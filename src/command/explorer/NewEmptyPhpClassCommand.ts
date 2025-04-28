@@ -35,12 +35,6 @@ import { ExplorerCommandInterface } from "../interface/ExplorerCommandInterface"
 
 
 export class NewEmptyPhpClassCommand implements ExplorerCommandInterface {
-    private commandName: Symbol = Symbol("newEmptyPhpClass");
-
-    getCommandName(): Symbol {
-        return this.commandName;
-    }
-
     async execute(uri?: vscode.Uri): Promise<void> {
         // Determine the target folder based on context
         const targetFolder = getTargetFolderFromContext(uri);

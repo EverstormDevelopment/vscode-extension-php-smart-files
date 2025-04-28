@@ -2,12 +2,12 @@ import { ConstructorType } from "./ConstructorInterface";
 
 export type ContainerRegistrationType = {
     /**
-     * The token for the service/class to be registered
+     * The token for the service to be registered
      */
     token: symbol;
 
     /**
-     * The constructor of the service/class to be registered
+     * The constructor of the service to be registered
      */
     constructor: ConstructorType<any>;
 

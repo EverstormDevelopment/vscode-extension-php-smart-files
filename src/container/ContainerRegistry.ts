@@ -3,7 +3,8 @@ import { NewEmptyPhpFileCommand } from "../command/explorer/NewEmptyPhpFileComma
 import { ContainerRegistrationType } from "./type/ContainerRegistrationType";
 
 /**
- * Registry for all services in the application
+ * Registry for all services in the application that should
+ * be automatically registered in the container.
  */
 export const ContainerRegistry: ContainerRegistrationType[] = [
     {

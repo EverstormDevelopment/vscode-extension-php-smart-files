@@ -22,7 +22,7 @@ export class Container implements ContainerInterface {
     private services: Map<symbol, ServiceRegistration<any>> = new Map();
 
     /**
-     * Registers a class with optional auto-wiring
+     * Registers a service class with optional auto-wiring
      * @param serviceKey The key to register the service under
      * @param constructor The service constructor
      * @param dependencies The keys of the dependencies required by the service

@@ -7,7 +7,7 @@ export interface ContainerInterface {
     /**
      * Registers a class/service with optional auto-wiring
      * @param token The token to register the service under
-     * @param constructor The class constructor
+     * @param constructor The service class constructor
      * @param dependencies The keys of the dependencies required by the service
      */
     register<T>(

@@ -19,8 +19,8 @@
         "title": "%php-file-creator.commands.newEmptyPhpFile.title%"
       },
       {
-        "command": "php-file-creator.newPhpClass",
-        "title": "%php-file-creator.commands.newPhpClass.title%"
+        "command": "php-file-creator.newEmptyPhpClass",
+        "title": "%php-file-creator.commands.newEmptyPhpClass.title%"
       }
     ],
     "menus": {
@@ -36,7 +36,7 @@
           "group": "1_creation"
         },
         {
-          "command": "php-file-creator.newPhpClass",
+          "command": "php-file-creator.newEmptyPhpClass",
           "group": "1_creation"
         }
       ]

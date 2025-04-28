@@ -76,7 +76,7 @@ export function activate(context: vscode.ExtensionContext) {
 	/**
 	 * Register new command for creating a PHP class
 	 */
-	const newPhpClassCommand = vscode.commands.registerCommand('php-file-creator.newPhpClass', async (uri: vscode.Uri) => {
+	const newEmptyPhpClassCommand = vscode.commands.registerCommand('php-file-creator.newEmptyPhpClass', async (uri: vscode.Uri) => {
 		// Determine the target folder based on context
 		const targetFolder = getTargetFolderFromContext(uri);
 		if (!targetFolder) {
@@ -196,7 +196,7 @@ class ${className} {
 
 	// Add all commands to context subscriptions
 	context.subscriptions.push(newEmptyPhpFileCommand);
-	context.subscriptions.push(newPhpClassCommand);
+	context.subscriptions.push(newEmptyPhpClassCommand);
 }
 
 /**

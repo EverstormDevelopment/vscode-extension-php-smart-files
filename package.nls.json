@@ -1,5 +1,5 @@
 {
-  "php-file-creator.commands.newEmptyPhpFile.title": "New empty PHP file",
-  "php-file-creator.commands.newPhpClass.title": "New PHP class",
-  "php-file-creator.submenus.main.label": "New PHP File"
+  "php-file-creator.commands.newEmptyPhpFile.title": "New PHP file",
+  "php-file-creator.commands.newEmptyPhpClass.title": "New PHP class",
+  "php-file-creator.submenus.main.label": "Create PHP File"
 }

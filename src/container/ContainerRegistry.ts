@@ -1,4 +1,4 @@
-import { NewEmptyPhpClassCommand } from "../command/explorer/NewEmptyPhpClassCommand copy";
+import { NewEmptyPhpClassCommand } from "../command/explorer/NewEmptyPhpClassCommand";
 import { NewEmptyPhpFileCommand } from "../command/explorer/NewEmptyPhpFileCommand";
 import { ContainerRegistrationType } from "./type/ContainerRegistrationType";
 

@@ -9,11 +9,6 @@ import * as fs from 'fs';
 export function activate(context: vscode.ExtensionContext) {
 	console.log('Congratulations, your extension "php-file-creator" is now active!');
 
-	// Register the commands that will be available in our context menu
-	const helloWorldCommand = vscode.commands.registerCommand('php-file-creator.helloWorld', () => {
-		vscode.window.showInformationMessage(vscode.l10n.t('Hello World from PHP File Creator!'));
-	});
-
 	/**
 	 * Register new command for creating an empty PHP file
 	 */
@@ -200,7 +195,6 @@ class ${className} {
 	}
 
 	// Add all commands to context subscriptions
-	context.subscriptions.push(helloWorldCommand);
 	context.subscriptions.push(newEmptyPhpFileCommand);
 	context.subscriptions.push(newPhpClassCommand);
 }

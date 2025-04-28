@@ -15,10 +15,6 @@
   "contributes": {
     "commands": [
       {
-        "command": "php-file-creator.helloWorld",
-        "title": "%php-file-creator.commands.helloWorld.title%"
-      },
-      {
         "command": "php-file-creator.newEmptyPhpFile",
         "title": "%php-file-creator.commands.newEmptyPhpFile.title%"
       },

@@ -1,5 +1,4 @@
 {
-  "php-file-creator.commands.helloWorld.title": "Hallo Welt",
   "php-file-creator.commands.newEmptyPhpFile.title": "Neue leere PHP-Datei",
   "php-file-creator.commands.newPhpClass.title": "Neue PHP-Klasse",
   "php-file-creator.submenus.main.label": "Neue PHP-Datei"

@@ -1,0 +1,86 @@
+{
+  "name": "php-file-creator",
+  "displayName": "PHPCreator",
+  "description": "A VS Code Extension for PHP development",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.99.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./dist/extension.js",
+  "l10n": "./l10n",
+  "contributes": {
+    "commands": [
+      {
+        "command": "php-file-creator.helloWorld",
+        "title": "%php-file-creator.commands.helloWorld.title%"
+      },
+      {
+        "command": "php-file-creator.newEmptyPhpFile",
+        "title": "%php-file-creator.commands.newEmptyPhpFile.title%"
+      },
+      {
+        "command": "php-file-creator.newPhpClass",
+        "title": "%php-file-creator.commands.newPhpClass.title%"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "submenu": "php-file-creator.submenu",
+          "group": "1_modification"
+        }
+      ],
+      "php-file-creator.submenu": [
+        {
+          "command": "php-file-creator.newEmptyPhpFile",
+          "group": "1_creation"
+        },
+        {
+          "command": "php-file-creator.newPhpClass",
+          "group": "1_creation"
+        }
+      ]
+    },
+    "submenus": [
+      {
+        "id": "php-file-creator.submenu",
+        "label": "%php-file-creator.submenus.main.label%"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "webpack",
+    "watch": "webpack --watch",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test",
+    "l10n-extract": "npx @vscode/l10n-dev export -o ./l10n ./src",
+    "l10n-pseudo": "npx @vscode/l10n-dev generate-pseudo -o ./l10n/ ./l10n/bundle.l10n.json ./package.nls.json"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "20.x",
+    "@types/vscode": "^1.99.0",
+    "@typescript-eslint/eslint-plugin": "^8.28.0",
+    "@typescript-eslint/parser": "^8.28.0",
+    "@vscode/l10n-dev": "^0.0.35",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1",
+    "eslint": "^9.23.0",
+    "ts-loader": "^9.5.2",
+    "typescript": "^5.8.2",
+    "webpack": "^5.98.0",
+    "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
+    "@vscode/l10n": "^0.0.18"
+  }
+}

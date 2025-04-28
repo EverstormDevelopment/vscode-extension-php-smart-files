@@ -11,7 +11,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Register the commands that will be available in our context menu
 	const helloWorldCommand = vscode.commands.registerCommand('php-file-creator.helloWorld', () => {
-		vscode.window.showInformationMessage(vscode.l10n.t('Hello World from PHPCreator!'));
+		vscode.window.showInformationMessage(vscode.l10n.t('Hello World from PHP File Creator!'));
 	});
 
 	/**
@@ -62,7 +62,7 @@ export function activate(context: vscode.ExtensionContext) {
 				}
 				
 				// Create empty PHP file
-				const emptyPhpContent = '<?php\n\n// ' + vscode.l10n.t('Empty PHP file created with PHPCreator') + '\n';
+				const emptyPhpContent = '<?php\n\n// ' + vscode.l10n.t('Empty PHP file created with PHP File Creator') + '\n';
 				await vscode.workspace.fs.writeFile(filePath, Buffer.from(emptyPhpContent, 'utf8'));
 				
 				// Open the created file
@@ -141,7 +141,7 @@ export function activate(context: vscode.ExtensionContext) {
 /**
  * Class ${className}
  * 
- * ${vscode.l10n.t('Created with PHPCreator')}
+ * ${vscode.l10n.t('Created with PHP File Creator')}
  */
 class ${className} {
     /**

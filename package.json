@@ -1,6 +1,6 @@
 {
   "name": "php-file-creator",
-  "displayName": "PHPCreator",
+  "displayName": "PHP File Creator",
   "description": "A VS Code Extension for PHP development",
   "version": "0.0.1",
   "engines": {

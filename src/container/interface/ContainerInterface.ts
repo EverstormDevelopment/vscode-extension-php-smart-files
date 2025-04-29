@@ -1,32 +1,27 @@
 import { ConstructorType } from "../type/ConstructorInterface";
 
 /**
- * Interface for a container that manages dependency injection
+ * Interface for the service container
  */
 export interface ContainerInterface {
     /**
-     * Registers a class/service with optional auto-wiring
-     * @param key The key to register the service under
-     * @param constructor The service class constructor
-     * @param dependencies The keys of the dependencies required by the service
+     * Registers a service in the container
+     * @param constructor The constructor of the service to register
+     * @param dependencies The constructors of the dependencies for the service
      */
-    register<T>(
-        key: symbol,
-        constructor: ConstructorType<T>,
-        dependencies?: symbol[]
-    ): void;
-
+    register<T>(constructor: ConstructorType<T>, dependencies?: ConstructorType<any>[]): void;
+    
     /**
-     * Gets a service from the container
-     * @param key The key of the service to get
+     * Gets a service instance from the container
+     * @param constructor The constructor of the service to get
      * @returns The service instance
      */
-    get<T>(key: symbol): T;
-
+    get<T>(constructor: ConstructorType<T>): T;
+    
     /**
-     * Checks if a service is registered in the container
-     * @param key The key to check
+     * Checks if a service is registered
+     * @param constructor The constructor to check
      * @returns True if the service is registered, false otherwise
      */
-    has(key: symbol): boolean;
+    has(constructor: ConstructorType<any>): boolean;
 }

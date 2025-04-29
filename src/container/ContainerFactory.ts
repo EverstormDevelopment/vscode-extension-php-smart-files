@@ -2,6 +2,9 @@ import { Container } from "./Container";
 import { ContainerRegistry } from "./ContainerRegistry";
 import { ContainerInterface } from "./interface/ContainerInterface";
 
+/**
+ * Factory for creating container instances
+ */
 export class ContainerFactory {
     /**
      * The singleton instance of the default container
@@ -34,9 +37,8 @@ export class ContainerFactory {
      * @param container The container to register services in
      */
     private static registerDefaultServices(container: ContainerInterface): void {
-        for(const toRegister of ContainerRegistry){
+        for (const toRegister of ContainerRegistry) {
             container.register(
-                toRegister.key,
                 toRegister.constructor,
                 toRegister.dependencies
             );

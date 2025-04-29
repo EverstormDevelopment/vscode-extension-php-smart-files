@@ -1,42 +1,46 @@
 import * as vscode from "vscode";
 import { ExplorerCommandInterface } from "../interface/ExplorerCommandInterface";
+import * as path from 'path';
+import * as fs from 'fs';
 
-        /**
-         * Helper function to determine the target folder
-         */
-        import * as path from 'path';
-        import * as fs from 'fs';
-        function getTargetFolderFromContext(uri?: vscode.Uri): vscode.Uri | undefined {
-            // If URI is given (right click on a folder or file)
-            if (uri) {
-                // If it's a folder, use it
-                if (uri.scheme === 'file') {
-                    try {
-                        const stat = fs.statSync(uri.fsPath);
-                        if (stat.isDirectory()) {
-                            return uri;
-                        } else {
-                            // If it's a file, use its parent folder
-                            return vscode.Uri.file(path.dirname(uri.fsPath));
-                        }
-                    } catch (error) {
-                        console.error(vscode.l10n.t('Error checking URI path: {0}', String(error)));
-                    }
+/**
+ * Helper function to determine the target folder
+ */
+function getTargetFolderFromContext(uri?: vscode.Uri): vscode.Uri | undefined {
+    // If URI is given (right click on a folder or file)
+    if (uri) {
+        // If it's a folder, use it
+        if (uri.scheme === 'file') {
+            try {
+                const stat = fs.statSync(uri.fsPath);
+                if (stat.isDirectory()) {
+                    return uri;
+                } else {
+                    // If it's a file, use its parent folder
+                    return vscode.Uri.file(path.dirname(uri.fsPath));
                 }
+            } catch (error) {
+                console.error(vscode.l10n.t('Error checking URI path: {0}', String(error)));
             }
-            
-            // Fallback: Use the first workspace folder
-            if (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0) {
-                return vscode.workspace.workspaceFolders[0].uri;
-            }
-            
-            return undefined;
         }
+    }
+    
+    // Fallback: Use the first workspace folder
+    if (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0) {
+        return vscode.workspace.workspaceFolders[0].uri;
+    }
+    
+    return undefined;
+}
 
-
-export const NewEmptyPhpFileCommandSymbol = Symbol('newEmptyPhpFileCommand');
-
+/**
+ * Command to create a new empty PHP file
+ */
 export class NewEmptyPhpFileCommand implements ExplorerCommandInterface {
+    /**
+     * Execute the command to create a new empty PHP file
+     * @param uri The URI from the command execution context
+     */
     async execute(uri?: vscode.Uri): Promise<void> {
         // Determine the target folder based on context
         const targetFolder = getTargetFolderFromContext(uri);

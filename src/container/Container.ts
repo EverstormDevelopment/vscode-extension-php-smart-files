@@ -7,7 +7,7 @@ import { ConstructorType } from "./type/ConstructorInterface";
 type RegistrationType<T> = {
     instance?: T;
     constructor: ConstructorType<T>;
-    dependencies?: symbol[];
+    dependencies?: ConstructorType<any>[];
 };
 
 /**
@@ -17,16 +17,15 @@ export class Container implements ContainerInterface {
     /**
      * The map of registered services
      */
-    private services: Map<symbol, RegistrationType<any>> = new Map();
+    private services: Map<ConstructorType<any>, RegistrationType<any>> = new Map();
 
     /**
      * Registers a service class with optional auto-wiring
-     * @param key The key to register the service under
      * @param constructor The service constructor
-     * @param dependencies The keys of the dependencies required by the service
+     * @param dependencies The constructors of the dependencies required by the service
      */
-    public register<T>(key: symbol, constructor: ConstructorType<T>, dependencies: symbol[]): void {
-        this.services.set(key, {
+    public register<T>(constructor: ConstructorType<T>, dependencies: ConstructorType<any>[] = []): void {
+        this.services.set(constructor, {
             constructor,
             dependencies,
         });
@@ -34,50 +33,46 @@ export class Container implements ContainerInterface {
 
     /**
      * Gets a service from the container
-     * @param key The key of the service to get
+     * @param constructor The constructor of the service to get
      * @returns The service instance
      * @throws Error if the service is not registered
      */
-    public get<T>(key: symbol): T {
-        if (!this.has(key)) {
-            throw new Error(`Service ${key.toString()} not registered`);
+    public get<T>(constructor: ConstructorType<T>): T {
+        if (!this.has(constructor)) {
+            throw new Error(`Service ${constructor.name} not registered`);
         }
 
-        const registration = this.services.get(key) as RegistrationType<T>;
+        const registration = this.services.get(constructor) as RegistrationType<T>;
         if (registration.instance !== undefined) {
             return registration.instance;
         }
-        return this.createInstance<T>(key, registration);
+        return this.createInstance<T>(constructor, registration);
     }
 
     /**
      * Creates an instance of a service, resolving its dependencies if necessary
-     * @param key The key key
+     * @param constructor The service constructor
      * @param registration The service registration
      * @returns The created service instance
      */
-    private createInstance<T>(key: symbol, registration: RegistrationType<T>): T {
-        if (!registration.constructor) {
-            throw new Error(`Constructor for service ${key.toString()} not defined`);
-        }
-
-        registration.dependencies?.map((depKey) => {
-            if (!this.has(depKey)) {
-                throw new Error(`Dependency ${depKey.toString()} not registered for service ${key.toString()}`);
+    private createInstance<T>(constructor: ConstructorType<T>, registration: RegistrationType<T>): T {
+        registration.dependencies?.map((depConstructor) => {
+            if (!this.has(depConstructor)) {
+                throw new Error(`Dependency ${depConstructor.name} not registered for service ${constructor.name}`);
             }
         });
 
-        const resolvedDependencies = registration.dependencies?.map((depKey) => this.get(depKey)) ?? [];
+        const resolvedDependencies = registration.dependencies?.map((depConstructor) => this.get(depConstructor)) ?? [];
         registration.instance = new registration.constructor(...resolvedDependencies);
         return registration.instance as T;
     }
 
     /**
      * Checks if a service is registered in the container
-     * @param key The key to check
+     * @param constructor The constructor to check
      * @returns True if the service is registered, false otherwise
      */
-    public has(key: symbol): boolean {
-        return this.services.has(key);
+    public has(constructor: ConstructorType<any>): boolean {
+        return this.services.has(constructor);
     }
 }

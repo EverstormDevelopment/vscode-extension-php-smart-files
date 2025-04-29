@@ -1,43 +1,26 @@
 import * as vscode from "vscode";
 import { ExplorerCommandInterface } from "../interface/ExplorerCommandInterface";
+import { UriFolderResolver } from "../../service/filesystem/UriFolderResolver";
 
-        /**
-         * Helper function to determine the target folder
-         */
-        import * as path from 'path';
-        import * as fs from 'fs';
-        function getTargetFolderFromContext(uri?: vscode.Uri): vscode.Uri | undefined {
-            // If URI is given (right click on a folder or file)
-            if (uri) {
-                // If it's a folder, use it
-                if (uri.scheme === 'file') {
-                    try {
-                        const stat = fs.statSync(uri.fsPath);
-                        if (stat.isDirectory()) {
-                            return uri;
-                        } else {
-                            // If it's a file, use its parent folder
-                            return vscode.Uri.file(path.dirname(uri.fsPath));
-                        }
-                    } catch (error) {
-                        console.error(vscode.l10n.t('Error checking URI path: {0}', String(error)));
-                    }
-                }
-            }
-            
-            // Fallback: Use the first workspace folder
-            if (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0) {
-                return vscode.workspace.workspaceFolders[0].uri;
-            }
-            
-            return undefined;
-        }
-
-
+/**
+ * Command to create a new PHP class file
+ */
 export class NewEmptyPhpClassCommand implements ExplorerCommandInterface {
+    /**
+     * Constructor for NewEmptyPhpClassCommand
+     * 
+     * @param uriFolderResolver The URI folder resolver service
+     */
+    constructor(private readonly uriFolderResolver: UriFolderResolver) {}
+
+    /**
+     * Execute the command to create a new PHP class file
+     * 
+     * @param uri The URI from the command execution context
+     */
     async execute(uri?: vscode.Uri): Promise<void> {
         // Determine the target folder based on context
-        const targetFolder = getTargetFolderFromContext(uri);
+        const targetFolder = this.uriFolderResolver.getTargetFolder(uri);
         if (!targetFolder) {
             vscode.window.showErrorMessage(vscode.l10n.t('No target folder selected or no workspace opened.'));
             return;

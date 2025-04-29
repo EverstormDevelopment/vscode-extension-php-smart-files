@@ -38,10 +38,7 @@ export class ContainerFactory {
      */
     private static registerDefaultServices(container: ContainerInterface): void {
         for (const toRegister of ContainerRegistry) {
-            container.register(
-                toRegister.constructor,
-                toRegister.dependencies
-            );
+            container.register(toRegister.constructor, toRegister.dependencies);
         }
     }
 }

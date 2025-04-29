@@ -10,14 +10,14 @@ export interface ContainerInterface {
      * @param dependencies The constructors of the dependencies for the service
      */
     register<T>(constructor: ConstructorType<T>, dependencies?: ConstructorType<any>[]): void;
-    
+
     /**
      * Gets a service instance from the container
      * @param constructor The constructor of the service to get
      * @returns The service instance
      */
     get<T>(constructor: ConstructorType<T>): T;
-    
+
     /**
      * Checks if a service is registered
      * @param constructor The constructor to check

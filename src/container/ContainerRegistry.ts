@@ -1,5 +1,5 @@
 import { NewEmptyPhpClassCommand } from "../command/explorer/NewEmptyPhpClassCommand";
-import { NewEmptyPhpFileCommand } from "../command/explorer/NewEmptyPhpFileCommand";
+import { NewEmptyPhpFileCommand, NewEmptyPhpFileCommandSymbol } from "../command/explorer/NewEmptyPhpFileCommand";
 import { ContainerRegistrationType } from "./type/ContainerRegistrationType";
 
 /**
@@ -8,12 +8,12 @@ import { ContainerRegistrationType } from "./type/ContainerRegistrationType";
  */
 export const ContainerRegistry: ContainerRegistrationType[] = [
     {
-        token: Symbol("newEmptyPhpFileCommand"),
+        key: NewEmptyPhpFileCommandSymbol,
         constructor: NewEmptyPhpFileCommand,
         dependencies: [],
     },
     {
-        token: Symbol("newEmptyPhpClassCommand"),
+        key: Symbol("newEmptyPhpClassCommand"),
         constructor: NewEmptyPhpClassCommand,
         dependencies: [],
     },

@@ -2,6 +2,8 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
+import { ContainerFactory } from './container/ContainerFactory';
+import { NewEmptyPhpFileCommand, NewEmptyPhpFileCommandSymbol } from './command/explorer/NewEmptyPhpFileCommand';
 
 /**
  * This method is called when the extension is activated
@@ -9,11 +11,15 @@ import * as fs from 'fs';
 export function activate(context: vscode.ExtensionContext) {
 	console.log('Congratulations, your extension "php-file-creator" is now active!');
 
+
+	const container = ContainerFactory.createDefaultContainer();
+
+
 	/**
 	 * Register new command for creating an empty PHP file
 	 */
 	const newEmptyPhpFileCommand = vscode.commands.registerCommand('php-file-creator.newEmptyPhpFile', async (uri: vscode.Uri) => {
-		
+		container.get<NewEmptyPhpFileCommand>(NewEmptyPhpFileCommandSymbol).execute(uri);
 	});
 
 	/**

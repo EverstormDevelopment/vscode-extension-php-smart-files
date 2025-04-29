@@ -1,15 +1,13 @@
 import { ContainerInterface } from "./interface/ContainerInterface";
 import { ConstructorType } from "./type/ConstructorInterface";
 
-
 /**
- * Type definition for a service registration
+ * Type definition for a registration
  */
-type ServiceRegistration<T> = {
+type RegistrationType<T> = {
     instance?: T;
     constructor: ConstructorType<T>;
     dependencies?: symbol[];
-    isInitialized: boolean;
 };
 
 /**
@@ -19,81 +17,67 @@ export class Container implements ContainerInterface {
     /**
      * The map of registered services
      */
-    private services: Map<symbol, ServiceRegistration<any>> = new Map();
+    private services: Map<symbol, RegistrationType<any>> = new Map();
 
     /**
      * Registers a service class with optional auto-wiring
-     * @param serviceKey The key to register the service under
+     * @param key The key to register the service under
      * @param constructor The service constructor
      * @param dependencies The keys of the dependencies required by the service
      */
-    public register<T>(
-        serviceKey: symbol,
-        constructor: ConstructorType<T>,
-        dependencies: symbol[]
-    ): void {
-        this.services.set(serviceKey, {
+    public register<T>(key: symbol, constructor: ConstructorType<T>, dependencies: symbol[]): void {
+        this.services.set(key, {
             constructor,
             dependencies,
-            isInitialized: false
         });
     }
 
     /**
      * Gets a service from the container
-     * @param serviceKey The key of the service to get
+     * @param key The key of the service to get
      * @returns The service instance
      * @throws Error if the service is not registered
      */
-    public get<T>(serviceKey: symbol): T {
-        if (!this.has(serviceKey)) {
-            throw new Error(`Service ${serviceKey.toString()} not registered`);
+    public get<T>(key: symbol): T {
+        if (!this.has(key)) {
+            throw new Error(`Service ${key.toString()} not registered`);
         }
-        
-        const registration = this.services.get(serviceKey) as ServiceRegistration<T>;
-        
-        // Return instance if already initialized
-        if (registration.isInitialized && registration.instance !== undefined) {
+
+        const registration = this.services.get(key) as RegistrationType<T>;
+        if (registration.instance !== undefined) {
             return registration.instance;
         }
-
-        this.initializeAutowiredService(serviceKey, registration);
-        
-        return registration.instance as T;
+        return this.createInstance<T>(key, registration);
     }
 
-    
     /**
-     * Initialize an auto-wired service by resolving its dependencies
-     * @param serviceKey The service key
+     * Creates an instance of a service, resolving its dependencies if necessary
+     * @param key The key key
      * @param registration The service registration
+     * @returns The created service instance
      */
-    private initializeAutowiredService<T>(
-        serviceKey: symbol,
-        registration: ServiceRegistration<T>
-    ): void {
+    private createInstance<T>(key: symbol, registration: RegistrationType<T>): T {
         if (!registration.constructor) {
-            throw new Error(`Constructor for service ${serviceKey.toString()} not defined`);
+            throw new Error(`Constructor for service ${key.toString()} not defined`);
         }
-        
-        if (!registration.dependencies) {
-            throw new Error(`Dependencies for service ${serviceKey.toString()} not defined`);
-        }
-        
-        // Resolve all dependencies
-        const resolvedDependencies = registration.dependencies.map(depKey => this.get(depKey));
-        
-        // Create instance with resolved dependencies
+
+        registration.dependencies?.map((depKey) => {
+            if (!this.has(depKey)) {
+                throw new Error(`Dependency ${depKey.toString()} not registered for service ${key.toString()}`);
+            }
+        });
+
+        const resolvedDependencies = registration.dependencies?.map((depKey) => this.get(depKey)) ?? [];
         registration.instance = new registration.constructor(...resolvedDependencies);
-        registration.isInitialized = true;
+        return registration.instance as T;
     }
 
     /**
      * Checks if a service is registered in the container
-     * @param serviceKey The key to check
+     * @param key The key to check
      * @returns True if the service is registered, false otherwise
      */
-    public has(serviceKey: symbol): boolean {
-        return this.services.has(serviceKey);
+    public has(key: symbol): boolean {
+        return this.services.has(key);
     }
 }

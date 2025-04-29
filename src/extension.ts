@@ -26,8 +26,8 @@ export function activate(context: vscode.ExtensionContext) {
 
     container = ContainerFactory.createDefaultContainer();
     const commands: Record<string, ConstructorType<ExplorerCommandInterface>> = {
-        'newEmptyPhpFile': NewEmptyPhpFileCommand,
-        'newEmptyPhpClass': NewEmptyPhpClassCommand,
+        newEmptyPhpFile: NewEmptyPhpFileCommand,
+        newEmptyPhpClass: NewEmptyPhpClassCommand,
     };
 
     for (const [name, constructor] of Object.entries(commands)) {

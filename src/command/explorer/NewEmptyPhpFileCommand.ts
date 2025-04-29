@@ -61,8 +61,7 @@ export class NewEmptyPhpFileCommand implements ExplorerCommandInterface {
                 }
 
                 // Create empty PHP file
-                const emptyPhpContent =
-                    "<?php\n\n// " + vscode.l10n.t("Empty PHP file created with PHP File Creator") + "\n";
+                const emptyPhpContent = "";
                 await vscode.workspace.fs.writeFile(filePath, Buffer.from(emptyPhpContent, "utf8"));
 
                 // Open the created file

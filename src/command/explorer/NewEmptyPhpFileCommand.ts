@@ -8,14 +8,12 @@ import { UriFolderResolver } from "../../service/filesystem/UriFolderResolver";
 export class NewEmptyPhpFileCommand implements ExplorerCommandInterface {
     /**
      * Constructor for NewEmptyPhpFileCommand
-     * 
      * @param uriFolderResolver The URI folder resolver service
      */
     constructor(private readonly uriFolderResolver: UriFolderResolver) {}
 
     /**
      * Execute the command to create a new empty PHP file
-     * 
      * @param uri The URI from the command execution context
      */
     async execute(uri?: vscode.Uri): Promise<void> {

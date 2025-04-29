@@ -1,4 +1,4 @@
-import { ConstructorType } from "../type/ConstructorInterface";
+import { ConstructorType } from "../type/ConstructorType";
 
 /**
  * Interface for the service container

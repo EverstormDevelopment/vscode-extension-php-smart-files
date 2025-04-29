@@ -1,5 +1,5 @@
 import { ContainerInterface } from "./interface/ContainerInterface";
-import { ConstructorType } from "./type/ConstructorInterface";
+import { ConstructorType } from "./type/ConstructorType";
 
 /**
  * Type definition for a registration

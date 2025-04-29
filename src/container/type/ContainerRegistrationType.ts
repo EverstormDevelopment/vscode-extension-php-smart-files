@@ -1,4 +1,4 @@
-import { ConstructorType } from "./ConstructorInterface";
+import { ConstructorType } from "./ConstructorType";
 
 /**
  * Type definition for container registration

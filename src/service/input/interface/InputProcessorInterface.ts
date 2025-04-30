@@ -1,3 +1,6 @@
+/**
+ * Interface for processors that transform input strings
+ */
 export interface InputProcessorInterface {
     /**
      * Processes the input string

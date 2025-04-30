@@ -1,6 +1,7 @@
 import { NewEmptyPhpClassCommand } from "../command/explorer/NewEmptyPhpClassCommand";
 import { NewEmptyPhpFileCommand } from "../command/explorer/NewEmptyPhpFileCommand";
 import { UriFolderResolver } from "../service/filesystem/UriFolderResolver";
+import { InputBoxFactory } from "../service/input/build/InputBoxFactory";
 import { ContainerRegistrationType } from "./type/ContainerRegistrationType";
 
 /**
@@ -13,11 +14,15 @@ export const ContainerRegistry: ContainerRegistrationType[] = [
         dependencies: [],
     },
     {
+        constructor: InputBoxFactory,
+        dependencies: [],
+    },    
+    {
         constructor: NewEmptyPhpFileCommand,
-        dependencies: [UriFolderResolver],
+        dependencies: [UriFolderResolver, InputBoxFactory],
     },
     {
         constructor: NewEmptyPhpClassCommand,
-        dependencies: [UriFolderResolver],
+        dependencies: [UriFolderResolver, InputBoxFactory],
     },
 ];

@@ -1,6 +1,8 @@
 import * as vscode from "vscode";
 import { UriFolderResolver } from "../../service/filesystem/UriFolderResolver";
+import { InputBoxTypeEnum } from "../../service/input/enum/InputBoxTypeEnum";
 import { ExplorerCommandInterface } from "../interface/ExplorerCommandInterface";
+import { InputBoxFactoryInterface } from './../../service/input/interface/InputBoxFactoryInterface';
 
 /**
  * Command to create a new empty PHP file
@@ -10,7 +12,10 @@ export class NewEmptyPhpFileCommand implements ExplorerCommandInterface {
      * Constructor for NewEmptyPhpFileCommand
      * @param uriFolderResolver The URI folder resolver service
      */
-    constructor(private readonly uriFolderResolver: UriFolderResolver) {}
+    constructor(
+        private readonly uriFolderResolver: UriFolderResolver,
+        private readonly inputBoxFactory: InputBoxFactoryInterface,
+    ) {}
 
     /**
      * Execute the command to create a new empty PHP file
@@ -24,63 +29,69 @@ export class NewEmptyPhpFileCommand implements ExplorerCommandInterface {
             return;
         }
 
-        // Create VS Code-like dialog
-        const inputBox = vscode.window.createInputBox();
-        inputBox.title = vscode.l10n.t("Create new empty PHP file");
-        inputBox.placeholder = vscode.l10n.t("Enter filename (without .php)");
-        inputBox.prompt = vscode.l10n.t("Enter a name for the new PHP file");
+        const testDialog = this.inputBoxFactory.create(InputBoxTypeEnum.File);
+        const fileName = await testDialog.prompt();
+        if (!fileName) {
+            return;
+        }
 
-        inputBox.onDidAccept(async () => {
-            const fileName = inputBox.value;
-            if (!fileName || fileName.length === 0) {
-                inputBox.validationMessage = vscode.l10n.t("Please enter a valid filename");
-                return;
-            }
+        // // Create VS Code-like dialog
+        // const inputBox = vscode.window.createInputBox();
+        // inputBox.title = vscode.l10n.t("Create new empty PHP file");
+        // inputBox.placeholder = vscode.l10n.t("Enter filename (without .php)");
+        // inputBox.prompt = vscode.l10n.t("Enter a name for the new PHP file");
 
-            inputBox.hide();
+        // inputBox.onDidAccept(async () => {
+        //     const fileName = inputBox.value;
+        //     if (!fileName || fileName.length === 0) {
+        //         inputBox.validationMessage = vscode.l10n.t("Please enter a valid filename");
+        //         return;
+        //     }
 
-            // Create path for the new file
-            const phpFileName = `${fileName}.php`;
-            const filePath = vscode.Uri.joinPath(targetFolder, phpFileName);
+        //     inputBox.hide();
 
-            try {
-                // Check if the file already exists
-                try {
-                    await vscode.workspace.fs.stat(filePath);
-                    // If stat() doesn't throw an error, the file already exists
-                    const overwrite = await vscode.window.showWarningMessage(
-                        vscode.l10n.t("The file '{0}' already exists. Overwrite?", phpFileName),
-                        { modal: true },
-                        vscode.l10n.t("Overwrite")
-                    );
-                    if (overwrite !== vscode.l10n.t("Overwrite")) {
-                        return;
-                    }
-                } catch (err) {
-                    // File doesn't exist, which is good
-                }
+        //     // Create path for the new file
+        //     const phpFileName = `${fileName}.php`;
+        //     const filePath = vscode.Uri.joinPath(targetFolder, phpFileName);
 
-                // Create empty PHP file
-                const emptyPhpContent = "";
-                await vscode.workspace.fs.writeFile(filePath, Buffer.from(emptyPhpContent, "utf8"));
+        //     try {
+        //         // Check if the file already exists
+        //         try {
+        //             await vscode.workspace.fs.stat(filePath);
+        //             // If stat() doesn't throw an error, the file already exists
+        //             const overwrite = await vscode.window.showWarningMessage(
+        //                 vscode.l10n.t("The file '{0}' already exists. Overwrite?", phpFileName),
+        //                 { modal: true },
+        //                 vscode.l10n.t("Overwrite")
+        //             );
+        //             if (overwrite !== vscode.l10n.t("Overwrite")) {
+        //                 return;
+        //             }
+        //         } catch (err) {
+        //             // File doesn't exist, which is good
+        //         }
 
-                // Open the created file
-                const document = await vscode.workspace.openTextDocument(filePath);
-                await vscode.window.showTextDocument(document);
+        //         // Create empty PHP file
+        //         const emptyPhpContent = "";
+        //         await vscode.workspace.fs.writeFile(filePath, Buffer.from(emptyPhpContent, "utf8"));
 
-                vscode.window.showInformationMessage(
-                    vscode.l10n.t("Empty PHP file '{0}' has been created.", phpFileName)
-                );
-            } catch (error) {
-                vscode.window.showErrorMessage(
-                    vscode.l10n.t(
-                        "Error creating PHP file: {0}",
-                        error instanceof Error ? error.message : String(error)
-                    )
-                );
-            }
-        });
+        //         // Open the created file
+        //         const document = await vscode.workspace.openTextDocument(filePath);
+        //         await vscode.window.showTextDocument(document);
 
-        inputBox.show();
+        //         vscode.window.showInformationMessage(
+        //             vscode.l10n.t("Empty PHP file '{0}' has been created.", phpFileName)
+        //         );
+        //     } catch (error) {
+        //         vscode.window.showErrorMessage(
+        //             vscode.l10n.t(
+        //                 "Error creating PHP file: {0}",
+        //                 error instanceof Error ? error.message : String(error)
+        //             )
+        //         );
+        //     }
+        // });
+
+        // inputBox.show();
     }
 }

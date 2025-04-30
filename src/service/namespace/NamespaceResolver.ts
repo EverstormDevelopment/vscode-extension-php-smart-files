@@ -147,7 +147,7 @@ export class NamespaceResolver {
         newMatch: NamespaceMatchType | undefined
     ): NamespaceMatchType | undefined {
         if (!currentMatch && !newMatch) {
-            return;
+            return undefined;
         }
 
         const currentMatchLength = currentMatch?.directory.length ?? 0;
@@ -167,18 +167,14 @@ export class NamespaceResolver {
      * @returns The complete namespace string
      */
     private buildNamespace(filePath: string, namespaceMatch: NamespaceMatchType, isPsr0: boolean): string {
-        if (filePath === namespaceMatch.directory) {
-            return this.getNamespaceNormalized(namespaceMatch.namespace);
-        }
-
         const relativeFilePath = path.relative(namespaceMatch.directory, filePath);
         const parsedFilePath = path.parse(relativeFilePath);
-        const relativePath = parsedFilePath.dir;
-        if (!relativePath) {
+        
+        if (filePath === namespaceMatch.directory || !parsedFilePath.dir) {
             return this.getNamespaceNormalized(namespaceMatch.namespace);
         }
-
-        const namespaceSegments = this.getNamespaceSegmentsFromPath(relativePath, namespaceMatch.namespace, isPsr0);
+    
+        const namespaceSegments = this.getNamespaceSegmentsFromPath(parsedFilePath.dir, namespaceMatch.namespace, isPsr0);
         return this.buildNamespaceWithSegments(namespaceMatch.namespace, namespaceSegments);
     }
 
@@ -191,6 +187,10 @@ export class NamespaceResolver {
      * @returns An array of namespace segments
      */
     private getNamespaceSegmentsFromPath(relativePath: string, namespacePrefix: string, isPsr0: boolean): string[] {
+        if (!relativePath) {
+            return [];
+        }
+        
         const namespaceSegments = relativePath.split(/[/\\]/);
         if (isPsr0) {
             this.removeDuplicateNamespaceSegmentsForPsr0(namespacePrefix, namespaceSegments);
@@ -206,10 +206,13 @@ export class NamespaceResolver {
      * @returns The complete normalized namespace
      */
     private buildNamespaceWithSegments(namespacePrefix: string, namespaceSegments: string[]): string {
-        if (namespaceSegments.length > 0) {
-            namespacePrefix += namespaceSegments.join("\\");
+        namespacePrefix = this.getNamespaceNormalized(namespacePrefix);
+        if (namespaceSegments.length === 0) {
+            return this.getNamespaceNormalized(namespacePrefix);
         }
-        return this.getNamespaceNormalized(namespacePrefix);
+
+        const namespace = `${namespacePrefix}\\${namespaceSegments.join("\\")}`;
+        return this.getNamespaceNormalized(namespace);
     }
 
     /**
@@ -220,9 +223,7 @@ export class NamespaceResolver {
      * @param namespacePrefix The namespace prefix
      * @param namespaceSegments The segments of the namespace path
      */
-    private removeDuplicateNamespaceSegmentsForPsr0(namespacePrefix: string, namespaceSegments: string[], ): void {
-        // For PSR-0, exclude the first segment if it matches the last part of the namespace prefix
-        // (because it's already included in the namespace)
+    private removeDuplicateNamespaceSegmentsForPsr0(namespacePrefix: string, namespaceSegments: string[]): void {
         const namespaceParts = namespacePrefix.split("\\").filter((p) => p !== "");
         const prefixLastPart = namespaceParts.length > 0 ? namespaceParts[namespaceParts.length - 1] : "";
         if (namespaceSegments.length > 0 && namespaceSegments[0] === prefixLastPart) {

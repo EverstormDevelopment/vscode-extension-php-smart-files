@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
-import { ExplorerCommandInterface } from "../interface/ExplorerCommandInterface";
 import { UriFolderResolver } from "../../service/filesystem/UriFolderResolver";
+import { ExplorerCommandInterface } from "../interface/ExplorerCommandInterface";
 
 /**
  * Command to create a new PHP class file

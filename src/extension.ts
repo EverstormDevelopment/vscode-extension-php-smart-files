@@ -1,11 +1,11 @@
 // The module 'vscode' contains the VS Code extensibility API
 import * as vscode from "vscode";
-import { ContainerFactory } from "./container/ContainerFactory";
-import { ConstructorType } from "./container/type/ConstructorType";
-import { NewEmptyPhpFileCommand } from "./command/explorer/NewEmptyPhpFileCommand";
 import { NewEmptyPhpClassCommand } from "./command/explorer/NewEmptyPhpClassCommand";
+import { NewEmptyPhpFileCommand } from "./command/explorer/NewEmptyPhpFileCommand";
 import { ExplorerCommandInterface } from "./command/interface/ExplorerCommandInterface";
+import { ContainerFactory } from "./container/ContainerFactory";
 import { ContainerInterface } from "./container/interface/ContainerInterface";
+import { ConstructorType } from "./container/type/ConstructorType";
 
 /**
  * Extension identifier used as prefix for all commands

@@ -1,5 +1,8 @@
 import { NewEmptyPhpClassCommand } from "../command/explorer/NewEmptyPhpClassCommand";
 import { NewEmptyPhpFileCommand } from "../command/explorer/NewEmptyPhpFileCommand";
+import { ComposerJsonService } from "../service/composer/ComposerJsonService";
+import { ComposerJsonFinder } from "../service/composer/model/ComposerJsonFinder";
+import { ComposerJsonParser } from "../service/composer/model/ComposerJsonParser";
 import { FileCreator } from "../service/filesystem/FileCreator";
 import { UriFolderResolver } from "../service/filesystem/UriFolderResolver";
 import { InputBoxFactory } from "../service/input/build/InputBoxFactory";
@@ -23,8 +26,20 @@ export const ContainerRegistry: ContainerRegistrationType[] = [
         dependencies: [],
     },
     {
+        constructor: ComposerJsonFinder,
+        dependencies: [],
+    },        
+    {
+        constructor: ComposerJsonParser,
+        dependencies: [],
+    },
+    {
+        constructor: ComposerJsonService,
+        dependencies: [ComposerJsonFinder, ComposerJsonParser],
+    },    
+    {
         constructor: NewEmptyPhpFileCommand,
-        dependencies: [UriFolderResolver, InputBoxFactory, FileCreator],
+        dependencies: [UriFolderResolver, InputBoxFactory, FileCreator, ComposerJsonService],
     },
     {
         constructor: NewEmptyPhpClassCommand,

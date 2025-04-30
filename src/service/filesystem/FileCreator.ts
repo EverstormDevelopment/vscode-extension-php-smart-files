@@ -11,8 +11,7 @@ export class FileCreator {
      * @throws Error if the file creation fails
      */
     public async create(filePath: vscode.Uri): Promise<void> {
-        const canCreateFile = await this.canCreateFile(filePath);
-        if (!canCreateFile) {
+        if (!await this.canCreateFile(filePath)) {
             return;
         }
 
@@ -60,10 +59,12 @@ export class FileCreator {
         const fileName = path.basename(filePath.fsPath);
         const overwriteMessage = vscode.l10n.t("The file '{0}' already exists. Overwrite?", fileName);
         const overwriteButton = vscode.l10n.t("Overwrite");
+        const cancelButton = vscode.l10n.t("Cancel");
         const overwriteReturn = await vscode.window.showWarningMessage(
             overwriteMessage,
             { modal: true },
-            overwriteButton
+            overwriteButton,
+            cancelButton
         );
         return overwriteReturn === overwriteButton;
     }
@@ -74,11 +75,7 @@ export class FileCreator {
      * @throws Error if file creation fails
      */
     private async createFile(filePath: vscode.Uri): Promise<void> {
-        try {
-            await vscode.workspace.fs.writeFile(filePath, Buffer.from("", "utf8"));
-        } catch (error) {
-            throw new Error(`Failed to create file: ${error instanceof Error ? error.message : String(error)}`);
-        }
+        await vscode.workspace.fs.writeFile(filePath, Buffer.from("", "utf8"));
     }
 
     /**

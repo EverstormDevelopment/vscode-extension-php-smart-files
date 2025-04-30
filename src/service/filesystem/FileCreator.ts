@@ -1,6 +1,6 @@
-import * as vscode from "vscode";
 import * as path from "path";
-import { isFile } from "../../utils/isFile";
+import * as vscode from "vscode";
+import { isFile } from "../../utils/filesystem/isFile";
 
 /**
  * Service to create files in the workspace
@@ -12,7 +12,7 @@ export class FileCreator {
      * @throws Error if the file creation fails
      */
     public async create(filePath: vscode.Uri): Promise<void> {
-        if (!await this.canCreateFile(filePath)) {
+        if (!(await this.canCreateFile(filePath))) {
             return;
         }
 

@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { isFile } from "../../utils/isFile";
+import { isFile } from "../../utils/filesystem/isFile";
 
 /**
  * Service to parse composer.json files

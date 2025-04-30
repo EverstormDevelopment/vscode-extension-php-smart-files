@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as vscode from "vscode";
-import { isFile } from "../../utils/isFile";
+import { isFile } from "../../utils/filesystem/isFile";
 
 /**
  * Service to find composer.json files in the directory hierarchy

@@ -66,7 +66,7 @@ export class InputBox implements InputBoxInterface {
 
             const value = this.inputBox.value;
             const isValueValid = await this.validate(value);
-            if (isValueValid) {
+            if (!isValueValid) {
                 return;
             }
 
@@ -86,7 +86,7 @@ export class InputBox implements InputBoxInterface {
             }
 
             if (this.inputBox.validationMessage) {
-                return; // Don't resolve if hiding due to validation error
+                return;
             }
 
             this.resolveInput(undefined);

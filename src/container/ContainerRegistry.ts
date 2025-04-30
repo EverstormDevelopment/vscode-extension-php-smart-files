@@ -6,6 +6,7 @@ import { ComposerJsonService } from "../service/composer/ComposerJsonService";
 import { FileCreator } from "../service/filesystem/FileCreator";
 import { UriFolderResolver } from "../service/filesystem/UriFolderResolver";
 import { InputBoxFactory } from "../service/input/build/InputBoxFactory";
+import { NamespaceResolver } from "../service/namespace/NamespaceResolver";
 import { ContainerRegistrationType } from "./type/ContainerRegistrationType";
 
 /**
@@ -38,11 +39,15 @@ export const ContainerRegistry: ContainerRegistrationType[] = [
         dependencies: [ComposerJsonFinder, ComposerJsonParser],
     },
     {
+        constructor: NamespaceResolver,
+        dependencies: [ComposerJsonService],
+    },
+    {
         constructor: NewEmptyPhpFileCommand,
         dependencies: [UriFolderResolver, InputBoxFactory, FileCreator, ComposerJsonService],
     },
     {
         constructor: NewEmptyPhpClassCommand,
-        dependencies: [UriFolderResolver, InputBoxFactory],
+        dependencies: [UriFolderResolver, InputBoxFactory, FileCreator, NamespaceResolver],
     },
 ];

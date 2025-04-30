@@ -16,6 +16,7 @@ export class NewEmptyPhpFileCommand implements ExplorerCommandInterface {
     constructor(
         private readonly uriFolderResolver: UriFolderResolver,
         private readonly inputBoxFactory: InputBoxFactoryInterface,
+        private readonly fileCreator: FileCreator,
     ) {}
 
     /**
@@ -40,9 +41,11 @@ export class NewEmptyPhpFileCommand implements ExplorerCommandInterface {
         // Create path for the new file
         const filePath = vscode.Uri.joinPath(targetFolder, fileName);
         try {
-            const fc = new FileCreator().create(filePath);
+            this.fileCreator.create(filePath);
         } catch (error) {
             return;
         }
+
+
     }
 }

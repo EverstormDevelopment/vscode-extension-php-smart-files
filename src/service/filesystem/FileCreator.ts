@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import * as path from "path";
+import { isFile } from "../../utils/isFile";
 
 /**
  * Service to create files in the workspace
@@ -29,25 +30,11 @@ export class FileCreator {
      * @returns True if file can be created, false otherwise
      */
     private async canCreateFile(filePath: vscode.Uri): Promise<boolean> {
-        const isExisting = await this.isExistingFile(filePath);
+        const isExisting = await isFile(filePath);
         if (!isExisting) {
             return true;
         }
         return this.askForOverwrite(filePath);
-    }
-
-    /**
-     * Checks if a file exists at the specified path
-     * @param filePath URI to check for existence
-     * @returns True if a file exists at the path, false otherwise
-     */
-    private async isExistingFile(filePath: vscode.Uri): Promise<boolean> {
-        try {
-            const stat = await vscode.workspace.fs.stat(filePath);
-            return (stat.type & vscode.FileType.File) === vscode.FileType.File;
-        } catch (error: unknown) {
-            return false;
-        }
     }
 
     /**

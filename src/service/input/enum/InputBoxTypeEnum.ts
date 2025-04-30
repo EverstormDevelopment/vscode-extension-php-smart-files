@@ -4,13 +4,13 @@
  */
 export enum InputBoxTypeEnum {
     /** Represents a regular PHP file */
-    File = 'File',
+    File = "File",
     /** Represents a PHP class */
-    Class = 'Class',
+    Class = "Class",
     /** Represents a PHP interface */
-    Interface = 'Interface',
+    Interface = "Interface",
     /** Represents a PHP enum */
-    Enum = 'Enum',
+    Enum = "Enum",
     /** Represents a PHP trait */
-    Trait = 'Trait',
+    Trait = "Trait",
 }

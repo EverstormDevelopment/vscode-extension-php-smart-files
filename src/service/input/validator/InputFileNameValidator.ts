@@ -15,12 +15,12 @@ export class InputFileNameValidator implements InputValidatorInterface {
         if (!input || input.trim().length === 0) {
             return vscode.l10n.t("Please enter a valid filename");
         }
-        
+
         const invalidChars = /[\\/:*?"<>|]/;
         if (invalidChars.test(input)) {
             return vscode.l10n.t("Filename contains invalid characters");
         }
-        
+
         return "";
     }
 }

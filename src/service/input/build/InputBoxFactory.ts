@@ -20,7 +20,7 @@ export class InputBoxFactory implements InputBoxFactoryInterface {
         [InputBoxTypeEnum.Class]: () => this.createClassInputBox(),
         [InputBoxTypeEnum.Interface]: () => this.createInterfaceInputBox(),
         [InputBoxTypeEnum.Enum]: () => this.createEnumInputBox(),
-        [InputBoxTypeEnum.Trait]: () => this.createTraitInputBox()
+        [InputBoxTypeEnum.Trait]: () => this.createTraitInputBox(),
     };
 
     /**

@@ -33,11 +33,11 @@
       "php-file-creator.submenu": [
         {
           "command": "php-file-creator.newEmptyPhpFile",
-          "group": "1_creation"
+          "group": "1_creation@1"
         },
         {
           "command": "php-file-creator.newEmptyPhpClass",
-          "group": "1_creation"
+          "group": "1_creation@2"
         }
       ]
     },

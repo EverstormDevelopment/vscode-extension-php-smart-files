@@ -12,14 +12,12 @@ import { NamespaceMatchType } from "./type/NamespaceMatchType";
 export class NamespaceResolver {
     /**
      * Creates a new instance of the NamespaceResolver.
-     *
      * @param composerJsonService Service for retrieving and parsing composer.json files
      */
     constructor(private readonly composerJsonService: ComposerJsonService) {}
 
     /**
      * Resolves the PHP namespace for a given file URI.
-     *
      * @param uri The URI of the file to resolve the namespace for
      * @returns The resolved PHP namespace or empty string if not resolvable
      */
@@ -48,7 +46,6 @@ export class NamespaceResolver {
 
     /**
      * Finds the namespace for a relative path using the provided namespace map and autoload type.
-     *
      * @param relativePath The file path relative to the composer.json directory
      * @param namespaceMap The mapping of namespace prefixes to directories
      * @param isPsr0 Whether to use PSR-0 or PSR-4 autoloading rules
@@ -70,7 +67,6 @@ export class NamespaceResolver {
 
     /**
      * Finds the best matching namespace prefix for a relative path.
-     *
      * @param relativePath The file path relative to the composer.json directory
      * @param namespaceMap The mapping of namespace prefixes to directories
      * @returns The best matching namespace information or undefined if not found
@@ -93,7 +89,6 @@ export class NamespaceResolver {
 
     /**
      * Finds the best matching directory for a path from a list of directories.
-     *
      * @param path The path to find a matching directory for
      * @param directories List of directories to check against
      * @param namespace The namespace associated with the directories
@@ -120,7 +115,6 @@ export class NamespaceResolver {
 
     /**
      * Checks if a path matches a directory and creates a match object if it does.
-     *
      * @param path The path to check
      * @param directory The directory to match against
      * @param namespace The namespace associated with the directory
@@ -137,7 +131,6 @@ export class NamespaceResolver {
     /**
      * Returns the best namespace match based on directory length.
      * Prefers matches with longer directory paths as they are more specific.
-     *
      * @param currentMatch The current best match
      * @param newMatch A new potential match to compare against
      * @returns The better match of the two or undefined if both are undefined
@@ -160,7 +153,6 @@ export class NamespaceResolver {
 
     /**
      * Builds a complete namespace string from a file path and namespace match.
-     *
      * @param filePath The file path to build a namespace for
      * @param namespaceMatch The matched namespace information
      * @param isPsr0 Whether to use PSR-0 or PSR-4 autoloading rules
@@ -180,7 +172,6 @@ export class NamespaceResolver {
 
     /**
      * Extracts namespace segments from a relative path and applies PSR-specific rules if needed.
-     *
      * @param relativePath The relative path to extract namespace segments from
      * @param namespacePrefix The namespace prefix
      * @param isPsr0 Whether to apply PSR-0 specific rules
@@ -200,7 +191,6 @@ export class NamespaceResolver {
 
     /**
      * Combines a namespace prefix with namespace segments to form a complete namespace.
-     *
      * @param namespacePrefix The namespace prefix
      * @param namespaceSegments The namespace segments to append
      * @returns The complete normalized namespace
@@ -208,7 +198,7 @@ export class NamespaceResolver {
     private buildNamespaceWithSegments(namespacePrefix: string, namespaceSegments: string[]): string {
         namespacePrefix = this.getNamespaceNormalized(namespacePrefix);
         if (namespaceSegments.length === 0) {
-            return this.getNamespaceNormalized(namespacePrefix);
+            return namespacePrefix;
         }
 
         const namespace = `${namespacePrefix}\\${namespaceSegments.join("\\")}`;
@@ -219,7 +209,6 @@ export class NamespaceResolver {
      * Removes the first segment from namespace segments if it matches the last part of the namespace prefix.
      * This is specific to PSR-0 autoloading, where the last part of the namespace prefix is already included
      * in the namespace and should not be duplicated in the path segments.
-     *
      * @param namespacePrefix The namespace prefix
      * @param namespaceSegments The segments of the namespace path
      */
@@ -232,12 +221,11 @@ export class NamespaceResolver {
     }
 
     /**
-     * Normalizes a namespace string by removing trailing backslashes.
-     *
+     * Normalizes a namespace string by removing leading and trailing backslashes.
      * @param namespace The namespace to normalize
      * @returns The normalized namespace string
      */
     private getNamespaceNormalized(namespace: string): string {
-        return namespace.replace(/\\$/, "");
+        return namespace.replace(/^\\|\\$/g, "");
     }
 }

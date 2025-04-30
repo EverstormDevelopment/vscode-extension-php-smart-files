@@ -1,5 +1,5 @@
-import * as vscode from "vscode";
 import * as path from "path";
+import * as vscode from "vscode";
 import { isFile } from "../../utils/isFile";
 
 /**
@@ -17,18 +17,15 @@ export class ComposerJsonFinder {
         const workspaceRoot = this.getWorkspaceRootUri(targetFolder);
 
         while (true) {
-            // Check for composer.json in current folder
             const composerJsonUri = vscode.Uri.joinPath(currentFolder, "composer.json");
             if (await isFile(composerJsonUri)) {
                 return composerJsonUri;
             }
 
-            // Break if we've reached the workspace root
             if (this.isWorkspaceRoot(currentFolder, workspaceRoot)) {
                 break;
             }
 
-            // Try to get parent folder, break if we can't go up further
             const parentFolder = this.getParentFolder(currentFolder);
             if (!parentFolder) {
                 break;

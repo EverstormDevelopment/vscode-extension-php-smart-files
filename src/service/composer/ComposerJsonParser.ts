@@ -1,10 +1,19 @@
 import * as vscode from "vscode";
-import { isFile } from "../../../utils/isFile";
+import { isFile } from "../../utils/isFile";
 
+/**
+ * Service to parse composer.json files
+ */
 export class ComposerJsonParser {
+    /**
+     * Parses a composer.json file
+     * @param composerJsonUri URI of the composer.json file to parse
+     * @returns Parsed composer.json content as an object
+     * @throws Error if the file cannot be read or parsed
+     */
     public async parse(composerJsonUri: vscode.Uri): Promise<any> {
         try {
-            if (!await isFile(composerJsonUri)) {
+            if (!(await isFile(composerJsonUri))) {
                 throw new Error(`Path is not a file: ${composerJsonUri.fsPath}`);
             }
 

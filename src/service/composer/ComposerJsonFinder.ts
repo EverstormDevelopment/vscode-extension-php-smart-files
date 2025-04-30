@@ -1,21 +1,26 @@
-import * as path from "path";
 import * as vscode from "vscode";
+import * as path from "path";
+import { isFile } from "../../utils/isFile";
 
+/**
+ * Service to find composer.json files in the directory hierarchy
+ * Searches for composer.json files starting from a target folder and traversing up
+ */
 export class ComposerJsonFinder {
-    public async find(targetUri: vscode.Uri): Promise<vscode.Uri | undefined> {
-        let currentFolder = targetUri;
-        const workspaceRoot = this.getWorkspaceRootUri(targetUri);
+    /**
+     * Finds a composer.json file starting from the target folder and moving up the directory hierarchy
+     * @param targetFolder The starting folder to search from
+     * @returns URI of the composer.json file or undefined if not found
+     */
+    public async find(targetFolder: vscode.Uri): Promise<vscode.Uri | undefined> {
+        let currentFolder = targetFolder;
+        const workspaceRoot = this.getWorkspaceRootUri(targetFolder);
 
         while (true) {
             // Check for composer.json in current folder
             const composerJsonUri = vscode.Uri.joinPath(currentFolder, "composer.json");
-            try {
-                const stat = await vscode.workspace.fs.stat(composerJsonUri);
-                if ((stat.type & vscode.FileType.File) === vscode.FileType.File) {
-                    return composerJsonUri;
-                }
-            } catch (error) {
-                // File doesn't exist in the current folder - continue searching
+            if (await isFile(composerJsonUri)) {
+                return composerJsonUri;
             }
 
             // Break if we've reached the workspace root

@@ -44,7 +44,7 @@ export class ComposerJsonService {
      */
     public async resolveAutoloadConfigs(uri: vscode.Uri): Promise<AutoloadConfigsType | undefined> {
         try {
-            const composerJson = this.parse(uri);
+            const composerJson = await this.parse(uri);
             return this.extractAutoloadConfigs(composerJson);
         } catch (error) {
             return;

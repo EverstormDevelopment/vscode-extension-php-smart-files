@@ -6,9 +6,9 @@ export type NamespaceMatchType = {
      * The directory path associated with the namespace
      */
     directory: string;
-    
+
     /**
      * The PHP namespace associated with the directory
      */
-    namespace: string
-}
+    namespace: string;
+};

@@ -161,12 +161,16 @@ export class NamespaceResolver {
     private buildNamespace(filePath: string, namespaceMatch: NamespaceMatchType, isPsr0: boolean): string {
         const relativeFilePath = path.relative(namespaceMatch.directory, filePath);
         const parsedFilePath = path.parse(relativeFilePath);
-        
+
         if (filePath === namespaceMatch.directory || !parsedFilePath.dir) {
             return this.getNamespaceNormalized(namespaceMatch.namespace);
         }
-    
-        const namespaceSegments = this.getNamespaceSegmentsFromPath(parsedFilePath.dir, namespaceMatch.namespace, isPsr0);
+
+        const namespaceSegments = this.getNamespaceSegmentsFromPath(
+            parsedFilePath.dir,
+            namespaceMatch.namespace,
+            isPsr0
+        );
         return this.buildNamespaceWithSegments(namespaceMatch.namespace, namespaceSegments);
     }
 
@@ -181,7 +185,7 @@ export class NamespaceResolver {
         if (!relativePath) {
             return [];
         }
-        
+
         const namespaceSegments = relativePath.split(/[/\\]/);
         if (isPsr0) {
             this.removeDuplicateNamespaceSegmentsForPsr0(namespacePrefix, namespaceSegments);

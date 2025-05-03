@@ -3,12 +3,13 @@ import { NewEmptyPhpFileCommand } from "../command/explorer/NewEmptyPhpFileComma
 import { ComposerJsonFinder } from "../service/composer/ComposerJsonFinder";
 import { ComposerJsonParser } from "../service/composer/ComposerJsonParser";
 import { ComposerJsonService } from "../service/composer/ComposerJsonService";
-import { UriFolderResolver } from "../service/uri/UriFolderResolver";
+import { FileCreator } from "../service/file/creator/FileCreator";
+import { FileGenerator } from "../service/file/generator/model/FileGenerator";
 import { InputBoxFactory } from "../service/input/build/InputBoxFactory";
 import { NamespaceResolver } from "../service/namespace/NamespaceResolver";
-import { PhpSnippetFactory } from "../service/snippet/build/PhpSnippetFactory";
+import { SnippetFactory } from "../service/snippet/build/SnippetFactory";
+import { UriFolderResolver } from "../service/uri/UriFolderResolver";
 import { ContainerRegistrationType } from "./type/ContainerRegistrationType";
-import { FileCreator } from "../service/file/creator/FileCreator";
 
 /**
  * Registry for all services in the application that should
@@ -44,8 +45,12 @@ export const ContainerRegistry: ContainerRegistrationType[] = [
         dependencies: [ComposerJsonService],
     },
     {
-        constructor: PhpSnippetFactory,
+        constructor: SnippetFactory,
         dependencies: [],
+    },
+    {
+        constructor: FileGenerator,
+        dependencies: [UriFolderResolver, InputBoxFactory, FileCreator, NamespaceResolver, SnippetFactory],
     },
     {
         constructor: NewEmptyPhpFileCommand,
@@ -53,6 +58,6 @@ export const ContainerRegistry: ContainerRegistrationType[] = [
     },
     {
         constructor: NewEmptyPhpClassCommand,
-        dependencies: [],
+        dependencies: [FileGenerator],
     },
 ];

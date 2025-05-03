@@ -78,7 +78,6 @@ export class ComposerJsonService {
                 continue;
             }
             for (const [namespace, dirs] of Object.entries(composerJson[autoLoadType][psr] || {})) {
-                // Convert single directory string to array for consistent handling
                 const directories = Array.isArray(dirs) ? dirs : [dirs as string];
                 result[namespace] = directories;
             }

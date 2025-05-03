@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
-import { Extension } from "./extension/model/Extension";
 import { ExtensionInterface } from "./extension/interface/ExtensionInterface";
+import { Extension } from "./extension/model/Extension";
 
 /**
  * Reference to the extension instance, used for activation and deactivation.
@@ -22,7 +22,7 @@ export function deactivate() {
     if (!extension) {
         return;
     }
-    
+
     extension.deactivate();
     extension = undefined;
 }

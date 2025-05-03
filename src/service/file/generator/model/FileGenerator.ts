@@ -1,12 +1,11 @@
 import path from "path";
 import * as vscode from "vscode";
-import { InputBoxFileType } from "../../../input/type/InputBoxFileType";
 import { InputBoxFactoryInterface } from "../../../input/interface/InputBoxFactoryInterface";
 import { NamespaceResolver } from "../../../namespace/NamespaceResolver";
-import { SnippetFactoryFileType } from "../../../snippet/type/SnippetFactoryFileType";
 import { SnippetFactoryInterface } from "../../../snippet/interface/SnippetFactoryInterface";
 import { UriFolderResolver } from "../../../uri/UriFolderResolver";
 import { FileCreator } from "../../creator/FileCreator";
+import { FileTypeEnum } from "../../../../utils/enum/FileTypeEnum";
 
 export class FileGenerator {
     constructor(
@@ -49,7 +48,7 @@ export class FileGenerator {
     }
 
     private async getFileName(): Promise<string | undefined> {
-        const testDialog = this.inputBoxFactory.create(InputBoxFileType.File);
+        const testDialog = this.inputBoxFactory.create(FileTypeEnum.File);
         return testDialog.prompt();
     }
 
@@ -76,7 +75,7 @@ export class FileGenerator {
     }
 
     private getSnippet(identifier: string, namespace: string | undefined): vscode.SnippetString {
-        return this.snippedFactory.create(SnippetFactoryFileType.Class, identifier, namespace);
+        return this.snippedFactory.create(FileTypeEnum.Class, identifier, namespace);
     }
 
     private async openFileInEditor(filePath: vscode.Uri): Promise<vscode.TextEditor> {

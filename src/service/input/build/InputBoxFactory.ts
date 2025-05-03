@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { InputBoxFileType } from "../type/InputBoxFileType";
+import { FileTypeEnum } from '../../../utils/enum/FileTypeEnum';
 import { InputBoxFactoryInterface } from "../interface/InputBoxFactoryInterface";
 import { InputBoxInterface } from "../interface/InputInterface";
 import { InputPhpFileNameProcessor } from "../processor/InputPhpFileNameProcessor";
@@ -15,12 +15,12 @@ export class InputBoxFactory implements InputBoxFactoryInterface {
     /**
      * Map of factory methods for different input box types
      */
-    private readonly creators: Record<InputBoxFileType, () => InputBoxInterface> = {
-        [InputBoxFileType.File]: () => this.createFileInputBox(),
-        [InputBoxFileType.Class]: () => this.createClassInputBox(),
-        [InputBoxFileType.Interface]: () => this.createInterfaceInputBox(),
-        [InputBoxFileType.Enum]: () => this.createEnumInputBox(),
-        [InputBoxFileType.Trait]: () => this.createTraitInputBox(),
+    private readonly creators: Record<FileTypeEnum, () => InputBoxInterface> = {
+        [FileTypeEnum.File]: () => this.createFileInputBox(),
+        [FileTypeEnum.Class]: () => this.createClassInputBox(),
+        [FileTypeEnum.Interface]: () => this.createInterfaceInputBox(),
+        [FileTypeEnum.Enum]: () => this.createEnumInputBox(),
+        [FileTypeEnum.Trait]: () => this.createTraitInputBox(),
     };
 
     /**
@@ -29,7 +29,7 @@ export class InputBoxFactory implements InputBoxFactoryInterface {
      * @returns An input box interface implementation
      * @throws Error if the specified type is not supported
      */
-    public create(type: InputBoxFileType): InputBoxInterface {
+    public create(type: FileTypeEnum): InputBoxInterface {
         const creator = this.creators[type];
         if (!creator) {
             throw new Error(`Unknown input box type: ${type}`);

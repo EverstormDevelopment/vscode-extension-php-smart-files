@@ -6,11 +6,8 @@ import { ExplorerCommandInterface } from "./command/interface/ExplorerCommandInt
 import { ContainerFactory } from "./container/ContainerFactory";
 import { ContainerInterface } from "./container/interface/ContainerInterface";
 import { ConstructorType } from "./container/type/ConstructorType";
+import { ExtensionId } from "./extension/ExtensionId";
 
-/**
- * Extension identifier used as prefix for all commands
- */
-const EXTENSION_ID = "php-file-creator";
 
 /**
  * Global container instance to be available throughout the extension lifecycle
@@ -22,7 +19,7 @@ let container: ContainerInterface | undefined;
  * @param context The extension context provided by VS Code
  */
 export function activate(context: vscode.ExtensionContext) {
-    console.log(`Congratulations, your extension "${EXTENSION_ID}" is now active!`);
+    console.log(`Congratulations, your extension "${ExtensionId}" is now active!`);
 
     container = ContainerFactory.createDefaultContainer();
     const commands: Record<string, ConstructorType<ExplorerCommandInterface>> = {
@@ -46,7 +43,7 @@ function registerCommand(
     constructor: ConstructorType<ExplorerCommandInterface>,
     context: vscode.ExtensionContext
 ): void {
-    const commandId = `${EXTENSION_ID}.${name}`;
+    const commandId = `${ExtensionId}.${name}`;
     const command = vscode.commands.registerCommand(commandId, createCommandCallback(constructor, name));
     context.subscriptions.push(command);
 }
@@ -63,7 +60,7 @@ function createCommandCallback(
 ): (uri?: vscode.Uri) => Promise<void> {
     return async (uri?: vscode.Uri) => {
         if (!container) {
-            vscode.window.showErrorMessage(`${EXTENSION_ID}: Container not initialized`);
+            vscode.window.showErrorMessage(`${ExtensionId}: Container not initialized`);
             return;
         }
 
@@ -71,7 +68,7 @@ function createCommandCallback(
             await container.get(constructor).execute(uri);
         } catch (error) {
             vscode.window.showErrorMessage(
-                `${EXTENSION_ID}: Error executing ${commandName}: ${
+                `${ExtensionId}: Error executing ${commandName}: ${
                     error instanceof Error ? error.message : String(error)
                 }`
             );
@@ -85,5 +82,5 @@ function createCommandCallback(
  */
 export function deactivate() {
     container = undefined;
-    console.log(`Extension "${EXTENSION_ID}" has been deactivated.`);
+    console.log(`Extension "${ExtensionId}" has been deactivated.`);
 }

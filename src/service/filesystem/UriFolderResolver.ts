@@ -11,8 +11,8 @@ export class UriFolderResolver {
      * @param uri The URI from the command context (if available)
      * @returns The target folder URI or undefined if not determinable
      */
-    public getTargetFolder(uri?: vscode.Uri): vscode.Uri | undefined {
-        return this.resolveFromUri(uri) || this.resolveFromActiveEditor() || this.resolveFromWorkspace();
+    public async getTargetFolder(uri?: vscode.Uri): Promise<vscode.Uri | undefined> {
+        return this.resolveFromUri(uri) || this.resolveFromActiveEditor() || (await this.resolveFromWorkspace());
     }
 
     /**
@@ -50,14 +50,30 @@ export class UriFolderResolver {
     }
 
     /**
-     * Attempts to resolve a folder from the workspace folders
-     * @returns The resolved folder or undefined
+     * Attempts to resolve a folder from the workspace folders. If multiple
+     * workspaces are available, prompts the user to select one
+     * @returns Promise resolving to the selected folder or undefined
      */
-    private resolveFromWorkspace(): vscode.Uri | undefined {
+    private async resolveFromWorkspace(): Promise<vscode.Uri | undefined> {
         if (!vscode.workspace.workspaceFolders || vscode.workspace.workspaceFolders.length === 0) {
             return undefined;
         }
 
-        return vscode.workspace.workspaceFolders[0].uri;
+        if (vscode.workspace.workspaceFolders.length === 1) {
+            return vscode.workspace.workspaceFolders[0].uri;
+        }
+
+        const workspaceOptions = vscode.workspace.workspaceFolders.map((folder) => ({
+            label: folder.name,
+            description: folder.uri.fsPath,
+            uri: folder.uri,
+        }));
+
+        const selectedWorkspace = await vscode.window.showQuickPick(workspaceOptions, {
+            placeHolder: vscode.l10n.t("Please select a workspace folder"),
+            canPickMany: false,
+        });
+
+        return selectedWorkspace?.uri;
     }
 }

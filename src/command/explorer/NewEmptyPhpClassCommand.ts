@@ -28,7 +28,7 @@ export class NewEmptyPhpClassCommand implements ExplorerCommandInterface {
      */
     async execute(uri?: vscode.Uri): Promise<void> {
         // Determine the target folder based on context
-        const targetFolder = this.uriFolderResolver.getTargetFolder(uri);
+        const targetFolder = await this.uriFolderResolver.getTargetFolder(uri);
         if (!targetFolder) {
             vscode.window.showErrorMessage(vscode.l10n.t("No target folder selected or no workspace opened."));
             return;

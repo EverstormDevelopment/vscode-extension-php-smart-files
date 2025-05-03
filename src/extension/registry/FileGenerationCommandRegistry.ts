@@ -6,4 +6,4 @@ export const FileGenerationCommandRegistry: Record<string, FileTypeEnum> = {
     newEmptyPhpInterface: FileTypeEnum.Interface,
     newEmptyPhpEnum: FileTypeEnum.Enum,
     newEmptyPhpTrait: FileTypeEnum.Trait,
-}
+};

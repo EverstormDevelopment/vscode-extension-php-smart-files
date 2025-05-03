@@ -3,6 +3,7 @@ import { FileTypeEnum } from "../../../utils/enum/FileTypeEnum";
 import { SnippetFactoryInterface } from '../interface/SnippetFactoryInterface';
 import { SnippetTypeFactoryInterface } from '../interface/SnippetTypeFactoryInterface';
 import { SnippetClassFactory } from './SnippetClassFactory';
+import { SnippetFileFactory } from "./SnippetFileFactory";
 
 /**
  * Factory class for creating PHP snippets.
@@ -14,7 +15,7 @@ export class SnippetFactory implements SnippetFactoryInterface {
      * Registry of factory functions for different PHP snippet types
      */
     private readonly factories: Record<FileTypeEnum, () => SnippetTypeFactoryInterface> = {
-        [FileTypeEnum.File]: () => new SnippetClassFactory(),
+        [FileTypeEnum.File]: () => new SnippetFileFactory(),
         [FileTypeEnum.Class]: () => new SnippetClassFactory(),
         [FileTypeEnum.Interface]: () => new SnippetClassFactory(),
         [FileTypeEnum.Enum]: () => new SnippetClassFactory(),

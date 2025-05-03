@@ -7,6 +7,10 @@ import { SnippetEnumFactory } from "./SnippetEnumFactory";
 import { SnippetFileFactory } from "./SnippetFileFactory";
 import { SnippetInterfaceFactory } from "./SnippetInterfaceFactory";
 import { SnippetTraitFactory } from "./SnippetTraitFactory";
+import { SnippetTemplateClassFactory } from "./SnippetTemplateClassFactory";
+import { SnippetTemplateInterfaceFactory } from "./SnippetTemplateInterfaceFactory";
+import { SnippetTemplateEnumFactory } from "./SnippetTemplateEnumFactory";
+import { SnippetTemplateTraitFactory } from "./SnippetTemplateTraitFactory";
 
 /**
  * Factory class for creating PHP snippets.
@@ -23,6 +27,11 @@ export class SnippetFactory implements SnippetFactoryInterface {
         [FileTypeEnum.Interface]: () => new SnippetInterfaceFactory(),
         [FileTypeEnum.Enum]: () => new SnippetEnumFactory(),
         [FileTypeEnum.Trait]: () => new SnippetTraitFactory(),
+
+        [FileTypeEnum.TemplateClass]: () => new SnippetTemplateClassFactory(),
+        [FileTypeEnum.TemplateInterface]: () => new SnippetTemplateInterfaceFactory(),
+        [FileTypeEnum.TemplateEnum]: () => new SnippetTemplateEnumFactory(),
+        [FileTypeEnum.TemplateTrait]: () => new SnippetTemplateTraitFactory(),
     };
 
     /**

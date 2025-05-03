@@ -9,32 +9,28 @@ import { InputBoxBuilder } from "./InputBoxBuilder";
 
 /**
  * Factory for creating input boxes based on type
- * This class uses the Factory pattern to create different types of input boxes
  */
 export class InputBoxFactory implements InputBoxFactoryInterface {
-    /**
-     * Map of factory methods for different input box types
-     */
-    private readonly creators: Record<FileTypeEnum, () => InputBoxInterface> = {
-        [FileTypeEnum.File]: () => this.createFileInputBox(),
-        [FileTypeEnum.Class]: () => this.createClassInputBox(),
-        [FileTypeEnum.Interface]: () => this.createInterfaceInputBox(),
-        [FileTypeEnum.Enum]: () => this.createEnumInputBox(),
-        [FileTypeEnum.Trait]: () => this.createTraitInputBox(),
-    };
 
-    /**
-     * Creates an input box for the specified type
-     * @param type The type of input box to create
-     * @returns An input box interface implementation
-     * @throws Error if the specified type is not supported
-     */
     public create(type: FileTypeEnum): InputBoxInterface {
-        const creator = this.creators[type];
-        if (!creator) {
-            throw new Error(`Unknown input box type: ${type}`);
-        }
-        return creator();
+        switch (type) {
+            case FileTypeEnum.File:
+                return this.createFileInputBox();
+            case FileTypeEnum.Class:
+            case FileTypeEnum.TemplateClass:
+                return this.createClassInputBox();
+            case FileTypeEnum.Interface:
+            case FileTypeEnum.TemplateInterface:
+                return this.createInterfaceInputBox();
+            case FileTypeEnum.Enum:
+            case FileTypeEnum.TemplateEnum:
+                return this.createEnumInputBox();
+            case FileTypeEnum.Trait:
+            case FileTypeEnum.TemplateTrait:
+                return this.createTraitInputBox();
+            default:
+                throw new Error(`Unknown input box type: ${type}`);
+        }        
     }
 
     /**

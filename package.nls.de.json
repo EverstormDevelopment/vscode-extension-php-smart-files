@@ -4,5 +4,9 @@
   "php-file-creator.commands.newEmptyPhpInterface.title": "Neues PHP-Interface",
   "php-file-creator.commands.newEmptyPhpEnum.title": "Neuer PHP-Enum",
   "php-file-creator.commands.newEmptyPhpTrait.title": "Neuer PHP-Trait",
+  "php-file-creator.commands.newTemplatePhpClass.title": "Neue PHP-Klasse aus Vorlage",
+  "php-file-creator.commands.newTemplatePhpInterface.title": "Neues PHP-Interface aus Vorlage",
+  "php-file-creator.commands.newTemplatePhpEnum.title": "Neuer PHP-Enum aus Vorlage",
+  "php-file-creator.commands.newTemplatePhpTrait.title": "Neuer PHP-Trait aus Vorlage",
   "php-file-creator.submenus.main.label": "PHP-Datei erstellen"
 }

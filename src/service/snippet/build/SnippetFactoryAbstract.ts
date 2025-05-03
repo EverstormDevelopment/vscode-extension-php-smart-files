@@ -78,6 +78,11 @@ export abstract class SnippetFactoryAbstract implements SnippetTypeFactoryInterf
         return this;
     }
 
+    protected addLineBreak(): this {
+        this.snippet.appendText("\n");
+        return this;
+    }
+
     /**
      * Returns the completed snippet
      * @returns The VS Code snippet string

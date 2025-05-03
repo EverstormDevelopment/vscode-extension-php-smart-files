@@ -4,5 +4,9 @@
   "php-file-creator.commands.newEmptyPhpInterface.title": "New PHP interface",
   "php-file-creator.commands.newEmptyPhpEnum.title": "New PHP enum",
   "php-file-creator.commands.newEmptyPhpTrait.title": "New PHP trait",
+  "php-file-creator.commands.newTemplatePhpClass.title": "New PHP class from template",
+  "php-file-creator.commands.newTemplatePhpInterface.title": "New PHP interface from template",
+  "php-file-creator.commands.newTemplatePhpEnum.title": "New PHP enum from template",
+  "php-file-creator.commands.newTemplatePhpTrait.title": "New PHP trait from template",
   "php-file-creator.submenus.main.label": "Create PHP File"
 }

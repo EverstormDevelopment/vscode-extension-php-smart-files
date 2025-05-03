@@ -16,14 +16,14 @@ export class FileGenerator {
         private readonly snippedFactory: SnippetFactoryInterface
     ) {}
 
-    async execute(uri?: vscode.Uri): Promise<void> {
+    async execute(fileType: FileTypeEnum, uri?: vscode.Uri): Promise<void> {
         const targetFolder = await this.getTargetFolder(uri);
         if (!targetFolder) {
             vscode.window.showErrorMessage(vscode.l10n.t("No target folder selected or no workspace opened."));
             return;
         }
 
-        const fileName = await this.getFileName();
+        const fileName = await this.getFileName(fileType);
         if (!fileName) {
             return;
         }
@@ -38,7 +38,7 @@ export class FileGenerator {
         
         const identifier = this.getIdentifier(filePath);
         const namespace = await this.getNamespace(filePath);
-        const snippet = this.getSnippet(identifier, namespace);
+        const snippet = this.getSnippet(fileType, identifier, namespace);
 
         await this.insertSnippet(editor, snippet);
     }
@@ -47,8 +47,8 @@ export class FileGenerator {
         return this.uriFolderResolver.getTargetFolder(uri);
     }
 
-    private async getFileName(): Promise<string | undefined> {
-        const testDialog = this.inputBoxFactory.create(FileTypeEnum.File);
+    private async getFileName(fileType: FileTypeEnum): Promise<string | undefined> {
+        const testDialog = this.inputBoxFactory.create(fileType);
         return testDialog.prompt();
     }
 
@@ -74,8 +74,8 @@ export class FileGenerator {
         return path.parse(baseName).name;
     }
 
-    private getSnippet(identifier: string, namespace: string | undefined): vscode.SnippetString {
-        return this.snippedFactory.create(FileTypeEnum.Class, identifier, namespace);
+    private getSnippet(fileType: FileTypeEnum, identifier: string, namespace: string | undefined): vscode.SnippetString {
+        return this.snippedFactory.create(fileType, identifier, namespace);
     }
 
     private async openFileInEditor(filePath: vscode.Uri): Promise<vscode.TextEditor> {

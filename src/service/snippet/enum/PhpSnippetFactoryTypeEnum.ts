@@ -1,3 +1,6 @@
+/**
+ * Enum for different PHP snippet factory types.
+ */
 export enum PhpSnippetFactoryTypeEnum {
     File = "File",
     Class = "Class",

@@ -1,16 +1,32 @@
 import { PhpSnippetFactoryAbstract } from "./PhpSnippetFactoryAbstract";
 
+/**
+ * Factory for creating PHP class snippets.
+ */
 export class PhpSnippetClassFactory extends PhpSnippetFactoryAbstract {
+    /**
+     * Opens a class declaration block with the given identifier
+     * @param identifier - The name of the PHP class
+     * @returns This instance for method chaining
+     */
     protected openDeclaration(identifier?: string): this {
         this.snippet.appendText(`class ${identifier} {\n`);
         return this;
     }
 
+    /**
+     * Closes the class declaration block
+     * @returns This instance for method chaining
+     */
     protected closeDeclaration(): this {
         this.snippet.appendText(`}\n`);
         return this;
     }
 
+    /**
+     * Adds a sample method inside the class declaration
+     * @returns This instance for method chaining
+     */
     protected addContent(): this {
         this.snippet.appendText("    ");
         this.snippet.appendText("public function ");

@@ -1,11 +1,11 @@
 import path from "path";
 import * as vscode from "vscode";
-import { InputBoxFactoryInterface } from "../../../input/interface/InputBoxFactoryInterface";
-import { NamespaceResolver } from "../../../namespace/NamespaceResolver";
-import { SnippetFactoryInterface } from "../../../snippet/interface/SnippetFactoryInterface";
-import { UriFolderResolver } from "../../../uri/UriFolderResolver";
-import { FileCreator } from "../../creator/FileCreator";
-import { FileTypeEnum } from "../../../../utils/enum/FileTypeEnum";
+import { InputBoxFactoryInterface } from "../../input/interface/InputBoxFactoryInterface";
+import { NamespaceResolver } from "../../namespace/NamespaceResolver";
+import { SnippetFactoryInterface } from "../../snippet/interface/SnippetFactoryInterface";
+import { UriFolderResolver } from "../../uri/UriFolderResolver";
+import { FileCreator } from "../creator/FileCreator";
+import { FileTypeEnum } from "../../../utils/enum/FileTypeEnum";
 
 export class FileGenerator {
     constructor(

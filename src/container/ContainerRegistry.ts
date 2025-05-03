@@ -4,7 +4,7 @@ import { ComposerJsonFinder } from "../service/composer/ComposerJsonFinder";
 import { ComposerJsonParser } from "../service/composer/ComposerJsonParser";
 import { ComposerJsonService } from "../service/composer/ComposerJsonService";
 import { FileCreator } from "../service/file/creator/FileCreator";
-import { FileGenerator } from "../service/file/generator/model/FileGenerator";
+import { FileGenerator } from "../service/file/generator/FileGenerator";
 import { InputBoxFactory } from "../service/input/build/InputBoxFactory";
 import { NamespaceResolver } from "../service/namespace/NamespaceResolver";
 import { SnippetFactory } from "../service/snippet/build/SnippetFactory";

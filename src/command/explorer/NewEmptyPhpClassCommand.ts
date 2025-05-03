@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { ExplorerCommandInterface } from "../interface/ExplorerCommandInterface";
-import { FileGenerator } from './../../service/file/generator/model/FileGenerator';
+import { FileGenerator } from '../../service/file/generator/FileGenerator';
 
 /**
  * Command to create a new PHP class file

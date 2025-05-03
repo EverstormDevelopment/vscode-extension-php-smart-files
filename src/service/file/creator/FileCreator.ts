@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as vscode from "vscode";
-import { isFile } from "../../utils/filesystem/isFile";
+import { isFile } from "../../../utils/filesystem/isFile";
 
 /**
  * Service to create files in the workspace

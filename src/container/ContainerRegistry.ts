@@ -3,11 +3,12 @@ import { NewEmptyPhpFileCommand } from "../command/explorer/NewEmptyPhpFileComma
 import { ComposerJsonFinder } from "../service/composer/ComposerJsonFinder";
 import { ComposerJsonParser } from "../service/composer/ComposerJsonParser";
 import { ComposerJsonService } from "../service/composer/ComposerJsonService";
-import { FileCreator } from "../service/filesystem/FileCreator";
-import { UriFolderResolver } from "../service/filesystem/UriFolderResolver";
+import { UriFolderResolver } from "../service/uri/UriFolderResolver";
 import { InputBoxFactory } from "../service/input/build/InputBoxFactory";
 import { NamespaceResolver } from "../service/namespace/NamespaceResolver";
+import { PhpSnippetFactory } from "../service/snippet/build/PhpSnippetFactory";
 import { ContainerRegistrationType } from "./type/ContainerRegistrationType";
+import { FileCreator } from "../service/file/creator/FileCreator";
 
 /**
  * Registry for all services in the application that should
@@ -43,11 +44,15 @@ export const ContainerRegistry: ContainerRegistrationType[] = [
         dependencies: [ComposerJsonService],
     },
     {
+        constructor: PhpSnippetFactory,
+        dependencies: [],
+    },
+    {
         constructor: NewEmptyPhpFileCommand,
-        dependencies: [UriFolderResolver, InputBoxFactory, FileCreator, ComposerJsonService],
+        dependencies: [],
     },
     {
         constructor: NewEmptyPhpClassCommand,
-        dependencies: [UriFolderResolver, InputBoxFactory, FileCreator, NamespaceResolver],
+        dependencies: [],
     },
 ];

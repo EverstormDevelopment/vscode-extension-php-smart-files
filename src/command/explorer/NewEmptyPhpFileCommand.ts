@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
 import { ComposerJsonService } from "../../service/composer/ComposerJsonService";
-import { FileCreator } from "../../service/filesystem/FileCreator";
-import { UriFolderResolver } from "../../service/filesystem/UriFolderResolver";
+import { UriFolderResolver } from "../../service/uri/UriFolderResolver";
 import { InputBoxTypeEnum } from "../../service/input/enum/InputBoxTypeEnum";
 import { ExplorerCommandInterface } from "../interface/ExplorerCommandInterface";
 import { InputBoxFactoryInterface } from './../../service/input/interface/InputBoxFactoryInterface';

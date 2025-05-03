@@ -1,7 +1,6 @@
 import path from "path";
 import * as vscode from "vscode";
-import { FileCreator } from "../../service/filesystem/FileCreator";
-import { UriFolderResolver } from "../../service/filesystem/UriFolderResolver";
+import { UriFolderResolver } from "../../service/uri/UriFolderResolver";
 import { InputBoxTypeEnum } from "../../service/input/enum/InputBoxTypeEnum";
 import { InputBoxFactoryInterface } from "../../service/input/interface/InputBoxFactoryInterface";
 import { NamespaceResolver } from "../../service/namespace/NamespaceResolver";
@@ -9,6 +8,7 @@ import { PhpSnippetClassFactory } from "../../service/snippet/build/PhpSnippetCl
 import { ExplorerCommandInterface } from "../interface/ExplorerCommandInterface";
 import { PhpSnippetFactory } from "../../service/snippet/build/PhpSnippetFactory";
 import { PhpSnippetFactoryTypeEnum } from "../../service/snippet/enum/PhpSnippetFactoryTypeEnum";
+import { FileCreator } from "../../service/file/creator/FileCreator";
 
 /**
  * Command to create a new PHP class file
@@ -64,18 +64,14 @@ export class NewEmptyPhpClassCommand implements ExplorerCommandInterface {
         const editor = await vscode.window.showTextDocument(document);
 
         // Prüfe, ob die Datei bereits geöffnet ist
-        const existingDocument = vscode.workspace.textDocuments.find(doc => 
-            doc.uri.fsPath === filePath.fsPath);
-            
+        const existingDocument = vscode.workspace.textDocuments.find((doc) => doc.uri.fsPath === filePath.fsPath);
+
         if (existingDocument) {
             // Wenn die Datei bereits geöffnet ist, lade den Inhalt neu
-            await vscode.commands.executeCommand('workbench.action.files.revert', existingDocument.uri);
+            await vscode.commands.executeCommand("workbench.action.files.revert", existingDocument.uri);
         }
-        
-        
+
         // Insert the snippet at the beginning of the document
         await editor.insertSnippet(snippet, new vscode.Position(0, 0));
-        
-        
     }
 }

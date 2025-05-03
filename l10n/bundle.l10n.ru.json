@@ -1,0 +1,38 @@
+{
+  "Create PHP File": "Создать PHP файл",
+  "Enter filename (without .php)": "Введите имя файла (без .php)",
+  "Enter a name for the new PHP file": "Введите имя для нового PHP файла",
+  
+  "Create PHP Class": "Создать PHP класс",
+  "Enter class name": "Введите имя класса",
+  "Enter a name for the new PHP class": "Введите имя для нового PHP класса",
+  
+  "Create PHP Interface": "Создать PHP интерфейс",
+  "Enter interface name": "Введите имя интерфейса",
+  "Enter a name for the new PHP interface": "Введите имя для нового PHP интерфейса",
+  
+  "Create PHP Enum": "Создать PHP перечисление",
+  "Enter enum name": "Введите имя перечисления",
+  "Enter a name for the new PHP enum": "Введите имя для нового PHP перечисления",
+  
+  "Create PHP Trait": "Создать PHP трейт",
+  "Enter trait name": "Введите имя трейта",
+  "Enter a name for the new PHP trait": "Введите имя для нового PHP трейта",
+  
+  "Please select a workspace folder": "Пожалуйста, выберите рабочую папку",
+  "No target folder selected or no workspace opened.": "Целевая папка не выбрана или рабочая область не открыта.",
+  
+  "The file '{0}' already exists. Overwrite?": "Файл '{0}' уже существует. Перезаписать?",
+  "Overwrite": "Перезаписать",
+  "Cancel": "Отмена",
+  "Error creating file: {0}": "Ошибка при создании файла: {0}",
+  "Error reading composer.json": "Ошибка чтения composer.json",
+
+  "Please enter a valid filename": "Пожалуйста, введите корректное имя файла",
+  "Filename contains invalid characters": "Имя файла содержит недопустимые символы",
+  "Please enter a valid definition name": "Пожалуйста, введите корректное имя определения",
+  "Definition name must start with a letter or underscore": "Имя определения должно начинаться с буквы или подчеркивания",
+  "Definition name must start with an uppercase letter or underscore": "Имя определения должно начинаться с заглавной буквы или подчеркивания",
+  "Definition name can only contain letters, numbers, and underscores": "Имя определения может содержать только буквы, цифры и подчеркивания",
+  "Cannot use PHP reserved keyword as definition name": "Невозможно использовать зарезервированное слово PHP в качестве имени определения"
+}

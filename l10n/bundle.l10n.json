@@ -1,24 +1,38 @@
 {
-  "Hello World from PHP File Creator!": "Hello World from PHP File Creator!",
-  "No target folder selected or no workspace opened.": "No target folder selected or no workspace opened.",
-  "Create new empty PHP file": "Create new empty PHP file",
+  "Create PHP File": "Create PHP File",
   "Enter filename (without .php)": "Enter filename (without .php)",
   "Enter a name for the new PHP file": "Enter a name for the new PHP file",
-  "Please enter a valid filename": "Please enter a valid filename",
-  "The file '{0}' already exists. Overwrite?": "The file '{0}' already exists. Overwrite?",
-  "Overwrite": "Overwrite",
-  "Empty PHP file created with PHP File Creator": "Empty PHP file created with PHP File Creator",
-  "Empty PHP file '{0}' has been created.": "Empty PHP file '{0}' has been created.",
-  "Error creating PHP file: {0}": "Error creating PHP file: {0}",
-  "Create new PHP class": "Create new PHP class",
+  
+  "Create PHP Class": "Create PHP Class",
   "Enter class name": "Enter class name",
   "Enter a name for the new PHP class": "Enter a name for the new PHP class",
-  "Please enter a class name": "Please enter a class name",
-  "Class name must start with a letter and can only contain letters, numbers and underscores": "Class name must start with a letter and can only contain letters, numbers and underscores",
-  "Created with PHP File Creator": "Created with PHP File Creator",
-  "Initialize here": "Initialize here",
-  "Add methods here": "Add methods here",
-  "PHP class '{0}' has been created.": "PHP class '{0}' has been created.",
-  "Error creating PHP class file: {0}": "Error creating PHP class file: {0}",
-  "Error checking URI path: {0}": "Error checking URI path: {0}"
+  
+  "Create PHP Interface": "Create PHP Interface",
+  "Enter interface name": "Enter interface name",
+  "Enter a name for the new PHP interface": "Enter a name for the new PHP interface",
+  
+  "Create PHP Enum": "Create PHP Enum",
+  "Enter enum name": "Enter enum name",
+  "Enter a name for the new PHP enum": "Enter a name for the new PHP enum",
+  
+  "Create PHP Trait": "Create PHP Trait",
+  "Enter trait name": "Enter trait name",
+  "Enter a name for the new PHP trait": "Enter a name for the new PHP trait",
+  
+  "Please select a workspace folder": "Please select a workspace folder",
+  "No target folder selected or no workspace opened.": "No target folder selected or no workspace opened.",
+  
+  "The file '{0}' already exists. Overwrite?": "The file '{0}' already exists. Overwrite?",
+  "Overwrite": "Overwrite",
+  "Cancel": "Cancel",
+  "Error creating file: {0}": "Error creating file: {0}",
+  "Error reading composer.json": "Error reading composer.json",
+
+  "Please enter a valid filename": "Please enter a valid filename",
+  "Filename contains invalid characters": "Filename contains invalid characters",
+  "Please enter a valid definition name": "Please enter a valid definition name",
+  "Definition name must start with a letter or underscore": "Definition name must start with a letter or underscore",
+  "Definition name must start with an uppercase letter or underscore": "Definition name must start with an uppercase letter or underscore",
+  "Definition name can only contain letters, numbers, and underscores": "Definition name can only contain letters, numbers, and underscores",
+  "Cannot use PHP reserved keyword as definition name": "Cannot use PHP reserved keyword as definition name"
 }

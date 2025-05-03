@@ -1,0 +1,38 @@
+{
+  "Create PHP File": "Créer un fichier PHP",
+  "Enter filename (without .php)": "Entrez le nom du fichier (sans .php)",
+  "Enter a name for the new PHP file": "Entrez un nom pour le nouveau fichier PHP",
+  
+  "Create PHP Class": "Créer une classe PHP",
+  "Enter class name": "Entrez le nom de la classe",
+  "Enter a name for the new PHP class": "Entrez un nom pour la nouvelle classe PHP",
+  
+  "Create PHP Interface": "Créer une interface PHP",
+  "Enter interface name": "Entrez le nom de l'interface",
+  "Enter a name for the new PHP interface": "Entrez un nom pour la nouvelle interface PHP",
+  
+  "Create PHP Enum": "Créer un enum PHP",
+  "Enter enum name": "Entrez le nom de l'enum",
+  "Enter a name for the new PHP enum": "Entrez un nom pour le nouvel enum PHP",
+  
+  "Create PHP Trait": "Créer un trait PHP",
+  "Enter trait name": "Entrez le nom du trait",
+  "Enter a name for the new PHP trait": "Entrez un nom pour le nouveau trait PHP",
+  
+  "Please select a workspace folder": "Veuillez sélectionner un dossier de travail",
+  "No target folder selected or no workspace opened.": "Aucun dossier cible sélectionné ou aucun espace de travail ouvert.",
+  
+  "The file '{0}' already exists. Overwrite?": "Le fichier '{0}' existe déjà. Écraser ?",
+  "Overwrite": "Écraser",
+  "Cancel": "Annuler",
+  "Error creating file: {0}": "Erreur lors de la création du fichier : {0}",
+  "Error reading composer.json": "Erreur de lecture du fichier composer.json",
+
+  "Please enter a valid filename": "Veuillez entrer un nom de fichier valide",
+  "Filename contains invalid characters": "Le nom du fichier contient des caractères non valides",
+  "Please enter a valid definition name": "Veuillez entrer un nom de définition valide",
+  "Definition name must start with a letter or underscore": "Le nom de définition doit commencer par une lettre ou un underscore",
+  "Definition name must start with an uppercase letter or underscore": "Le nom de définition doit commencer par une lettre majuscule ou un underscore",
+  "Definition name can only contain letters, numbers, and underscores": "Le nom de définition ne peut contenir que des lettres, des chiffres et des underscores",
+  "Cannot use PHP reserved keyword as definition name": "Impossible d'utiliser un mot-clé réservé PHP comme nom de définition"
+}

@@ -1,24 +1,38 @@
 {
-  "Hello World from PHP File Creator!": "Hallo Welt von PHP File Creator!",
-  "No target folder selected or no workspace opened.": "Kein Zielordner ausgewählt oder kein Workspace geöffnet.",
-  "Create new empty PHP file": "Neue leere PHP-Datei erstellen",
-  "Enter filename (without .php)": "Dateinamen eingeben (ohne .php)",
+  "Create PHP File": "PHP-Datei erstellen",
+  "Enter filename (without .php)": "Dateiname eingeben (ohne .php)",
   "Enter a name for the new PHP file": "Geben Sie einen Namen für die neue PHP-Datei ein",
-  "Please enter a valid filename": "Bitte geben Sie einen gültigen Dateinamen ein",
+  
+  "Create PHP Class": "PHP-Klasse erstellen",
+  "Enter class name": "Klassenname eingeben",
+  "Enter a name for the new PHP class": "Geben Sie einen Namen für die neue PHP-Klasse ein",
+  
+  "Create PHP Interface": "PHP-Interface erstellen",
+  "Enter interface name": "Interface-Name eingeben",
+  "Enter a name for the new PHP interface": "Geben Sie einen Namen für das neue PHP-Interface ein",
+  
+  "Create PHP Enum": "PHP-Enum erstellen",
+  "Enter enum name": "Enum-Name eingeben",
+  "Enter a name for the new PHP enum": "Geben Sie einen Namen für den neuen PHP-Enum ein",
+  
+  "Create PHP Trait": "PHP-Trait erstellen",
+  "Enter trait name": "Trait-Name eingeben",
+  "Enter a name for the new PHP trait": "Geben Sie einen Namen für den neuen PHP-Trait ein",
+  
+  "Please select a workspace folder": "Bitte wählen Sie einen Arbeitsbereichsordner aus",
+  "No target folder selected or no workspace opened.": "Kein Zielordner ausgewählt oder kein Arbeitsbereich geöffnet.",
+  
   "The file '{0}' already exists. Overwrite?": "Die Datei '{0}' existiert bereits. Überschreiben?",
   "Overwrite": "Überschreiben",
-  "Empty PHP file created with PHP File Creator": "Leere PHP-Datei erstellt mit PHP File Creator",
-  "Empty PHP file '{0}' has been created.": "Leere PHP-Datei '{0}' wurde erstellt.",
-  "Error creating PHP file: {0}": "Fehler beim Erstellen der PHP-Datei: {0}",
-  "Create new PHP class": "Neue PHP-Klasse erstellen",
-  "Enter class name": "Klassennamen eingeben",
-  "Enter a name for the new PHP class": "Geben Sie einen Namen für die neue PHP-Klasse ein",
-  "Please enter a class name": "Bitte geben Sie einen Klassennamen ein",
-  "Class name must start with a letter and can only contain letters, numbers and underscores": "Der Klassenname muss mit einem Buchstaben beginnen und darf nur Buchstaben, Zahlen und Unterstriche enthalten",
-  "Created with PHP File Creator": "Erstellt mit PHP File Creator",
-  "Initialize here": "Hier initialisieren",
-  "Add methods here": "Methoden hier hinzufügen",
-  "PHP class '{0}' has been created.": "PHP-Klasse '{0}' wurde erstellt.",
-  "Error creating PHP class file: {0}": "Fehler beim Erstellen der PHP-Klassendatei: {0}",
-  "Error checking URI path: {0}": "Fehler beim Prüfen des URI-Pfads: {0}"
+  "Cancel": "Abbrechen",
+  "Error creating file: {0}": "Fehler beim Erstellen der Datei: {0}",
+  "Error reading composer.json": "Fehler beim Lesen der composer.json",
+
+  "Please enter a valid filename": "Bitte geben Sie einen gültigen Dateinamen ein",
+  "Filename contains invalid characters": "Der Dateiname enthält ungültige Zeichen",
+  "Please enter a valid definition name": "Bitte geben Sie einen gültigen Definitionsnamen ein",
+  "Definition name must start with a letter or underscore": "Der Definitionsname muss mit einem Buchstaben oder einem Unterstrich beginnen",
+  "Definition name must start with an uppercase letter or underscore": "Der Definitionsname muss mit einem Großbuchstaben oder einem Unterstrich beginnen",
+  "Definition name can only contain letters, numbers, and underscores": "Der Definitionsname darf nur Buchstaben, Zahlen und Unterstriche enthalten",
+  "Cannot use PHP reserved keyword as definition name": "PHP-reservierte Schlüsselwörter können nicht als Definitionsnamen verwendet werden"
 }

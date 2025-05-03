@@ -1,0 +1,38 @@
+{
+  "Create PHP File": "Crear archivo PHP",
+  "Enter filename (without .php)": "Ingrese nombre de archivo (sin .php)",
+  "Enter a name for the new PHP file": "Ingrese un nombre para el nuevo archivo PHP",
+  
+  "Create PHP Class": "Crear clase PHP",
+  "Enter class name": "Ingrese nombre de la clase",
+  "Enter a name for the new PHP class": "Ingrese un nombre para la nueva clase PHP",
+  
+  "Create PHP Interface": "Crear interfaz PHP",
+  "Enter interface name": "Ingrese nombre de la interfaz",
+  "Enter a name for the new PHP interface": "Ingrese un nombre para la nueva interfaz PHP",
+  
+  "Create PHP Enum": "Crear enum PHP",
+  "Enter enum name": "Ingrese nombre del enum",
+  "Enter a name for the new PHP enum": "Ingrese un nombre para el nuevo enum PHP",
+  
+  "Create PHP Trait": "Crear trait PHP",
+  "Enter trait name": "Ingrese nombre del trait",
+  "Enter a name for the new PHP trait": "Ingrese un nombre para el nuevo trait PHP",
+  
+  "Please select a workspace folder": "Por favor seleccione una carpeta de trabajo",
+  "No target folder selected or no workspace opened.": "No se ha seleccionado una carpeta de destino o no hay un espacio de trabajo abierto.",
+  
+  "The file '{0}' already exists. Overwrite?": "El archivo '{0}' ya existe. ¿Sobrescribir?",
+  "Overwrite": "Sobrescribir",
+  "Cancel": "Cancelar",
+  "Error creating file: {0}": "Error al crear el archivo: {0}",
+  "Error reading composer.json": "Error al leer composer.json",
+
+  "Please enter a valid filename": "Por favor ingrese un nombre de archivo válido",
+  "Filename contains invalid characters": "El nombre del archivo contiene caracteres no válidos",
+  "Please enter a valid definition name": "Por favor ingrese un nombre de definición válido",
+  "Definition name must start with a letter or underscore": "El nombre de definición debe comenzar con una letra o guion bajo",
+  "Definition name must start with an uppercase letter or underscore": "El nombre de definición debe comenzar con una letra mayúscula o guion bajo",
+  "Definition name can only contain letters, numbers, and underscores": "El nombre de definición solo puede contener letras, números y guiones bajos",
+  "Cannot use PHP reserved keyword as definition name": "No se puede usar una palabra reservada de PHP como nombre de definición"
+}

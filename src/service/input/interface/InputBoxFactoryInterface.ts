@@ -1,4 +1,4 @@
-import { InputBoxTypeEnum } from "../enum/InputBoxTypeEnum";
+import { InputBoxFileType } from "../type/InputBoxFileType";
 import { InputBoxInterface } from "./InputInterface";
 
 /**
@@ -12,5 +12,5 @@ export interface InputBoxFactoryInterface {
      * @param type The type of input box to create
      * @returns An input box interface implementation
      */
-    create(type: InputBoxTypeEnum): InputBoxInterface;
+    create(type: InputBoxFileType): InputBoxInterface;
 }

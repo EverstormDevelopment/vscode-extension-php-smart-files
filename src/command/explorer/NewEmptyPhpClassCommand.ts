@@ -2,13 +2,13 @@ import { FileGenerator } from './../../service/file/generator/model/FileGenerato
 import path from "path";
 import * as vscode from "vscode";
 import { UriFolderResolver } from "../../service/uri/UriFolderResolver";
-import { InputBoxTypeEnum } from "../../service/input/enum/InputBoxTypeEnum";
+import { InputBoxFileType } from "../../service/input/type/InputBoxFileType";
 import { InputBoxFactoryInterface } from "../../service/input/interface/InputBoxFactoryInterface";
 import { NamespaceResolver } from "../../service/namespace/NamespaceResolver";
 import { SnippetClassFactory } from "../../service/snippet/build/SnippetClassFactory";
 import { ExplorerCommandInterface } from "../interface/ExplorerCommandInterface";
 import { SnippetFactory } from "../../service/snippet/build/SnippetFactory";
-import { SnippetFactoryTypeEnum } from "../../service/snippet/enum/SnippetFactoryTypeEnum";
+import { SnippetFactoryFileType } from "../../service/snippet/type/SnippetFactoryFileType";
 import { FileCreator } from "../../service/file/creator/FileCreator";
 
 /**

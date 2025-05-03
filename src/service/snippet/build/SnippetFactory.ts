@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { SnippetFactoryTypeEnum } from '../enum/SnippetFactoryTypeEnum';
+import { SnippetFactoryFileType } from '../type/SnippetFactoryFileType';
 import { SnippetTypeFactoryInterface } from '../interface/SnippetTypeFactoryInterface';
 import { SnippetFactoryInterface } from '../interface/SnippetFactoryInterface';
 import { SnippetClassFactory } from './SnippetClassFactory';
@@ -13,12 +13,12 @@ export class SnippetFactory implements SnippetFactoryInterface {
     /**
      * Registry of factory functions for different PHP snippet types
      */
-    private readonly factories: Record<SnippetFactoryTypeEnum, () => SnippetTypeFactoryInterface> = {
-        [SnippetFactoryTypeEnum.File]: () => new SnippetClassFactory(),
-        [SnippetFactoryTypeEnum.Class]: () => new SnippetClassFactory(),
-        [SnippetFactoryTypeEnum.Interface]: () => new SnippetClassFactory(),
-        [SnippetFactoryTypeEnum.Enum]: () => new SnippetClassFactory(),
-        [SnippetFactoryTypeEnum.Trait]: () => new SnippetClassFactory(),
+    private readonly factories: Record<SnippetFactoryFileType, () => SnippetTypeFactoryInterface> = {
+        [SnippetFactoryFileType.File]: () => new SnippetClassFactory(),
+        [SnippetFactoryFileType.Class]: () => new SnippetClassFactory(),
+        [SnippetFactoryFileType.Interface]: () => new SnippetClassFactory(),
+        [SnippetFactoryFileType.Enum]: () => new SnippetClassFactory(),
+        [SnippetFactoryFileType.Trait]: () => new SnippetClassFactory(),
     };
 
     /**
@@ -29,7 +29,7 @@ export class SnippetFactory implements SnippetFactoryInterface {
      * @returns A VS Code snippet string
      * @throws Error if an unknown snippet factory type is provided
      */
-    public create(type: SnippetFactoryTypeEnum, identifier: string, namespace?: string): vscode.SnippetString {
+    public create(type: SnippetFactoryFileType, identifier: string, namespace?: string): vscode.SnippetString {
         if(!this.factories[type]) {
             throw new Error(`Unknown snippet factory type: ${type}`);
         }

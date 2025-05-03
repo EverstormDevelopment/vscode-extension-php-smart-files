@@ -3,6 +3,7 @@ import { ComposerJsonFinder } from "./ComposerJsonFinder";
 import { ComposerJsonParser } from "./ComposerJsonParser";
 import { AutoloadConfigType } from "./type/AutoloadConfigType";
 import { AutoloadConfigsType } from "./type/AutoloadConfigsType";
+import { ComposerJsonType } from "./type/ComposerJsonType";
 
 /**
  * Service for resolving and parsing composer.json files in PHP projects.
@@ -33,7 +34,7 @@ export class ComposerJsonService {
      * @returns Promise resolving to the parsed composer.json content
      * @throws Error if the file cannot be read or parsed
      */
-    public async parse(composerJsonUri: vscode.Uri): Promise<any> {
+    public async parse(composerJsonUri: vscode.Uri): Promise<ComposerJsonType> {
         return this.composerJsonParser.parse(composerJsonUri);
     }
 
@@ -56,7 +57,7 @@ export class ComposerJsonService {
      * @param composerJson - Parsed composer.json content
      * @returns Object containing PSR-0 and PSR-4 autoload configurations
      */
-    private extractAutoloadConfigs(composerJson: any): AutoloadConfigsType {
+    private extractAutoloadConfigs(composerJson: ComposerJsonType): AutoloadConfigsType {
         return {
             psr4: this.extractAutoloadConfig(composerJson, "psr-4"),
             psr0: this.extractAutoloadConfig(composerJson, "psr-0"),
@@ -69,10 +70,14 @@ export class ComposerJsonService {
      * @param psr - The PSR standard to extract ("psr-4" or "psr-0")
      * @returns Mapping of namespace prefixes to directories
      */
-    private extractAutoloadConfig(composerJson: any, psr: "psr-4" | "psr-0"): AutoloadConfigType {
+    private extractAutoloadConfig(composerJson: ComposerJsonType, psr: "psr-4" | "psr-0"): AutoloadConfigType {
         const result: AutoloadConfigType = {};
-        if (composerJson?.autoload?.[psr]) {
-            for (const [namespace, dirs] of Object.entries(composerJson.autoload[psr])) {
+        const autoLoadTypes = ["autoload-dev", "autoload"] as const;
+        for (const autoLoadType of autoLoadTypes) {
+            if (!composerJson?.[autoLoadType]?.[psr]) {
+                continue;
+            }
+            for (const [namespace, dirs] of Object.entries(composerJson[autoLoadType][psr] || {})) {
                 // Convert single directory string to array for consistent handling
                 const directories = Array.isArray(dirs) ? dirs : [dirs as string];
                 result[namespace] = directories;

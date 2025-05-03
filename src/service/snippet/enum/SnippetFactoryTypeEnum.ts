@@ -1,7 +1,7 @@
 /**
  * Enum for different PHP snippet factory types.
  */
-export enum PhpSnippetFactoryTypeEnum {
+export enum SnippetFactoryTypeEnum {
     File = "File",
     Class = "Class",
     Interface = "Interface",

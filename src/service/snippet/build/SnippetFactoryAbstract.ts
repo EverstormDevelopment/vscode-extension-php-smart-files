@@ -1,10 +1,10 @@
 import * as vscode from "vscode";
-import { PhpSnippetTypeFactoryInterface } from "../interface/PhpSnippetTypeFactoryInterface";
+import { SnippetTypeFactoryInterface } from "../interface/SnippetTypeFactoryInterface";
 
 /**
  * Abstract base class for PHP snippet factories.
  */
-export abstract class PhpSnippetFactoryAbstract implements PhpSnippetTypeFactoryInterface {
+export abstract class SnippetFactoryAbstract implements SnippetTypeFactoryInterface {
     /**
      * Current tab stop index for placeholders in the snippet
      */

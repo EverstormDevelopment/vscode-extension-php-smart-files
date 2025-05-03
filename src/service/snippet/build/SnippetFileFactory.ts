@@ -1,9 +1,9 @@
-import { PhpSnippetFactoryAbstract } from "./PhpSnippetFactoryAbstract";
+import { SnippetFactoryAbstract } from "./SnippetFactoryAbstract";
 
 /**
  * Abstract factory for creating PHP file snippets.
  */
-export abstract class PhpSnippetFileFactory extends PhpSnippetFactoryAbstract {
+export abstract class SnippetFileFactory extends SnippetFactoryAbstract {
     /**
      * No opening declaration needed for simple PHP files
      * @param identifier - The file identifier (unused in this implementation)

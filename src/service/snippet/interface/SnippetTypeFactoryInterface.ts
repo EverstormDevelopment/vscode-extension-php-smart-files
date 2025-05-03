@@ -3,7 +3,7 @@ import * as vscode from "vscode";
 /**
  * Interface for specific PHP snippet type factory implementations.
  */
-export interface PhpSnippetTypeFactoryInterface {
+export interface SnippetTypeFactoryInterface {
     /**
      * Creates a specific type of PHP snippet.
      * @param identifier Optional name/identifier for the PHP element

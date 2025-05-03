@@ -1,9 +1,9 @@
-import { PhpSnippetFactoryAbstract } from "./PhpSnippetFactoryAbstract";
+import { SnippetFactoryAbstract } from "./SnippetFactoryAbstract";
 
 /**
  * Factory for creating PHP class snippets.
  */
-export class PhpSnippetClassFactory extends PhpSnippetFactoryAbstract {
+export class SnippetClassFactory extends SnippetFactoryAbstract {
     /**
      * Opens a class declaration block with the given identifier
      * @param identifier - The name of the PHP class

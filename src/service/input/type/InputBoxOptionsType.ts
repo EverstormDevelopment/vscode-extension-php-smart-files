@@ -38,14 +38,14 @@ export type InputBoxOptionsType = {
 
     /**
      * An optional validator class that implements the {@linkcode InputValidatorInterface} interface.
-     * The validator method `validate` is called whenever the input changes and can be used 
+     * The validator method `validate` is called whenever the input changes and can be used
      * to provide custom validation messages.
      */
     inputValidator?: InputValidatorInterface;
 
     /**
      * An optional processor class that implements the {@linkcode InputProcessorInterface} interface.
-     * The processor method `process` is called whenever the input was confirmed and can be used 
+     * The processor method `process` is called whenever the input was confirmed and can be used
      * to transform the input value before it's returned.
      */
     inputProcessor?: InputProcessorInterface;

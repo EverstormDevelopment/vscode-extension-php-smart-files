@@ -84,9 +84,7 @@ export class InputDefinitionNameValidator implements InputValidatorInterface {
      * Creates a new validator for PHP definition names
      * @param allowLowercaseStart Whether to allow identifiers to start with lowercase letters
      */
-    public constructor(
-        private allowLowercaseStart: boolean = false,
-    ) {}
+    public constructor(private allowLowercaseStart: boolean = false) {}
 
     /**
      * Validates a PHP definition name according to PHP naming rules

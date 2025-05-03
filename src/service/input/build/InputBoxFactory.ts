@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { FileTypeEnum } from '../../../utils/enum/FileTypeEnum';
+import { FileTypeEnum } from "../../../utils/enum/FileTypeEnum";
 import { InputBoxFactoryInterface } from "../interface/InputBoxFactoryInterface";
 import { InputBoxInterface } from "../interface/InputInterface";
 import { InputPhpFileNameProcessor } from "../processor/InputPhpFileNameProcessor";
@@ -11,7 +11,6 @@ import { InputBoxBuilder } from "./InputBoxBuilder";
  * Factory for creating input boxes based on PHP file types.
  */
 export class InputBoxFactory implements InputBoxFactoryInterface {
-
     /**
      * Creates an input box appropriate for the specified PHP file type.
      * Configures validation, processing, and UI elements based on the type.
@@ -37,7 +36,7 @@ export class InputBoxFactory implements InputBoxFactoryInterface {
                 return this.createTraitInputBox();
             default:
                 throw new Error(`Unknown input box type: ${type}`);
-        }        
+        }
     }
 
     /**

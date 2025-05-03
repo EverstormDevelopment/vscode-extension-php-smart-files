@@ -78,6 +78,10 @@ export abstract class SnippetFactoryAbstract implements SnippetTypeFactoryInterf
         return this;
     }
 
+    /**
+     * Adds a line break to the snippet
+     * @returns This instance for method chaining
+     */
     protected addLineBreak(): this {
         this.snippet.appendText("\n");
         return this;

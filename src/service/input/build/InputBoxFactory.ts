@@ -8,10 +8,17 @@ import { InputFileNameValidator } from "../validator/InputFileNameValidator";
 import { InputBoxBuilder } from "./InputBoxBuilder";
 
 /**
- * Factory for creating input boxes based on type
+ * Factory for creating input boxes based on PHP file types.
  */
 export class InputBoxFactory implements InputBoxFactoryInterface {
 
+    /**
+     * Creates an input box appropriate for the specified PHP file type.
+     * Configures validation, processing, and UI elements based on the type.
+     * @param type The PHP file type to create an input box for
+     * @returns An input box interface implementation for the specified type
+     * @throws Error if an unknown input box type is provided
+     */
     public create(type: FileTypeEnum): InputBoxInterface {
         switch (type) {
             case FileTypeEnum.File:
@@ -34,7 +41,7 @@ export class InputBoxFactory implements InputBoxFactoryInterface {
     }
 
     /**
-     * Creates an input box configured for PHP file creation
+     * Creates an input box configured for PHP file creation.
      * @returns An input box interface implementation for PHP files
      */
     private createFileInputBox(): InputBoxInterface {
@@ -48,7 +55,7 @@ export class InputBoxFactory implements InputBoxFactoryInterface {
     }
 
     /**
-     * Creates an input box configured for PHP class creation
+     * Creates an input box configured for PHP class creation.
      * @returns An input box interface implementation for PHP classes
      */
     private createClassInputBox(): InputBoxInterface {
@@ -62,7 +69,7 @@ export class InputBoxFactory implements InputBoxFactoryInterface {
     }
 
     /**
-     * Creates an input box configured for PHP interface creation
+     * Creates an input box configured for PHP interface creation.
      * @returns An input box interface implementation for PHP interfaces
      */
     private createInterfaceInputBox(): InputBoxInterface {
@@ -76,7 +83,7 @@ export class InputBoxFactory implements InputBoxFactoryInterface {
     }
 
     /**
-     * Creates an input box configured for PHP enum creation
+     * Creates an input box configured for PHP enum creation.
      * @returns An input box interface implementation for PHP enums
      */
     private createEnumInputBox(): InputBoxInterface {
@@ -90,7 +97,7 @@ export class InputBoxFactory implements InputBoxFactoryInterface {
     }
 
     /**
-     * Creates an input box configured for PHP trait creation
+     * Creates an input box configured for PHP trait creation.
      * @returns An input box interface implementation for PHP traits
      */
     private createTraitInputBox(): InputBoxInterface {

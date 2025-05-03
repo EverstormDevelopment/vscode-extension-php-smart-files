@@ -1,6 +1,8 @@
 import { SnippetClassFactory } from "./SnippetClassFactory";
 
-
+/**
+ * Factory for creating PHP class snippets with template content.
+ */
 export class SnippetTemplateClassFactory extends SnippetClassFactory {
     /**
      * Adds a sample template body to the snippet
@@ -12,6 +14,10 @@ export class SnippetTemplateClassFactory extends SnippetClassFactory {
             .addMethod();
     }
 
+    /**
+     * Adds a constructor method to the class with parameters and implementation placeholders
+     * @returns This instance for method chaining
+     */
     protected addConstructor(): this {
         this.snippet.appendText("    ");
         this.snippet.appendText("public function __construct(");
@@ -26,6 +32,10 @@ export class SnippetTemplateClassFactory extends SnippetClassFactory {
         return this;
     }
 
+    /**
+     * Adds a standard method to the class with parameters, return type, and implementation placeholders
+     * @returns This instance for method chaining
+     */
     protected addMethod(): this {
         this.snippet.appendText("    ");
         this.snippet.appendText("public function ");

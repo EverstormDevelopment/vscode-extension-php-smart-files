@@ -2,16 +2,28 @@ import { ContainerInterface } from "./interface/ContainerInterface";
 import { ConstructorType } from "./type/ConstructorType";
 
 /**
- * Type definition for a registration
+ * Type definition for a registration in the dependency injection container
  */
 type RegistrationType<T> = {
+    /**
+     * The service instance, created on first request
+     */
     instance?: T;
+    
+    /**
+     * The service constructor
+     */
     constructor: ConstructorType<T>;
+    
+    /**
+     * The constructors of the dependencies required by the service
+     */
     dependencies?: ConstructorType<any>[];
 };
 
 /**
- * Implementation of the service container for dependency injection
+ * Implementation of the service container for dependency injection.
+ * Provides registration, resolution and instantiation of services with their dependencies.
  */
 export class Container implements ContainerInterface {
     /**
@@ -54,6 +66,7 @@ export class Container implements ContainerInterface {
      * @param constructor The service constructor
      * @param registration The service registration
      * @returns The created service instance
+     * @throws Error if a dependency is not registered
      */
     private createInstance<T>(constructor: ConstructorType<T>, registration: RegistrationType<T>): T {
         registration.dependencies?.map((depConstructor) => {

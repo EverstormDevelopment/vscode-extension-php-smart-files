@@ -1,11 +1,11 @@
 import { SnippetFactoryAbstract } from "./SnippetFactoryAbstract";
 
 /**
- * Abstract factory for creating PHP file snippets.
+ * Factory for creating simple PHP file snippets.
  */
 export class SnippetFileFactory extends SnippetFactoryAbstract {
     /**
-     * No opening declaration needed for simple PHP files
+     * No opening declaration needed for simple PHP files.
      * @param identifier - The file identifier (unused in this implementation)
      * @returns This instance for method chaining
      */
@@ -14,7 +14,7 @@ export class SnippetFileFactory extends SnippetFactoryAbstract {
     }
 
     /**
-     * No closing declaration needed for simple PHP files
+     * No closing declaration needed for simple PHP files.
      * @returns This instance for method chaining
      */
     protected closeDeclaration(): this {
@@ -22,7 +22,7 @@ export class SnippetFileFactory extends SnippetFactoryAbstract {
     }
 
     /**
-     * Adds a tabstop placeholder as content for the PHP file
+     * Adds a tabstop placeholder as content for the PHP file.
      * @returns This instance for method chaining
      */
     protected addContent(): this {

@@ -1,8 +1,11 @@
 import { SnippetTraitFactory } from "./SnippetTraitFactory";
 
+/**
+ * Factory for creating PHP trait snippets with template content.
+ */
 export class SnippetTemplateTraitFactory extends SnippetTraitFactory {
     /**
-     * Adds a tabstop for a method inside the class declaration
+     * Adds a template method to the trait declaration with implementation placeholder
      * @returns This instance for method chaining
      */
     protected addContent(): this {

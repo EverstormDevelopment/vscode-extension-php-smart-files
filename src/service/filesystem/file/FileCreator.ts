@@ -3,11 +3,12 @@ import * as vscode from "vscode";
 import { isFile } from "../../../utils/filesystem/isFile";
 
 /**
- * Service to create files in the workspace
+ * Service to create files in the workspace.
  */
 export class FileCreator {
     /**
-     * Creates a new file at the specified path
+     * Creates a new file at the specified path.
+     * If the file already exists, asks the user for confirmation before overwriting.
      * @param filePath URI to the file to create
      * @throws Error if the file creation fails
      */
@@ -25,7 +26,8 @@ export class FileCreator {
     }
 
     /**
-     * Checks if a file can be created at the specified path
+     * Checks if a file can be created at the specified path.
+     * If the file exists, prompts the user for confirmation.
      * @param filePath URI to check
      * @returns True if file can be created, false otherwise
      */
@@ -38,7 +40,7 @@ export class FileCreator {
     }
 
     /**
-     * Asks the user if they want to overwrite an existing file
+     * Asks the user if they want to overwrite an existing file.
      * @param filePath URI to the file to overwrite
      * @returns True if user confirms overwrite, false otherwise
      */
@@ -57,7 +59,7 @@ export class FileCreator {
     }
 
     /**
-     * Creates an empty file at the specified path
+     * Creates an empty file at the specified path.
      * @param filePath URI where to create the file
      * @throws Error if file creation fails
      */
@@ -66,7 +68,7 @@ export class FileCreator {
     }
 
     /**
-     * Shows an error message to the user
+     * Shows an error message to the user.
      * @param error The error to display
      */
     private showErrorMessage(error: unknown): void {

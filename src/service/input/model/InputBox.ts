@@ -3,19 +3,20 @@ import { InputBoxInterface } from "../interface/InputInterface";
 import { InputBoxOptionsType } from "../type/InputBoxOptionsType";
 
 /**
- * Class representing an input box for user input.
- * Provides methods to configure, validate, and process user input.
+ * Implementation of an input box for collecting user input.
+ * Wraps VS Code's native input box with additional validation and processing capabilities.
  */
 export class InputBox implements InputBoxInterface {
     /**
      * Function to resolve the user input when the input box is closed.
+     * Used as part of the Promise-based API to return the result asynchronously.
      */
     private resolveInput: (value: string | undefined) => void = () => {};
 
     /**
-     * Constructor for the InputBox class.
-     * @param options Configuration options for the input box.
-     * @param inputBox The VS Code input box instance.
+     * Creates a new InputBox instance.
+     * @param options Configuration options for the input box
+     * @param inputBox The VS Code input box instance to use
      */
     constructor(
         protected readonly options: InputBoxOptionsType = {},
@@ -26,7 +27,7 @@ export class InputBox implements InputBoxInterface {
     }
 
     /**
-     * Configures the UI properties of the input box.
+     * Configures the UI properties of the input box based on provided options.
      */
     private configureUI(): void {
         const { title, value, prompt, placeholder, password, ignoreFocusOut } = this.options;
@@ -94,9 +95,10 @@ export class InputBox implements InputBoxInterface {
     }
 
     /**
-     * Validates the input value and sets the validation message.
-     * @param value The input value to validate.
-     * @returns True if the input is valid, false otherwise.
+     * Validates the input value using the configured validator.
+     * Sets the validation message in the input box UI.
+     * @param value The input value to validate
+     * @returns True if the input is valid, false otherwise
      */
     private async validate(value: string): Promise<boolean> {
         const validationMessage = (await this.options.inputValidator?.validate(value)) || "";
@@ -105,9 +107,9 @@ export class InputBox implements InputBoxInterface {
     }
 
     /**
-     * Processes the validated input value.
-     * @param input The validated input value.
-     * @returns The processed input value.
+     * Processes the validated input value using the configured processor.
+     * @param input The validated input value
+     * @returns The processed input value
      */
     private async processInput(input: string): Promise<string> {
         return this.options.inputProcessor?.process(input) || input;
@@ -115,7 +117,7 @@ export class InputBox implements InputBoxInterface {
 
     /**
      * Prompts the user for input and returns the result.
-     * @returns A promise resolving to the user input or undefined if canceled.
+     * @returns A promise resolving to the user input or undefined if canceled
      */
     public async prompt(): Promise<string | undefined> {
         return new Promise<string | undefined>((resolve) => {

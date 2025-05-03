@@ -11,7 +11,7 @@ import { ContainerRegistrationType } from "./type/ContainerRegistrationType";
 
 /**
  * Registry for all services in the application that should
- * be automatically registered in the container.
+ * be automatically registered in the dependency injection container.
  */
 export const ContainerRegistry: ContainerRegistrationType[] = [
     {

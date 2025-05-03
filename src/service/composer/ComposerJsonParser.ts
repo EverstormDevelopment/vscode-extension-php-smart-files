@@ -2,13 +2,14 @@ import * as vscode from "vscode";
 import { isFile } from "../../utils/filesystem/isFile";
 
 /**
- * Service to parse composer.json files
+ * Service to parse composer.json files for PHP projects.
  */
 export class ComposerJsonParser {
     /**
-     * Parses a composer.json file
+     * Parses a composer.json file into a JavaScript object and balidates that
+     * the file exists before attempting to parse it.
      * @param composerJsonUri URI of the composer.json file to parse
-     * @returns Parsed composer.json content as an object
+     * @returns Promise resolving to the parsed composer.json content as an object
      * @throws Error if the file cannot be read or parsed
      */
     public async parse(composerJsonUri: vscode.Uri): Promise<any> {
@@ -26,8 +27,8 @@ export class ComposerJsonParser {
     }
 
     /**
-     * Shows an error message to the user
-     * @param message The main error message
+     * Shows an error message to the user.
+     * @param message The main error message to display
      */
     private showErrorMessage(message: string): void {
         vscode.window.showErrorMessage(message);

@@ -6,16 +6,42 @@ import { FileGenerationCommandRegistry } from "../registry/FileGenerationCommand
 import { FileGenerationCommand } from './../command/FileGenerationCommand';
 import { FileTypeEnum } from "../../utils/enum/FileTypeEnum";
 
+/**
+ * The main extension class that handles the extension lifecycle.
+ */
 export class Extension implements ExtensionInterface {
+    /**
+     * The extension ID from the manifest
+     */
     private id: string | undefined;
+    
+    /**
+     * The extension name from the manifest
+     */
     private name: string | undefined;
+    
+    /**
+     * The extension version from the manifest
+     */
     private version: string | undefined;
+    
+    /**
+     * The dependency injection container
+     */
     private container: ContainerInterface;
 
+    /**
+     * Creates a new Extension instance with default container
+     */
     constructor() {
         this.container = ContainerFactory.createDefaultContainer();
     }
 
+    /**
+     * Activates the extension, initializing all dependencies and registering commands
+     * @param context The VS Code extension context
+     * @returns This extension instance for chaining
+     */
     public activate(context: vscode.ExtensionContext): this {
         this.initialize(context);
         this.addFileCreationCommands(context);
@@ -23,6 +49,10 @@ export class Extension implements ExtensionInterface {
         return this;
     }
 
+    /**
+     * Initializes extension metadata from context
+     * @param context The VS Code extension context
+     */
     private initialize(context: vscode.ExtensionContext): void {
         this.id = context.extension.id;
         this.name = context.extension.packageJSON.name;
@@ -30,6 +60,10 @@ export class Extension implements ExtensionInterface {
         
     }
 
+    /**
+     * Registers all file creation commands with VS Code
+     * @param context The VS Code extension context
+     */
     private addFileCreationCommands(context: vscode.ExtensionContext): void {
         const commandRegistry = FileGenerationCommandRegistry;        
         for (const [commandName, fileType] of Object.entries(commandRegistry)) {
@@ -37,6 +71,12 @@ export class Extension implements ExtensionInterface {
         }
     }
 
+    /**
+     * Registers a single file creation command with VS Code
+     * @param context The VS Code extension context
+     * @param commandName The command name suffix
+     * @param fileType The PHP file type to create when the command is executed
+     */
     private addFileCreationCommand(context: vscode.ExtensionContext, commandName: string, fileType: FileTypeEnum): void {
         const commandId = `${this.name}.${commandName}`;
         const vscodeCommand = vscode.commands.registerCommand(commandId, 
@@ -48,8 +88,11 @@ export class Extension implements ExtensionInterface {
         context.subscriptions.push(vscodeCommand);
     }
 
+    /**
+     * Deactivates the extension and cleans up resources
+     * @returns This extension instance for chaining
+     */
     public deactivate(): this {
         return this;
     }
-
 }

@@ -1,7 +1,7 @@
 import { ConstructorType } from "./ConstructorType";
 
 /**
- * Type definition for container registration
+ * Type definition for container service registration entries.
  */
 export type ContainerRegistrationType = {
     /**

@@ -3,14 +3,14 @@ import * as vscode from "vscode";
 import { isFile } from "../../utils/filesystem/isFile";
 
 /**
- * Service to find composer.json files in the directory hierarchy
- * Searches for composer.json files starting from a target folder and traversing up
+ * Service to find composer.json files in the directory hierarchy.
  */
 export class ComposerJsonFinder {
     /**
-     * Finds a composer.json file starting from the target folder and moving up the directory hierarchy
-     * @param targetFolder The starting folder to search from
-     * @returns URI of the composer.json file or undefined if not found
+     * Finds a composer.json file starting from the target folder and moving up the directory hierarchy.
+     * The search stops when a composer.json is found, the workspace root is reached, or the filesystem root is reached.
+     * @param targetFolder The starting folder URI to search from
+     * @returns Promise resolving to the URI of the found composer.json file or undefined if not found
      */
     public async find(targetFolder: vscode.Uri): Promise<vscode.Uri | undefined> {
         let currentFolder = targetFolder;
@@ -37,9 +37,9 @@ export class ComposerJsonFinder {
     }
 
     /**
-     * Gets the parent folder of a given URI
+     * Gets the parent folder of a given URI.
      * @param uri The URI to get the parent folder from
-     * @returns The parent folder URI or undefined if at the root
+     * @returns The parent folder URI or undefined if at the filesystem root
      */
     private getParentFolder(uri: vscode.Uri): vscode.Uri | undefined {
         const dirname = path.dirname(uri.fsPath);
@@ -50,7 +50,7 @@ export class ComposerJsonFinder {
     }
 
     /**
-     * Gets the workspace root URI for the given URI
+     * Gets the workspace root URI for the given URI.
      * @param uri The URI to find the workspace root for
      * @returns The workspace root URI or undefined if not in a workspace
      */
@@ -60,7 +60,7 @@ export class ComposerJsonFinder {
     }
 
     /**
-     * Checks if the given folder is the workspace root
+     * Checks if the given folder is the workspace root.
      * @param currentFolder The folder to check
      * @param workspaceFolder The workspace root URI
      * @returns True if the folder is the workspace root, false otherwise
@@ -73,7 +73,7 @@ export class ComposerJsonFinder {
     }
 
     /**
-     * Checks if two URIs point to the same location
+     * Checks if two URIs point to the same location.
      * @param uri1 First URI to compare
      * @param uri2 Second URI to compare
      * @returns True if the URIs point to the same location

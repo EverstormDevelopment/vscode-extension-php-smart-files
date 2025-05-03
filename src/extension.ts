@@ -2,10 +2,13 @@ import * as vscode from "vscode";
 import { Extension } from "./extension/model/Extension";
 import { ExtensionInterface } from "./extension/interface/ExtensionInterface";
 
+/**
+ * Reference to the extension instance, used for activation and deactivation.
+ */
 let extension: ExtensionInterface | undefined;
 
 /**
- * This method is called when the extension is activated
+ * This method is called when the extension is activated.
  * @param context The extension context provided by VS Code
  */
 export function activate(context: vscode.ExtensionContext) {
@@ -13,7 +16,7 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 /**
- * This method is called when the extension is deactivated
+ * This method is called when the extension is deactivated.
  */
 export function deactivate() {
     if (!extension) {

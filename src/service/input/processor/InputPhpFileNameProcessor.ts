@@ -1,8 +1,7 @@
 import { InputProcessorInterface } from "../interface/InputProcessorInterface";
 
 /**
- * Processor for PHP file names
- * Ensures that file names have the .php extension
+ * Processor for PHP file names which ensures they have a .php extension.
  */
 export class InputPhpFileNameProcessor implements InputProcessorInterface {
     /**

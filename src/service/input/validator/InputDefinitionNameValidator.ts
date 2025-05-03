@@ -2,11 +2,11 @@ import * as vscode from "vscode";
 import { InputValidatorInterface } from "../interface/InputValidatorInterface";
 
 /**
- * Validator for PHP definition names (classes, interfaces, traits, enums)
+ * Validator for PHP definition names (classes, interfaces, traits, enums).
  */
 export class InputDefinitionNameValidator implements InputValidatorInterface {
     /**
-     * List of PHP reserved keywords
+     * List of PHP reserved keywords that cannot be used as definition names
      */
     private readonly reservedKeywords = [
         "abstract",
@@ -80,14 +80,24 @@ export class InputDefinitionNameValidator implements InputValidatorInterface {
         "enum",
     ];
 
+    /**
+     * Creates a new validator for PHP definition names
+     * @param allowLowercaseStart Whether to allow identifiers to start with lowercase letters
+     */
     public constructor(
         private allowLowercaseStart: boolean = false,
     ) {}
 
     /**
-     * Validates a PHP definition name
-     * @param input The input to validate
-     * @returns Error message or empty string if valid
+     * Validates a PHP definition name according to PHP naming rules
+     * Checks for:
+     * - Non-empty input
+     * - Starting with a letter or underscore
+     * - Starting with uppercase letter if allowLowercaseStart is false
+     * - Using only letters, numbers, and underscores
+     * - Not using PHP reserved keywords
+     * @param input The definition name to validate
+     * @returns Error message if validation fails, or empty string if valid
      */
     public async validate(input: string): Promise<string> {
         if (!input || input.trim().length === 0) {

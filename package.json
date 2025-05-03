@@ -22,6 +22,18 @@
       {
         "command": "php-file-creator.newEmptyPhpClass",
         "title": "%php-file-creator.commands.newEmptyPhpClass.title%"
+      },
+      {
+        "command": "php-file-creator.newEmptyPhpInterface",
+        "title": "%php-file-creator.commands.newEmptyPhpInterface.title%"
+      },
+      {
+        "command": "php-file-creator.newEmptyPhpEnum",
+        "title": "%php-file-creator.commands.newEmptyPhpEnum.title%"
+      },
+      {
+        "command": "php-file-creator.newEmptyPhpTrait",
+        "title": "%php-file-creator.commands.newEmptyPhpTrait.title%"
       }
     ],
     "menus": {
@@ -34,11 +46,23 @@
       "php-file-creator.submenu": [
         {
           "command": "php-file-creator.newEmptyPhpFile",
-          "group": "1_creation@1"
+          "group": "1_creation_empty@1"
         },
         {
           "command": "php-file-creator.newEmptyPhpClass",
-          "group": "1_creation@2"
+          "group": "1_creation_empty@2"
+        },
+        {
+          "command": "php-file-creator.newEmptyPhpInterface",
+          "group": "1_creation_empty@3"
+        },
+        {
+          "command": "php-file-creator.newEmptyPhpEnum",
+          "group": "1_creation_empty@4"
+        },
+        {
+          "command": "php-file-creator.newEmptyPhpTrait",
+          "group": "1_creation_empty@5"
         }
       ]
     },

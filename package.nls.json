@@ -1,5 +1,8 @@
 {
   "php-file-creator.commands.newEmptyPhpFile.title": "New PHP file",
   "php-file-creator.commands.newEmptyPhpClass.title": "New PHP class",
+  "php-file-creator.commands.newEmptyPhpInterface.title": "New PHP interface",
+  "php-file-creator.commands.newEmptyPhpEnum.title": "New PHP enum",
+  "php-file-creator.commands.newEmptyPhpTrait.title": "New PHP trait",
   "php-file-creator.submenus.main.label": "Create PHP File"
 }

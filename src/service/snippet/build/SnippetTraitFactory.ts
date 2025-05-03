@@ -1,23 +1,12 @@
 import { SnippetFactoryAbstract } from "./SnippetFactoryAbstract";
 
-/**
- * Factory for creating PHP class snippets.
- */
-export class SnippetClassFactory extends SnippetFactoryAbstract {
-    /**
-     * Opens a class declaration block with the given identifier
-     * @param identifier - The name of the PHP class
-     * @returns This instance for method chaining
-     */
+export class SnippetTraitFactory extends SnippetFactoryAbstract {
     protected openDeclaration(identifier?: string): this {
-        this.snippet.appendText(`class ${identifier}\n{\n`);
+        this.snippet.appendText(`trait ${identifier}\n{\n`);
         return this;
     }
 
-    /**
-     * Closes the class declaration block
-     * @returns This instance for method chaining
-     */
+
     protected closeDeclaration(): this {
         this.snippet.appendText(`}\n`);
         return this;

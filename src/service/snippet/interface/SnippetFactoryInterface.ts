@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { SnippetFactoryFileType } from "../type/SnippetFactoryFileType";
+import { FileTypeEnum } from "../../../utils/enum/FileTypeEnum";
 
 /**
  * Interface for PHP snippet factory implementations.
@@ -12,5 +12,5 @@ export interface SnippetFactoryInterface {
      * @param namespace Optional namespace for the PHP element
      * @returns A VS Code snippet string representing the PHP code
      */
-    create(type: SnippetFactoryFileType, identifier?: string, namespace?: string): vscode.SnippetString;
+    create(type: FileTypeEnum, identifier?: string, namespace?: string): vscode.SnippetString;
 }

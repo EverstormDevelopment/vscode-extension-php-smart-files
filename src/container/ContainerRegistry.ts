@@ -1,14 +1,12 @@
-import { NewEmptyPhpClassCommand } from "../command/explorer/NewEmptyPhpClassCommand";
-import { NewEmptyPhpFileCommand } from "../command/explorer/NewEmptyPhpFileCommand";
+import { FileGenerationCommand } from "../extension/command/FileGenerationCommand";
 import { ComposerJsonFinder } from "../service/composer/ComposerJsonFinder";
 import { ComposerJsonParser } from "../service/composer/ComposerJsonParser";
 import { ComposerJsonService } from "../service/composer/ComposerJsonService";
-import { FileCreator } from "../service/file/creator/FileCreator";
-import { FileGenerator } from "../service/file/generator/FileGenerator";
+import { FileCreator } from "../service/filesystem/file/FileCreator";
+import { UriFolderResolver } from "../service/filesystem/uri/UriFolderResolver";
 import { InputBoxFactory } from "../service/input/build/InputBoxFactory";
 import { NamespaceResolver } from "../service/namespace/NamespaceResolver";
 import { SnippetFactory } from "../service/snippet/build/SnippetFactory";
-import { UriFolderResolver } from "../service/uri/UriFolderResolver";
 import { ContainerRegistrationType } from "./type/ContainerRegistrationType";
 
 /**
@@ -49,15 +47,7 @@ export const ContainerRegistry: ContainerRegistrationType[] = [
         dependencies: [],
     },
     {
-        constructor: FileGenerator,
+        constructor: FileGenerationCommand,
         dependencies: [UriFolderResolver, InputBoxFactory, FileCreator, NamespaceResolver, SnippetFactory],
-    },
-    {
-        constructor: NewEmptyPhpFileCommand,
-        dependencies: [],
-    },
-    {
-        constructor: NewEmptyPhpClassCommand,
-        dependencies: [FileGenerator],
     },
 ];

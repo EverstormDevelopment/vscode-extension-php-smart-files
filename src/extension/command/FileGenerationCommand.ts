@@ -1,13 +1,13 @@
 import path from "path";
 import * as vscode from "vscode";
-import { InputBoxFactoryInterface } from "../../input/interface/InputBoxFactoryInterface";
-import { NamespaceResolver } from "../../namespace/NamespaceResolver";
-import { SnippetFactoryInterface } from "../../snippet/interface/SnippetFactoryInterface";
-import { UriFolderResolver } from "../../uri/UriFolderResolver";
-import { FileCreator } from "../creator/FileCreator";
-import { FileTypeEnum } from "../../../utils/enum/FileTypeEnum";
+import { InputBoxFactoryInterface } from "../../service/input/interface/InputBoxFactoryInterface";
+import { NamespaceResolver } from "../../service/namespace/NamespaceResolver";
+import { SnippetFactoryInterface } from "../../service/snippet/interface/SnippetFactoryInterface";
+import { UriFolderResolver } from "../../service/filesystem/uri/UriFolderResolver";
+import { FileCreator } from "../../service/filesystem/file/FileCreator";
+import { FileTypeEnum } from "../../utils/enum/FileTypeEnum";
 
-export class FileGenerator {
+export class FileGenerationCommand {
     constructor(
         private readonly uriFolderResolver: UriFolderResolver,
         private readonly inputBoxFactory: InputBoxFactoryInterface,
@@ -34,8 +34,8 @@ export class FileGenerator {
             return;
         }
 
-        const editor = await this.openFileInEditor(filePath); 
-        
+        const editor = await this.openFileInEditor(filePath);
+
         const identifier = this.getIdentifier(filePath);
         const namespace = await this.getNamespace(filePath);
         const snippet = this.getSnippet(fileType, identifier, namespace);
@@ -74,7 +74,11 @@ export class FileGenerator {
         return path.parse(baseName).name;
     }
 
-    private getSnippet(fileType: FileTypeEnum, identifier: string, namespace: string | undefined): vscode.SnippetString {
+    private getSnippet(
+        fileType: FileTypeEnum,
+        identifier: string,
+        namespace: string | undefined
+    ): vscode.SnippetString {
         return this.snippedFactory.create(fileType, identifier, namespace);
     }
 
@@ -93,5 +97,4 @@ export class FileGenerator {
     private async insertSnippet(editor: vscode.TextEditor, snippet: vscode.SnippetString): Promise<void> {
         editor.insertSnippet(snippet, new vscode.Position(0, 0));
     }
-
 }

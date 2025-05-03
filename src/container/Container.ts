@@ -9,12 +9,12 @@ type RegistrationType<T> = {
      * The service instance, created on first request
      */
     instance?: T;
-    
+
     /**
      * The service constructor
      */
     constructor: ConstructorType<T>;
-    
+
     /**
      * The constructors of the dependencies required by the service
      */

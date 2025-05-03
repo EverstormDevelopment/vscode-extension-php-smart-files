@@ -1,23 +1,22 @@
 import * as vscode from "vscode";
 import { FileTypeEnum } from "../../../utils/enum/FileTypeEnum";
-import { SnippetFactoryInterface } from '../interface/SnippetFactoryInterface';
-import { SnippetTypeFactoryInterface } from '../interface/SnippetTypeFactoryInterface';
-import { SnippetClassFactory } from './SnippetClassFactory';
+import { SnippetFactoryInterface } from "../interface/SnippetFactoryInterface";
+import { SnippetTypeFactoryInterface } from "../interface/SnippetTypeFactoryInterface";
+import { SnippetClassFactory } from "./SnippetClassFactory";
 import { SnippetEnumFactory } from "./SnippetEnumFactory";
 import { SnippetFileFactory } from "./SnippetFileFactory";
 import { SnippetInterfaceFactory } from "./SnippetInterfaceFactory";
-import { SnippetTraitFactory } from "./SnippetTraitFactory";
 import { SnippetTemplateClassFactory } from "./SnippetTemplateClassFactory";
-import { SnippetTemplateInterfaceFactory } from "./SnippetTemplateInterfaceFactory";
 import { SnippetTemplateEnumFactory } from "./SnippetTemplateEnumFactory";
+import { SnippetTemplateInterfaceFactory } from "./SnippetTemplateInterfaceFactory";
 import { SnippetTemplateTraitFactory } from "./SnippetTemplateTraitFactory";
+import { SnippetTraitFactory } from "./SnippetTraitFactory";
 
 /**
  * Factory class for creating PHP snippets.
  * Delegates to specific factories based on the requested PHP element type.
  */
 export class SnippetFactory implements SnippetFactoryInterface {
-
     /**
      * Registry of factory functions for different PHP snippet types
      */
@@ -43,7 +42,7 @@ export class SnippetFactory implements SnippetFactoryInterface {
      * @throws Error if an unknown snippet factory type is provided
      */
     public create(type: FileTypeEnum, identifier: string, namespace?: string): vscode.SnippetString {
-        if(!this.factories[type]) {
+        if (!this.factories[type]) {
             throw new Error(`Unknown snippet factory type: ${type}`);
         }
 

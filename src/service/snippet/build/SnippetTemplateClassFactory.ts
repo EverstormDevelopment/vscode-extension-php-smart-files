@@ -9,9 +9,7 @@ export class SnippetTemplateClassFactory extends SnippetClassFactory {
      * @returns This instance for method chaining
      */
     protected addContent(): this {
-        return this.addConstructor()
-            .addLineBreak()
-            .addMethod();
+        return this.addConstructor().addLineBreak().addMethod();
     }
 
     /**

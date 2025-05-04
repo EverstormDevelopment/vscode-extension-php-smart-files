@@ -84,14 +84,7 @@ export abstract class SnippetFactoryAbstract implements SnippetTypeFactoryInterf
             return this;
         }
 
-        if (namespace) {
-            this.snippet.appendText(`namespace ${namespace};\n\n`);
-            return this;
-        }
-
-        this.snippet.appendText("namespace ");
-        this.snippet.appendPlaceholder("App", this.tabstop++);
-        this.snippet.appendText(";\n\n");
+        this.snippet.appendText(`namespace ${namespace};\n\n`);
         return this;
     }
 

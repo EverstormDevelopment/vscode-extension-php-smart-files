@@ -9,6 +9,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - Some awesome new feature... Stay tuned!
 
 
+## [0.1.1] - 2025-05-04
+
+### Fixed
+
+- Missing package translations (nls) for es, fr and ru
+
+
 ## [0.1.0] - 2025-05-04
 
 ### Added

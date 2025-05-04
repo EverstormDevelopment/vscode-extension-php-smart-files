@@ -1,15 +1,17 @@
 # Change Log
 
 All notable changes to the extension will be documented in this file.
-
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+<!-- Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file. -->
 
 
 
 ## [Unreleased]
 
+
+
+## [0.2.0] - 2025-05-04
+
 ### Added
-- Some awesome new feature... Stay tuned!
 - Added setting to control inclusion of `declare(strict_types=1);` in generated files (default: `false`)
 - Added setting `useFallbackNamespace` to use a fallback namespace when no namespace could be resolved (default: `false`)
 - Added setting `fallbackNamespace` to define the namespace when `useFallbackNamespace` is enabled (default: `App`)

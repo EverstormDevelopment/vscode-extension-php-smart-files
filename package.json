@@ -3,7 +3,7 @@
   "displayName": "PHP File Creator",
   "description": "A VS Code Extension for PHP development",
   "publisher": "everstorm",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "engines": {
     "vscode": "^1.99.0"
   },

@@ -124,7 +124,6 @@
           "command": "php-file-creator.newTemplatePhpTrait",
           "group": "2_creation_template@5"
         }
-        
       ]
     },
     "submenus": [
@@ -163,6 +162,7 @@
     "webpack-cli": "^6.0.1"
   },
   "dependencies": {
-    "@vscode/l10n": "^0.0.18"
+    "@vscode/l10n": "^0.0.18",
+    "php-parser": "^3.2.3"
   }
 }

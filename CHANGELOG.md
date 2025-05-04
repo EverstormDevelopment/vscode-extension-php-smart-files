@@ -4,19 +4,24 @@ All notable changes to the extension will be documented in this file.
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+
+
 ## [Unreleased]
 
 ### Added
 - Some awesome new feature... Stay tuned!
 - Added setting to control inclusion of `declare(strict_types=1);` in generated files (default: `false`)
-- Added setting `useFallbackNamespace` to use a default namespace when no namespace could be resolved (default: `false`)
+- Added setting `useFallbackNamespace` to use a fallback namespace when no namespace could be resolved (default: `false`)
 - Added setting `fallbackNamespace` to define the namespace when `useFallbackNamespace` is enabled (default: `App`)
+
+### Fixed
+- Missleading and wrong translations
+
 
 
 ## [0.1.1] - 2025-05-04
 
 ### Fixed
-
 - Missing package translations (nls) for es, fr and ru
 
 
@@ -30,3 +35,5 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - Template options for PHP elements with pre-populated code
 - Multi-language support (English, German, French, Spanish, Russian)
 - Integration with VS Code Explorer context menu
+
+

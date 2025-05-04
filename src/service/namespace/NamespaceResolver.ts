@@ -3,6 +3,7 @@ import * as vscode from "vscode";
 import { getPathNormalized } from "../../utils/filesystem/getPathNormalized";
 import { ComposerJsonService } from "../composer/ComposerJsonService";
 import { NamespaceMatchType } from "./type/NamespaceMatchType";
+import { AutoloadConfigsType } from "../composer/type/AutoloadConfigsType";
 
 /**
  * Resolves PHP namespaces based on file paths and Composer autoload configurations.
@@ -19,29 +20,54 @@ export class NamespaceResolver {
     /**
      * Resolves the PHP namespace for a given file URI.
      * @param uri The URI of the file to resolve the namespace for
-     * @returns The resolved PHP namespace or empty string if not resolvable
+     * @returns The resolved PHP namespace or undefined if not resolvable
      */
-    public async resolve(uri: vscode.Uri): Promise<string> {
+    public async resolve(uri: vscode.Uri): Promise<string | undefined> {
         const composerJsonUri = await this.composerJsonService.find(uri);
         if (!composerJsonUri) {
-            return "";
+            return this.getNamespaceDefault();
         }
 
-        const autoloadConfig = await this.composerJsonService.resolveAutoloadConfigs(composerJsonUri);
-        if (!autoloadConfig) {
-            return "";
+        const autoloadConfigs = await this.composerJsonService.resolveAutoloadConfigs(composerJsonUri);
+        if (!autoloadConfigs) {
+            return this.getNamespaceDefault();
         }
 
         const composerDirectory = path.dirname(composerJsonUri.fsPath);
         const relativeFilePath = path.relative(composerDirectory, uri.fsPath);
-        for (const [type, config] of Object.entries(autoloadConfig)) {
-            const namespace = this.findNamespaceForPath(relativeFilePath, config, type === "psr0");
+        const namespace = this.findNamespace(relativeFilePath, autoloadConfigs);
+        
+        return namespace ?? this.getNamespaceDefault();
+    }
+
+    /**
+     * Searches for a PHP namespace that matches the given relative file path in the autoload configurations.
+     * @param relativePath The relative file path to find a namespace for
+     * @param autoloadConfigs The Composer autoload configurations to search in
+     * @returns The matching namespace or undefined if none found
+     */
+    private findNamespace(relativePath: string, autoloadConfigs: AutoloadConfigsType): string | undefined {
+        for (const [type, config] of Object.entries(autoloadConfigs)) {
+            const namespace = this.findNamespaceForPath(relativePath, config, type === "psr0");
             if (namespace) {
                 return namespace;
             }
         }
+        return undefined;
+    }
 
-        return "";
+    /**
+     * Gets the default namespace from configuration if enabled.
+     * @returns The configured default namespace or undefined if not enabled
+     */
+    private getNamespaceDefault(): string | undefined {
+        const config = vscode.workspace.getConfiguration("phpFileCreator");
+        const usesDefaultNamespace = config.get<boolean>("useDefaultNamespace", false);
+        if (!usesDefaultNamespace) {
+            return undefined;
+        }
+
+        return config.get<string>("defaultNamespace", "App");
     }
 
     /**

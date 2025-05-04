@@ -1,0 +1,12 @@
+{
+  "php-file-creator.commands.newEmptyPhpFile.title": "Fichier PHP vide",
+  "php-file-creator.commands.newEmptyPhpClass.title": "Classe PHP vide",
+  "php-file-creator.commands.newEmptyPhpInterface.title": "Interface PHP vide",
+  "php-file-creator.commands.newEmptyPhpEnum.title": "Enum PHP vide",
+  "php-file-creator.commands.newEmptyPhpTrait.title": "Trait PHP vide",
+  "php-file-creator.commands.newTemplatePhpClass.title": "Classe PHP depuis modèle",
+  "php-file-creator.commands.newTemplatePhpInterface.title": "Interface PHP depuis modèle",
+  "php-file-creator.commands.newTemplatePhpEnum.title": "Enum PHP depuis modèle",
+  "php-file-creator.commands.newTemplatePhpTrait.title": "Trait PHP depuis modèle",
+  "php-file-creator.submenus.main.label": "Créer un fichier PHP"
+}

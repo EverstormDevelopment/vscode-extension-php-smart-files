@@ -37,5 +37,3 @@ All notable changes to the extension will be documented in this file.
 - Template options for PHP elements with pre-populated code
 - Multi-language support (English, German, French, Spanish, Russian)
 - Integration with VS Code Explorer context menu
-
-

@@ -5,6 +5,7 @@ import { FileTypeEnum } from "../../utils/enum/FileTypeEnum";
 import { ExtensionInterface } from "../interface/ExtensionInterface";
 import { FileGenerationCommandRegistry } from "../registry/FileGenerationCommandRegistry";
 import { FileGenerationCommand } from "./../command/FileGenerationCommand";
+import { FileMovedObserver } from "../../service/refactor/observer/FileMovedObserver";
 
 /**
  * The main extension class that handles the extension lifecycle.
@@ -45,6 +46,8 @@ export class Extension implements ExtensionInterface {
     public activate(context: vscode.ExtensionContext): this {
         this.initialize(context);
         this.addFileCreationCommands(context);
+
+        this.container.get(FileMovedObserver).start(context);
 
         return this;
     }

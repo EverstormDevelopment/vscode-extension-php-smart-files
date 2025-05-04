@@ -1,17 +1,17 @@
 {
-  "php-file-creator.commands.newEmptyPhpFile.title": "Archivo PHP vacío",
-  "php-file-creator.commands.newEmptyPhpClass.title": "Clase PHP vacía",
-  "php-file-creator.commands.newEmptyPhpInterface.title": "Interfaz PHP vacía",
-  "php-file-creator.commands.newEmptyPhpEnum.title": "Enum PHP vacío",
-  "php-file-creator.commands.newEmptyPhpTrait.title": "Trait PHP vacío",
+  "php-file-creator.commands.newEmptyPhpFile.title": "Archivo PHP",
+  "php-file-creator.commands.newEmptyPhpClass.title": "Clase PHP",
+  "php-file-creator.commands.newEmptyPhpInterface.title": "Interfaz PHP",
+  "php-file-creator.commands.newEmptyPhpEnum.title": "Enum PHP",
+  "php-file-creator.commands.newEmptyPhpTrait.title": "Trait PHP",
   "php-file-creator.commands.newTemplatePhpClass.title": "Clase PHP desde plantilla",
   "php-file-creator.commands.newTemplatePhpInterface.title": "Interfaz PHP desde plantilla",
   "php-file-creator.commands.newTemplatePhpEnum.title": "Enum PHP desde plantilla",
   "php-file-creator.commands.newTemplatePhpTrait.title": "Trait PHP desde plantilla",
   "php-file-creator.submenus.main.label": "Crear archivo PHP",
 
-  "php-file-creator.config.useStrictTypeInTemplates.description": "Controla si `declare(strict_types=1);` se incluye en los archivos generados",
-  "php-file-creator.config.useFallbackNamespace.description": "Usar un namespace alternativo cuando no se puede resolver ningún namespace",
-  "php-file-creator.config.fallbackNamespace.description": "Definir el namespace a utilizar cuando el namespace alternativo está habilitado",
-  "php-file-creator.config.fallbackNamespace.patternErrorMessage": "El namespace debe ser un namespace PHP válido"
+  "php-file-creator.config.useStrictTypeInTemplates.description": "Determina si `declare(strict_types=1);` se incluye en los archivos generados",
+  "php-file-creator.config.useFallbackNamespace.description": "Determina si usar un espacio de nombres alternativo cuando no se pudo resolver ningún espacio de nombres. Cuando está desactivado, no se añadirá ningún espacio de nombres",
+  "php-file-creator.config.fallbackNamespace.description": "Define el espacio de nombres a utilizar cuando el espacio de nombres alternativo está habilitado y no se pudo encontrar ningún otro espacio de nombres",
+  "php-file-creator.config.fallbackNamespace.patternErrorMessage": "El espacio de nombres debe ser un espacio de nombres PHP válido según PSR-4 (por ejemplo, 'App', 'Vendor\\Service'). Cada segmento debe comenzar con una letra mayúscula."
 }

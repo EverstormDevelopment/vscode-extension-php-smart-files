@@ -1,19 +1,17 @@
 {
-  "php-file-creator.commands.newEmptyPhpFile.title": "Fichier PHP vide",
-  "php-file-creator.commands.newEmptyPhpClass.title": "Classe PHP vide",
-  "php-file-creator.commands.newEmptyPhpInterface.title": "Interface PHP vide",
-  "php-file-creator.commands.newEmptyPhpEnum.title": "Enum PHP vide",
-  "php-file-creator.commands.newEmptyPhpTrait.title": "Trait PHP vide",
+  "php-file-creator.commands.newEmptyPhpFile.title": "Fichier PHP",
+  "php-file-creator.commands.newEmptyPhpClass.title": "Classe PHP",
+  "php-file-creator.commands.newEmptyPhpInterface.title": "Interface PHP",
+  "php-file-creator.commands.newEmptyPhpEnum.title": "Enum PHP",
+  "php-file-creator.commands.newEmptyPhpTrait.title": "Trait PHP",
   "php-file-creator.commands.newTemplatePhpClass.title": "Classe PHP depuis modèle",
   "php-file-creator.commands.newTemplatePhpInterface.title": "Interface PHP depuis modèle",
   "php-file-creator.commands.newTemplatePhpEnum.title": "Enum PHP depuis modèle",
   "php-file-creator.commands.newTemplatePhpTrait.title": "Trait PHP depuis modèle",
   "php-file-creator.submenus.main.label": "Créer un fichier PHP",
 
-  "php-file-creator.config.useStrictTypeInTemplates.description": "Contrôle si `declare(strict_types=1);` est inclus dans les fichiers générés",
-  "php-file-creator.config.useFallbackNamespace.description": "Utiliser un espace de noms de secours lorsqu'aucun espace de noms n'a pu être résolu",
-  "php-file-creator.config.fallbackNamespace.description": "Définir l'espace de noms à utiliser lorsque l'espace de noms de secours est activé",
-  "php-file-creator.config.fallbackNamespace.patternErrorMessage": "L'espace de noms doit être un espace de noms PHP valide",
-  "php-file-creator.config.defaultNamespace.description": "L'espace de noms par défaut à utiliser si aucun espace de noms n'a pu être trouvé",
-  "php-file-creator.config.defaultNamespace.patternErrorMessage": "L'espace de noms doit être un espace de noms PHP valide selon PSR-4 (ex: 'App', 'Vendor\\Service'). Chaque segment doit commencer par une lettre majuscule."
+  "php-file-creator.config.useStrictTypeInTemplates.description": "Détermine si `declare(strict_types=1);` est inclus dans les fichiers générés",
+  "php-file-creator.config.useFallbackNamespace.description": "Détermine s'il faut utiliser un espace de noms de secours lorsqu'aucun espace de noms n'a pu être résolu. Quand désactivé, aucun espace de noms ne sera ajouté",
+  "php-file-creator.config.fallbackNamespace.description": "Définit l'espace de noms à utiliser lorsque l'espace de noms de secours est activé et qu'aucun autre espace de noms n'a pu être trouvé",
+  "php-file-creator.config.fallbackNamespace.patternErrorMessage": "L'espace de noms doit être un espace de noms PHP valide selon PSR-4 (par exemple, 'App', 'Vendor\\Service'). Chaque segment doit commencer par une lettre majuscule."
 }

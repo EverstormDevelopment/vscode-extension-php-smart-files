@@ -1,17 +1,17 @@
 {
-  "php-file-creator.commands.newEmptyPhpFile.title": "Пустой PHP файл",
-  "php-file-creator.commands.newEmptyPhpClass.title": "Пустой PHP класс",
-  "php-file-creator.commands.newEmptyPhpInterface.title": "Пустой PHP интерфейс",
-  "php-file-creator.commands.newEmptyPhpEnum.title": "Пустой PHP enum",
-  "php-file-creator.commands.newEmptyPhpTrait.title": "Пустой PHP трейт",
+  "php-file-creator.commands.newEmptyPhpFile.title": "PHP файл",
+  "php-file-creator.commands.newEmptyPhpClass.title": "PHP класс",
+  "php-file-creator.commands.newEmptyPhpInterface.title": "PHP интерфейс",
+  "php-file-creator.commands.newEmptyPhpEnum.title": "PHP enum",
+  "php-file-creator.commands.newEmptyPhpTrait.title": "PHP трейт",
   "php-file-creator.commands.newTemplatePhpClass.title": "PHP класс из шаблона",
   "php-file-creator.commands.newTemplatePhpInterface.title": "PHP интерфейс из шаблона",
   "php-file-creator.commands.newTemplatePhpEnum.title": "PHP enum из шаблона",
   "php-file-creator.commands.newTemplatePhpTrait.title": "PHP трейт из шаблона",
   "php-file-creator.submenus.main.label": "Создать PHP файл",
 
-  "php-file-creator.config.useStrictTypeInTemplates.description": "Определяет, включать ли `declare(strict_types=1);` в сгенерированные файлы",
-  "php-file-creator.config.useFallbackNamespace.description": "Использовать резервное пространство имен, когда не удалось разрешить пространство имен",
-  "php-file-creator.config.fallbackNamespace.description": "Определить пространство имен для использования, когда включено резервное пространство имен",
-  "php-file-creator.config.fallbackNamespace.patternErrorMessage": "Пространство имен должно быть действительным пространством имен PHP"
+  "php-file-creator.config.useStrictTypeInTemplates.description": "Определяет, будет ли `declare(strict_types=1);` включен в сгенерированные файлы",
+  "php-file-creator.config.useFallbackNamespace.description": "Определяет, использовать ли резервное пространство имен, когда не удалось разрешить пространство имен. Когда отключено, пространство имен не будет добавлено",
+  "php-file-creator.config.fallbackNamespace.description": "Определяет пространство имен для использования, когда резервное пространство имен включено и не удалось найти другое пространство имен",
+  "php-file-creator.config.fallbackNamespace.patternErrorMessage": "Пространство имен должно быть действительным пространством имен PHP в соответствии с PSR-4 (например, 'App', 'Vendor\\Service'). Каждый сегмент должен начинаться с заглавной буквы."
 }

@@ -1,17 +1,17 @@
 {
-  "php-file-creator.commands.newEmptyPhpFile.title": "Empty PHP File",
-  "php-file-creator.commands.newEmptyPhpClass.title": "Empty PHP Class",
-  "php-file-creator.commands.newEmptyPhpInterface.title": "Empty PHP Interface",
-  "php-file-creator.commands.newEmptyPhpEnum.title": "Empty PHP Enum",
-  "php-file-creator.commands.newEmptyPhpTrait.title": "Empty PHP Trait",
+  "php-file-creator.commands.newEmptyPhpFile.title": "PHP File",
+  "php-file-creator.commands.newEmptyPhpClass.title": "PHP Class",
+  "php-file-creator.commands.newEmptyPhpInterface.title": "PHP Interface",
+  "php-file-creator.commands.newEmptyPhpEnum.title": "PHP Enum",
+  "php-file-creator.commands.newEmptyPhpTrait.title": "PHP Trait",
   "php-file-creator.commands.newTemplatePhpClass.title": "PHP Class from Template",
   "php-file-creator.commands.newTemplatePhpInterface.title": "PHP Interface from Template",
   "php-file-creator.commands.newTemplatePhpEnum.title": "PHP Enum from Template",
   "php-file-creator.commands.newTemplatePhpTrait.title": "PHP Trait from Template",
   "php-file-creator.submenus.main.label": "Create PHP File",
 
-  "php-file-creator.config.useStrictTypeInTemplates.description": "Controls whether `declare(strict_types=1);` is included in generated files",
-  "php-file-creator.config.useFallbackNamespace.description": "Use a fallback namespace when no namespace could be resolved",
-  "php-file-creator.config.fallbackNamespace.description": "Define the namespace to use when the fallback namespace is enabled",
-  "php-file-creator.config.fallbackNamespace.patternErrorMessage": "The namespace must be a valid PHP namespace"
+  "php-file-creator.config.useStrictTypeInTemplates.description": "Determines whether `declare(strict_types=1);` is included in generated files",
+  "php-file-creator.config.useFallbackNamespace.description": "Determines whether to use a fallback namespace when no namespace could be resolved. When disabled, no namespace will be added",
+  "php-file-creator.config.fallbackNamespace.description": "Defines the namespace to use when fallback namespace is enabled and no other namespace could be found",
+  "php-file-creator.config.fallbackNamespace.patternErrorMessage": "The namespace must be a valid PHP namespace according to PSR-4 (e.g. 'App', 'Vendor\\Service'). Each segment must start with an uppercase letter."
 }

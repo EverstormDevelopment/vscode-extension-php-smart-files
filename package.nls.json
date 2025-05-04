@@ -9,5 +9,9 @@
   "php-file-creator.commands.newTemplatePhpEnum.title": "PHP Enum from Template",
   "php-file-creator.commands.newTemplatePhpTrait.title": "PHP Trait from Template",
   "php-file-creator.submenus.main.label": "Create PHP File",
-  "php-file-creator.config.useStrictTypeInTemplates.description": "If enabled the extension adds `declare(strict_types=1);` to the generated files"
+
+  "php-file-creator.config.useStrictTypeInTemplates.description": "If enabled the extension adds `declare(strict_types=1);` to the generated files",
+  "php-file-creator.config.useDefaultNamespace.description": "Determines whether the default namespace should be used when no namespace is found. If disabled, no namespace will be added instead.",
+  "php-file-creator.config.defaultNamespace.description": "The default namespace to use if no namespace could be found",
+  "php-file-creator.config.defaultNamespace.patternErrorMessage": "The namespace must be a valid PHP namespace according to PSR-4 (e.g. 'App', 'Vendor\\Service'). Each segment must start with an uppercase letter."
 }

@@ -9,5 +9,9 @@
   "php-file-creator.commands.newTemplatePhpEnum.title": "PHP-Enum aus Vorlage",
   "php-file-creator.commands.newTemplatePhpTrait.title": "Neuer PHP-Trait aus Vorlage",
   "php-file-creator.submenus.main.label": "PHP-Datei erstellen",
-  "php-file-creator.config.useStrictTypeInTemplates.description": "Wenn aktiviert, fügt die Erweiterung `declare(strict_types=1);` zu den generierten Dateien hinzu"
+
+  "php-file-creator.config.useStrictTypeInTemplates.description": "Wenn aktiviert, fügt die Erweiterung `declare(strict_types=1);` zu den generierten Dateien hinzu",
+  "php-file-creator.config.useDefaultNamespace.description": "Bestimmt, ob bei fehlendem Namespace der Standard-Namespace verwendet werden soll. Wenn deaktiviert, wird stattdessen kein Namespace hinzugefügt.",
+  "php-file-creator.config.defaultNamespace.description": "Der Standard-Namespace, der verwendet wird, wenn kein Namespace gefunden wird",
+  "php-file-creator.config.defaultNamespace.patternErrorMessage": "Der Namespace muss ein gültiger PHP-Namespace gemäß PSR-4 sein (z.B. 'App', 'Vendor\\Service'). Jedes Segment muss mit einem Großbuchstaben beginnen."
 }

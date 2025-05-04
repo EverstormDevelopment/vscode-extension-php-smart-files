@@ -9,5 +9,9 @@
   "php-file-creator.commands.newTemplatePhpEnum.title": "Enum PHP desde plantilla",
   "php-file-creator.commands.newTemplatePhpTrait.title": "Trait PHP desde plantilla",
   "php-file-creator.submenus.main.label": "Crear archivo PHP",
-  "php-file-creator.config.useStrictTypeInTemplates.description": "Si está activado, la extensión agrega `declare(strict_types=1);` a los archivos generados"
+
+  "php-file-creator.config.useStrictTypeInTemplates.description": "Si está activado, la extensión agrega `declare(strict_types=1);` a los archivos generados",
+  "php-file-creator.config.useDefaultNamespace.description": "Determina si se debe utilizar el namespace predeterminado cuando no se encuentra ningún namespace. Si está desactivado, no se agregará ningún namespace en su lugar.",
+  "php-file-creator.config.defaultNamespace.description": "El namespace predeterminado a utilizar si no se pudo encontrar ningún namespace",
+  "php-file-creator.config.defaultNamespace.patternErrorMessage": "El namespace debe ser un namespace PHP válido según PSR-4 (p.ej. 'App', 'Vendor\\Service'). Cada segmento debe comenzar con una letra mayúscula."
 }

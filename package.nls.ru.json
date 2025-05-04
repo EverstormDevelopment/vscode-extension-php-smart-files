@@ -9,5 +9,9 @@
   "php-file-creator.commands.newTemplatePhpEnum.title": "PHP enum из шаблона",
   "php-file-creator.commands.newTemplatePhpTrait.title": "PHP трейт из шаблона",
   "php-file-creator.submenus.main.label": "Создать PHP файл",
-  "php-file-creator.config.useStrictTypeInTemplates.description": "Если включено, расширение добавляет `declare(strict_types=1);` в генерируемые файлы"
+
+  "php-file-creator.config.useStrictTypeInTemplates.description": "Если включено, расширение добавляет `declare(strict_types=1);` в генерируемые файлы",
+  "php-file-creator.config.useDefaultNamespace.description": "Определяет, следует ли использовать пространство имен по умолчанию, когда не найдено никакого пространства имен. Если отключено, пространство имен не будет добавлено вообще.",
+  "php-file-creator.config.defaultNamespace.description": "Пространство имен по умолчанию, используемое, если не удалось найти пространство имен",
+  "php-file-creator.config.defaultNamespace.patternErrorMessage": "Пространство имен должно быть допустимым пространством имен PHP в соответствии с PSR-4 (например, 'App', 'Vendor\\Service'). Каждый сегмент должен начинаться с заглавной буквы."
 }

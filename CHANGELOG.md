@@ -7,8 +7,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## [Unreleased]
 
 ### Added
-- Added setting to control inclusion of `declare(strict_types=1);` in generated files (default: `false`)
 - Some awesome new feature... Stay tuned!
+- Added setting to control inclusion of `declare(strict_types=1);` in generated files (default: `false`)
+
 
 
 

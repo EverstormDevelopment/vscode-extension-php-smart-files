@@ -21,7 +21,24 @@
           "type": "boolean",
           "default": false,
           "description": "%php-file-creator.config.useStrictTypeInTemplates.description%",
-          "markdownDescription": "%php-file-creator.config.useStrictTypeInTemplates.description%"
+          "markdownDescription": "%php-file-creator.config.useStrictTypeInTemplates.description%",
+          "order": 1
+        },
+        "phpFileCreator.useDefaultNamespace": {
+          "type": "boolean",
+          "default": false,
+          "description": "%php-file-creator.config.useDefaultNamespace.description%",
+          "markdownDescription": "%php-file-creator.config.useDefaultNamespace.description%",
+          "order": 2
+        },
+        "phpFileCreator.defaultNamespace": {
+          "type": "string",
+          "default": "App",
+          "description": "%php-file-creator.config.defaultNamespace.description%",
+          "markdownDescription": "%php-file-creator.config.defaultNamespace.description%",
+          "pattern": "^[A-Z\\p{Lu}_][a-zA-Z0-9\\p{L}_\\x80-\\xff]*(\\\\[A-Z\\p{Lu}_][a-zA-Z0-9\\p{L}_\\x80-\\xff]*)*$",
+          "patternErrorMessage": "%php-file-creator.config.defaultNamespace.patternErrorMessage%",
+          "order": 3
         }
       }
     },

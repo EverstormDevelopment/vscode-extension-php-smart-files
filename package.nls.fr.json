@@ -9,5 +9,9 @@
   "php-file-creator.commands.newTemplatePhpEnum.title": "Enum PHP depuis modèle",
   "php-file-creator.commands.newTemplatePhpTrait.title": "Trait PHP depuis modèle",
   "php-file-creator.submenus.main.label": "Créer un fichier PHP",
-  "php-file-creator.config.useStrictTypeInTemplates.description": "Si activé, l'extension ajoute `declare(strict_types=1);` aux fichiers générés"
+
+  "php-file-creator.config.useStrictTypeInTemplates.description": "Si activé, l'extension ajoute `declare(strict_types=1);` aux fichiers générés",
+  "php-file-creator.config.useDefaultNamespace.description": "Détermine si l'espace de noms par défaut doit être utilisé lorsqu'aucun espace de noms n'est trouvé. Si désactivé, aucun espace de noms ne sera ajouté à la place.",
+  "php-file-creator.config.defaultNamespace.description": "L'espace de noms par défaut à utiliser si aucun espace de noms n'a pu être trouvé",
+  "php-file-creator.config.defaultNamespace.patternErrorMessage": "L'espace de noms doit être un espace de noms PHP valide selon PSR-4 (ex: 'App', 'Vendor\\Service'). Chaque segment doit commencer par une lettre majuscule."
 }

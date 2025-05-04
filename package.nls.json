@@ -1,12 +1,13 @@
 {
-  "php-file-creator.commands.newEmptyPhpFile.title": "New PHP file",
-  "php-file-creator.commands.newEmptyPhpClass.title": "New PHP class",
-  "php-file-creator.commands.newEmptyPhpInterface.title": "New PHP interface",
-  "php-file-creator.commands.newEmptyPhpEnum.title": "New PHP enum",
-  "php-file-creator.commands.newEmptyPhpTrait.title": "New PHP trait",
-  "php-file-creator.commands.newTemplatePhpClass.title": "New PHP class from template",
-  "php-file-creator.commands.newTemplatePhpInterface.title": "New PHP interface from template",
-  "php-file-creator.commands.newTemplatePhpEnum.title": "New PHP enum from template",
-  "php-file-creator.commands.newTemplatePhpTrait.title": "New PHP trait from template",
-  "php-file-creator.submenus.main.label": "Create PHP File"
+  "php-file-creator.commands.newEmptyPhpFile.title": "Empty PHP File",
+  "php-file-creator.commands.newEmptyPhpClass.title": "Empty PHP Class",
+  "php-file-creator.commands.newEmptyPhpInterface.title": "Empty PHP Interface",
+  "php-file-creator.commands.newEmptyPhpEnum.title": "Empty PHP Enum",
+  "php-file-creator.commands.newEmptyPhpTrait.title": "Empty PHP Trait",
+  "php-file-creator.commands.newTemplatePhpClass.title": "PHP Class from Template",
+  "php-file-creator.commands.newTemplatePhpInterface.title": "PHP Interface from Template",
+  "php-file-creator.commands.newTemplatePhpEnum.title": "PHP Enum from Template",
+  "php-file-creator.commands.newTemplatePhpTrait.title": "PHP Trait from Template",
+  "php-file-creator.submenus.main.label": "PHP File Creator",
+  "php-file-creator.config.useStrictTypeInTemplates.description": "If enabled the extension adds `declare(strict_types=1);` to the generated files"
 }

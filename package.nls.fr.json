@@ -8,5 +8,6 @@
   "php-file-creator.commands.newTemplatePhpInterface.title": "Interface PHP depuis modèle",
   "php-file-creator.commands.newTemplatePhpEnum.title": "Enum PHP depuis modèle",
   "php-file-creator.commands.newTemplatePhpTrait.title": "Trait PHP depuis modèle",
-  "php-file-creator.submenus.main.label": "Créer un fichier PHP"
+  "php-file-creator.submenus.main.label": "Créer un fichier PHP",
+  "php-file-creator.config.useStrictTypeInTemplates.description": "Si activé, l'extension ajoute `declare(strict_types=1);` aux fichiers générés"
 }

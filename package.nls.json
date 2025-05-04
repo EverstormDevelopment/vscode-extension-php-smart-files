@@ -8,6 +8,6 @@
   "php-file-creator.commands.newTemplatePhpInterface.title": "PHP Interface from Template",
   "php-file-creator.commands.newTemplatePhpEnum.title": "PHP Enum from Template",
   "php-file-creator.commands.newTemplatePhpTrait.title": "PHP Trait from Template",
-  "php-file-creator.submenus.main.label": "PHP File Creator",
+  "php-file-creator.submenus.main.label": "Create PHP File",
   "php-file-creator.config.useStrictTypeInTemplates.description": "If enabled the extension adds `declare(strict_types=1);` to the generated files"
 }

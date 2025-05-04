@@ -8,5 +8,6 @@
   "php-file-creator.commands.newTemplatePhpInterface.title": "Interfaz PHP desde plantilla",
   "php-file-creator.commands.newTemplatePhpEnum.title": "Enum PHP desde plantilla",
   "php-file-creator.commands.newTemplatePhpTrait.title": "Trait PHP desde plantilla",
-  "php-file-creator.submenus.main.label": "Crear archivo PHP"
+  "php-file-creator.submenus.main.label": "Crear archivo PHP",
+  "php-file-creator.config.useStrictTypeInTemplates.description": "Si está activado, la extensión agrega `declare(strict_types=1);` a los archivos generados"
 }

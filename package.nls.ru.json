@@ -8,5 +8,6 @@
   "php-file-creator.commands.newTemplatePhpInterface.title": "PHP интерфейс из шаблона",
   "php-file-creator.commands.newTemplatePhpEnum.title": "PHP enum из шаблона",
   "php-file-creator.commands.newTemplatePhpTrait.title": "PHP трейт из шаблона",
-  "php-file-creator.submenus.main.label": "Создать PHP файл"
+  "php-file-creator.submenus.main.label": "Создать PHP файл",
+  "php-file-creator.config.useStrictTypeInTemplates.description": "Если включено, расширение добавляет `declare(strict_types=1);` в генерируемые файлы"
 }

@@ -7,7 +7,7 @@
   "php-file-creator.commands.newTemplatePhpClass.title": "PHP-Klasse aus Vorlage",
   "php-file-creator.commands.newTemplatePhpInterface.title": "PHP-Interface aus Vorlage",
   "php-file-creator.commands.newTemplatePhpEnum.title": "PHP-Enum aus Vorlage",
-  "php-file-creator.commands.newTemplatePhpTrait.title": "PHP-Trait aus Vorlage",
-  "php-file-creator.submenus.main.label": "PHP File Creator",
+  "php-file-creator.commands.newTemplatePhpTrait.title": "Neuer PHP-Trait aus Vorlage",
+  "php-file-creator.submenus.main.label": "PHP-Datei erstellen",
   "php-file-creator.config.useStrictTypeInTemplates.description": "Wenn aktiviert, fügt die Erweiterung `declare(strict_types=1);` zu den generierten Dateien hinzu"
 }

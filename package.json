@@ -20,7 +20,8 @@
         "phpFileCreator.useStrictTypeInTemplates": {
           "type": "boolean",
           "default": false,
-          "description": "%php-file-creator.config.useStrictTypeInTemplates.description%"
+          "description": "%php-file-creator.config.useStrictTypeInTemplates.description%",
+          "markdownDescription": "%php-file-creator.config.useStrictTypeInTemplates.description%"
         }
       }
     },

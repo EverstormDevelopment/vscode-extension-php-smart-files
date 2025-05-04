@@ -9,8 +9,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ### Added
 - Some awesome new feature... Stay tuned!
 - Added setting to control inclusion of `declare(strict_types=1);` in generated files (default: `false`)
-
-
+- Added setting `useFallbackNamespace` to use a default namespace when no namespace could be resolved (default: `false`)
+- Added setting `fallbackNamespace` to define the namespace when `useFallbackNamespace` is enabled (default: `App`)
 
 
 ## [0.1.1] - 2025-05-04

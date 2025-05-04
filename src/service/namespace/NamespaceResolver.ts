@@ -25,19 +25,19 @@ export class NamespaceResolver {
     public async resolve(uri: vscode.Uri): Promise<string | undefined> {
         const composerJsonUri = await this.composerJsonService.find(uri);
         if (!composerJsonUri) {
-            return this.getNamespaceDefault();
+            return this.getNamespaceFallback();
         }
 
         const autoloadConfigs = await this.composerJsonService.resolveAutoloadConfigs(composerJsonUri);
         if (!autoloadConfigs) {
-            return this.getNamespaceDefault();
+            return this.getNamespaceFallback();
         }
 
         const composerDirectory = path.dirname(composerJsonUri.fsPath);
         const relativeFilePath = path.relative(composerDirectory, uri.fsPath);
         const namespace = this.findNamespace(relativeFilePath, autoloadConfigs);
         
-        return namespace ?? this.getNamespaceDefault();
+        return namespace ?? this.getNamespaceFallback();
     }
 
     /**
@@ -57,17 +57,17 @@ export class NamespaceResolver {
     }
 
     /**
-     * Gets the default namespace from configuration if enabled.
-     * @returns The configured default namespace or undefined if not enabled
+     * Returns the fallback namespace from configuration if enabled.
+     * @returns The configured fallback namespace or undefined if the fallback option is disabled
      */
-    private getNamespaceDefault(): string | undefined {
+    private getNamespaceFallback(): string | undefined {
         const config = vscode.workspace.getConfiguration("phpFileCreator");
-        const usesDefaultNamespace = config.get<boolean>("useDefaultNamespace", false);
-        if (!usesDefaultNamespace) {
+        const useFallbackNamespace = config.get<boolean>("useFallbackNamespace", false);
+        if (!useFallbackNamespace) {
             return undefined;
         }
 
-        return config.get<string>("defaultNamespace", "App");
+        return config.get<string>("fallbackNamespace", "App");
     }
 
     /**

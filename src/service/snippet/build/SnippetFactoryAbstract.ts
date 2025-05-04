@@ -32,6 +32,8 @@ export abstract class SnippetFactoryAbstract implements SnippetTypeFactoryInterf
     public create(identifier: string, namespace?: string): vscode.SnippetString {
         return this.createSnippet()
             .addPhpTag()
+            .addStrictType()
+            .addLineBreak()
             .addNamespace(namespace)
             .openDeclaration(identifier)
             .addContent()
@@ -53,7 +55,22 @@ export abstract class SnippetFactoryAbstract implements SnippetTypeFactoryInterf
      * @returns This instance for method chaining
      */
     private addPhpTag(): this {
-        this.snippet.appendText("<?php\n\n");
+        this.snippet.appendText("<?php\n");
+        return this;
+    }
+
+    /**
+     * Adds strict type declaration if enabled in settings
+     * @returns This instance for method chaining
+     */
+    private addStrictType(): this {
+        const config = vscode.workspace.getConfiguration("phpFileCreator");
+        const useStrictType = config.get<boolean>("useStrictTypeInTemplates", false);
+        if (!useStrictType) {
+            return this;
+        }
+
+        this.snippet.appendText("declare(strict_types=1);\n");
         return this;
     }
 

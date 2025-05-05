@@ -2,6 +2,7 @@ import path from "path";
 import * as vscode from "vscode";
 import { escapeRegExp } from "../../../utils/regex/escapeRegExp";
 import { NamespaceResolver } from "../../namespace/NamespaceResolver";
+import { NamespaceRefactorDetailsType } from "./../type/NamespaceRefactorDetailType";
 
 /**
  * Handles refactoring operations related to PHP namespaces
@@ -20,36 +21,34 @@ export class NamespaceRefactorer {
      * @param newUri The URI of the new file
      */
     public async updateFileAndReferences(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<void> {
-        const oldNamespace = await this.namespaceResolver.resolve(oldUri);
-        const newNamespace = await this.namespaceResolver.resolve(newUri);
-        const identifier = path.parse(newUri.fsPath).name;
-        if (!oldNamespace || !newNamespace || oldNamespace === newNamespace) {
-            return;
-        }
-
-        const updatedFile = await this.updateFile(newUri, newNamespace);
+        const updatedFile = await this.updateFile(oldUri, newUri);
         if (!updatedFile) {
             return;
         }
 
-        await this.updateReferences(`${oldNamespace}\\${identifier}`, `${newNamespace}\\${identifier}`);
+        await this.updateReferences(oldUri, newUri);
     }
 
     /**
      * Updates the namespace declaration in a single file.
-     * @param uri The URI of the file to update
-     * @param namespace The new namespace to set
+     * @param oldUri The URI of the original file
+     * @param newUri The URI of the new file
      * @returns True if the file was updated, false otherwise
      */
-    public async updateFile(uri: vscode.Uri, namespace: string): Promise<boolean> {
+    public async updateFile(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<boolean> {
         try {
-            const fileContent = await this.getFileContent(uri);
-            const updatedContent = this.replaceNamespace(fileContent, namespace);
+            const refactorDetails = await this.getRefactorDetails(oldUri, newUri);
+            if (!refactorDetails.oldNamespace || !refactorDetails.newNamespace) {
+                return false;
+            }
+
+            const fileContent = await this.getFileContent(refactorDetails.newUri);
+            const updatedContent = this.replaceNamespace(fileContent, refactorDetails.newNamespace);
             if (!updatedContent) {
                 return false;
             }
 
-            await this.updateFileContent(uri, updatedContent);
+            await this.updateFileContent(refactorDetails.newUri, updatedContent);
             return true;
         } catch (error) {
             const errorDetails = error instanceof Error ? error.message : String(error);
@@ -60,16 +59,33 @@ export class NamespaceRefactorer {
     }
 
     /**
-     * Updates all references to the old namespace with the new namespace across the project.
-     * @param oldNamespace The original namespace to be replaced
-     * @param newNamespace The new namespace to replace with
+     * Updates references to a namespace in other files.
+     * @param oldDeclarationUri The URI of the old namespace declaration
+     * @param newDeclarationUri The URI of the new namespace declaration
      */
-    public async updateReferences(oldNamespace: string, newNamespace: string): Promise<void> {
+    public async updateReferences(oldDeclarationUri: vscode.Uri, newDeclarationUri: vscode.Uri): Promise<void> {
+        const refactorDetails = await this.getRefactorDetails(oldDeclarationUri, newDeclarationUri);
+        if (!refactorDetails.oldNamespace || !refactorDetails.newNamespace) {
+            return;
+        }
+        if (!refactorDetails.hasNamespaceChanged && !refactorDetails.hasIdentifierChanged) {
+            return;
+        }
+
+        await this.progressUpdateReferences(refactorDetails);
+    }
+
+    /**
+     * Updates references in multiple files with progress reporting.
+     * @param refactorDetails The details of the namespace refactor
+     */
+    private async progressUpdateReferences(refactorDetails: NamespaceRefactorDetailsType): Promise<void> {
         const notificationMessage = vscode.l10n.t(
             'Updating references from "{0}" to "{1}"',
-            oldNamespace,
-            newNamespace
+            refactorDetails.oldNamespace,
+            refactorDetails.newNamespace
         );
+
         await vscode.window.withProgress(
             {
                 location: vscode.ProgressLocation.Notification,
@@ -81,34 +97,36 @@ export class NamespaceRefactorer {
                 const progressIncrement = 100 / files.length;
 
                 for (let fileIndex = 0; fileIndex < files.length; fileIndex++) {
-                    const processMessage = vscode.l10n.t("Processing file {0} of {1}", fileIndex + 1, files.length);
+                    const progressMessage = vscode.l10n.t("Processing file {0} of {1}", fileIndex + 1, files.length);
                     progress.report({
                         increment: progressIncrement,
-                        message: processMessage,
+                        message: progressMessage,
                     });
 
-                    await this.updateReference(files[fileIndex], oldNamespace, newNamespace);
+                    await this.updateReference(files[fileIndex], refactorDetails);
                 }
             }
         );
     }
 
     /**
-     * Updates namespace references in a single file.
-     * @param uri The file URI to process
-     * @param oldNamespace The original namespace to be replaced
-     * @param newNamespace The new namespace to replace with
+     * Updates references in a file based on refactor details.
+     * @param uri The URI of the file to update
+     * @param refactorDetails The details of the namespace refactor
      */
-    private async updateReference(uri: vscode.Uri, oldNamespace: string, newNamespace: string): Promise<void> {
+    private async updateReference(uri: vscode.Uri, refactorDetails: NamespaceRefactorDetailsType): Promise<void> {
         try {
             const fileContent = await this.getFileContent(uri);
-            if (!fileContent.includes(oldNamespace)) {
+            const oldFQN = `${refactorDetails.oldNamespace}\\${refactorDetails.oldIdentifier}`;
+            const newFQN = `${refactorDetails.newNamespace}\\${refactorDetails.newIdentifier}`;
+
+            if (!fileContent.includes(refactorDetails.oldNamespace)) {
                 return;
             }
 
             let fileContentUpdated = fileContent;
-            fileContentUpdated = this.replaceUseStatement(fileContentUpdated, oldNamespace, newNamespace);
-            fileContentUpdated = this.replaceFullyQualified(fileContentUpdated, oldNamespace, newNamespace);
+            fileContentUpdated = this.replaceUseStatement(fileContentUpdated, oldFQN, newFQN);
+            fileContentUpdated = this.replaceFullyQualified(fileContentUpdated, oldFQN, newFQN);
             if (fileContentUpdated === fileContent) {
                 return;
             }
@@ -192,8 +210,7 @@ export class NamespaceRefactorer {
             return;
         }
 
-        const isDirty = openEditor.document.isDirty;
-
+        const wasDirty = openEditor.document.isDirty;
         const fullRange = new vscode.Range(
             openEditor.document.positionAt(0),
             openEditor.document.positionAt(openEditor.document.getText().length)
@@ -203,7 +220,7 @@ export class NamespaceRefactorer {
             editBuilder.replace(fullRange, content);
         });
 
-        if (!isDirty) {
+        if (!wasDirty) {
             await openEditor.document.save();
         }
     }
@@ -226,5 +243,29 @@ export class NamespaceRefactorer {
         const excludePattern = `{${excludedFolders.map((folder) => folder + "/**").join(",")}}`;
         const phpFiles = await vscode.workspace.findFiles("**/*.php", excludePattern);
         return phpFiles;
+    }
+
+    /**
+     * Retrieves details about the namespace refactor operation.
+     * @param oldUri The URI of the old file
+     * @param newUri The URI of the new file
+     * @returns An object containing details about the refactor operation
+     */
+    private async getRefactorDetails(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<NamespaceRefactorDetailsType> {
+        const oldNamespace = await this.namespaceResolver.resolve(oldUri);
+        const newNamespace = await this.namespaceResolver.resolve(newUri);
+        const oldIdentifier = path.parse(oldUri.fsPath).name;
+        const newIdentifier = path.parse(newUri.fsPath).name;
+
+        return {
+            oldUri: oldUri,
+            newUri: newUri,
+            oldIdentifier: oldIdentifier,
+            newIdentifier: newIdentifier,
+            oldNamespace: oldNamespace || "",
+            newNamespace: newNamespace || "",
+            hasNamespaceChanged: oldNamespace !== newNamespace,
+            hasIdentifierChanged: oldIdentifier !== newIdentifier,
+        };
     }
 }

@@ -2,8 +2,8 @@ import * as path from "path";
 import * as vscode from "vscode";
 import { getPathNormalized } from "../../utils/filesystem/getPathNormalized";
 import { ComposerJsonService } from "../composer/ComposerJsonService";
-import { NamespaceMatchType } from "./type/NamespaceMatchType";
 import { AutoloadConfigsType } from "../composer/type/AutoloadConfigsType";
+import { NamespaceMatchType } from "./type/NamespaceMatchType";
 
 /**
  * Resolves PHP namespaces based on file paths and Composer autoload configurations.
@@ -36,7 +36,7 @@ export class NamespaceResolver {
         const composerDirectory = path.dirname(composerJsonUri.fsPath);
         const relativeFilePath = path.relative(composerDirectory, uri.fsPath);
         const namespace = this.findNamespace(relativeFilePath, autoloadConfigs);
-        
+
         return namespace ?? this.getNamespaceFallback();
     }
 

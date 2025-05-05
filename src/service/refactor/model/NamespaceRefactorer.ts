@@ -80,33 +80,30 @@ export class NamespaceRefactorer {
      * @param refactorDetails The details of the namespace refactor
      */
     private async progressUpdateReferences(refactorDetails: NamespaceRefactorDetailsType): Promise<void> {
-        const notificationMessage = vscode.l10n.t(
-            'Updating references from "{0}" to "{1}"',
-            refactorDetails.oldNamespace,
-            refactorDetails.newNamespace
-        );
+        const options: vscode.ProgressOptions = {
+            cancellable: false,
+            location: vscode.ProgressLocation.Notification,
+            title: vscode.l10n.t(
+                'Updating references from "{0}" to "{1}"',
+                refactorDetails.oldNamespace,
+                refactorDetails.newNamespace
+            ),
+        };
 
-        await vscode.window.withProgress(
-            {
-                location: vscode.ProgressLocation.Notification,
-                title: notificationMessage,
-                cancellable: false,
-            },
-            async (progress) => {
-                const files = await this.findFilesToRefactor();
-                const progressIncrement = 100 / files.length;
+        await vscode.window.withProgress(options, async (progress) => {
+            const files = await this.findFilesToRefactor();
+            const progressIncrement = 100 / files.length;
 
-                for (let fileIndex = 0; fileIndex < files.length; fileIndex++) {
-                    const progressMessage = vscode.l10n.t("Processing file {0} of {1}", fileIndex + 1, files.length);
-                    progress.report({
-                        increment: progressIncrement,
-                        message: progressMessage,
-                    });
+            for (let fileIndex = 0; fileIndex < files.length; fileIndex++) {
+                const progressMessage = vscode.l10n.t("Processing file {0} of {1}", fileIndex + 1, files.length);
+                progress.report({
+                    increment: progressIncrement,
+                    message: progressMessage,
+                });
 
-                    await this.updateReference(files[fileIndex], refactorDetails);
-                }
+                await this.updateReference(files[fileIndex], refactorDetails);
             }
-        );
+        });
     }
 
     /**
@@ -117,13 +114,14 @@ export class NamespaceRefactorer {
     private async updateReference(uri: vscode.Uri, refactorDetails: NamespaceRefactorDetailsType): Promise<void> {
         try {
             const fileContent = await this.getFileContent(uri);
-            const oldFQN = `${refactorDetails.oldNamespace}\\${refactorDetails.oldIdentifier}`;
-            const newFQN = `${refactorDetails.newNamespace}\\${refactorDetails.newIdentifier}`;
-
-            if (!fileContent.includes(refactorDetails.oldNamespace)) {
+            const includesOldNamespace = fileContent.includes(refactorDetails.oldNamespace);
+            const includesNewNamespace = fileContent.includes(refactorDetails.newNamespace);
+            if (!includesOldNamespace && !includesNewNamespace) {
                 return;
             }
 
+            const oldFQN = `${refactorDetails.oldNamespace}\\${refactorDetails.oldIdentifier}`;
+            const newFQN = `${refactorDetails.newNamespace}\\${refactorDetails.newIdentifier}`;
             let fileContentUpdated = fileContent;
             fileContentUpdated = this.replaceUseStatement(fileContentUpdated, oldFQN, newFQN);
             fileContentUpdated = this.replaceFullyQualified(fileContentUpdated, oldFQN, newFQN);

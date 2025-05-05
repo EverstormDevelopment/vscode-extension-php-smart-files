@@ -27,6 +27,7 @@ export class FileRenameTracker {
             this.handleRenamedFiles(event);
         });
         context.subscriptions.push(renameDisposable, this.onDidRenameFileEmitter);
+        
         return this;
     }
 

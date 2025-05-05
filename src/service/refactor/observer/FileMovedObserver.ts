@@ -1,23 +1,23 @@
-import * as vscode from 'vscode';
-import { FileRenameOperationTypeEnum } from '../enum/FileRenameOperationTypeEnum';
-import { FileRenameOperationEvent } from '../event/FileRenameOperationEvent';
-import { FileRenameTracker } from '../model/FileRenameTracker';
-import { isFile } from '../../../utils/filesystem/isFile';
+import * as vscode from "vscode";
+import { getFileNameWithoutExtension } from "../../../utils/filesystem/getFileNameWithoutExtension";
+import { NamespaceResolver } from "../../namespace/NamespaceResolver";
+import { FileRenameOperationTypeEnum } from "../enum/FileRenameOperationTypeEnum";
+import { FileRenameOperationEvent } from "../event/FileRenameOperationEvent";
+import { FileRenameTracker } from "../model/FileRenameTracker";
+import { NamespaceRefactorer } from "../model/NamespaceRefactorer";
 
 export class FileMovedObserver {
-
-    private readonly fileRenameTracker: FileRenameTracker;
-
-    constructor() {
-        this.fileRenameTracker = new FileRenameTracker();
-    }
+    constructor(
+        private readonly namespaceResolver: NamespaceResolver,
+        private readonly fileRenameTracker = new FileRenameTracker()
+    ) {}
 
     public start(context: vscode.ExtensionContext): void {
         this.fileRenameTracker.start(context);
 
         this.fileRenameTracker.onDidRenameFile(async (event: FileRenameOperationEvent) => {
             this.handleFileRenameOperationEvent(event);
-        }); 
+        });
     }
 
     private async handleFileRenameOperationEvent(event: FileRenameOperationEvent): Promise<void> {
@@ -29,8 +29,20 @@ export class FileMovedObserver {
     }
 
     private async handleFileMoved(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<void> {
-        console.log("isFile OLD", await isFile(oldUri));
-        console.log("isFile NEW", await isFile(newUri));
+        this.handlePhpFileRename(oldUri, newUri);
     }
-    
+
+    private async handlePhpFileRename(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<void> {
+        const oldNamespace = await this.namespaceResolver.resolve(oldUri);
+        const newNamespace = await this.namespaceResolver.resolve(newUri);
+
+        if (!oldNamespace || !newNamespace || oldNamespace === newNamespace) {
+            return;
+        }
+
+        const filename = getFileNameWithoutExtension(oldUri);
+
+        const foo = new NamespaceRefactorer();
+        await foo.updateFileAndReferences(newUri, oldNamespace, newNamespace, filename);
+    }
 }

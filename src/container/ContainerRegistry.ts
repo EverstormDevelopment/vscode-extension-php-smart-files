@@ -54,6 +54,6 @@ export const ContainerRegistry: ContainerRegistrationType[] = [
 
     {
         constructor: FileMovedObserver,
-        dependencies: [],
+        dependencies: [NamespaceResolver],
     },    
 ];

@@ -44,7 +44,7 @@ export class NamespaceRefactorer {
     public async updateFile(uri: vscode.Uri, namespace: string): Promise<boolean> {
         try {
             const fileContent = await this.getFileContent(uri);
-            const updatedContent = this.repalceNamespace(fileContent, namespace);
+            const updatedContent = this.replaceNamespace(fileContent, namespace);
             if (!updatedContent) {
                 return false;
             }
@@ -142,7 +142,7 @@ export class NamespaceRefactorer {
      * @param namespace The new namespace to set
      * @returns The updated content, or undefined if no namespace declaration was found
      */
-    private repalceNamespace(content: string, namespace: string): string | undefined {
+    private replaceNamespace(content: string, namespace: string): string | undefined {
         const namespaceRegex = /[^\r\n]*namespace\s+[\w\\]+;/m;
         const match = content.match(namespaceRegex);
         if (!match) {
@@ -193,6 +193,7 @@ export class NamespaceRefactorer {
         }
 
         const isDirty = openEditor.document.isDirty;
+
         const fullRange = new vscode.Range(
             openEditor.document.positionAt(0),
             openEditor.document.positionAt(openEditor.document.getText().length)

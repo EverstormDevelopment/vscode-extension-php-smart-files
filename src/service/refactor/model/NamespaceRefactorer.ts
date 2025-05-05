@@ -1,5 +1,5 @@
+import path from "path";
 import * as vscode from "vscode";
-import { getFileNameWithoutExtension } from "../../../utils/filesystem/getFileNameWithoutExtension";
 import { escapeRegExp } from "../../../utils/regex/escapeRegExp";
 import { NamespaceResolver } from "../../namespace/NamespaceResolver";
 
@@ -22,7 +22,7 @@ export class NamespaceRefactorer {
     public async updateFileAndReferences(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<void> {
         const oldNamespace = await this.namespaceResolver.resolve(oldUri);
         const newNamespace = await this.namespaceResolver.resolve(newUri);
-        const identifier = getFileNameWithoutExtension(oldUri);
+        const identifier = path.parse(newUri.fsPath).name;
         if (!oldNamespace || !newNamespace || oldNamespace === newNamespace) {
             return;
         }

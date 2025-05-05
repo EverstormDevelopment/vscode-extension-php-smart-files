@@ -127,6 +127,7 @@ export class NamespaceRefactorer {
             fileContentUpdated = this.replaceFullyQualified(fileContentUpdated, oldFQN, newFQN);
             fileContentUpdated = this.replaceUseStatement(fileContentUpdated, oldFQN, newFQN);
             fileContentUpdated = await this.addUseStatement(fileContentUpdated, uri, refactorDetails);
+            fileContentUpdated = await this.removeUseStatement(fileContentUpdated, uri, refactorDetails);
             if (fileContentUpdated === fileContent) {
                 return;
             }
@@ -211,27 +212,43 @@ export class NamespaceRefactorer {
             return content;
         }
 
-        const namespaceRegex = this.getNamespaceDeclarationRegex();
-        const namespaceMatch = content.match(namespaceRegex);
-        if (!namespaceMatch) {
+        const namespaceDeclarationRegex = this.getNamespaceDeclarationRegex();
+        const namespaceDeclarationMatch = content.match(namespaceDeclarationRegex);
+        if (!namespaceDeclarationMatch) {
             return content;
         }
 
         const useStatement = `use ${refactorDetails.newNamespace}\\${refactorDetails.newIdentifier};`;
 
-        const useRegex = this.getLastUseStatementRegex();
-        const useMatches = content.match(useRegex);
-        if (useMatches) {
-            const lastUseMatch = useMatches[useMatches.length - 1];
+        const lastUseStatementRegex = this.getLastUseStatementRegex();
+        const lastUseStatementMatch = content.match(lastUseStatementRegex);
+        if (lastUseStatementMatch) {
+            const lastUseMatch = lastUseStatementMatch[lastUseStatementMatch.length - 1];
             return content.replace(lastUseMatch, `${lastUseMatch}\n${useStatement}`);
         }
 
-        return content.replace(namespaceMatch[0], `${namespaceMatch[0]}\n\n${useStatement}`);
+        return content.replace(namespaceDeclarationMatch[0], `${namespaceDeclarationMatch[0]}\n\n${useStatement}`);
     }
 
-    // private async removeUseStatement(content: string, uri: vscode.Uri, refactorDetails: NamespaceRefactorDetailsType): Promise<string> {
+    private async removeUseStatement(
+        content: string,
+        uri: vscode.Uri,
+        refactorDetails: NamespaceRefactorDetailsType
+    ): Promise<string> {
+        const fileNamespace = await this.namespaceResolver.resolve(uri);
+        if (!fileNamespace || fileNamespace !== refactorDetails.newNamespace) {
+            return content;
+        }
 
-    // }
+        const namspaceFullQualified = `${refactorDetails.newNamespace}\\${refactorDetails.newIdentifier}`;
+        const useStatementRegex = this.getUseStatementRegex(namspaceFullQualified);
+        const useStatementWithLineBreakRegex = new RegExp(
+            `${useStatementRegex.source}\\s*?\\n`,
+            useStatementRegex.flags
+        );
+
+        return content.replace(useStatementWithLineBreakRegex, "");
+    }
 
     /**
      * Updates the content of a file, either in an open editor or directly on disk.

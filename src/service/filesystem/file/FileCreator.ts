@@ -41,11 +41,11 @@ export class FileCreator {
 
     /**
      * Asks the user if they want to overwrite an existing file.
-     * @param filePath URI to the file to overwrite
+     * @param fileUri URI to the file to overwrite
      * @returns True if user confirms overwrite, false otherwise
      */
-    private async askForOverwrite(filePath: vscode.Uri): Promise<boolean> {
-        const fileName = path.basename(filePath.fsPath);
+    private async askForOverwrite(fileUri: vscode.Uri): Promise<boolean> {
+        const fileName = path.basename(fileUri.fsPath);
         const overwriteMessage = vscode.l10n.t("The file '{0}' already exists. Overwrite?", fileName);
         const overwriteButton = vscode.l10n.t("Overwrite");
         const cancelButton = vscode.l10n.t("Cancel");

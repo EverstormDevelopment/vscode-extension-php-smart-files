@@ -122,9 +122,11 @@ export class NamespaceRefactorer {
 
             const oldFQN = `${refactorDetails.oldNamespace}\\${refactorDetails.oldIdentifier}`;
             const newFQN = `${refactorDetails.newNamespace}\\${refactorDetails.newIdentifier}`;
+
             let fileContentUpdated = fileContent;
-            fileContentUpdated = this.replaceUseStatement(fileContentUpdated, oldFQN, newFQN);
             fileContentUpdated = this.replaceFullyQualified(fileContentUpdated, oldFQN, newFQN);
+            fileContentUpdated = this.replaceUseStatement(fileContentUpdated, oldFQN, newFQN);
+            fileContentUpdated = await this.addUseStatement(fileContentUpdated, uri, refactorDetails);
             if (fileContentUpdated === fileContent) {
                 return;
             }
@@ -159,27 +161,13 @@ export class NamespaceRefactorer {
      * @returns The updated content, or undefined if no namespace declaration was found
      */
     private replaceNamespace(content: string, namespace: string): string | undefined {
-        const namespaceRegex = /[^\r\n]*namespace\s+[\w\\]+;/m;
-        const match = content.match(namespaceRegex);
-        if (!match) {
+        const namespaceRegex = this.getNamespaceDeclarationRegex();
+        const hasMatch = namespaceRegex.test(content);
+        if (!hasMatch) {
             return undefined;
         }
 
         return content.replace(namespaceRegex, `namespace ${namespace};`);
-    }
-
-    /**
-     * Replaces `use` statements for the old namespace with the new namespace.
-     * @param content The content of the file
-     * @param oldNamespace The original namespace to be replaced
-     * @param newNamespace The new namespace to replace with
-     * @returns The updated content
-     */
-    private replaceUseStatement(content: string, oldNamespace: string, newNamespace: string): string {
-        const useRegex = new RegExp(`use\\s+${escapeRegExp(oldNamespace)}\s*;`, "g");
-        return content.replace(useRegex, (match, suffix) => {
-            return `use ${newNamespace};`;
-        });
     }
 
     /**
@@ -190,11 +178,60 @@ export class NamespaceRefactorer {
      * @returns The updated content
      */
     private replaceFullyQualified(content: string, oldNamespace: string, newNamespace: string): string {
-        const fqcnRegex = new RegExp(`\\b${escapeRegExp(oldNamespace)}`, "g");
-        return content.replace(fqcnRegex, () => {
-            return `${newNamespace}`;
-        });
+        const fqcnRegex = this.getFullyQualifiedNamespaceRegex(oldNamespace);
+        return content.replace(fqcnRegex, newNamespace);
     }
+
+    /**
+     * Replaces `use` statements for the old namespace with the new namespace.
+     * @param content The content of the file
+     * @param oldNamespace The original namespace to be replaced
+     * @param newNamespace The new namespace to replace with
+     * @returns The updated content
+     */
+    private replaceUseStatement(content: string, oldNamespace: string, newNamespace: string): string {
+        const useRegex = this.getUseStatementRegex(oldNamespace);
+        return content.replace(useRegex, `use ${newNamespace};`);
+    }
+
+    private async addUseStatement(
+        content: string,
+        uri: vscode.Uri,
+        refactorDetails: NamespaceRefactorDetailsType
+    ): Promise<string> {
+        const fileNamespace = await this.namespaceResolver.resolve(uri);
+        if (!fileNamespace || fileNamespace === refactorDetails.newNamespace) {
+            return content;
+        }
+
+        const namspaceFullQualified = `${refactorDetails.newNamespace}\\${refactorDetails.newIdentifier}`;
+        const hasUseStatementRegex = this.getUseStatementRegex(namspaceFullQualified);
+        const hasIdentifierRegex = this.getIdentifierRegex(refactorDetails.newIdentifier);
+        if (hasUseStatementRegex.test(content) || !hasIdentifierRegex.test(content)) {
+            return content;
+        }
+
+        const namespaceRegex = this.getNamespaceDeclarationRegex();
+        const namespaceMatch = content.match(namespaceRegex);
+        if (!namespaceMatch) {
+            return content;
+        }
+
+        const useStatement = `use ${refactorDetails.newNamespace}\\${refactorDetails.newIdentifier};`;
+
+        const useRegex = this.getLastUseStatementRegex();
+        const useMatches = content.match(useRegex);
+        if (useMatches) {
+            const lastUseMatch = useMatches[useMatches.length - 1];
+            return content.replace(lastUseMatch, `${lastUseMatch}\n${useStatement}`);
+        }
+
+        return content.replace(namespaceMatch[0], `${namespaceMatch[0]}\n\n${useStatement}`);
+    }
+
+    // private async removeUseStatement(content: string, uri: vscode.Uri, refactorDetails: NamespaceRefactorDetailsType): Promise<string> {
+
+    // }
 
     /**
      * Updates the content of a file, either in an open editor or directly on disk.
@@ -265,5 +302,28 @@ export class NamespaceRefactorer {
             hasNamespaceChanged: oldNamespace !== newNamespace,
             hasIdentifierChanged: oldIdentifier !== newIdentifier,
         };
+    }
+
+    private getNamespaceDeclarationRegex(): RegExp {
+        return new RegExp(/[^\r\n\s]*namespace\s+[\p{L}\d_\\]+\s*;/mu);
+    }
+
+    private getFullyQualifiedNamespaceRegex(fullyQualifiedNamespace: string): RegExp {
+        const escapedNamespace = escapeRegExp(fullyQualifiedNamespace);
+        return new RegExp(`\\b${escapedNamespace}`, "g");
+    }
+
+    private getUseStatementRegex(fullyQualifiedNamespace: string): RegExp {
+        const escapedNamespace = escapeRegExp(fullyQualifiedNamespace);
+        return new RegExp(`use\\s+${escapedNamespace}\s*;`, "g");
+    }
+
+    private getLastUseStatementRegex(): RegExp {
+        return new RegExp(/^use\s+[\p{L}\d_\\]+\s*;/gmu);
+    }
+
+    private getIdentifierRegex(identifier: string): RegExp {
+        const escapedIdentifier = escapeRegExp(identifier);
+        return new RegExp(`(?<![\\p{L}\\d_])${escapedIdentifier}(?![\\p{L}\\d_])`, "gu");
     }
 }

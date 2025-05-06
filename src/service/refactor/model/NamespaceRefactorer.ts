@@ -301,12 +301,13 @@ export class NamespaceRefactorer {
     }
 
     /**
-     * Finds all PHP files in the workspace, excluding certain folders.
+     * Retrieves PHP files in the workspace, excluding specified folders.
      * @returns A list of URIs for the PHP files to refactor.
      */
     private async findFilesToRefactor(): Promise<vscode.Uri[]> {
-        const excludedFolders = ["vendor", "node_modules"];
-        const excludePattern = `{${excludedFolders.map((folder) => folder + "/**").join(",")}}`;
+        const config = vscode.workspace.getConfiguration("phpFileCreator");
+        const excludedFolders = config.get<string[]>('refactorNamespacesExcludeDirectories',  []);
+        const excludePattern = `{${excludedFolders.map(folder => folder).join(",")}}`;
         const phpFiles = await vscode.workspace.findFiles("**/*.php", excludePattern);
         return phpFiles;
     }

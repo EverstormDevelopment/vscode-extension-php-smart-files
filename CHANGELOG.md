@@ -3,11 +3,17 @@
 All notable changes to the extension will be documented in this file.
 <!-- Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file. -->
 
-
-
 ## [Unreleased]
 
-
+### Added
+- Introduced a feature to detect when a file is moved and automatically adjust the namespace within the file and all its references.
+  - If the files previously shared the same namespace, a `use` statement is added to the reference.
+  - If the files were in different namespaces and a `use` statement existed, it is removed.
+- Added configuration `refactorNamespacesOnFileMoved` to control the behavior of this feature with options:
+  - `confirm` (default): Prompts for confirmation before refactoring.
+  - `always`: Automatically refactors without confirmation.
+  - `never`: Disables the feature.
+- Added configuration `refactorNamespacesExcludeDirectories` to specify directories to exclude when searching for references.
 
 ## [0.2.0] - 2025-05-04
 
@@ -19,14 +25,10 @@ All notable changes to the extension will be documented in this file.
 ### Fixed
 - Missleading and wrong translations
 
-
-
 ## [0.1.1] - 2025-05-04
 
 ### Fixed
 - Missing package translations (nls) for es, fr and ru
-
-
 
 ## [0.1.0] - 2025-05-04
 

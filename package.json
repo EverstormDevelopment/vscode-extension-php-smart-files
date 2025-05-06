@@ -61,6 +61,7 @@
             "vendor/**",
             "node_modules/**",
             "var/cache/**",
+            "var/logs/**",
             "**/temp/**",
             "**/tmp/**",
             "dist/**",

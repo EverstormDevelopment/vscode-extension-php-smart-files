@@ -34,5 +34,13 @@
   "Definition name must start with a letter or underscore": "El nombre de definición debe comenzar con una letra o guion bajo",
   "Definition name must start with an uppercase letter or underscore": "El nombre de definición debe comenzar con una letra mayúscula o guion bajo",
   "Definition name can only contain letters, numbers, and underscores": "El nombre de definición solo puede contener letras, números y guiones bajos",
-  "Cannot use PHP reserved keyword as definition name": "No se puede usar una palabra reservada de PHP como nombre de definición"
+  "Cannot use PHP reserved keyword as definition name": "No se puede usar una palabra reservada de PHP como nombre de definición",
+  
+  "Would you like to update the namespace for \"{0}\" and all its references?": "¿Le gustaría actualizar el espacio de nombres para \"{0}\" y todas sus referencias?",
+  "Yes": "Sí",
+  "No": "No",
+  "Error during namespace refactoring: {0}": "Error durante la refactorización del espacio de nombres: {0}",
+  "Updating references from \"{0}\" to \"{1}\"": "Actualizando referencias de \"{0}\" a \"{1}\"",
+  "Processing file {0} of {1}": "Procesando archivo {0} de {1}",
+  "Error updating references in file {0}: {1}": "Error al actualizar referencias en el archivo {0}: {1}"
 }

@@ -34,5 +34,13 @@
   "Definition name must start with a letter or underscore": "Имя определения должно начинаться с буквы или подчеркивания",
   "Definition name must start with an uppercase letter or underscore": "Имя определения должно начинаться с заглавной буквы или подчеркивания",
   "Definition name can only contain letters, numbers, and underscores": "Имя определения может содержать только буквы, цифры и подчеркивания",
-  "Cannot use PHP reserved keyword as definition name": "Невозможно использовать зарезервированное слово PHP в качестве имени определения"
+  "Cannot use PHP reserved keyword as definition name": "Невозможно использовать зарезервированное слово PHP в качестве имени определения",
+  
+  "Would you like to update the namespace for \"{0}\" and all its references?": "Хотите обновить пространство имен для \"{0}\" и всех его ссылок?",
+  "Yes": "Да",
+  "No": "Нет",
+  "Error during namespace refactoring: {0}": "Ошибка при рефакторинге пространства имен: {0}",
+  "Updating references from \"{0}\" to \"{1}\"": "Обновление ссылок с \"{0}\" на \"{1}\"",
+  "Processing file {0} of {1}": "Обработка файла {0} из {1}",
+  "Error updating references in file {0}: {1}": "Ошибка обновления ссылок в файле {0}: {1}"
 }

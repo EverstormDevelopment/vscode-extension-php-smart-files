@@ -52,7 +52,13 @@ export class FileMovedObserver {
      * @param newUri The URI of the file at its new location
      */
     private async handleFileMoved(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<void> {
-        const shouldRefactor = await this.askForRefactor(newUri);
+        const config = vscode.workspace.getConfiguration("phpFileCreator");
+        const refactorOption = config.get<string>("refactorNamespacesOnFileMoved", "confirm");
+        if (refactorOption === "never") {
+            return;
+        }
+
+        const shouldRefactor = refactorOption === "always" || (await this.askForRefactor(newUri));
         if (!shouldRefactor) {
             return;
         }

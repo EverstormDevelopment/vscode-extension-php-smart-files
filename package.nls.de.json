@@ -20,5 +20,7 @@
   "php-file-creator.config.refactorNamespacesOnFileMoved.description": "Bestimmt, ob nach dem Verschieben einer Datei der Namespace in der Datei und in deren Referenzen refaktoriert werden soll.",
   "php-file-creator.config.refactorNamespacesOnFileMoved.confirm": "Nach Bestätigung",
   "php-file-creator.config.refactorNamespacesOnFileMoved.always": "Immer ohne Nachfrage",
-  "php-file-creator.config.refactorNamespacesOnFileMoved.never": "Niemals"
+  "php-file-creator.config.refactorNamespacesOnFileMoved.never": "Niemals",
+  
+  "php-file-creator.config.refactorNamespacesExcludeDirectories.description": "Die angegebenen Verzeichnisse werden beim Refactoring von Namespaces ausgeschlossen. (Anmerkung: Die Angaben werden im Glob-Muster erwartet, z.B. `/vendor/**`, `var/cache/**` oder `**/temp/**`.)"
 }

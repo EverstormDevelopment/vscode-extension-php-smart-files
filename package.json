@@ -54,6 +54,22 @@
             "%php-file-creator.config.refactorNamespacesOnFileMoved.never%"
           ],
           "order": 4
+        },
+        "phpFileCreator.refactorNamespacesExcludeDirectories": {
+          "type": "array",
+          "default": [
+            "vendor/**",
+            "node_modules/**",
+            "var/cache/**",
+            "**/temp/**",
+            "**/tmp/**"
+          ],
+          "description": "%php-file-creator.config.refactorNamespacesExcludeDirectories.description%",
+          "markdownDescription": "%php-file-creator.config.refactorNamespacesExcludeDirectories.description%",
+          "items": {
+            "type": "string"
+          },
+          "order": 5
         }
       }
     },

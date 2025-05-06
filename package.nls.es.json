@@ -20,5 +20,7 @@
   "php-file-creator.config.refactorNamespacesOnFileMoved.description": "Determina si, después de mover un archivo, se debe refactorizar el espacio de nombres en el archivo y en sus referencias.",
   "php-file-creator.config.refactorNamespacesOnFileMoved.confirm": "Con confirmación",
   "php-file-creator.config.refactorNamespacesOnFileMoved.always": "Siempre sin confirmación",
-  "php-file-creator.config.refactorNamespacesOnFileMoved.never": "Nunca"
+  "php-file-creator.config.refactorNamespacesOnFileMoved.never": "Nunca",
+
+  "php-file-creator.config.refactorNamespacesExcludeDirectories.description": "Los directorios especificados se excluirán durante la refactorización de espacios de nombres. (Nota: Las entradas deben estar en el formato de patrón Glob, por ejemplo, `/vendor/**`, `var/cache/**` o `**/temp/**`.)"
 }

@@ -1,4 +1,6 @@
 {
+  "php-file-creator.submenus.main.label": "PHP-Datei erstellen",
+  
   "php-file-creator.commands.newEmptyPhpFile.title": "PHP-Datei",
   "php-file-creator.commands.newEmptyPhpClass.title": "PHP-Klasse",
   "php-file-creator.commands.newEmptyPhpInterface.title": "PHP-Interface",
@@ -8,10 +10,15 @@
   "php-file-creator.commands.newTemplatePhpInterface.title": "PHP-Interface aus Vorlage",
   "php-file-creator.commands.newTemplatePhpEnum.title": "PHP-Enum aus Vorlage",
   "php-file-creator.commands.newTemplatePhpTrait.title": "PHP-Trait aus Vorlage",
-  "php-file-creator.submenus.main.label": "PHP-Datei erstellen",
 
-  "php-file-creator.config.useStrictTypeInTemplates.description": "Bestimmt, ob `declare(strict_types=1);` in die generierten Dateien eingefügt werden soll",
-  "php-file-creator.config.useFallbackNamespace.description": "Bestimmt, ob bei fehlendem Namespace der Fallback-Namespace verwendet werden soll. Wenn deaktiviert, wird kein Namespace hinzugefügt",
-  "php-file-creator.config.fallbackNamespace.description": "Definiert den Namespace, der verwendet wird, wenn der Fallback-Namespace aktiviert ist und kein anderer Namespace gefunden werden konnte",
-  "php-file-creator.config.fallbackNamespace.patternErrorMessage": "Der Namespace muss ein gültiger PHP-Namespace gemäß PSR-4 sein (z.B. 'App', 'Vendor\\Service'). Jedes Segment muss mit einem Großbuchstaben beginnen."
+  "php-file-creator.config.useStrictTypeInTemplates.description": "Bestimmt, ob `declare(strict_types=1);` in die generierten Dateien eingefügt werden soll.",
+
+  "php-file-creator.config.useFallbackNamespace.description": "Bestimmt, ob bei fehlendem Namespace der Fallback-Namespace verwendet werden soll. Wenn deaktiviert, wird kein Namespace hinzugefügt.",
+  "php-file-creator.config.fallbackNamespace.description": "Definiert den Namespace, der verwendet wird, wenn der Fallback-Namespace aktiviert ist und kein anderer Namespace gefunden werden konnte.",
+  "php-file-creator.config.fallbackNamespace.patternErrorMessage": "Der Namespace muss ein gültiger PHP-Namespace gemäß PSR-4 sein (z.B. 'App', 'Vendor\\Service'). Jedes Segment muss mit einem Großbuchstaben beginnen.",
+  
+  "php-file-creator.config.refactorNamespacesOnFileMoved.description": "Bestimmt, ob nach dem Verschieben einer Datei der Namespace in der Datei und in deren Referenzen refaktoriert werden soll.",
+  "php-file-creator.config.refactorNamespacesOnFileMoved.confirm": "Nach Bestätigung",
+  "php-file-creator.config.refactorNamespacesOnFileMoved.always": "Immer ohne Nachfrage",
+  "php-file-creator.config.refactorNamespacesOnFileMoved.never": "Niemals"
 }

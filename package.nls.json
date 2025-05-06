@@ -1,4 +1,6 @@
 {
+  "php-file-creator.submenus.main.label": "Create PHP File",
+
   "php-file-creator.commands.newEmptyPhpFile.title": "PHP File",
   "php-file-creator.commands.newEmptyPhpClass.title": "PHP Class",
   "php-file-creator.commands.newEmptyPhpInterface.title": "PHP Interface",
@@ -8,10 +10,15 @@
   "php-file-creator.commands.newTemplatePhpInterface.title": "PHP Interface from Template",
   "php-file-creator.commands.newTemplatePhpEnum.title": "PHP Enum from Template",
   "php-file-creator.commands.newTemplatePhpTrait.title": "PHP Trait from Template",
-  "php-file-creator.submenus.main.label": "Create PHP File",
 
-  "php-file-creator.config.useStrictTypeInTemplates.description": "Determines whether `declare(strict_types=1);` is included in generated files",
-  "php-file-creator.config.useFallbackNamespace.description": "Determines whether to use a fallback namespace when no namespace could be resolved. When disabled, no namespace will be added",
-  "php-file-creator.config.fallbackNamespace.description": "Defines the namespace to use when fallback namespace is enabled and no other namespace could be found",
-  "php-file-creator.config.fallbackNamespace.patternErrorMessage": "The namespace must be a valid PHP namespace according to PSR-4 (e.g. 'App', 'Vendor\\Service'). Each segment must start with an uppercase letter."
+  "php-file-creator.config.useStrictTypeInTemplates.description": "Determines whether `declare(strict_types=1);` is included in generated files.",
+
+  "php-file-creator.config.useFallbackNamespace.description": "Determines whether to use a fallback namespace when no namespace could be resolved. When disabled, no namespace will be added.",
+  "php-file-creator.config.fallbackNamespace.description": "Defines the namespace to use when fallback namespace is enabled and no other namespace could be found.",
+  "php-file-creator.config.fallbackNamespace.patternErrorMessage": "The namespace must be a valid PHP namespace according to PSR-4 (e.g. 'App', 'Vendor\\Service'). Each segment must start with an uppercase letter.",
+  
+  "php-file-creator.config.refactorNamespacesOnFileMoved.description": "Determines whether, after a file is moved, the namespace in the file and its references should be refactored.",
+  "php-file-creator.config.refactorNamespacesOnFileMoved.confirm": "With confirmation",
+  "php-file-creator.config.refactorNamespacesOnFileMoved.always": "Always without confirmation",
+  "php-file-creator.config.refactorNamespacesOnFileMoved.never": "Never"
 }

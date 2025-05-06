@@ -1,4 +1,6 @@
 {
+  "php-file-creator.submenus.main.label": "Создать PHP файл",
+
   "php-file-creator.commands.newEmptyPhpFile.title": "PHP файл",
   "php-file-creator.commands.newEmptyPhpClass.title": "PHP класс",
   "php-file-creator.commands.newEmptyPhpInterface.title": "PHP интерфейс",
@@ -8,10 +10,15 @@
   "php-file-creator.commands.newTemplatePhpInterface.title": "PHP интерфейс из шаблона",
   "php-file-creator.commands.newTemplatePhpEnum.title": "PHP enum из шаблона",
   "php-file-creator.commands.newTemplatePhpTrait.title": "PHP трейт из шаблона",
-  "php-file-creator.submenus.main.label": "Создать PHP файл",
 
-  "php-file-creator.config.useStrictTypeInTemplates.description": "Определяет, будет ли `declare(strict_types=1);` включен в сгенерированные файлы",
-  "php-file-creator.config.useFallbackNamespace.description": "Определяет, использовать ли резервное пространство имен, когда не удалось разрешить пространство имен. Когда отключено, пространство имен не будет добавлено",
-  "php-file-creator.config.fallbackNamespace.description": "Определяет пространство имен для использования, когда резервное пространство имен включено и не удалось найти другое пространство имен",
-  "php-file-creator.config.fallbackNamespace.patternErrorMessage": "Пространство имен должно быть действительным пространством имен PHP в соответствии с PSR-4 (например, 'App', 'Vendor\\Service'). Каждый сегмент должен начинаться с заглавной буквы."
+  "php-file-creator.config.useStrictTypeInTemplates.description": "Определяет, будет ли `declare(strict_types=1);` включен в сгенерированные файлы.",
+
+  "php-file-creator.config.useFallbackNamespace.description": "Определяет, использовать ли резервное пространство имен, когда не удалось разрешить пространство имен. Когда отключено, пространство имен не будет добавлено.",
+  "php-file-creator.config.fallbackNamespace.description": "Определяет пространство имен для использования, когда резервное пространство имен включено и не удалось найти другое пространство имен.",
+  "php-file-creator.config.fallbackNamespace.patternErrorMessage": "Пространство имен должно быть действительным пространством имен PHP в соответствии с PSR-4 (например, 'App', 'Vendor\\Service'). Каждый сегмент должен начинаться с заглавной буквы.",
+  
+  "php-file-creator.config.refactorNamespacesOnFileMoved.description": "Определяет, следует ли после перемещения файла рефакторить пространство имен в файле и его ссылках.",
+  "php-file-creator.config.refactorNamespacesOnFileMoved.confirm": "С подтверждением",
+  "php-file-creator.config.refactorNamespacesOnFileMoved.always": "Всегда без подтверждения",
+  "php-file-creator.config.refactorNamespacesOnFileMoved.never": "Никогда"
 }

@@ -41,6 +41,19 @@
           "pattern": "^[A-Z\\p{Lu}_][a-zA-Z0-9\\p{L}_\\x80-\\xff]*(\\\\[A-Z\\p{Lu}_][a-zA-Z0-9\\p{L}_\\x80-\\xff]*)*$",
           "patternErrorMessage": "%php-file-creator.config.fallbackNamespace.patternErrorMessage%",
           "order": 3
+        },
+        "phpFileCreator.refactorNamespacesOnFileMoved": {
+          "type": "string",
+          "enum": ["confirm", "always", "never"],
+          "default": "confirm",
+          "description": "%php-file-creator.config.refactorNamespacesOnFileMoved.description%",
+          "markdownDescription": "%php-file-creator.config.refactorNamespacesOnFileMoved.description%",
+          "enumDescriptions": [
+            "%php-file-creator.config.refactorNamespacesOnFileMoved.confirm%",
+            "%php-file-creator.config.refactorNamespacesOnFileMoved.always%",
+            "%php-file-creator.config.refactorNamespacesOnFileMoved.never%"
+          ],
+          "order": 4
         }
       }
     },

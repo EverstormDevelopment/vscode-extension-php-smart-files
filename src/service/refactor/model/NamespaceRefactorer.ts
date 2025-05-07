@@ -167,23 +167,28 @@ export class NamespaceRefactorer {
         return content.replace(namespaceRegex, `namespace ${namespace};`);
     }
 
-    /**
-     * Refactors fully qualified namespace references in the given content.
-     * @param content The content of the file to refactor.
-     * @param fileNamespace The namespace of the file being refactored.
-     * @param refactorDetails The details of the namespace refactoring operation.
-     * @returns The updated content with refactored fully qualified namespace references.
-     */
     private async refactorFullyQualified(
         content: string,
         fileNamespace: string,
         refactorDetails: NamespaceRefactorDetailsType
     ): Promise<string> {
-        const oldFQN = `${refactorDetails.oldNamespace}\\${refactorDetails.oldIdentifier}`;
-        const newFQN = `${refactorDetails.newNamespace}\\${refactorDetails.newIdentifier}`;
+        const oldFullyQualifiedNamespace = `\\${refactorDetails.oldNamespace}\\${refactorDetails.oldIdentifier}`;
+        const newFullyQualifiedNamespace = `\\${refactorDetails.newNamespace}\\${refactorDetails.newIdentifier}`;
 
-        const fqcnRegex = this.getFullyQualifiedNamespaceRegex(oldFQN);
-        return content.replace(fqcnRegex, newFQN);
+        if(fileNamespace === refactorDetails.newNamespace){
+            return this.replaceFullyQualified(content, oldFullyQualifiedNamespace, refactorDetails.newIdentifier);
+        }
+
+        return this.replaceFullyQualified(content, oldFullyQualifiedNamespace, newFullyQualifiedNamespace);
+    }
+
+    private async replaceFullyQualified(
+        content: string,
+        oldFullyQualifiedNamespace: string,
+        newFullyQualifiedNamespace: string
+    ): Promise<string> {
+        const fqcnRegex = this.getFullyQualifiedNamespaceRegex(oldFullyQualifiedNamespace);
+        return content.replace(fqcnRegex, newFullyQualifiedNamespace);
     }
 
     /**
@@ -357,7 +362,7 @@ export class NamespaceRefactorer {
      */
     private getFullyQualifiedNamespaceRegex(fullyQualifiedNamespace: string): RegExp {
         const escapedNamespace = escapeRegExp(fullyQualifiedNamespace);
-        return new RegExp(`\\b\\\\${escapedNamespace}`, "g");
+        return new RegExp(`(?<![\\p{L}\\d_])${escapedNamespace}(?![\\p{L}\\d_\\\\])`, "gu");
     }
 
     /**
@@ -367,7 +372,7 @@ export class NamespaceRefactorer {
      */
     private getUseStatementRegex(fullyQualifiedNamespace: string): RegExp {
         const escapedNamespace = escapeRegExp(fullyQualifiedNamespace);
-        return new RegExp(`use\\s+${escapedNamespace}\\s*;`, "g");
+        return new RegExp(`use\\s+${escapedNamespace}\\s*;`, "gu");
     }
 
     /**

@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
-import { isFile } from "../../utils/filesystem/isFile";
-import { ComposerJsonType } from "./type/ComposerJsonType";
+import { isFile } from "../../../utils/filesystem/isFile";
+import { ComposerJsonType } from "../type/ComposerJsonType";
 
 /**
  * Service to parse composer.json files for PHP projects.

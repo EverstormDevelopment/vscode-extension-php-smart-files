@@ -1,7 +1,7 @@
 import { FileGenerationCommand } from "../../extension/command/FileGenerationCommand";
-import { ComposerJsonFinder } from "../../service/composer/ComposerJsonFinder";
-import { ComposerJsonParser } from "../../service/composer/ComposerJsonParser";
-import { ComposerJsonService } from "../../service/composer/ComposerJsonService";
+import { ComposerJsonFinder } from "../../service/composer/model/ComposerJsonFinder";
+import { ComposerJsonParser } from "../../service/composer/model/ComposerJsonParser";
+import { ComposerJsonService } from "../../service/composer/model/ComposerJsonService";
 import { FileCreator } from "../../service/filesystem/file/FileCreator";
 import { UriFolderResolver } from "../../service/filesystem/uri/UriFolderResolver";
 import { InputBoxFactory } from "../../service/input/build/InputBoxFactory";

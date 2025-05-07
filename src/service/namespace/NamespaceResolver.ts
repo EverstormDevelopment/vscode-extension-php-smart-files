@@ -1,7 +1,7 @@
 import * as path from "path";
 import * as vscode from "vscode";
 import { getPathNormalized } from "../../utils/filesystem/getPathNormalized";
-import { ComposerJsonService } from "../composer/ComposerJsonService";
+import { ComposerJsonService } from "../composer/model/ComposerJsonService";
 import { AutoloadConfigsType } from "../composer/type/AutoloadConfigsType";
 import { NamespaceMatchType } from "./type/NamespaceMatchType";
 

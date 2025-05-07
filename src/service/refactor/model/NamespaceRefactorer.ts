@@ -175,7 +175,7 @@ export class NamespaceRefactorer {
         const oldFullyQualifiedNamespace = `\\${refactorDetails.oldNamespace}\\${refactorDetails.oldIdentifier}`;
         const newFullyQualifiedNamespace = `\\${refactorDetails.newNamespace}\\${refactorDetails.newIdentifier}`;
 
-        if(fileNamespace === refactorDetails.newNamespace){
+        if (fileNamespace === refactorDetails.newNamespace) {
             return this.replaceFullyQualified(content, oldFullyQualifiedNamespace, refactorDetails.newIdentifier);
         }
 
@@ -221,9 +221,10 @@ export class NamespaceRefactorer {
      * @returns The updated content with replaced use statements.
      */
     private async replaceUseStatement(content: string, refactorDetails: NamespaceRefactorDetailsType): Promise<string> {
-        const fullQualifiedNamespace = `${refactorDetails.oldNamespace}\\${refactorDetails.oldIdentifier}`;
-        const useRegex = this.getUseStatementRegex(fullQualifiedNamespace);
-        return content.replace(useRegex, `use ${fullQualifiedNamespace};`);
+        const oldFullQualifiedNamespace = `${refactorDetails.oldNamespace}\\${refactorDetails.oldIdentifier}`;
+        const newFullQualifiedNamespace = `${refactorDetails.newNamespace}\\${refactorDetails.newIdentifier}`;
+        const useRegex = this.getUseStatementRegex(oldFullQualifiedNamespace);
+        return content.replace(useRegex, `use ${newFullQualifiedNamespace};`);
     }
 
     /**

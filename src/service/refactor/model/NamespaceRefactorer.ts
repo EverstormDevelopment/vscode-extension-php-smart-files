@@ -167,6 +167,13 @@ export class NamespaceRefactorer {
         return content.replace(namespaceRegex, `namespace ${namespace};`);
     }
 
+    /**
+     * Refactors fully qualified namespaces in content based on the file's namespace context.
+     * @param content The content of the file to refactor.
+     * @param fileNamespace The namespace of the file being refactored.
+     * @param refactorDetails The details of the namespace refactoring operation.
+     * @returns The updated content with refactored fully qualified namespaces.
+     */
     private async refactorFullyQualified(
         content: string,
         fileNamespace: string,
@@ -182,6 +189,13 @@ export class NamespaceRefactorer {
         return this.replaceFullyQualified(content, oldFullyQualifiedNamespace, newFullyQualifiedNamespace);
     }
 
+    /**
+     * Replaces occurrences of a fully qualified namespace with a new one in the content.
+     * @param content The content of the file to process.
+     * @param oldFullyQualifiedNamespace The old fully qualified namespace to replace.
+     * @param newFullyQualifiedNamespace The new fully qualified namespace to use as replacement.
+     * @returns The updated content with replaced fully qualified namespaces.
+     */
     private async replaceFullyQualified(
         content: string,
         oldFullyQualifiedNamespace: string,

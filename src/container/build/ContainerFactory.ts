@@ -1,6 +1,6 @@
-import { Container } from "./Container";
-import { ContainerRegistry } from "./ContainerRegistry";
-import { ContainerInterface } from "./interface/ContainerInterface";
+import { ContainerInterface } from "../interface/ContainerInterface";
+import { Container } from "../model/Container";
+import { ContainerRegistry } from "../registry/ContainerRegistry";
 
 /**
  * Factory for creating dependency injection container instances.

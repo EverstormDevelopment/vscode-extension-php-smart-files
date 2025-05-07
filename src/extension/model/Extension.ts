@@ -1,11 +1,11 @@
 import * as vscode from "vscode";
-import { ContainerFactory } from "../../container/ContainerFactory";
 import { ContainerInterface } from "../../container/interface/ContainerInterface";
+import { FileMovedObserver } from "../../service/refactor/observer/FileMovedObserver";
 import { FileTypeEnum } from "../../utils/enum/FileTypeEnum";
 import { ExtensionInterface } from "../interface/ExtensionInterface";
 import { FileGenerationCommandRegistry } from "../registry/FileGenerationCommandRegistry";
 import { FileGenerationCommand } from "./../command/FileGenerationCommand";
-import { FileMovedObserver } from "../../service/refactor/observer/FileMovedObserver";
+import { ContainerFactory } from "../../container/build/ContainerFactory";
 
 /**
  * The main extension class that handles the extension lifecycle.

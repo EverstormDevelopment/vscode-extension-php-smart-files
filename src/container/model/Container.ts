@@ -1,5 +1,5 @@
-import { ContainerInterface } from "./interface/ContainerInterface";
-import { ConstructorType } from "./type/ConstructorType";
+import { ContainerInterface } from "../interface/ContainerInterface";
+import { ConstructorType } from "../type/ConstructorType";
 
 /**
  * Type definition for a registration in the dependency injection container

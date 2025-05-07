@@ -7,8 +7,10 @@ All notable changes to the extension will be documented in this file.
 
 ### Added
 - Introduced a feature to detect when a file is moved and automatically adjust the namespace within the file and all its references.
+  - If the namespace changes, the `use` statement in the reference is updated accordingly.
   - If the files previously shared the same namespace, a `use` statement is added to the reference.
-  - If the files were in different namespaces and a `use` statement existed, it is removed.
+  - If the files were in different namespaces before and now share the same namespace, an existing `use` statement is removed.
+  - If a fully qualified namespace is directly referenced (e.g., `new \App\MyClass()`), the statement is also updated to use the new namespace.
 - Added configuration `refactorNamespacesOnFileMoved` to control the behavior of this feature with options:
   - `confirm` (default): Prompts for confirmation before refactoring.
   - `always`: Automatically refactors without confirmation.

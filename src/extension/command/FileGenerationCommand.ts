@@ -1,4 +1,3 @@
-import path from "path";
 import * as vscode from "vscode";
 import { FileCreator } from "../../service/filesystem/file/model/FileCreator";
 import { UriFolderResolver } from "../../service/filesystem/uri/UriFolderResolver";

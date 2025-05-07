@@ -1,9 +1,8 @@
-import path from "path";
 import * as vscode from "vscode";
+import { getFileNameFromUri } from "../../../utils/filesystem/getFileNameFromUri";
 import { escapeRegExp } from "../../../utils/regex/escapeRegExp";
 import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailType";
 import { NamespaceResolver } from "./NamespaceResolver";
-import { getFileNameFromUri } from "../../../utils/filesystem/getFileNameFromUri";
 
 /**
  * Handles refactoring operations related to PHP namespaces.

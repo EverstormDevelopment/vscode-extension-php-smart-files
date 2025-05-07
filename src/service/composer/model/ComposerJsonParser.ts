@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { isFile } from "../../../utils/filesystem/isFile";
+import { isUriFile } from "../../../utils/filesystem/isUriFile";
 import { ComposerJsonType } from "../type/ComposerJsonType";
 
 /**
@@ -14,7 +14,7 @@ export class ComposerJsonParser {
      */
     public async parse(composerJsonUri: vscode.Uri): Promise<ComposerJsonType> {
         try {
-            if (!(await isFile(composerJsonUri))) {
+            if (!(await isUriFile(composerJsonUri))) {
                 throw new Error(`Path is not a file: ${composerJsonUri.fsPath}`);
             }
 

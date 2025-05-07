@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as vscode from "vscode";
-import { isFile } from "../../../utils/filesystem/isFile";
+import { isUriFile } from "../../../utils/filesystem/isUriFile";
 
 /**
  * Service to find composer.json files in the directory hierarchy.
@@ -18,7 +18,7 @@ export class ComposerJsonFinder {
 
         while (true) {
             const composerJsonUri = vscode.Uri.joinPath(currentFolder, "composer.json");
-            if (await isFile(composerJsonUri)) {
+            if (await isUriFile(composerJsonUri)) {
                 return composerJsonUri;
             }
 

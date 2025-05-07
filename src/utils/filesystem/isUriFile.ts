@@ -5,7 +5,7 @@ import * as vscode from "vscode";
  * @param uri - The URI to check
  * @returns Promise resolving to true if the URI points to an existing file, false otherwise
  */
-export async function isFile(uri: vscode.Uri): Promise<boolean> {
+export async function isUriFile(uri: vscode.Uri): Promise<boolean> {
     try {
         const stat = await vscode.workspace.fs.stat(uri);
         return (stat.type & vscode.FileType.File) === vscode.FileType.File;

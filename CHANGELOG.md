@@ -5,6 +5,10 @@ All notable changes to the extension will be documented in this file.
 
 ## [Unreleased]
 
+
+
+## [0.3.0] - 2025-05-07
+
 ### Added
 - Introduced a feature to detect when a file is moved and automatically adjust the namespace within the file and all its references.
   - If the namespace changes, the `use` statement in the reference is updated accordingly.
@@ -17,6 +21,8 @@ All notable changes to the extension will be documented in this file.
   - `never`: Disables the feature.
 - Added configuration `refactorNamespacesExcludeDirectories` to specify directories to exclude when searching for references.
 
+
+
 ## [0.2.0] - 2025-05-04
 
 ### Added
@@ -27,10 +33,14 @@ All notable changes to the extension will be documented in this file.
 ### Fixed
 - Missleading and wrong translations
 
+
+
 ## [0.1.1] - 2025-05-04
 
 ### Fixed
 - Missing package translations (nls) for es, fr and ru
+
+
 
 ## [0.1.0] - 2025-05-04
 

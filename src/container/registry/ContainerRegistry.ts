@@ -7,7 +7,7 @@ import { UriFolderResolver } from "../../service/filesystem/uri/UriFolderResolve
 import { InputBoxFactory } from "../../service/input/build/InputBoxFactory";
 import { NamespaceRefactorer } from "../../service/namespace/model/NamespaceRefactorer";
 import { NamespaceResolver } from "../../service/namespace/model/NamespaceResolver";
-import { NamespaceFileMovedObserver } from "../../service/namespace/observer/NamespaceFileMovedObserver";
+import { FileMovedObserver } from "../../extension/observer/FileMovedObserver";
 import { SnippetFactory } from "../../service/snippet/build/SnippetFactory";
 import { ContainerRegistrationType } from "../type/ContainerRegistrationType";
 
@@ -52,13 +52,12 @@ export const ContainerRegistry: ContainerRegistrationType[] = [
         constructor: FileGenerationCommand,
         dependencies: [UriFolderResolver, InputBoxFactory, FileCreator, NamespaceResolver, SnippetFactory],
     },
-
     {
         constructor: NamespaceRefactorer,
         dependencies: [NamespaceResolver],
     },
     {
-        constructor: NamespaceFileMovedObserver,
+        constructor: FileMovedObserver,
         dependencies: [NamespaceRefactorer],
     },
 ];

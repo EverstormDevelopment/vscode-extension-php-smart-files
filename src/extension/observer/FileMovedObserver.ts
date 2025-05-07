@@ -1,16 +1,16 @@
 import path from "path";
 import * as vscode from "vscode";
-import { FileRenameOperationTypeEnum } from "../../filesystem/file/enum/FileRenameOperationTypeEnum";
-import { FileRenameOperationEvent } from "../../filesystem/file/event/FileRenameOperationEvent";
-import { FileObserverInterface } from "../../filesystem/file/interface/FileObserverInterface";
-import { FileRenameTracker } from "../../filesystem/file/model/FileRenameTracker";
-import { NamespaceRefactorer } from "../model/NamespaceRefactorer";
+import { FileRenameOperationTypeEnum } from "../../service/filesystem/file/enum/FileRenameOperationTypeEnum";
+import { FileRenameOperationEvent } from "../../service/filesystem/file/event/FileRenameOperationEvent";
+import { FileObserverInterface } from "../../service/filesystem/file/interface/FileObserverInterface";
+import { FileRenameTracker } from "../../service/filesystem/file/model/FileRenameTracker";
+import { NamespaceRefactorer } from "../../service/namespace/model/NamespaceRefactorer";
 
 /**
  * Observes file move operations in the workspace and triggers namespace refactoring when PHP files are moved.
  * Acts as a bridge between file system events and namespace refactoring functionality.
  */
-export class NamespaceFileMovedObserver implements FileObserverInterface {
+export class FileMovedObserver implements FileObserverInterface {
     /**
      * Tracks file rename and move operations in the workspace.
      */

@@ -1,8 +1,8 @@
 import path from "path";
 import * as vscode from "vscode";
 import { escapeRegExp } from "../../../utils/regex/escapeRegExp";
-import { NamespaceResolver } from "../../namespace/NamespaceResolver";
-import { NamespaceRefactorDetailsType } from "./../type/NamespaceRefactorDetailType";
+import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailType";
+import { NamespaceResolver } from "./NamespaceResolver";
 
 /**
  * Handles refactoring operations related to PHP namespaces.

@@ -1,9 +1,9 @@
 import * as path from "path";
 import * as vscode from "vscode";
-import { getPathNormalized } from "../../utils/filesystem/getPathNormalized";
-import { ComposerJsonService } from "../composer/model/ComposerJsonService";
-import { AutoloadConfigsType } from "../composer/type/AutoloadConfigsType";
-import { NamespaceMatchType } from "./type/NamespaceMatchType";
+import { getPathNormalized } from "../../../utils/filesystem/getPathNormalized";
+import { ComposerJsonService } from "../../composer/model/ComposerJsonService";
+import { AutoloadConfigsType } from "../../composer/type/AutoloadConfigsType";
+import { NamespaceMatchType } from "../type/NamespaceMatchType";
 
 /**
  * Resolves PHP namespaces based on file paths and Composer autoload configurations.

@@ -1,11 +1,11 @@
 import * as vscode from "vscode";
+import { ContainerFactory } from "../../container/build/ContainerFactory";
 import { ContainerInterface } from "../../container/interface/ContainerInterface";
-import { FileMovedObserver } from "../../service/refactor/observer/FileMovedObserver";
+import { NamespaceFileMovedObserver } from "../../service/namespace/observer/NamespaceFileMovedObserver";
 import { FileTypeEnum } from "../../utils/enum/FileTypeEnum";
 import { ExtensionInterface } from "../interface/ExtensionInterface";
 import { FileGenerationCommandRegistry } from "../registry/FileGenerationCommandRegistry";
 import { FileGenerationCommand } from "./../command/FileGenerationCommand";
-import { ContainerFactory } from "../../container/build/ContainerFactory";
 
 /**
  * The main extension class that handles the extension lifecycle.
@@ -47,7 +47,7 @@ export class Extension implements ExtensionInterface {
         this.initialize(context);
         this.addFileCreationCommands(context);
 
-        this.container.get(FileMovedObserver).start(context);
+        this.container.get(NamespaceFileMovedObserver).start(context);
 
         return this;
     }

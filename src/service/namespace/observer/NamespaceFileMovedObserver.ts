@@ -1,30 +1,31 @@
 import path from "path";
 import * as vscode from "vscode";
-import { FileRenameOperationTypeEnum } from "../enum/FileRenameOperationTypeEnum";
-import { FileRenameOperationEvent } from "../event/FileRenameOperationEvent";
-import { FileRenameTracker } from "../model/FileRenameTracker";
-import { NamespaceRefactorer } from "./../model/NamespaceRefactorer";
+import { FileRenameOperationTypeEnum } from "../../filesystem/file/enum/FileRenameOperationTypeEnum";
+import { FileRenameOperationEvent } from "../../filesystem/file/event/FileRenameOperationEvent";
+import { FileRenameTracker } from "../../filesystem/file/model/FileRenameTracker";
+import { NamespaceRefactorer } from "../model/NamespaceRefactorer";
 
 /**
- * Observes file moves in the workspace and initiates namespace refactoring operations
+ * Observes file move operations in the workspace and triggers namespace refactoring when PHP files are moved.
+ * Acts as a bridge between file system events and namespace refactoring functionality.
  */
-export class FileMovedObserver {
+export class NamespaceFileMovedObserver {
     /**
-     * The tracker that detects file rename and move operations
+     * Tracks file rename and move operations in the workspace.
      */
     private readonly fileRenameTracker: FileRenameTracker;
 
     /**
-     * Creates a new file moved observer
-     * @param namespaceRefactorer The service that performs the actual namespace refactoring
+     * Initializes a new observer with namespace refactoring capabilities.
+     * @param namespaceRefactorer Service that updates namespaces in PHP files and their references.
      */
     constructor(private readonly namespaceRefactorer: NamespaceRefactorer) {
         this.fileRenameTracker = new FileRenameTracker();
     }
 
     /**
-     * Starts tracking file move operations
-     * @param context The VS Code extension context
+     * Begins observing file move operations in the workspace.
+     * @param context The VS Code extension context used to register disposables.
      */
     public start(context: vscode.ExtensionContext): void {
         this.fileRenameTracker.start(context);
@@ -35,8 +36,8 @@ export class FileMovedObserver {
     }
 
     /**
-     * Processes a file rename operation event
-     * @param event The file rename operation event to process
+     * Processes file rename events and filters for move operations only.
+     * @param event Details of the file rename operation that occurred.
      */
     private async handleFileRenameOperationEvent(event: FileRenameOperationEvent): Promise<void> {
         if (event.operationType !== FileRenameOperationTypeEnum.Moved) {

@@ -5,7 +5,7 @@ import { InputBoxFactoryInterface } from "../../service/input/interface/InputBox
 import { NamespaceResolver } from "../../service/namespace/model/NamespaceResolver";
 import { SnippetFactoryInterface } from "../../service/snippet/interface/SnippetFactoryInterface";
 import { FileTypeEnum } from "../../utils/enum/FileTypeEnum";
-import { getFileNameFromUri } from "../../utils/filesystem/getFileNameFromUri";
+import { getUriFileName } from "../../utils/filesystem/getUriFileName";
 
 /**
  * Command handler for creating new PHP files of various types.
@@ -55,7 +55,7 @@ export class FileGenerationCommand {
 
         const editor = await this.openFileInEditor(filePath);
 
-        const identifier = getFileNameFromUri(filePath);
+        const identifier = getUriFileName(filePath);
         const namespace = await this.getNamespace(filePath);
         const snippet = this.getSnippet(fileType, identifier, namespace);
 

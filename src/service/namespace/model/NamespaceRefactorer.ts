@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { getFileNameFromUri } from "../../../utils/filesystem/getFileNameFromUri";
+import { getUriFileName } from "../../../utils/filesystem/getUriFileName";
 import { escapeRegExp } from "../../../utils/regex/escapeRegExp";
 import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailType";
 import { NamespaceResolver } from "./NamespaceResolver";
@@ -347,8 +347,8 @@ export class NamespaceRefactorer {
     private async getRefactorDetails(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<NamespaceRefactorDetailsType> {
         const oldNamespace = await this.namespaceResolver.resolve(oldUri);
         const newNamespace = await this.namespaceResolver.resolve(newUri);
-        const oldIdentifier = getFileNameFromUri(oldUri);
-        const newIdentifier = getFileNameFromUri(newUri);
+        const oldIdentifier = getUriFileName(oldUri);
+        const newIdentifier = getUriFileName(newUri);
 
         return {
             oldUri: oldUri,

@@ -6,6 +6,6 @@ import * as vscode from "vscode";
  * @param uri The URI of the file.
  * @returns The file name without extension.
  */
-export function getFileNameFromUri(uri: vscode.Uri): string {
+export function getUriFileName(uri: vscode.Uri): string {
     return path.parse(uri.fsPath).name;
 }

@@ -306,8 +306,8 @@ export class NamespaceRefactorer {
      */
     private async findFilesToRefactor(): Promise<vscode.Uri[]> {
         const config = vscode.workspace.getConfiguration("phpFileCreator");
-        const excludedFolders = config.get<string[]>('refactorNamespacesExcludeDirectories',  []);
-        const excludePattern = `{${excludedFolders.map(folder => folder).join(",")}}`;
+        const excludedFolders = config.get<string[]>("refactorNamespacesExcludeDirectories", []);
+        const excludePattern = `{${excludedFolders.map((folder) => folder).join(",")}}`;
         const phpFiles = await vscode.workspace.findFiles("**/*.php", excludePattern);
         return phpFiles;
     }
@@ -341,7 +341,7 @@ export class NamespaceRefactorer {
      * @returns A regular expression to match namespace declarations.
      */
     private getNamespaceDeclarationRegex(): RegExp {
-        return new RegExp(/[^\r\n\s]*namespace\s+[\p{L}\d_\\]+\s*;/mu);
+        return new RegExp(/[^\r\n\s]*namespace\s+([\p{L}\d_\\]+)\s*;/mu);
     }
 
     /**
@@ -379,6 +379,6 @@ export class NamespaceRefactorer {
      */
     private getIdentifierRegex(identifier: string): RegExp {
         const escapedIdentifier = escapeRegExp(identifier);
-        return new RegExp(`(?<![\\p{L}\\d_])${escapedIdentifier}(?![\\p{L}\\d_])`, "gu");
+        return new RegExp(`(?<![\p{L}\d_\\])${escapedIdentifier}(?![\p{L}\d_\\])`, "gu");
     }
 }

@@ -3,6 +3,7 @@ import * as vscode from "vscode";
 import { escapeRegExp } from "../../../utils/regex/escapeRegExp";
 import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailType";
 import { NamespaceResolver } from "./NamespaceResolver";
+import { getFileNameFromUri } from "../../../utils/filesystem/getFileNameFromUri";
 
 /**
  * Handles refactoring operations related to PHP namespaces.
@@ -347,8 +348,8 @@ export class NamespaceRefactorer {
     private async getRefactorDetails(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<NamespaceRefactorDetailsType> {
         const oldNamespace = await this.namespaceResolver.resolve(oldUri);
         const newNamespace = await this.namespaceResolver.resolve(newUri);
-        const oldIdentifier = path.parse(oldUri.fsPath).name;
-        const newIdentifier = path.parse(newUri.fsPath).name;
+        const oldIdentifier = getFileNameFromUri(oldUri);
+        const newIdentifier = getFileNameFromUri(newUri);
 
         return {
             oldUri: oldUri,

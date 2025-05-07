@@ -6,6 +6,7 @@ import { InputBoxFactoryInterface } from "../../service/input/interface/InputBox
 import { NamespaceResolver } from "../../service/namespace/model/NamespaceResolver";
 import { SnippetFactoryInterface } from "../../service/snippet/interface/SnippetFactoryInterface";
 import { FileTypeEnum } from "../../utils/enum/FileTypeEnum";
+import { getFileNameFromUri } from "../../utils/filesystem/getFileNameFromUri";
 
 /**
  * Command handler for creating new PHP files of various types.
@@ -55,7 +56,7 @@ export class FileGenerationCommand {
 
         const editor = await this.openFileInEditor(filePath);
 
-        const identifier = this.getIdentifier(filePath);
+        const identifier = getFileNameFromUri(filePath);
         const namespace = await this.getNamespace(filePath);
         const snippet = this.getSnippet(fileType, identifier, namespace);
 
@@ -112,16 +113,6 @@ export class FileGenerationCommand {
      */
     private async getNamespace(filePath: vscode.Uri): Promise<string | undefined> {
         return this.namespaceResolver.resolve(filePath);
-    }
-
-    /**
-     * Extracts the identifier (class/interface/enum name) from a file path.
-     * @param filePath The URI of the file
-     * @returns The identifier extracted from the filename (without extension)
-     */
-    private getIdentifier(filePath: vscode.Uri): string {
-        const baseName = path.basename(filePath.toString());
-        return path.parse(baseName).name;
     }
 
     /**

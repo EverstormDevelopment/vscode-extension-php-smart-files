@@ -379,6 +379,6 @@ export class NamespaceRefactorer {
      */
     private getIdentifierRegex(identifier: string): RegExp {
         const escapedIdentifier = escapeRegExp(identifier);
-        return new RegExp(`(?<![\p{L}\d_\\])${escapedIdentifier}(?![\p{L}\d_\\])`, "gu");
+        return new RegExp(`(?<![\\p{L}\\d_\\\\])${escapedIdentifier}(?![\\p{L}\\d_\\\\])`, "gu");
     }
 }

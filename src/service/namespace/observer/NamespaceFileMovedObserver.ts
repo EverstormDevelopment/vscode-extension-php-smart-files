@@ -2,6 +2,7 @@ import path from "path";
 import * as vscode from "vscode";
 import { FileRenameOperationTypeEnum } from "../../filesystem/file/enum/FileRenameOperationTypeEnum";
 import { FileRenameOperationEvent } from "../../filesystem/file/event/FileRenameOperationEvent";
+import { FileObserverInterface } from "../../filesystem/file/interface/FileObserverInterface";
 import { FileRenameTracker } from "../../filesystem/file/model/FileRenameTracker";
 import { NamespaceRefactorer } from "../model/NamespaceRefactorer";
 
@@ -9,7 +10,7 @@ import { NamespaceRefactorer } from "../model/NamespaceRefactorer";
  * Observes file move operations in the workspace and triggers namespace refactoring when PHP files are moved.
  * Acts as a bridge between file system events and namespace refactoring functionality.
  */
-export class NamespaceFileMovedObserver {
+export class NamespaceFileMovedObserver implements FileObserverInterface {
     /**
      * Tracks file rename and move operations in the workspace.
      */
@@ -27,7 +28,7 @@ export class NamespaceFileMovedObserver {
      * Begins observing file move operations in the workspace.
      * @param context The VS Code extension context used to register disposables.
      */
-    public start(context: vscode.ExtensionContext): void {
+    public watch(context: vscode.ExtensionContext): void {
         this.fileRenameTracker.start(context);
 
         this.fileRenameTracker.onDidRenameFile(async (event: FileRenameOperationEvent) => {

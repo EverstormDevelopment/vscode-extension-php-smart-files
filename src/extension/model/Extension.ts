@@ -1,30 +1,22 @@
 import * as vscode from "vscode";
 import { ContainerFactory } from "../../container/build/ContainerFactory";
 import { ContainerInterface } from "../../container/interface/ContainerInterface";
-import { NamespaceFileMovedObserver } from "../../service/namespace/observer/NamespaceFileMovedObserver";
 import { FileTypeEnum } from "../../utils/enum/FileTypeEnum";
 import { ExtensionInterface } from "../interface/ExtensionInterface";
 import { FileGenerationCommandRegistry } from "../registry/FileGenerationCommandRegistry";
+import { FileObserverRegistry } from "../registry/FileObserverRegistry";
 import { FileGenerationCommand } from "./../command/FileGenerationCommand";
+import { FileObserverInterface } from "../../service/filesystem/file/interface/FileObserverInterface";
+import { ConstructorType } from "../../container/type/ConstructorType";
 
 /**
  * The main extension class that handles the extension lifecycle.
  */
 export class Extension implements ExtensionInterface {
     /**
-     * The extension ID from the manifest
-     */
-    private id: string | undefined;
-
-    /**
      * The extension name from the manifest
      */
     private name: string | undefined;
-
-    /**
-     * The extension version from the manifest
-     */
-    private version: string | undefined;
 
     /**
      * The dependency injection container
@@ -46,9 +38,7 @@ export class Extension implements ExtensionInterface {
     public activate(context: vscode.ExtensionContext): this {
         this.initialize(context);
         this.addFileCreationCommands(context);
-
-        this.container.get(NamespaceFileMovedObserver).start(context);
-
+        this.addFileOvservers(context);
         return this;
     }
 
@@ -57,9 +47,9 @@ export class Extension implements ExtensionInterface {
      * @param context The VS Code extension context
      */
     private initialize(context: vscode.ExtensionContext): void {
-        this.id = context.extension.id;
+        // this.id = context.extension.id;
+        // this.version = context.extension.packageJSON.version;
         this.name = context.extension.packageJSON.name;
-        this.version = context.extension.packageJSON.version;
     }
 
     /**
@@ -90,6 +80,30 @@ export class Extension implements ExtensionInterface {
             await fileGenerationCommand.execute(fileType, uri);
         });
         context.subscriptions.push(vscodeCommand);
+    }
+
+    private addFileOvservers(context: vscode.ExtensionContext): void {
+        const observerRegisty = FileObserverRegistry;
+        for (const [observerName, observer] of Object.entries(observerRegisty)) {
+            this.addFileObserver(context, observerName, observer);
+        }
+    }
+
+    private addFileObserver(
+        context: vscode.ExtensionContext,
+        name: string,
+        observer: ConstructorType<FileObserverInterface>
+    ): void {
+        const observerInstance = this.container.get(observer);
+        if (!observerInstance) {
+            vscode.window.showErrorMessage(`Observer ${name} not found`);
+            return;
+        }
+        if (typeof observerInstance.watch !== "function") {
+            vscode.window.showErrorMessage(`Observer ${name} does not implement \`watch\``);
+            return;
+        }
+        observerInstance.watch(context);
     }
 
     /**

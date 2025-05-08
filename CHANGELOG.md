@@ -5,6 +5,10 @@ All notable changes to the extension will be documented in this file.
 
 ## [Unreleased]
 
+
+
+## [0.4.0] - 2025-05-08
+
 ### Added
 - Enhanced namespace refactoring to support file renaming operations
   - When a PHP file is renamed, the name of the definition (class, interface, enum, or trait) in the file is adjusted accordingly

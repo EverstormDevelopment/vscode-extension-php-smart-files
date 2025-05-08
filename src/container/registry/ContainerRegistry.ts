@@ -1,4 +1,6 @@
 import { FileGenerationCommand } from "../../extension/command/FileGenerationCommand";
+import { FileMovedObserver } from "../../extension/observer/FileMovedObserver";
+import { FileRenamedObserver } from "../../extension/observer/FileRenamedObserver";
 import { ComposerJsonFinder } from "../../service/composer/model/ComposerJsonFinder";
 import { ComposerJsonParser } from "../../service/composer/model/ComposerJsonParser";
 import { ComposerJsonService } from "../../service/composer/model/ComposerJsonService";
@@ -7,7 +9,6 @@ import { UriFolderResolver } from "../../service/filesystem/uri/UriFolderResolve
 import { InputBoxFactory } from "../../service/input/build/InputBoxFactory";
 import { NamespaceRefactorer } from "../../service/namespace/model/NamespaceRefactorer";
 import { NamespaceResolver } from "../../service/namespace/model/NamespaceResolver";
-import { FileMovedObserver } from "../../extension/observer/FileMovedObserver";
 import { SnippetFactory } from "../../service/snippet/build/SnippetFactory";
 import { ContainerRegistrationType } from "../type/ContainerRegistrationType";
 
@@ -58,6 +59,10 @@ export const ContainerRegistry: ContainerRegistrationType[] = [
     },
     {
         constructor: FileMovedObserver,
+        dependencies: [NamespaceRefactorer],
+    },
+    {
+        constructor: FileRenamedObserver,
         dependencies: [NamespaceRefactorer],
     },
 ];

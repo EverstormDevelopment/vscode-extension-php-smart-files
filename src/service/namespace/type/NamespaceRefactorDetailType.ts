@@ -10,6 +10,8 @@ export type NamespaceRefactorDetailsType = {
     newIdentifier: string;
     oldNamespace: string;
     newNamespace: string;
+    hasNamespaces: boolean;
     hasNamespaceChanged: boolean;
     hasIdentifierChanged: boolean;
+    hasChanged: boolean;
 };

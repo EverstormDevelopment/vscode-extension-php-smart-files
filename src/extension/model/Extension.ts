@@ -1,13 +1,13 @@
 import * as vscode from "vscode";
 import { ContainerFactory } from "../../container/build/ContainerFactory";
 import { ContainerInterface } from "../../container/interface/ContainerInterface";
+import { ConstructorType } from "../../container/type/ConstructorType";
+import { FileObserverInterface } from "../../service/filesystem/file/interface/FileObserverInterface";
 import { FileTypeEnum } from "../../utils/enum/FileTypeEnum";
 import { ExtensionInterface } from "../interface/ExtensionInterface";
 import { FileGenerationCommandRegistry } from "../registry/FileGenerationCommandRegistry";
 import { FileObserverRegistry } from "../registry/FileObserverRegistry";
 import { FileGenerationCommand } from "./../command/FileGenerationCommand";
-import { FileObserverInterface } from "../../service/filesystem/file/interface/FileObserverInterface";
-import { ConstructorType } from "../../container/type/ConstructorType";
 
 /**
  * The main extension class that handles the extension lifecycle.

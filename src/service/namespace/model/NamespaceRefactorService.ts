@@ -7,7 +7,6 @@ import { NamespaceReferencesRefactorer } from "./NamespaceReferencesRefactorer";
  * Orchestrates both file content updates and references across the workspace.
  */
 export class NamespaceRefactorService {
-
     /**
      * Initializes the namespace refactoring service with its required dependencies.
      * @param namespaceFileRefactorer Handles refactoring within the moved/renamed file
@@ -15,7 +14,7 @@ export class NamespaceRefactorService {
      */
     constructor(
         private readonly namespaceFileRefactorer: NamespaceFileRefactorer,
-        private readonly namespaceReferencesRefactorer: NamespaceReferencesRefactorer,
+        private readonly namespaceReferencesRefactorer: NamespaceReferencesRefactorer
     ) {}
 
     /**

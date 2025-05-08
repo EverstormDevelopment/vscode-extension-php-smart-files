@@ -7,8 +7,8 @@ import { FileRenameTracker } from "../../service/filesystem/file/model/FileRenam
 import { NamespaceRefactorer } from "../../service/namespace/model/NamespaceRefactorer";
 
 /**
- * Observes file move operations in the workspace and triggers namespace refactoring when PHP files are moved.
- * Acts as a bridge between file system events and namespace refactoring functionality.
+ * Observer that handles file move operations in the workspace.
+ * Updates namespaces and references when PHP files are moved.
  */
 export class FileMovedObserver implements FileObserverInterface {
     /**
@@ -18,7 +18,7 @@ export class FileMovedObserver implements FileObserverInterface {
 
     /**
      * Initializes a new observer with namespace refactoring capabilities.
-     * @param namespaceRefactorer Service that updates namespaces in PHP files and their references.
+     * @param namespaceRefactorer Service that updates namespaces in PHP files and their references
      */
     constructor(private readonly namespaceRefactorer: NamespaceRefactorer) {
         this.fileRenameTracker = new FileRenameTracker();
@@ -26,7 +26,7 @@ export class FileMovedObserver implements FileObserverInterface {
 
     /**
      * Begins observing file move operations in the workspace.
-     * @param context The VS Code extension context used to register disposables.
+     * @param context The VS Code extension context used to register disposables
      */
     public watch(context: vscode.ExtensionContext): void {
         this.fileRenameTracker.start(context);
@@ -37,8 +37,8 @@ export class FileMovedObserver implements FileObserverInterface {
     }
 
     /**
-     * Processes file rename events and filters for move operations only.
-     * @param event Details of the file rename operation that occurred.
+     * Handles file rename operation events by filtering for move operations only.
+     * @param event The file rename operation event to handle
      */
     private async handleFileRenameOperationEvent(event: FileRenameOperationEvent): Promise<void> {
         if (event.operationType !== FileRenameOperationTypeEnum.Moved) {

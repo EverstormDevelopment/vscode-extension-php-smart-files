@@ -42,5 +42,9 @@
   "Error during namespace refactoring: {0}": "Error during namespace refactoring: {0}",
   "Updating references from \"{0}\" to \"{1}\"": "Updating references from \"{0}\" to \"{1}\"",
   "Processing file {0} of {1}": "Processing file {0} of {1}",
-  "Error updating references in file {0}: {1}": "Error updating references in file {0}: {1}"
+  "Error updating references in file {0}: {1}": "Error updating references in file {0}: {1}",
+
+  "Would you like to update the declaration identifer to \"{0}\" and update its references?": "Would you like to update the declaration identifer to \"{0}\" and update its references?",
+  "The provided name '{0}' is not a valid PHP identifier. The refactoring process has been canceled.": "The provided name '{0}' is not a valid PHP identifier. The refactoring process has been canceled.",
+  "Unable to locate a valid definition. The refactoring process has been canceled.": "Unable to locate a valid definition. The refactoring process has been canceled."
 }

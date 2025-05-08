@@ -22,7 +22,7 @@
   "php-file-creator.config.refactorNamespacesOnFileMoved.always": "Always without confirmation",
   "php-file-creator.config.refactorNamespacesOnFileMoved.never": "Never",
 
-  "php-file-creator.config.refactorNamespacesOnFileRenamed.description": "Determines whether, after a file is renamed, the declaration identifier in the file and its references should be refactored.",
+  "php-file-creator.config.refactorNamespacesOnFileRenamed.description": "Determines whether, after a file is renamed, class names or other declaration identifiers should be adapted to the new filename. This includes updating all internal references (like MyClass::SOME_STATIC), 'use' statements and all external references in other files.",
   "php-file-creator.config.refactorNamespacesOnFileRenamed.confirm": "With confirmation",
   "php-file-creator.config.refactorNamespacesOnFileRenamed.always": "Always without confirmation",
   "php-file-creator.config.refactorNamespacesOnFileRenamed.never": "Never",

@@ -22,7 +22,7 @@
   "php-file-creator.config.refactorNamespacesOnFileMoved.always": "Всегда без подтверждения",
   "php-file-creator.config.refactorNamespacesOnFileMoved.never": "Никогда",
 
-  "php-file-creator.config.refactorNamespacesOnFileRenamed.description": "Определяет, следует ли после переименования файла рефакторить идентификатор объявления в файле и его ссылках.",
+  "php-file-creator.config.refactorNamespacesOnFileRenamed.description": "Определяет, следует ли после переименования файла адаптировать имя класса или другие идентификаторы объявлений к новому имени файла. Это включает обновление всех внутренних ссылок (например, MyClass::SOME_STATIC), объявлений 'use', а также всех внешних ссылок в других файлах.",
   "php-file-creator.config.refactorNamespacesOnFileRenamed.confirm": "С подтверждением",
   "php-file-creator.config.refactorNamespacesOnFileRenamed.always": "Всегда без подтверждения",
   "php-file-creator.config.refactorNamespacesOnFileRenamed.never": "Никогда",

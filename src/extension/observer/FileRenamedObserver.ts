@@ -1,4 +1,3 @@
-import path from "path";
 import * as vscode from "vscode";
 import { FileRenameOperationTypeEnum } from "../../service/filesystem/file/enum/FileRenameOperationTypeEnum";
 import { FileRenameOperationEvent } from "../../service/filesystem/file/event/FileRenameOperationEvent";

@@ -5,6 +5,21 @@ All notable changes to the extension will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- Enhanced namespace refactoring to support file renaming operations
+  - When a PHP file is renamed, the name of the definition (class, interface, enum, or trait) in the file is adjusted accordingly
+  - All references to the definition in other files are automatically updated
+  - Behavior is similar to the "moved file" functionality with additional identifier adaptation
+- Added configuration `refactorNamespacesOnFileRenamed` to control behavior when files are renamed:
+  - `confirm` (default): Prompts for confirmation before refactoring
+  - `always`: Automatically refactors without confirmation
+  - `never`: Disables the feature
+- Improved confirmation dialog for namespace refactoring showing the new identifier name
+
+### Changed
+- Improved error handling during namespace refactoring
+- Optimized performance for file operation processing
+
 
 
 ## [0.3.0] - 2025-05-07

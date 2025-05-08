@@ -22,5 +22,10 @@
   "php-file-creator.config.refactorNamespacesOnFileMoved.always": "Toujours sans confirmation",
   "php-file-creator.config.refactorNamespacesOnFileMoved.never": "Jamais",
 
+  "php-file-creator.config.refactorNamespacesOnFileRenamed.description": "Détermine si, après le renommage d'un fichier, l'identifiant de déclaration dans le fichier et dans ses références doit être refactorisé.",
+  "php-file-creator.config.refactorNamespacesOnFileRenamed.confirm": "Avec confirmation",
+  "php-file-creator.config.refactorNamespacesOnFileRenamed.always": "Toujours sans confirmation",
+  "php-file-creator.config.refactorNamespacesOnFileRenamed.never": "Jamais",
+
   "php-file-creator.config.refactorNamespacesExcludeDirectories.description": "Les répertoires spécifiés seront exclus lors du refactoring des espaces de noms. (Remarque : Les entrées doivent être au format de motif Glob, par exemple, `/vendor/**`, `var/cache/**` ou `**/temp/**`.)"
 }

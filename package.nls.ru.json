@@ -22,5 +22,10 @@
   "php-file-creator.config.refactorNamespacesOnFileMoved.always": "Всегда без подтверждения",
   "php-file-creator.config.refactorNamespacesOnFileMoved.never": "Никогда",
 
+  "php-file-creator.config.refactorNamespacesOnFileRenamed.description": "Определяет, следует ли после переименования файла рефакторить идентификатор объявления в файле и его ссылках.",
+  "php-file-creator.config.refactorNamespacesOnFileRenamed.confirm": "С подтверждением",
+  "php-file-creator.config.refactorNamespacesOnFileRenamed.always": "Всегда без подтверждения",
+  "php-file-creator.config.refactorNamespacesOnFileRenamed.never": "Никогда",
+
   "php-file-creator.config.refactorNamespacesExcludeDirectories.description": "Указанные каталоги будут исключены при рефакторинге пространств имен. (Примечание: Ввод должен быть в формате шаблона Glob, например, `/vendor/**`, `var/cache/**` или `**/temp/**`.)"
 }

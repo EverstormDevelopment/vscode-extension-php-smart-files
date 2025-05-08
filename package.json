@@ -55,6 +55,19 @@
           ],
           "order": 4
         },
+        "phpFileCreator.refactorNamespacesOnFileRenamed": {
+          "type": "string",
+          "enum": ["confirm", "always", "never"],
+          "default": "confirm",
+          "description": "%php-file-creator.config.refactorNamespacesOnFileRenamed.description%",
+          "markdownDescription": "%php-file-creator.config.refactorNamespacesOnFileRenamed.description%",
+          "enumDescriptions": [
+            "%php-file-creator.config.refactorNamespacesOnFileRenamed.confirm%",
+            "%php-file-creator.config.refactorNamespacesOnFileRenamed.always%",
+            "%php-file-creator.config.refactorNamespacesOnFileRenamed.never%"
+          ],
+          "order": 5
+        },
         "phpFileCreator.refactorNamespacesExcludeDirectories": {
           "type": "array",
           "default": [
@@ -81,7 +94,7 @@
           "items": {
             "type": "string"
           },
-          "order": 5
+          "order": 6
         }
       }
     },

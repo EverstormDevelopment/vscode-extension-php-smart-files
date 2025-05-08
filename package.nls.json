@@ -21,6 +21,11 @@
   "php-file-creator.config.refactorNamespacesOnFileMoved.confirm": "With confirmation",
   "php-file-creator.config.refactorNamespacesOnFileMoved.always": "Always without confirmation",
   "php-file-creator.config.refactorNamespacesOnFileMoved.never": "Never",
+
+  "php-file-creator.config.refactorNamespacesOnFileRenamed.description": "Determines whether, after a file is renamed, the declaration identifier in the file and its references should be refactored.",
+  "php-file-creator.config.refactorNamespacesOnFileRenamed.confirm": "With confirmation",
+  "php-file-creator.config.refactorNamespacesOnFileRenamed.always": "Always without confirmation",
+  "php-file-creator.config.refactorNamespacesOnFileRenamed.never": "Never",
   
   "php-file-creator.config.refactorNamespacesExcludeDirectories.description": "Specifies directories to exclude during namespace refactoring. (Note: Entries are expected in Glob pattern format, e.g., `/vendor/**`, `var/cache/**`, or `**/temp/**`.)"
 }

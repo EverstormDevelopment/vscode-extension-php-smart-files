@@ -82,6 +82,10 @@ export class Extension implements ExtensionInterface {
         context.subscriptions.push(vscodeCommand);
     }
 
+    /**
+     * Registers all file observers with VS Code
+     * @param context The VS Code extension context
+     */
     private addFileOvservers(context: vscode.ExtensionContext): void {
         const observerRegisty = FileObserverRegistry;
         for (const [observerName, observer] of Object.entries(observerRegisty)) {
@@ -89,6 +93,12 @@ export class Extension implements ExtensionInterface {
         }
     }
 
+    /**
+     * Registers a single file observer with VS Code
+     * @param context The VS Code extension context
+     * @param name The name of the observer
+     * @param observer The constructor type of the observer to register
+     */
     private addFileObserver(
         context: vscode.ExtensionContext,
         name: string,

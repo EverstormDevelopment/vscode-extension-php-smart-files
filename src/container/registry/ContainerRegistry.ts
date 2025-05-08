@@ -7,7 +7,9 @@ import { ComposerJsonService } from "../../service/composer/model/ComposerJsonSe
 import { FileCreator } from "../../service/filesystem/file/model/FileCreator";
 import { UriFolderResolver } from "../../service/filesystem/uri/UriFolderResolver";
 import { InputBoxFactory } from "../../service/input/build/InputBoxFactory";
-import { NamespaceRefactorer } from "../../service/namespace/model/NamespaceRefactorer";
+import { NamespaceFileRefactorer } from "../../service/namespace/model/NamespaceFileRefactorer";
+import { NamespaceRefactorService } from "../../service/namespace/model/NamespaceRefactorService";
+import { NamespaceReferencesRefactorer } from "../../service/namespace/model/NamespaceReferencesRefactorer";
 import { NamespaceResolver } from "../../service/namespace/model/NamespaceResolver";
 import { SnippetFactory } from "../../service/snippet/build/SnippetFactory";
 import { ContainerRegistrationType } from "../type/ContainerRegistrationType";
@@ -54,15 +56,23 @@ export const ContainerRegistry: ContainerRegistrationType[] = [
         dependencies: [UriFolderResolver, InputBoxFactory, FileCreator, NamespaceResolver, SnippetFactory],
     },
     {
-        constructor: NamespaceRefactorer,
+        constructor: NamespaceFileRefactorer,
         dependencies: [NamespaceResolver],
     },
     {
+        constructor: NamespaceReferencesRefactorer,
+        dependencies: [NamespaceResolver],
+    },
+    {
+        constructor: NamespaceRefactorService,
+        dependencies: [NamespaceFileRefactorer, NamespaceReferencesRefactorer],
+    },
+    {
         constructor: FileMovedObserver,
-        dependencies: [NamespaceRefactorer],
+        dependencies: [NamespaceRefactorService],
     },
     {
         constructor: FileRenamedObserver,
-        dependencies: [NamespaceRefactorer],
+        dependencies: [NamespaceRefactorService],
     },
 ];

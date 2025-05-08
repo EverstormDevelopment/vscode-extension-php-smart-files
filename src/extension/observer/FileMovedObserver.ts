@@ -4,7 +4,7 @@ import { FileRenameOperationTypeEnum } from "../../service/filesystem/file/enum/
 import { FileRenameOperationEvent } from "../../service/filesystem/file/event/FileRenameOperationEvent";
 import { FileObserverInterface } from "../../service/filesystem/file/interface/FileObserverInterface";
 import { FileRenameTracker } from "../../service/filesystem/file/model/FileRenameTracker";
-import { NamespaceRefactorer } from "../../service/namespace/model/NamespaceRefactorer";
+import { NamespaceRefactorService } from "../../service/namespace/model/NamespaceRefactorService";
 
 /**
  * Observer that handles file move operations in the workspace.
@@ -16,11 +16,7 @@ export class FileMovedObserver implements FileObserverInterface {
      */
     private readonly fileRenameTracker: FileRenameTracker;
 
-    /**
-     * Initializes a new observer with namespace refactoring capabilities.
-     * @param namespaceRefactorer Service that updates namespaces in PHP files and their references
-     */
-    constructor(private readonly namespaceRefactorer: NamespaceRefactorer) {
+    constructor(private readonly namespaceRefactorService: NamespaceRefactorService) {
         this.fileRenameTracker = new FileRenameTracker();
     }
 
@@ -65,7 +61,7 @@ export class FileMovedObserver implements FileObserverInterface {
             return;
         }
 
-        await this.namespaceRefactorer.updateFileAndReferences(oldUri, newUri);
+        await this.namespaceRefactorService.refactorFileAndReferences(oldUri, newUri);
     }
 
     /**

@@ -1,31 +1,31 @@
 {
-  "php-file-creator.submenus.main.label": "Создать PHP файл",
+  "php-smart-files.submenus.main.label": "Создать PHP файл",
 
-  "php-file-creator.commands.newEmptyPhpFile.title": "PHP файл",
-  "php-file-creator.commands.newEmptyPhpClass.title": "PHP класс",
-  "php-file-creator.commands.newEmptyPhpInterface.title": "PHP интерфейс",
-  "php-file-creator.commands.newEmptyPhpEnum.title": "PHP enum",
-  "php-file-creator.commands.newEmptyPhpTrait.title": "PHP трейт",
-  "php-file-creator.commands.newTemplatePhpClass.title": "PHP класс из шаблона",
-  "php-file-creator.commands.newTemplatePhpInterface.title": "PHP интерфейс из шаблона",
-  "php-file-creator.commands.newTemplatePhpEnum.title": "PHP enum из шаблона",
-  "php-file-creator.commands.newTemplatePhpTrait.title": "PHP трейт из шаблона",
+  "php-smart-files.commands.newEmptyPhpFile.title": "PHP файл",
+  "php-smart-files.commands.newEmptyPhpClass.title": "PHP класс",
+  "php-smart-files.commands.newEmptyPhpInterface.title": "PHP интерфейс",
+  "php-smart-files.commands.newEmptyPhpEnum.title": "PHP enum",
+  "php-smart-files.commands.newEmptyPhpTrait.title": "PHP трейт",
+  "php-smart-files.commands.newTemplatePhpClass.title": "PHP класс из шаблона",
+  "php-smart-files.commands.newTemplatePhpInterface.title": "PHP интерфейс из шаблона",
+  "php-smart-files.commands.newTemplatePhpEnum.title": "PHP enum из шаблона",
+  "php-smart-files.commands.newTemplatePhpTrait.title": "PHP трейт из шаблона",
 
-  "php-file-creator.config.useStrictTypeInTemplates.description": "Определяет, будет ли `declare(strict_types=1);` включен в сгенерированные файлы.",
+  "php-smart-files.config.useStrictTypeInTemplates.description": "Определяет, будет ли `declare(strict_types=1);` включен в сгенерированные файлы.",
 
-  "php-file-creator.config.useFallbackNamespace.description": "Определяет, использовать ли резервное пространство имен, когда не удалось разрешить пространство имен. Когда отключено, пространство имен не будет добавлено.",
-  "php-file-creator.config.fallbackNamespace.description": "Определяет пространство имен для использования, когда резервное пространство имен включено и не удалось найти другое пространство имен.",
-  "php-file-creator.config.fallbackNamespace.patternErrorMessage": "Пространство имен должно быть действительным пространством имен PHP в соответствии с PSR-4 (например, 'App', 'Vendor\\Service'). Каждый сегмент должен начинаться с заглавной буквы.",
+  "php-smart-files.config.useFallbackNamespace.description": "Определяет, использовать ли резервное пространство имен, когда не удалось разрешить пространство имен. Когда отключено, пространство имен не будет добавлено.",
+  "php-smart-files.config.fallbackNamespace.description": "Определяет пространство имен для использования, когда резервное пространство имен включено и не удалось найти другое пространство имен.",
+  "php-smart-files.config.fallbackNamespace.patternErrorMessage": "Пространство имен должно быть действительным пространством имен PHP в соответствии с PSR-4 (например, 'App', 'Vendor\\Service'). Каждый сегмент должен начинаться с заглавной буквы.",
   
-  "php-file-creator.config.refactorNamespacesOnFileMoved.description": "Определяет, следует ли после перемещения файла рефакторить пространство имен в файле и его ссылках.",
-  "php-file-creator.config.refactorNamespacesOnFileMoved.confirm": "С подтверждением",
-  "php-file-creator.config.refactorNamespacesOnFileMoved.always": "Всегда без подтверждения",
-  "php-file-creator.config.refactorNamespacesOnFileMoved.never": "Никогда",
+  "php-smart-files.config.refactorNamespacesOnFileMoved.description": "Определяет, следует ли после перемещения файла рефакторить пространство имен в файле и его ссылках.",
+  "php-smart-files.config.refactorNamespacesOnFileMoved.confirm": "С подтверждением",
+  "php-smart-files.config.refactorNamespacesOnFileMoved.always": "Всегда без подтверждения",
+  "php-smart-files.config.refactorNamespacesOnFileMoved.never": "Никогда",
 
-  "php-file-creator.config.refactorNamespacesOnFileRenamed.description": "Определяет, следует ли после переименования файла адаптировать имя класса или другие идентификаторы объявлений к новому имени файла. Это включает обновление всех внутренних ссылок (например, MyClass::SOME_STATIC), объявлений 'use', а также всех внешних ссылок в других файлах.",
-  "php-file-creator.config.refactorNamespacesOnFileRenamed.confirm": "С подтверждением",
-  "php-file-creator.config.refactorNamespacesOnFileRenamed.always": "Всегда без подтверждения",
-  "php-file-creator.config.refactorNamespacesOnFileRenamed.never": "Никогда",
+  "php-smart-files.config.refactorNamespacesOnFileRenamed.description": "Определяет, следует ли после переименования файла адаптировать имя класса или другие идентификаторы объявлений к новому имени файла. Это включает обновление всех внутренних ссылок (например, MyClass::SOME_STATIC), объявлений 'use', а также всех внешних ссылок в других файлах.",
+  "php-smart-files.config.refactorNamespacesOnFileRenamed.confirm": "С подтверждением",
+  "php-smart-files.config.refactorNamespacesOnFileRenamed.always": "Всегда без подтверждения",
+  "php-smart-files.config.refactorNamespacesOnFileRenamed.never": "Никогда",
 
-  "php-file-creator.config.refactorNamespacesExcludeDirectories.description": "Указанные каталоги будут исключены при рефакторинге пространств имен. (Примечание: Ввод должен быть в формате шаблона Glob, например, `/vendor/**`, `var/cache/**` или `**/temp/**`.)"
+  "php-smart-files.config.refactorNamespacesExcludeDirectories.description": "Указанные каталоги будут исключены при рефакторинге пространств имен. (Примечание: Ввод должен быть в формате шаблона Glob, например, `/vendor/**`, `var/cache/**` или `**/temp/**`.)"
 }

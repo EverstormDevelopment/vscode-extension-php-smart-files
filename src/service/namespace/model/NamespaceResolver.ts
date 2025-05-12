@@ -61,7 +61,7 @@ export class NamespaceResolver {
      * @returns The configured fallback namespace or undefined if the fallback option is disabled
      */
     private getNamespaceFallback(): string | undefined {
-        const config = vscode.workspace.getConfiguration("phpFileCreator");
+        const config = vscode.workspace.getConfiguration("phpSmartFiles");
         const useFallbackNamespace = config.get<boolean>("useFallbackNamespace", false);
         if (!useFallbackNamespace) {
             return undefined;

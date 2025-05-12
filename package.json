@@ -1,6 +1,6 @@
 {
-  "name": "php-file-creator",
-  "displayName": "PHP File Creator",
+  "name": "php-smart-files",
+  "displayName": "PHP Smart Files",
   "description": "A VS Code Extension for PHP development",
   "publisher": "everstorm",
   "version": "0.5.1",
@@ -17,58 +17,58 @@
   "l10n": "./l10n",
   "contributes": {
     "configuration": {
-      "title": "PHP File Creator",
+      "title": "PHP Smart Files",
       "properties": {
-        "phpFileCreator.useStrictTypeInTemplates": {
+        "phpSmartFiles.useStrictTypeInTemplates": {
           "type": "boolean",
           "default": false,
-          "description": "%php-file-creator.config.useStrictTypeInTemplates.description%",
-          "markdownDescription": "%php-file-creator.config.useStrictTypeInTemplates.description%",
+          "description": "%php-smart-files.config.useStrictTypeInTemplates.description%",
+          "markdownDescription": "%php-smart-files.config.useStrictTypeInTemplates.description%",
           "order": 1
         },
-        "phpFileCreator.useFallbackNamespace": {
+        "phpSmartFiles.useFallbackNamespace": {
           "type": "boolean",
           "default": false,
-          "description": "%php-file-creator.config.useFallbackNamespace.description%",
-          "markdownDescription": "%php-file-creator.config.useFallbackNamespace.description%",
+          "description": "%php-smart-files.config.useFallbackNamespace.description%",
+          "markdownDescription": "%php-smart-files.config.useFallbackNamespace.description%",
           "order": 2
         },
-        "phpFileCreator.fallbackNamespace": {
+        "phpSmartFiles.fallbackNamespace": {
           "type": "string",
           "default": "App",
-          "description": "%php-file-creator.config.fallbackNamespace.description%",
-          "markdownDescription": "%php-file-creator.config.fallbackNamespace.description%",
+          "description": "%php-smart-files.config.fallbackNamespace.description%",
+          "markdownDescription": "%php-smart-files.config.fallbackNamespace.description%",
           "pattern": "^[A-Z\\p{Lu}_][a-zA-Z0-9\\p{L}_\\x80-\\xff]*(\\\\[A-Z\\p{Lu}_][a-zA-Z0-9\\p{L}_\\x80-\\xff]*)*$",
-          "patternErrorMessage": "%php-file-creator.config.fallbackNamespace.patternErrorMessage%",
+          "patternErrorMessage": "%php-smart-files.config.fallbackNamespace.patternErrorMessage%",
           "order": 3
         },
-        "phpFileCreator.refactorNamespacesOnFileMoved": {
+        "phpSmartFiles.refactorNamespacesOnFileMoved": {
           "type": "string",
           "enum": ["confirm", "always", "never"],
           "default": "confirm",
-          "description": "%php-file-creator.config.refactorNamespacesOnFileMoved.description%",
-          "markdownDescription": "%php-file-creator.config.refactorNamespacesOnFileMoved.description%",
+          "description": "%php-smart-files.config.refactorNamespacesOnFileMoved.description%",
+          "markdownDescription": "%php-smart-files.config.refactorNamespacesOnFileMoved.description%",
           "enumDescriptions": [
-            "%php-file-creator.config.refactorNamespacesOnFileMoved.confirm%",
-            "%php-file-creator.config.refactorNamespacesOnFileMoved.always%",
-            "%php-file-creator.config.refactorNamespacesOnFileMoved.never%"
+            "%php-smart-files.config.refactorNamespacesOnFileMoved.confirm%",
+            "%php-smart-files.config.refactorNamespacesOnFileMoved.always%",
+            "%php-smart-files.config.refactorNamespacesOnFileMoved.never%"
           ],
           "order": 4
         },
-        "phpFileCreator.refactorNamespacesOnFileRenamed": {
+        "phpSmartFiles.refactorNamespacesOnFileRenamed": {
           "type": "string",
           "enum": ["confirm", "always", "never"],
           "default": "confirm",
-          "description": "%php-file-creator.config.refactorNamespacesOnFileRenamed.description%",
-          "markdownDescription": "%php-file-creator.config.refactorNamespacesOnFileRenamed.description%",
+          "description": "%php-smart-files.config.refactorNamespacesOnFileRenamed.description%",
+          "markdownDescription": "%php-smart-files.config.refactorNamespacesOnFileRenamed.description%",
           "enumDescriptions": [
-            "%php-file-creator.config.refactorNamespacesOnFileRenamed.confirm%",
-            "%php-file-creator.config.refactorNamespacesOnFileRenamed.always%",
-            "%php-file-creator.config.refactorNamespacesOnFileRenamed.never%"
+            "%php-smart-files.config.refactorNamespacesOnFileRenamed.confirm%",
+            "%php-smart-files.config.refactorNamespacesOnFileRenamed.always%",
+            "%php-smart-files.config.refactorNamespacesOnFileRenamed.never%"
           ],
           "order": 5
         },
-        "phpFileCreator.refactorNamespacesExcludeDirectories": {
+        "phpSmartFiles.refactorNamespacesExcludeDirectories": {
           "type": "array",
           "default": [
             "vendor/**",
@@ -89,8 +89,8 @@
             "coverage/**",
             "reports/**"
           ],
-          "description": "%php-file-creator.config.refactorNamespacesExcludeDirectories.description%",
-          "markdownDescription": "%php-file-creator.config.refactorNamespacesExcludeDirectories.description%",
+          "description": "%php-smart-files.config.refactorNamespacesExcludeDirectories.description%",
+          "markdownDescription": "%php-smart-files.config.refactorNamespacesExcludeDirectories.description%",
           "items": {
             "type": "string"
           },
@@ -100,92 +100,92 @@
     },
     "commands": [
       {
-        "command": "php-file-creator.newEmptyPhpFile",
-        "title": "%php-file-creator.commands.newEmptyPhpFile.title%"
+        "command": "php-smart-files.newEmptyPhpFile",
+        "title": "%php-smart-files.commands.newEmptyPhpFile.title%"
       },
       {
-        "command": "php-file-creator.newEmptyPhpClass",
-        "title": "%php-file-creator.commands.newEmptyPhpClass.title%"
+        "command": "php-smart-files.newEmptyPhpClass",
+        "title": "%php-smart-files.commands.newEmptyPhpClass.title%"
       },
       {
-        "command": "php-file-creator.newEmptyPhpInterface",
-        "title": "%php-file-creator.commands.newEmptyPhpInterface.title%"
+        "command": "php-smart-files.newEmptyPhpInterface",
+        "title": "%php-smart-files.commands.newEmptyPhpInterface.title%"
       },
       {
-        "command": "php-file-creator.newEmptyPhpEnum",
-        "title": "%php-file-creator.commands.newEmptyPhpEnum.title%"
+        "command": "php-smart-files.newEmptyPhpEnum",
+        "title": "%php-smart-files.commands.newEmptyPhpEnum.title%"
       },
       {
-        "command": "php-file-creator.newEmptyPhpTrait",
-        "title": "%php-file-creator.commands.newEmptyPhpTrait.title%"
+        "command": "php-smart-files.newEmptyPhpTrait",
+        "title": "%php-smart-files.commands.newEmptyPhpTrait.title%"
       },
       {
-        "command": "php-file-creator.newTemplatePhpClass",
-        "title": "%php-file-creator.commands.newTemplatePhpClass.title%"
+        "command": "php-smart-files.newTemplatePhpClass",
+        "title": "%php-smart-files.commands.newTemplatePhpClass.title%"
       },
       {
-        "command": "php-file-creator.newTemplatePhpInterface",
-        "title": "%php-file-creator.commands.newTemplatePhpInterface.title%"
+        "command": "php-smart-files.newTemplatePhpInterface",
+        "title": "%php-smart-files.commands.newTemplatePhpInterface.title%"
       },
       {
-        "command": "php-file-creator.newTemplatePhpEnum",
-        "title": "%php-file-creator.commands.newTemplatePhpEnum.title%"
+        "command": "php-smart-files.newTemplatePhpEnum",
+        "title": "%php-smart-files.commands.newTemplatePhpEnum.title%"
       },
       {
-        "command": "php-file-creator.newTemplatePhpTrait",
-        "title": "%php-file-creator.commands.newTemplatePhpTrait.title%"
+        "command": "php-smart-files.newTemplatePhpTrait",
+        "title": "%php-smart-files.commands.newTemplatePhpTrait.title%"
       }
     ],
     "menus": {
       "explorer/context": [
         {
-          "submenu": "php-file-creator.submenu",
+          "submenu": "php-smart-files.submenu",
           "group": "1_modification"
         }
       ],
-      "php-file-creator.submenu": [
+      "php-smart-files.submenu": [
         {
-          "command": "php-file-creator.newEmptyPhpFile",
+          "command": "php-smart-files.newEmptyPhpFile",
           "group": "1_creation_empty@1"
         },
         {
-          "command": "php-file-creator.newEmptyPhpClass",
+          "command": "php-smart-files.newEmptyPhpClass",
           "group": "1_creation_empty@2"
         },
         {
-          "command": "php-file-creator.newEmptyPhpInterface",
+          "command": "php-smart-files.newEmptyPhpInterface",
           "group": "1_creation_empty@3"
         },
         {
-          "command": "php-file-creator.newEmptyPhpEnum",
+          "command": "php-smart-files.newEmptyPhpEnum",
           "group": "1_creation_empty@4"
         },
         {
-          "command": "php-file-creator.newEmptyPhpTrait",
+          "command": "php-smart-files.newEmptyPhpTrait",
           "group": "1_creation_empty@5"
         },
         {
-          "command": "php-file-creator.newTemplatePhpClass",
+          "command": "php-smart-files.newTemplatePhpClass",
           "group": "2_creation_template@2"
         },
         {
-          "command": "php-file-creator.newTemplatePhpInterface",
+          "command": "php-smart-files.newTemplatePhpInterface",
           "group": "2_creation_template@3"
         },
         {
-          "command": "php-file-creator.newTemplatePhpEnum",
+          "command": "php-smart-files.newTemplatePhpEnum",
           "group": "2_creation_template@4"
         },
         {
-          "command": "php-file-creator.newTemplatePhpTrait",
+          "command": "php-smart-files.newTemplatePhpTrait",
           "group": "2_creation_template@5"
         }
       ]
     },
     "submenus": [
       {
-        "id": "php-file-creator.submenu",
-        "label": "%php-file-creator.submenus.main.label%"
+        "id": "php-smart-files.submenu",
+        "label": "%php-smart-files.submenus.main.label%"
       }
     ]
   },

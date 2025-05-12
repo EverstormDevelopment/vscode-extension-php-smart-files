@@ -195,7 +195,7 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
      * @returns Array of URIs for PHP files that might need updates.
      */
     private async findFilesToRefactor(fileUri: vscode.Uri): Promise<vscode.Uri[]> {
-        const config = vscode.workspace.getConfiguration("phpFileCreator");
+        const config = vscode.workspace.getConfiguration("phpSmartFiles");
         const excludedFolders = config.get<string[]>("refactorNamespacesExcludeDirectories", []);
 
         const relativeFilePath = vscode.workspace.asRelativePath(fileUri.fsPath);

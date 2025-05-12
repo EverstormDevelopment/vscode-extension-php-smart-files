@@ -55,7 +55,7 @@ export class FileRenameObserverAbstract implements FileObserverInterface {
      * @param newUri The URI of the file at its new location
      */
     private async handleFileMoved(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<void> {
-        const config = vscode.workspace.getConfiguration("phpFileCreator");
+        const config = vscode.workspace.getConfiguration("phpSmartFiles");
         const refactorOption = config.get<string>(this.refactorOptionName, "confirm");
         if (refactorOption === "never") {
             return;

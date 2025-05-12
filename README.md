@@ -1,6 +1,6 @@
-# php-file-creator README
+# php-smart-files README
 
-This is the README for your extension "php-file-creator". After writing up a brief description, we recommend including the following sections.
+This is the README for your extension "php-smart-files". After writing up a brief description, we recommend including the following sections.
 
 ## Features
 

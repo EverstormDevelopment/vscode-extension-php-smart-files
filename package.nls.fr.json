@@ -1,31 +1,31 @@
 {
-  "php-file-creator.submenus.main.label": "Créer un fichier PHP",
+  "php-smart-files.submenus.main.label": "Créer un fichier PHP",
 
-  "php-file-creator.commands.newEmptyPhpFile.title": "Fichier PHP",
-  "php-file-creator.commands.newEmptyPhpClass.title": "Classe PHP",
-  "php-file-creator.commands.newEmptyPhpInterface.title": "Interface PHP",
-  "php-file-creator.commands.newEmptyPhpEnum.title": "Enum PHP",
-  "php-file-creator.commands.newEmptyPhpTrait.title": "Trait PHP",
-  "php-file-creator.commands.newTemplatePhpClass.title": "Classe PHP depuis modèle",
-  "php-file-creator.commands.newTemplatePhpInterface.title": "Interface PHP depuis modèle",
-  "php-file-creator.commands.newTemplatePhpEnum.title": "Enum PHP depuis modèle",
-  "php-file-creator.commands.newTemplatePhpTrait.title": "Trait PHP depuis modèle",
+  "php-smart-files.commands.newEmptyPhpFile.title": "Fichier PHP",
+  "php-smart-files.commands.newEmptyPhpClass.title": "Classe PHP",
+  "php-smart-files.commands.newEmptyPhpInterface.title": "Interface PHP",
+  "php-smart-files.commands.newEmptyPhpEnum.title": "Enum PHP",
+  "php-smart-files.commands.newEmptyPhpTrait.title": "Trait PHP",
+  "php-smart-files.commands.newTemplatePhpClass.title": "Classe PHP depuis modèle",
+  "php-smart-files.commands.newTemplatePhpInterface.title": "Interface PHP depuis modèle",
+  "php-smart-files.commands.newTemplatePhpEnum.title": "Enum PHP depuis modèle",
+  "php-smart-files.commands.newTemplatePhpTrait.title": "Trait PHP depuis modèle",
 
-  "php-file-creator.config.useStrictTypeInTemplates.description": "Détermine si `declare(strict_types=1);` est inclus dans les fichiers générés.",
+  "php-smart-files.config.useStrictTypeInTemplates.description": "Détermine si `declare(strict_types=1);` est inclus dans les fichiers générés.",
 
-  "php-file-creator.config.useFallbackNamespace.description": "Détermine s'il faut utiliser un espace de noms de secours lorsqu'aucun espace de noms n'a pu être résolu. Quand désactivé, aucun espace de noms ne sera ajouté.",
-  "php-file-creator.config.fallbackNamespace.description": "Définit l'espace de noms à utiliser lorsque l'espace de noms de secours est activé et qu'aucun autre espace de noms n'a pu être trouvé.",
-  "php-file-creator.config.fallbackNamespace.patternErrorMessage": "L'espace de noms doit être un espace de noms PHP valide selon PSR-4 (par exemple, 'App', 'Vendor\\Service'). Chaque segment doit commencer par une lettre majuscule.",
+  "php-smart-files.config.useFallbackNamespace.description": "Détermine s'il faut utiliser un espace de noms de secours lorsqu'aucun espace de noms n'a pu être résolu. Quand désactivé, aucun espace de noms ne sera ajouté.",
+  "php-smart-files.config.fallbackNamespace.description": "Définit l'espace de noms à utiliser lorsque l'espace de noms de secours est activé et qu'aucun autre espace de noms n'a pu être trouvé.",
+  "php-smart-files.config.fallbackNamespace.patternErrorMessage": "L'espace de noms doit être un espace de noms PHP valide selon PSR-4 (par exemple, 'App', 'Vendor\\Service'). Chaque segment doit commencer par une lettre majuscule.",
   
-  "php-file-creator.config.refactorNamespacesOnFileMoved.description": "Détermine si, après le déplacement d'un fichier, l'espace de noms dans le fichier et dans ses références doit être refactorisé.",
-  "php-file-creator.config.refactorNamespacesOnFileMoved.confirm": "Avec confirmation",
-  "php-file-creator.config.refactorNamespacesOnFileMoved.always": "Toujours sans confirmation",
-  "php-file-creator.config.refactorNamespacesOnFileMoved.never": "Jamais",
+  "php-smart-files.config.refactorNamespacesOnFileMoved.description": "Détermine si, après le déplacement d'un fichier, l'espace de noms dans le fichier et dans ses références doit être refactorisé.",
+  "php-smart-files.config.refactorNamespacesOnFileMoved.confirm": "Avec confirmation",
+  "php-smart-files.config.refactorNamespacesOnFileMoved.always": "Toujours sans confirmation",
+  "php-smart-files.config.refactorNamespacesOnFileMoved.never": "Jamais",
 
-  "php-file-creator.config.refactorNamespacesOnFileRenamed.description": "Détermine si, après le renommage d'un fichier, le nom de la classe ou d'autres identificateurs de déclaration doivent être adaptés au nouveau nom du fichier. Cela inclut la mise à jour de toutes les références internes (comme MyClass::SOME_STATIC), des déclarations 'use' ainsi que toutes les références externes dans d'autres fichiers.",
-  "php-file-creator.config.refactorNamespacesOnFileRenamed.confirm": "Avec confirmation",
-  "php-file-creator.config.refactorNamespacesOnFileRenamed.always": "Toujours sans confirmation",
-  "php-file-creator.config.refactorNamespacesOnFileRenamed.never": "Jamais",
+  "php-smart-files.config.refactorNamespacesOnFileRenamed.description": "Détermine si, après le renommage d'un fichier, le nom de la classe ou d'autres identificateurs de déclaration doivent être adaptés au nouveau nom du fichier. Cela inclut la mise à jour de toutes les références internes (comme MyClass::SOME_STATIC), des déclarations 'use' ainsi que toutes les références externes dans d'autres fichiers.",
+  "php-smart-files.config.refactorNamespacesOnFileRenamed.confirm": "Avec confirmation",
+  "php-smart-files.config.refactorNamespacesOnFileRenamed.always": "Toujours sans confirmation",
+  "php-smart-files.config.refactorNamespacesOnFileRenamed.never": "Jamais",
 
-  "php-file-creator.config.refactorNamespacesExcludeDirectories.description": "Les répertoires spécifiés seront exclus lors du refactoring des espaces de noms. (Remarque : Les entrées doivent être au format de motif Glob, par exemple, `/vendor/**`, `var/cache/**` ou `**/temp/**`.)"
+  "php-smart-files.config.refactorNamespacesExcludeDirectories.description": "Les répertoires spécifiés seront exclus lors du refactoring des espaces de noms. (Remarque : Les entrées doivent être au format de motif Glob, par exemple, `/vendor/**`, `var/cache/**` ou `**/temp/**`.)"
 }

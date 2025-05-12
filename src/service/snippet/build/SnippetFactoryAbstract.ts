@@ -64,7 +64,7 @@ export abstract class SnippetFactoryAbstract implements SnippetTypeFactoryInterf
      * @returns This instance for method chaining
      */
     private addStrictType(): this {
-        const config = vscode.workspace.getConfiguration("phpFileCreator");
+        const config = vscode.workspace.getConfiguration("phpSmartFiles");
         const useStrictType = config.get<boolean>("useStrictTypeInTemplates", false);
         if (!useStrictType) {
             return this;

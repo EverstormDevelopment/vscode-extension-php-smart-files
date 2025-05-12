@@ -1,31 +1,31 @@
 {
-  "php-file-creator.submenus.main.label": "Create PHP File",
+  "php-smart-files.submenus.main.label": "Create PHP File",
 
-  "php-file-creator.commands.newEmptyPhpFile.title": "PHP File",
-  "php-file-creator.commands.newEmptyPhpClass.title": "PHP Class",
-  "php-file-creator.commands.newEmptyPhpInterface.title": "PHP Interface",
-  "php-file-creator.commands.newEmptyPhpEnum.title": "PHP Enum",
-  "php-file-creator.commands.newEmptyPhpTrait.title": "PHP Trait",
-  "php-file-creator.commands.newTemplatePhpClass.title": "PHP Class from Template",
-  "php-file-creator.commands.newTemplatePhpInterface.title": "PHP Interface from Template",
-  "php-file-creator.commands.newTemplatePhpEnum.title": "PHP Enum from Template",
-  "php-file-creator.commands.newTemplatePhpTrait.title": "PHP Trait from Template",
+  "php-smart-files.commands.newEmptyPhpFile.title": "PHP File",
+  "php-smart-files.commands.newEmptyPhpClass.title": "PHP Class",
+  "php-smart-files.commands.newEmptyPhpInterface.title": "PHP Interface",
+  "php-smart-files.commands.newEmptyPhpEnum.title": "PHP Enum",
+  "php-smart-files.commands.newEmptyPhpTrait.title": "PHP Trait",
+  "php-smart-files.commands.newTemplatePhpClass.title": "PHP Class from Template",
+  "php-smart-files.commands.newTemplatePhpInterface.title": "PHP Interface from Template",
+  "php-smart-files.commands.newTemplatePhpEnum.title": "PHP Enum from Template",
+  "php-smart-files.commands.newTemplatePhpTrait.title": "PHP Trait from Template",
 
-  "php-file-creator.config.useStrictTypeInTemplates.description": "Determines whether `declare(strict_types=1);` is included in generated files.",
+  "php-smart-files.config.useStrictTypeInTemplates.description": "Determines whether `declare(strict_types=1);` is included in generated files.",
 
-  "php-file-creator.config.useFallbackNamespace.description": "Determines whether to use a fallback namespace when no namespace could be resolved. When disabled, no namespace will be added.",
-  "php-file-creator.config.fallbackNamespace.description": "Defines the namespace to use when fallback namespace is enabled and no other namespace could be found.",
-  "php-file-creator.config.fallbackNamespace.patternErrorMessage": "The namespace must be a valid PHP namespace according to PSR-4 (e.g. 'App', 'Vendor\\Service'). Each segment must start with an uppercase letter.",
+  "php-smart-files.config.useFallbackNamespace.description": "Determines whether to use a fallback namespace when no namespace could be resolved. When disabled, no namespace will be added.",
+  "php-smart-files.config.fallbackNamespace.description": "Defines the namespace to use when fallback namespace is enabled and no other namespace could be found.",
+  "php-smart-files.config.fallbackNamespace.patternErrorMessage": "The namespace must be a valid PHP namespace according to PSR-4 (e.g. 'App', 'Vendor\\Service'). Each segment must start with an uppercase letter.",
   
-  "php-file-creator.config.refactorNamespacesOnFileMoved.description": "Determines whether, after a file is moved, the namespace in the file and its references should be refactored.",
-  "php-file-creator.config.refactorNamespacesOnFileMoved.confirm": "With confirmation",
-  "php-file-creator.config.refactorNamespacesOnFileMoved.always": "Always without confirmation",
-  "php-file-creator.config.refactorNamespacesOnFileMoved.never": "Never",
+  "php-smart-files.config.refactorNamespacesOnFileMoved.description": "Determines whether, after a file is moved, the namespace in the file and its references should be refactored.",
+  "php-smart-files.config.refactorNamespacesOnFileMoved.confirm": "With confirmation",
+  "php-smart-files.config.refactorNamespacesOnFileMoved.always": "Always without confirmation",
+  "php-smart-files.config.refactorNamespacesOnFileMoved.never": "Never",
 
-  "php-file-creator.config.refactorNamespacesOnFileRenamed.description": "Determines whether, after a file is renamed, class names or other declaration identifiers should be adapted to the new filename. This includes updating all internal references (like MyClass::SOME_STATIC), 'use' statements and all external references in other files.",
-  "php-file-creator.config.refactorNamespacesOnFileRenamed.confirm": "With confirmation",
-  "php-file-creator.config.refactorNamespacesOnFileRenamed.always": "Always without confirmation",
-  "php-file-creator.config.refactorNamespacesOnFileRenamed.never": "Never",
+  "php-smart-files.config.refactorNamespacesOnFileRenamed.description": "Determines whether, after a file is renamed, class names or other declaration identifiers should be adapted to the new filename. This includes updating all internal references (like MyClass::SOME_STATIC), 'use' statements and all external references in other files.",
+  "php-smart-files.config.refactorNamespacesOnFileRenamed.confirm": "With confirmation",
+  "php-smart-files.config.refactorNamespacesOnFileRenamed.always": "Always without confirmation",
+  "php-smart-files.config.refactorNamespacesOnFileRenamed.never": "Never",
   
-  "php-file-creator.config.refactorNamespacesExcludeDirectories.description": "Specifies directories to exclude during namespace refactoring. (Note: Entries are expected in Glob pattern format, e.g., `/vendor/**`, `var/cache/**`, or `**/temp/**`.)"
+  "php-smart-files.config.refactorNamespacesExcludeDirectories.description": "Specifies directories to exclude during namespace refactoring. (Note: Entries are expected in Glob pattern format, e.g., `/vendor/**`, `var/cache/**`, or `**/temp/**`.)"
 }

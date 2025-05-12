@@ -2,16 +2,17 @@
 
 <div align="center">
 
-![PHP Smart Files](images/logo.png)
-
-### Seamless PHP File Creation & Intelligent Namespace Management
 ![Version](https://img.shields.io/badge/version-0.5.1-blue)
 ![Installs](https://img.shields.io/badge/installs-new-green)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)     
 
-</div>
+### Seamless PHP File Creation & Intelligent Namespace Management
+
 
 **Accelerate your PHP development!** Create perfectly structured files with smart templates while automatic namespace management takes care of the rest
+
+</div>
+
 
 ## Table of Contents
 - [Features](#features)

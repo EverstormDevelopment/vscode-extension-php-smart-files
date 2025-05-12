@@ -181,32 +181,11 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
     }
 
     /**
-     * Creates a regular expression to match a specific namespace declaration.
-     * @param namespace The namespace to match in the declaration.
-     * @returns A regular expression for matching the namespace declaration.
-     */
-    protected getNamespaceRegExp(namespace: string): RegExp {
-        const escapedNamespace = escapeRegExp(namespace);
-        return new RegExp(`[^\\r\\n\\s]*namespace\\s+${escapedNamespace}\\s*;`, "mu");
-    }
-
-    /**
      * Creates a regular expression to match any namespace declaration.
      * @returns A regular expression that captures the namespace name.
      */
     protected getNamespaceDeclarationRegExp(): RegExp {
         return new RegExp(/[^\r\n\s]*namespace\s+([\p{L}\d_\\]+)\s*;/mu);
-    }
-
-    /**
-     * Creates a regular expression to match fully qualified namespace references.
-     * Includes word boundary checks to prevent partial matches.
-     * @param fullyQualifiedNamespace The fully qualified namespace to match.
-     * @returns A regular expression for matching the fully qualified namespace.
-     */
-    protected getFullyQualifiedNamespaceRegExp(fullyQualifiedNamespace: string): RegExp {
-        const escapedNamespace = escapeRegExp(fullyQualifiedNamespace);
-        return new RegExp(`(?<![\\p{L}\\d_])${escapedNamespace}(?![\\p{L}\\d_\\\\])`, "gu");
     }
 
     /**
@@ -219,9 +198,14 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
         return new RegExp(`use\\s+${escapedNamespace}\\s*;`, "gu");
     }
 
+    /**
+     * Creates a regular expression to match `use` statements for a specific identifier.
+     * @param identifier The identifier to match in use statements.
+     * @returns A regular expression for matching use statements.
+     */
     protected getUseStatementByIdentiferRegExp(identifier: string): RegExp {
         const escapedIdentifier = escapeRegExp(identifier);
-        // Ensure at least one `\` precedes the identifier
+        // Ensure at least one `\` precedes the identifier, so we exclude `use` statements for other classes.
         return new RegExp(`use\\s+[\\p{L}\\d_\\\\]+\\\\${escapedIdentifier}\\s*;`, "gu");
     }
 
@@ -243,46 +227,5 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
     protected getIdentifierRegExp(identifier: string): RegExp {
         const escapedIdentifier = escapeRegExp(identifier);
         return new RegExp(`(?<![\\p{L}\\d_\\\\])${escapedIdentifier}(?![\\p{L}\\d_\\\\])`, "gu");
-    }
-
-    /**
-     * Creates a regular expression to validate PHP identifiers.
-     * Ensures the identifier follows PHP naming rules.
-     * @returns A regular expression for validating PHP identifiers.
-     */
-    protected getIdentifierValidationRegExp(): RegExp {
-        return new RegExp(`^[\\p{L}_][\\p{L}\\d_]*$`, "u");
-    }
-
-    /**
-     * Creates a regular expression to match PHP class/interface/enum/trait definitions.
-     * Used to find and update the main definition in the file.
-     * @returns A regular expression that captures the definition type and name.
-     */
-    protected getDefinitionRegExp(): RegExp {
-        return new RegExp(`\\b(class|interface|enum|trait)\\s+([\\p{L}_][\\p{L}\\d_]*)`, "gu");
-    }
-
-    /**
-     * Creates a regular expression to match non-qualified references in PHP code.
-     * Used to find references that need to be updated to fully qualified names.
-     * @returns A regular expression for matching non-qualified references.
-     */
-    protected getNonQualifiedReferenceRegExp(): RegExp {
-        const patterns = [
-            // Attribute annotations (PHP 8+)
-            "#\\[\\s*([\\p{L}_][\\p{L}\\d_]*)",
-            // Extends/implements clauses
-            "(?:extends|implements)\\s+([\\p{L}_][\\p{L}\\d_]*)(?!\\s*\\\\)",
-            // New instantiations
-            "new\\s+([\\p{L}_][\\p{L}\\d_]*)(?!\\s*\\\\)",
-            // use statements (single-level namespaces only)
-            "use\\s+([\\p{L}_][\\p{L}\\d_]*)\\s*;",
-            // Static access
-            "\\b([\\p{L}_][\\p{L}\\d_]*)(?!\\s*\\\\)::",
-        ];
-
-        // Combine patterns with OR
-        return new RegExp(patterns.join("|"), "gu");
     }
 }

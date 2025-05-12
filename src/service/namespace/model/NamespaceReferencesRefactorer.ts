@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { getPathNormalized } from "../../../utils/filesystem/getPathNormalized";
 import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailType";
 import { NamespaceRefactorerAbstract } from "./NamespaceRefactorerAbstract";
+import { escapeRegExp } from "../../../utils/regex/escapeRegExp";
 
 /**
  * Handles refactoring of namespace references across multiple PHP files when a file
@@ -202,5 +203,16 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
 
         const excludePattern = `{${[...excludedFolders, excludedFile].join(",")}}`;
         return vscode.workspace.findFiles("**/*.php", excludePattern);
+    }
+
+    /**
+     * Creates a regular expression to match fully qualified namespace references.
+     * Includes word boundary checks to prevent partial matches.
+     * @param fullyQualifiedNamespace The fully qualified namespace to match.
+     * @returns A regular expression for matching the fully qualified namespace.
+     */
+    protected getFullyQualifiedNamespaceRegExp(fullyQualifiedNamespace: string): RegExp {
+        const escapedNamespace = escapeRegExp(fullyQualifiedNamespace);
+        return new RegExp(`(?<![\\p{L}\\d_])${escapedNamespace}(?![\\p{L}\\d_\\\\])`, "gu");
     }
 }

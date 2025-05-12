@@ -221,7 +221,8 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
 
     protected getUseStatementByIdentiferRegExp(identifier: string): RegExp {
         const escapedIdentifier = escapeRegExp(identifier);
-        return new RegExp(`use\\s+(?:[\\p{L}\\d_\\\\]+\\\\)?${escapedIdentifier}\\s*;`, "gu");
+        // Ensure at least one `\` precedes the identifier
+        return new RegExp(`use\\s+[\\p{L}\\d_\\\\]+\\\\${escapedIdentifier}\\s*;`, "gu");
     }
 
     /**
@@ -275,6 +276,8 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
             "(?:extends|implements)\\s+([\\p{L}_][\\p{L}\\d_]*)(?!\\s*\\\\)",
             // New instantiations
             "new\\s+([\\p{L}_][\\p{L}\\d_]*)(?!\\s*\\\\)",
+            // use statements (single-level namespaces only)
+            "use\\s+([\\p{L}_][\\p{L}\\d_]*)\\s*;",
             // Static access
             "\\b([\\p{L}_][\\p{L}\\d_]*)(?!\\s*\\\\)::",
         ];

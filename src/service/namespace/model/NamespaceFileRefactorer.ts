@@ -137,39 +137,5 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
         return Array.from(classNames);
     }
 
-    private addUseStatement(content: string, namespace: string, identifier: string): string {
-        const fullQualifiedNamespace = `${namespace}\\${identifier}`;
-        const hasUseStatementRegExp = this.getUseStatementByIdentiferRegExp(identifier);
-        if (hasUseStatementRegExp.test(content)) {
-            return content;
-        }
 
-        const namespaceDeclarationRegExp = this.getNamespaceDeclarationRegExp();
-        const namespaceDeclarationMatch = content.match(namespaceDeclarationRegExp);
-        if (!namespaceDeclarationMatch) {
-            return content;
-        }
-
-        const useStatement = `use ${fullQualifiedNamespace};`;
-
-        const lastUseStatementRegExp = this.getLastUseStatementRegExp();
-        const lastUseStatementMatch = content.match(lastUseStatementRegExp);
-        if (lastUseStatementMatch) {
-            const lastUseMatch = lastUseStatementMatch[lastUseStatementMatch.length - 1];
-            return content.replace(lastUseMatch, `${lastUseMatch}\n${useStatement}`);
-        }
-
-        return content.replace(namespaceDeclarationMatch[0], `${namespaceDeclarationMatch[0]}\n\n${useStatement}`);
-    }
-
-    private removeUseStatement(content: string, namespace: string, identifier: string): string {
-        const fullQualifiedNamespace = `${namespace}\\${identifier}`;
-        const useStatementRegExp = this.getUseStatementRegExp(fullQualifiedNamespace);
-        const useStatementWithLineBreakRegExp = new RegExp(
-            `${useStatementRegExp.source}\\s*?\\r?\\n?\\r?`,
-            useStatementRegExp.flags
-        );
-
-        return content.replace(useStatementWithLineBreakRegExp, "");
-    }
 }

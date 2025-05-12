@@ -45,6 +45,42 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
         return content.replace(identifierRegExp, refactorDetails.newIdentifier);
     }
 
+    protected addUseStatement(content: string, namespace: string, identifier: string): string {
+        const fullQualifiedNamespace = `${namespace}\\${identifier}`;
+        const hasUseStatementRegExp = this.getUseStatementByIdentiferRegExp(identifier);
+        if (hasUseStatementRegExp.test(content)) {
+            return content;
+        }
+
+        const namespaceDeclarationRegExp = this.getNamespaceDeclarationRegExp();
+        const namespaceDeclarationMatch = content.match(namespaceDeclarationRegExp);
+        if (!namespaceDeclarationMatch) {
+            return content;
+        }
+
+        const useStatement = `use ${fullQualifiedNamespace};`;
+
+        const lastUseStatementRegExp = this.getLastUseStatementRegExp();
+        const lastUseStatementMatch = content.match(lastUseStatementRegExp);
+        if (lastUseStatementMatch) {
+            const lastUseMatch = lastUseStatementMatch[lastUseStatementMatch.length - 1];
+            return content.replace(lastUseMatch, `${lastUseMatch}\n${useStatement}`);
+        }
+
+        return content.replace(namespaceDeclarationMatch[0], `${namespaceDeclarationMatch[0]}\n\n${useStatement}`);
+    }
+
+    protected removeUseStatement(content: string, namespace: string, identifier: string): string {
+        const fullQualifiedNamespace = `${namespace}\\${identifier}`;
+        const useStatementRegExp = this.getUseStatementRegExp(fullQualifiedNamespace);
+        const useStatementWithLineBreakRegExp = new RegExp(
+            `${useStatementRegExp.source}\\s*?\\r?\\n?\\r?`,
+            useStatementRegExp.flags
+        );
+
+        return content.replace(useStatementWithLineBreakRegExp, "");
+    }
+
     /**
      * Retrieves the content of a file, either from an open editor or by reading from disk.
      * @param uri The URI of the file to read.

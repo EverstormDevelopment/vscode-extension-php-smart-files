@@ -138,76 +138,33 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
         refactorDetails: NamespaceRefactorDetailsType
     ): string {
         if (fileNamespace === refactorDetails.oldNamespace) {
-            return this.addUseStatement(content, refactorDetails);
+            return this.addReferenceUseStatement(content, refactorDetails);
         }
 
         if (fileNamespace === refactorDetails.newNamespace) {
-            return this.removeUseStatement(content, refactorDetails);
+            return this.removeReferenceUseStatement(content, refactorDetails);
         }
 
-        return this.replaceUseStatement(content, refactorDetails);
+        return this.replaceReferenceUseStatement(content, refactorDetails);
     }
 
-    /**
-     * Replaces an old use statement with a new one.
-     * @param content The content to modify
-     * @param refactorDetails Details about what needs to be refactored
-     * @returns The updated content with replaced use statement
-     */
-    private replaceUseStatement(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
+    private replaceReferenceUseStatement(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
         const oldFullQualifiedNamespace = `${refactorDetails.oldNamespace}\\${refactorDetails.oldIdentifier}`;
         const newFullQualifiedNamespace = `${refactorDetails.newNamespace}\\${refactorDetails.newIdentifier}`;
         const useRegExp = this.getUseStatementRegExp(oldFullQualifiedNamespace);
         return content.replace(useRegExp, `use ${newFullQualifiedNamespace};`);
     }
-
-    /**
-     * Adds a new use statement for the refactored namespace if needed.
-     * @param content The content to modify
-     * @param refactorDetails Details about what needs to be refactored
-     * @returns The updated content with added use statement
-     */
-    private addUseStatement(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
-        const fullQualifiedNamespace = `${refactorDetails.newNamespace}\\${refactorDetails.newIdentifier}`;
-        const hasUseStatementRegExp = this.getUseStatementRegExp(fullQualifiedNamespace);
+    
+    private addReferenceUseStatement(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
         const hasIdentifierRegExp = this.getIdentifierRegExp(refactorDetails.newIdentifier);
-        if (hasUseStatementRegExp.test(content) || !hasIdentifierRegExp.test(content)) {
+        if (!hasIdentifierRegExp.test(content)) {
             return content;
         }
-
-        const namespaceDeclarationRegExp = this.getNamespaceDeclarationRegExp();
-        const namespaceDeclarationMatch = content.match(namespaceDeclarationRegExp);
-        if (!namespaceDeclarationMatch) {
-            return content;
-        }
-
-        const useStatement = `use ${refactorDetails.newNamespace}\\${refactorDetails.newIdentifier};`;
-
-        const lastUseStatementRegExp = this.getLastUseStatementRegExp();
-        const lastUseStatementMatch = content.match(lastUseStatementRegExp);
-        if (lastUseStatementMatch) {
-            const lastUseMatch = lastUseStatementMatch[lastUseStatementMatch.length - 1];
-            return content.replace(lastUseMatch, `${lastUseMatch}\n${useStatement}`);
-        }
-
-        return content.replace(namespaceDeclarationMatch[0], `${namespaceDeclarationMatch[0]}\n\n${useStatement}`);
+        return this.addUseStatement(content, refactorDetails.newNamespace, refactorDetails.newIdentifier);
     }
 
-    /**
-     * Removes an obsolete use statement when it's no longer needed.
-     * @param content The content to modify
-     * @param refactorDetails Details about what needs to be refactored
-     * @returns The updated content with removed use statement
-     */
-    private removeUseStatement(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
-        const fullQualifiedNamespace = `${refactorDetails.oldNamespace}\\${refactorDetails.oldIdentifier}`;
-        const useStatementRegExp = this.getUseStatementRegExp(fullQualifiedNamespace);
-        const useStatementWithLineBreakRegExp = new RegExp(
-            `${useStatementRegExp.source}\\s*?\\r?\\n?\\r?`,
-            useStatementRegExp.flags
-        );
-
-        return content.replace(useStatementWithLineBreakRegExp, "");
+    private removeReferenceUseStatement(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
+        return this.removeUseStatement(content, refactorDetails.oldNamespace, refactorDetails.oldIdentifier);
     }
 
     /**

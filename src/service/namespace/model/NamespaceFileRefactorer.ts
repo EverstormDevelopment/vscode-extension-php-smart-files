@@ -82,7 +82,17 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
      */
     private refactorDefinition(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
         const validationRegExp = this.getIdentifierValidationRegExp();
+        const oldIdentifier = refactorDetails.oldIdentifier;
         const newIdentifier = refactorDetails.newIdentifier;
+
+        if (!validationRegExp.test(oldIdentifier)) {
+            const message = vscode.l10n.t(
+                "The previous name '{0}' was not a valid PHP identifier. The refactoring process has been canceled.",
+                oldIdentifier
+            );
+            throw new Error(message);
+        }
+
         if (!validationRegExp.test(newIdentifier)) {
             const message = vscode.l10n.t(
                 "The provided name '{0}' is not a valid PHP identifier. The refactoring process has been canceled.",

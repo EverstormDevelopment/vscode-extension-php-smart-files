@@ -46,5 +46,6 @@
 
   "Would you like to update the declaration identifer to \"{0}\" and update its references?": "Souhaitez-vous mettre à jour l'identifiant de déclaration en \"{0}\" et mettre à jour ses références ?",
   "The provided name '{0}' is not a valid PHP identifier. The refactoring process has been canceled.": "Le nom fourni '{0}' n'est pas un identifiant PHP valide. Le processus de refactoring a été annulé.",
-  "Unable to locate a valid definition. The refactoring process has been canceled.": "Impossible de localiser une définition valide. Le processus de refactoring a été annulé."
+  "Unable to locate a valid definition. The refactoring process has been canceled.": "Impossible de localiser une définition valide. Le processus de refactoring a été annulé.",
+  "The previous name '{0}' was not a valid PHP identifier. The refactoring process has been canceled.": "Le nom précédent '{0}' n'était pas un identifiant PHP valide. Le processus de refactorisation a été annulé."
 }

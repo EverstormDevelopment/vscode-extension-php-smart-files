@@ -9,7 +9,7 @@
   
   "Create PHP Interface": "Создать PHP интерфейс",
   "Enter interface name": "Введите имя интерфейса",
-  "Enter a name for the new PHP interface": "Введите имя для нового PHP интерфейса",
+  "Enter a name for the new PHP интерфейс": "Введите имя для нового PHP интерфейса",
   
   "Create PHP Enum": "Создать PHP перечисление",
   "Enter enum name": "Введите имя перечисления",
@@ -46,5 +46,6 @@
   
   "Would you like to update the declaration identifer to \"{0}\" and update its references?": "Хотите обновить идентификатор объявления на \"{0}\" и обновить все его ссылки?",
   "The provided name '{0}' is not a valid PHP identifier. The refactoring process has been canceled.": "Указанное имя '{0}' не является допустимым идентификатором PHP. Процесс рефакторинга отменен.",
-  "Unable to locate a valid definition. The refactoring process has been canceled.": "Не удалось найти действительное определение. Процесс рефакторинга отменен."
+  "Unable to locate a valid definition. The refactoring process has been canceled.": "Не удалось найти действительное определение. Процесс рефакторинга отменен.",
+  "The previous name '{0}' was not a valid PHP identifier. The refactoring process has been canceled.": "Предыдущее имя '{0}' не является допустимым идентификатором PHP. Процесс рефакторинга был отменен."
 }

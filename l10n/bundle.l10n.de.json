@@ -46,5 +46,6 @@
 
   "Would you like to update the declaration identifer to \"{0}\" and update its references?": "Möchten Sie den Deklarationsbezeichner in \"{0}\" ändern und alle Referenzen aktualisieren?",
   "The provided name '{0}' is not a valid PHP identifier. The refactoring process has been canceled.": "Der angegebene Name '{0}' ist kein gültiger PHP-Bezeichner. Der Refactoring-Prozess wurde abgebrochen.",
+  "The previous name '{0}' was not a valid PHP identifier. The refactoring process has been canceled.": "Der vorherige Name '{0}' war kein gültiger PHP-Bezeichner. Der Refactoring-Prozess wurde abgebrochen.",
   "Unable to locate a valid definition. The refactoring process has been canceled.": "Es konnte keine gültige Definition gefunden werden. Der Refactoring-Prozess wurde abgebrochen."
 }

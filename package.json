@@ -2,7 +2,7 @@
   "version": "0.5.1",
   "name": "php-smart-files",
   "displayName": "PHP Smart Files",
-  "description": "Effortlessly create PHP files with auto-detected namespaces and smart refactoring. Seamlessly updates class references when moving or renaming files.",
+  "description": "Effortlessly create PHP files with auto-detected namespaces and smart refactoring. Seamlessly updates references when moving or renaming files.",
   "publisher": "everstorm",
     "author": {
     "name": "Everstorm Development",

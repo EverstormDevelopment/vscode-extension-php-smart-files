@@ -167,6 +167,11 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
         return new RegExp(`use\\s+${escapedNamespace}\\s*;`, "gu");
     }
 
+    protected getUseStatementByIdentiferRegExp(identifier: string): RegExp {
+        const escapedIdentifier = escapeRegExp(identifier);
+        return new RegExp(`use\\s+(?:[\\p{L}\\d_\\\\]+\\\\)?${escapedIdentifier}\\s*;`, "gu");
+    }
+
     /**
      * Creates a regular expression to match the last `use` statement in a file.
      * Used to determine where to add new use statements.
@@ -203,5 +208,22 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
      */
     protected getDefinitionRegExp(): RegExp {
         return new RegExp(`\\b(class|interface|enum|trait)\\s+([\\p{L}_][\\p{L}\\d_]*)`, "gu");
+    }
+
+
+    protected getNonQualifiedReferenceRegExp(): RegExp {
+        const patterns = [
+            // Attribute annotations (PHP 8+)
+            "#\\[\\s*([\\p{L}_][\\p{L}\\d_]*)",
+            // Extends/implements clauses
+            "(?:extends|implements)\\s+([\\p{L}_][\\p{L}\\d_]*)(?!\\s*\\\\)",
+            // New instantiations
+            "new\\s+([\\p{L}_][\\p{L}\\d_]*)(?!\\s*\\\\)",
+            // Static access
+            "\\b([\\p{L}_][\\p{L}\\d_]*)(?!\\s*\\\\)::",
+        ];
+
+        // Combine patterns with OR
+        return new RegExp(patterns.join("|"), "gu");
     }
 }

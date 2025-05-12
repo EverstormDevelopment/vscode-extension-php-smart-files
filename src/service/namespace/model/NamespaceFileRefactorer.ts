@@ -45,6 +45,7 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
     private refactorContent(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
         if (refactorDetails.hasNamespaceChanged) {
             content = this.refactorNamespace(content, refactorDetails);
+            content = this.refactorUseStatements(content, refactorDetails);
         }
         if (refactorDetails.hasIdentifierChanged) {
             content = this.refactorDefinition(content, refactorDetails);
@@ -98,5 +99,77 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
 
         const newDefinition = `${definitionMatch[1]} ${refactorDetails.newIdentifier}`;
         return content.replace(definitionRegExp, newDefinition);
+    }
+
+    private refactorUseStatements(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
+        const nonQualifiedReferences = this.getNonQualifiedReferences(content);
+        if (nonQualifiedReferences.length === 0) {
+            return content;
+        }
+
+        content = this.addUseStatements(content, refactorDetails.oldNamespace, nonQualifiedReferences);
+        content = this.removeUseStatements(content, refactorDetails.newNamespace, nonQualifiedReferences);
+
+        return content;
+    }
+
+    private addUseStatements(content: string, namespace: string, nonQualifiedReferences: string[]): string {
+        for (const identifier of nonQualifiedReferences) {
+            content = this.addUseStatement(content, namespace, identifier);
+        }
+        return content;
+    }
+
+    private removeUseStatements(content: string, namespace: string, nonQualifiedReferences: string[]): string {
+        for (const identifier of nonQualifiedReferences) {
+            content = this.removeUseStatement(content, namespace, identifier);
+        }
+        return content;
+    }
+
+    private getNonQualifiedReferences(content: string): string[] {
+        const regex = this.getNonQualifiedReferenceRegExp();
+        const matches = Array.from(content.matchAll(regex));
+
+        const extractedNames = matches.map((match) => match.slice(1).find(Boolean)).filter(Boolean) as string[];
+
+        const classNames = new Set(extractedNames);
+        return Array.from(classNames);
+    }
+
+    private addUseStatement(content: string, namespace: string, identifier: string): string {
+        const fullQualifiedNamespace = `${namespace}\\${identifier}`;
+        const hasUseStatementRegExp = this.getUseStatementByIdentiferRegExp(identifier);
+        if (hasUseStatementRegExp.test(content)) {
+            return content;
+        }
+
+        const namespaceDeclarationRegExp = this.getNamespaceDeclarationRegExp();
+        const namespaceDeclarationMatch = content.match(namespaceDeclarationRegExp);
+        if (!namespaceDeclarationMatch) {
+            return content;
+        }
+
+        const useStatement = `use ${fullQualifiedNamespace};`;
+
+        const lastUseStatementRegExp = this.getLastUseStatementRegExp();
+        const lastUseStatementMatch = content.match(lastUseStatementRegExp);
+        if (lastUseStatementMatch) {
+            const lastUseMatch = lastUseStatementMatch[lastUseStatementMatch.length - 1];
+            return content.replace(lastUseMatch, `${lastUseMatch}\n${useStatement}`);
+        }
+
+        return content.replace(namespaceDeclarationMatch[0], `${namespaceDeclarationMatch[0]}\n\n${useStatement}`);
+    }
+
+    private removeUseStatement(content: string, namespace: string, identifier: string): string {
+        const fullQualifiedNamespace = `${namespace}\\${identifier}`;
+        const useStatementRegExp = this.getUseStatementRegExp(fullQualifiedNamespace);
+        const useStatementWithLineBreakRegExp = new RegExp(
+            `${useStatementRegExp.source}\\s*?\\r?\\n?\\r?`,
+            useStatementRegExp.flags
+        );
+
+        return content.replace(useStatementWithLineBreakRegExp, "");
     }
 }

@@ -24,7 +24,7 @@ export class NamespaceRefactorService {
      * @param newUri The new URI of the file after moving/renaming
      */
     public async refactorFileAndReferences(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<void> {
-        const updatedFile = await this.refatorFile(oldUri, newUri);
+        const updatedFile = await this.refactorFile(oldUri, newUri);
         if (!updatedFile) {
             return;
         }
@@ -38,7 +38,7 @@ export class NamespaceRefactorService {
      * @param newUri The new URI of the file after moving/renaming
      * @returns Promise resolving to true if refactoring was performed, false otherwise
      */
-    public async refatorFile(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<boolean> {
+    public async refactorFile(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<boolean> {
         return this.namespaceFileRefactorer.refactor(oldUri, newUri);
     }
 

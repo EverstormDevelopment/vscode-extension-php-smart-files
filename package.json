@@ -5,7 +5,7 @@
   "description": "Effortlessly create PHP files with auto-detected namespaces and smart refactoring. Seamlessly updates references when moving or renaming files.",
   "publisher": "everstorm",
     "author": {
-    "name": "Everstorm Development",
+    "name": "everstorm",
     "email": "nico@everstorm.de",
     "url": "https://github.com/EverstormDevelopment"
   },

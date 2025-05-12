@@ -27,6 +27,11 @@
     "interface",
     "template",
     "smart files",
+    "code generation",
+    "autodetect",
+    "psr-4",
+    "productivity",
+    "workflow",
     "phpstorm"
   ],
   "icon": "images/icon.png",

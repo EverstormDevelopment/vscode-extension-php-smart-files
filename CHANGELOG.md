@@ -5,10 +5,17 @@ All notable changes to the extension will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+- Optimized extension performance by only activating file observers when PHP files exist in workspace
+- Fixed method name typo from `addFileOvservers` to `addFileObservers`
+
+
+
 ## [0.5.1] - 2025-05-12
 
 ### Fixed
 - Cancel refactor on renaming files from or to invalid PHP identifier
+
 
 
 ## [0.5.0] - 2025-05-12

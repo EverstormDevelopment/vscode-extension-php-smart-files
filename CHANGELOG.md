@@ -3,7 +3,7 @@
 All notable changes to the extension will be documented in this file.
 <!-- Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file. -->
 
-## [Unreleased]
+## [0.5.0] - 2025-05-12
 
 ### Changed
 - Enhanced namespace refactoring to adjust `use` statements when moving files:

@@ -86,7 +86,11 @@ export class Extension implements ExtensionInterface {
      * Registers all file observers with VS Code
      * @param context The VS Code extension context
      */
-    private addFileOvservers(context: vscode.ExtensionContext): void {
+    private async addFileOvservers(context: vscode.ExtensionContext): Promise<void> {
+        if (!(await this.hasPhpFilesInWorkspace())) {
+            return;
+        }
+
         const observerRegisty = FileObserverRegistry;
         for (const [observerName, observer] of Object.entries(observerRegisty)) {
             this.addFileObserver(context, observerName, observer);
@@ -114,6 +118,24 @@ export class Extension implements ExtensionInterface {
             return;
         }
         observerInstance.watch(context);
+    }
+
+    /**
+     * Checks if there are PHP files in the workspace (outside of vendor directories)
+     * @returns Promise that resolves to true if PHP files are found, false otherwise
+     */
+    private async hasPhpFilesInWorkspace(): Promise<boolean> {
+        if (!vscode.workspace.workspaceFolders?.length) {
+            return false;
+        }
+
+        try {
+            const phpFiles = await vscode.workspace.findFiles("**/*.php", "**/vendor/**", 1);
+            return phpFiles.length > 0;
+        } catch (error) {
+            console.error("Error checking for PHP files:", error);
+            return false;
+        }
     }
 
     /**

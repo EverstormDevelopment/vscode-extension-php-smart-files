@@ -25,6 +25,7 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
 
     /**
      * Updates class identifier references within the file content.
+     * Ensures that identifiers are updated to reflect namespace or class name changes.
      * @param content The content of the file to refactor.
      * @param fileNamespace The current namespace of the file.
      * @param refactorDetails The details of the namespace refactor operation.
@@ -45,6 +46,14 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
         return content.replace(identifierRegExp, refactorDetails.newIdentifier);
     }
 
+    /**
+     * Adds a `use` statement for a given namespace and identifier to the file content.
+     * Ensures that duplicate `use` statements are not added.
+     * @param content The content of the file to update.
+     * @param namespace The namespace to add.
+     * @param identifier The identifier (class name) to add.
+     * @returns The updated content with the new `use` statement.
+     */
     protected addUseStatement(content: string, namespace: string, identifier: string): string {
         const fullQualifiedNamespace = `${namespace}\\${identifier}`;
         const hasUseStatementRegExp = this.getUseStatementByIdentiferRegExp(identifier);
@@ -70,6 +79,13 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
         return content.replace(namespaceDeclarationMatch[0], `${namespaceDeclarationMatch[0]}\n\n${useStatement}`);
     }
 
+    /**
+     * Removes a `use` statement for a given namespace and identifier from the file content.
+     * @param content The content of the file to update.
+     * @param namespace The namespace to remove.
+     * @param identifier The identifier (class name) to remove.
+     * @returns The updated content with the `use` statement removed.
+     */
     protected removeUseStatement(content: string, namespace: string, identifier: string): string {
         const fullQualifiedNamespace = `${namespace}\\${identifier}`;
         const useStatementRegExp = this.getUseStatementRegExp(fullQualifiedNamespace);
@@ -246,7 +262,11 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
         return new RegExp(`\\b(class|interface|enum|trait)\\s+([\\p{L}_][\\p{L}\\d_]*)`, "gu");
     }
 
-
+    /**
+     * Creates a regular expression to match non-qualified references in PHP code.
+     * Used to find references that need to be updated to fully qualified names.
+     * @returns A regular expression for matching non-qualified references.
+     */
     protected getNonQualifiedReferenceRegExp(): RegExp {
         const patterns = [
             // Attribute annotations (PHP 8+)

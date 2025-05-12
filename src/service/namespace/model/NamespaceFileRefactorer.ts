@@ -9,9 +9,9 @@ import { NamespaceRefactorerAbstract } from "./NamespaceRefactorerAbstract";
 export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
     /**
      * Refactors namespace and class identifiers in a PHP file after it has been moved or renamed.
-     * @param oldUri The original URI of the file before moving/renaming
-     * @param newUri The new URI of the file after moving/renaming
-     * @returns Promise resolving to true if refactoring was successful, false otherwise
+     * @param oldUri The original URI of the file before moving/renaming.
+     * @param newUri The new URI of the file after moving/renaming.
+     * @returns Promise resolving to true if refactoring was successful, false otherwise.
      */
     public async refactor(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<boolean> {
         try {
@@ -38,9 +38,10 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
 
     /**
      * Performs content refactoring based on the refactor details.
-     * @param content The original file content
-     * @param refactorDetails Details about what needs to be refactored
-     * @returns The refactored content
+     * Handles namespace changes, use statements, and identifier updates.
+     * @param content The original file content.
+     * @param refactorDetails Details about what needs to be refactored.
+     * @returns The refactored content.
      */
     private refactorContent(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
         if (refactorDetails.hasNamespaceChanged) {
@@ -56,9 +57,10 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
 
     /**
      * Refactors the namespace declaration in the file content.
-     * @param content The original file content
-     * @param refactorDetails Details about what needs to be refactored
-     * @returns The content with updated namespace
+     * Updates the namespace declaration to reflect the new namespace.
+     * @param content The original file content.
+     * @param refactorDetails Details about what needs to be refactored.
+     * @returns The content with the updated namespace declaration.
      */
     private refactorNamespace(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
         const namespaceRegExp = this.getNamespaceDeclarationRegExp();
@@ -72,10 +74,11 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
 
     /**
      * Refactors the class/interface/trait definition to use the new identifier.
-     * @param content The original file content
-     * @param refactorDetails Details about what needs to be refactored
-     * @returns The content with updated definition
-     * @throws Error if the new identifier is invalid or if no valid definition is found
+     * Ensures the new identifier is valid and updates the definition accordingly.
+     * @param content The original file content.
+     * @param refactorDetails Details about what needs to be refactored.
+     * @returns The content with the updated definition.
+     * @throws Error if the new identifier is invalid or if no valid definition is found.
      */
     private refactorDefinition(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
         const validationRegExp = this.getIdentifierValidationRegExp();
@@ -101,6 +104,13 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
         return content.replace(definitionRegExp, newDefinition);
     }
 
+    /**
+     * Refactors `use` statements in the file content.
+     * Adds or removes `use` statements based on the namespace changes.
+     * @param content The original file content.
+     * @param refactorDetails Details about what needs to be refactored.
+     * @returns The content with updated `use` statements.
+     */
     private refactorUseStatements(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
         const nonQualifiedReferences = this.getNonQualifiedReferences(content);
         if (nonQualifiedReferences.length === 0) {
@@ -113,6 +123,13 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
         return content;
     }
 
+    /**
+     * Adds `use` statements for non-qualified references.
+     * @param content The original file content.
+     * @param namespace The namespace to add `use` statements for.
+     * @param nonQualifiedReferences A list of non-qualified references to add.
+     * @returns The content with added `use` statements.
+     */
     private addUseStatements(content: string, namespace: string, nonQualifiedReferences: string[]): string {
         for (const identifier of nonQualifiedReferences) {
             content = this.addUseStatement(content, namespace, identifier);
@@ -120,6 +137,13 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
         return content;
     }
 
+    /**
+     * Removes `use` statements for non-qualified references.
+     * @param content The original file content.
+     * @param namespace The namespace to remove `use` statements for.
+     * @param nonQualifiedReferences A list of non-qualified references to remove.
+     * @returns The content with removed `use` statements.
+     */
     private removeUseStatements(content: string, namespace: string, nonQualifiedReferences: string[]): string {
         for (const identifier of nonQualifiedReferences) {
             content = this.removeUseStatement(content, namespace, identifier);
@@ -127,6 +151,12 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
         return content;
     }
 
+    /**
+     * Extracts non-qualified references from the file content.
+     * Identifies class/interface/trait names that are used without a namespace.
+     * @param content The original file content.
+     * @returns A list of unique non-qualified references.
+     */
     private getNonQualifiedReferences(content: string): string[] {
         const regex = this.getNonQualifiedReferenceRegExp();
         const matches = Array.from(content.matchAll(regex));
@@ -136,6 +166,4 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
         const classNames = new Set(extractedNames);
         return Array.from(classNames);
     }
-
-
 }

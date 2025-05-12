@@ -5,6 +5,11 @@ All notable changes to the extension will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+- Enhanced namespace refactoring to adjust `use` statements when moving files:
+  - If the moved file references classes, interfaces, enums, or traits in the same namespace before the move, the necessary `use` statements are added to maintain valid references.
+  - If the moved file is in the same namespace as classes, interfaces, enums, or traits it previously referenced via `use` statements, the now redundant `use` statements are removed.
+
 
 
 ## [0.4.0] - 2025-05-08

@@ -1,20 +1,55 @@
 {
+  "version": "0.5.1",
   "name": "php-smart-files",
   "displayName": "PHP Smart Files",
-  "description": "A VS Code Extension for PHP development",
+  "description": "Create and refactor PHP files with smart namespace handling and Composer integration.",
   "publisher": "everstorm",
-  "version": "0.5.1",
+    "author": {
+    "name": "Everstorm Development",
+    "email": "nico@everstorm.de",
+    "url": "https://github.com/EverstormDevelopment"
+  },
+  "categories": [
+    "Programming Languages",
+    "Snippets",
+    "Formatters",
+    "Other"
+  ],
+  "keywords": [
+    "php",
+    "namespace",
+    "composer",
+    "file creation",
+    "refactoring",
+    "class",
+    "trait",
+    "enum",
+    "interface",
+    "template",
+    "smart files",
+    "phpstorm"
+  ],
+  "icon": "images/icon.png",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EverstormDevelopment/vscode-extension-php-smart-files"
+  },
+  "bugs": {
+    "url": "https://github.com/EverstormDevelopment/vscode-extension-php-smart-files/issues"
+  },
+  "homepage": "https://github.com/EverstormDevelopment/vscode-extension-php-smart-files#readme",
+  
+  
+  "main": "./dist/extension.js",
+  "l10n": "./l10n",
   "engines": {
     "vscode": "^1.99.0"
   },
-  "categories": [
-    "Other"
-  ],
   "activationEvents": [
-    "onLanguage:php"
-  ],
-  "main": "./dist/extension.js",
-  "l10n": "./l10n",
+    "onLanguage:php",
+    "onStartupFinished"
+  ],  
   "contributes": {
     "configuration": {
       "title": "PHP Smart Files",

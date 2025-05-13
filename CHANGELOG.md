@@ -5,9 +5,16 @@ All notable changes to the extension will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- Added specialized templates for Symfony components:
+  - Controller with proper route attributes and render method
+  - Command with complete structure following Symfony console conventions
+  - Form Type with buildForm and configureOptions methods
+
 ### Changed
-- Renamed extension from "PHP File Creator" to "PHP Smart Files" to better reflect its expanded capabilities
 - Optimized extension performance by only activating file observers when PHP files exist in workspace
+- Renamed extension from "PHP File Creator" to "PHP Smart Files" to better reflect its expanded capabilities
+
 
 
 

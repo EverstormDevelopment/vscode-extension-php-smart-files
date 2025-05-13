@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
 import { getPathNormalized } from "../../../utils/filesystem/getPathNormalized";
+import { escapeRegExp } from "../../../utils/regexp/escapeRegExp";
 import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailType";
 import { NamespaceRefactorerAbstract } from "./NamespaceRefactorerAbstract";
-import { escapeRegExp } from "../../../utils/regex/escapeRegExp";
 
 /**
  * Handles refactoring of namespace references across multiple PHP files when a file

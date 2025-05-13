@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { getUriFileName } from "../../../utils/filesystem/getUriFileName";
-import { escapeRegExp } from "../../../utils/regex/escapeRegExp";
+import { escapeRegExp } from "../../../utils/regexp/escapeRegExp";
 import { NamespaceRefactorerInterface } from "../interface/NamespaceRefactorerInterface";
 import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailType";
 import { NamespaceResolver } from "./NamespaceResolver";

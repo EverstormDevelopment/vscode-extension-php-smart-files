@@ -1,6 +1,9 @@
 import * as vscode from "vscode";
 import { getUriFileName } from "../../../utils/filesystem/getUriFileName";
 import { escapeRegExp } from "../../../utils/regexp/escapeRegExp";
+import { findEditorByUri } from "../../../utils/vscode/findEditorByUri";
+import { getFileContentByUri } from "../../../utils/vscode/getFileContentByUri";
+import { setFileContentByUri } from "../../../utils/vscode/setFileContentByUri";
 import { NamespaceRefactorerInterface } from "../interface/NamespaceRefactorerInterface";
 import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailType";
 import { NamespaceResolver } from "./NamespaceResolver";
@@ -103,41 +106,17 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
      * @returns The content of the file as a string.
      */
     protected async getFileContent(uri: vscode.Uri): Promise<string> {
-        const editor = this.findOpenEditor(uri);
-        if (editor) {
-            return editor.document.getText();
-        }
-
-        const fileContent = await vscode.workspace.fs.readFile(uri);
-        return fileContent.toString();
+        return getFileContentByUri(uri);
     }
 
     /**
-     * Updates the content of a file, either in an open editor or directly on disk.
+     * Sets the content of a file, either in an open editor or directly on disk.
      * Preserves the editor's dirty state if the file is already open.
      * @param uri The URI of the file to update.
      * @param content The new content to write to the file.
      */
-    protected async updateFileContent(uri: vscode.Uri, content: string): Promise<void> {
-        const openEditor = this.findOpenEditor(uri);
-        if (!openEditor) {
-            await vscode.workspace.fs.writeFile(uri, Buffer.from(content, "utf8"));
-            return;
-        }
-
-        const wasDirty = openEditor.document.isDirty;
-        const fullRange = new vscode.Range(
-            openEditor.document.positionAt(0),
-            openEditor.document.positionAt(openEditor.document.getText().length)
-        );
-
-        await openEditor.edit((editBuilder) => {
-            editBuilder.replace(fullRange, content);
-        });
-
-        if (!wasDirty) {
-            await openEditor.document.save();
-        }
+    protected async setFileContent(uri: vscode.Uri, content: string): Promise<void> {
+        return setFileContentByUri(uri, content);
     }
 
     /**
@@ -146,7 +125,7 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
      * @returns The open TextEditor, or undefined if no editor is open for the file.
      */
     protected findOpenEditor(uri: vscode.Uri): vscode.TextEditor | undefined {
-        return vscode.window.visibleTextEditors.find((editor) => editor.document.uri.toString() === uri.toString());
+        return findEditorByUri(uri);
     }
 
     /**

@@ -80,7 +80,7 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
                 return;
             }
 
-            await this.updateFileContent(uri, fileContentUpdated);
+            await this.setFileContent(uri, fileContentUpdated);
         } catch (error) {
             const errorDetails = error instanceof Error ? error.message : String(error);
             const errorMessage = vscode.l10n.t("Error updating references in file {0}: {1}", uri.fsPath, errorDetails);

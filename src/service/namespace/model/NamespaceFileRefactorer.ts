@@ -26,7 +26,7 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
                 return false;
             }
 
-            await this.updateFileContent(refactorDetails.newUri, updatedContent);
+            await this.setFileContent(refactorDetails.newUri, updatedContent);
             return true;
         } catch (error) {
             const errorDetails = error instanceof Error ? error.message : String(error);

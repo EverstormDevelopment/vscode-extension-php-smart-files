@@ -8,6 +8,11 @@ import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailsTy
  * with a namespace is moved or renamed.
  */
 export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
+    /**
+     * Processes namespace reference updates across the workspace.
+     * @param refactorDetails Contains information about the old and new namespace/identifier values
+     * @returns Promise resolving to true if refactoring was performed, false otherwise
+     */
     public async refactor(refactorDetails: NamespaceRefactorDetailsType): Promise<boolean> {
         if (!refactorDetails.hasNamespaces || !refactorDetails.hasChanged) {
             return false;
@@ -19,7 +24,7 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
 
     /**
      * Shows a progress notification while updating references in all relevant files.
-     * @param refactorDetails Details about what needs to be refactored.
+     * @param refactorDetails Details about what needs to be refactored
      */
     private async progressUpdateReferences(refactorDetails: NamespaceRefactorDetailsType): Promise<void> {
         const options: vscode.ProgressOptions = {

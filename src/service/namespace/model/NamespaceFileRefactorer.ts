@@ -7,6 +7,11 @@ import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailsTy
  * when a file is moved or renamed.
  */
 export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
+    /**
+     * Performs the refactoring based on the provided details.
+     * @param refactorDetails The details for the refactoring operation.
+     * @returns True if refactoring was successfully performed, otherwise False.
+     */
     public async refactor(refactorDetails: NamespaceRefactorDetailsType): Promise<boolean> {
         try {
             if (!this.isRefactorable(refactorDetails)) {
@@ -22,6 +27,12 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
         }
     }
 
+    /**
+     * Checks if the file is suitable for refactoring.
+     * @param refactorDetails The details for the refactoring operation.
+     * @returns True if the file can be refactored, otherwise False.
+     * @throws Error if the filename is not a valid PHP identifier.
+     */
     private isRefactorable(refactorDetails: NamespaceRefactorDetailsType): boolean {
         if (!refactorDetails.new.isFileNameValid) {
             const message = vscode.l10n.t(
@@ -38,6 +49,12 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
         return true;
     }
 
+    /**
+     * Performs the actual refactoring of the file.
+     * Reads the file content, updates it, and writes it back.
+     * @param refactorDetails The details for the refactoring operation.
+     * @returns True if changes were made, otherwise False.
+     */
     private async refactorFile(refactorDetails: NamespaceRefactorDetailsType): Promise<boolean> {
         const fileContent = await this.getFileContent(refactorDetails.new.uri);
         const updatedContent = this.refactorContent(fileContent, refactorDetails);

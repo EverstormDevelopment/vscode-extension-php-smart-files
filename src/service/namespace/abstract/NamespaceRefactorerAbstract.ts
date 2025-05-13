@@ -7,7 +7,8 @@ import { NamespaceRegExpProvider } from "../provider/NamespaceRegExpProvider";
 import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailsType";
 
 /**
- * Abstract class for refactoring namespaces in PHP files.
+ * Abstract base class that implements common functionality for PHP namespace refactoring.
+ * Provides methods for manipulating namespace declarations, use statements, and class references.
  */
 export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorerInterface {
     constructor(protected readonly namespaceRegExpProvider: NamespaceRegExpProvider) {}
@@ -15,12 +16,11 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
     public abstract refactor(refactorDetails: NamespaceRefactorDetailsType): Promise<boolean>;
 
     /**
-     * Updates class identifier references within the file content.
-     * Ensures that identifiers are updated to reflect namespace or class name changes.
-     * @param content The content of the file to refactor.
+     * Updates class identifier references within file content.
+     * @param content The file content to refactor.
      * @param fileNamespace The current namespace of the file.
-     * @param refactorDetails The details of the namespace refactor operation.
-     * @returns The updated content with refactored identifiers.
+     * @param refactorDetails Details about the namespace and identifier changes.
+     * @returns Updated content with refactored identifiers.
      */
     protected refactorIdentifier(
         content: string,

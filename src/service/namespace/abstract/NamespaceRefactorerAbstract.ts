@@ -1,33 +1,18 @@
 import * as vscode from "vscode";
-import { getUriFileName } from "../../../utils/filesystem/getUriFileName";
 import { findEditorByUri } from "../../../utils/vscode/findEditorByUri";
 import { getFileContentByUri } from "../../../utils/vscode/getFileContentByUri";
 import { setFileContentByUri } from "../../../utils/vscode/setFileContentByUri";
 import { NamespaceRefactorerInterface } from "../interface/NamespaceRefactorerInterface";
-import { NamespaceResolver } from "../model/NamespaceResolver";
 import { NamespaceRegExpProvider } from "../provider/NamespaceRegExpProvider";
-import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailType";
+import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailsType";
 
 /**
  * Abstract class for refactoring namespaces in PHP files.
  */
 export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorerInterface {
-    /**
-     * Initializes the NamespaceRefactorer with a NamespaceResolver.
-     * @param namespaceResolver Resolves namespaces for given file URIs.
-     */
-    constructor(
-        protected readonly namespaceResolver: NamespaceResolver,
-        protected readonly namespaceRegExpProvider: NamespaceRegExpProvider
-    ) {}
+    constructor(protected readonly namespaceRegExpProvider: NamespaceRegExpProvider) {}
 
-    /**
-     * Refactors the namespace and identifiers in a PHP file.
-     * @param oldUri The URI of the old file location.
-     * @param newUri The URI of the new file location.
-     * @returns A promise that resolves to true if refactoring was successful, false otherwise.
-     */
-    public abstract refactor(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<boolean>;
+    public abstract refactor(refactorDetails: NamespaceRefactorDetailsType): Promise<boolean>;
 
     /**
      * Updates class identifier references within the file content.
@@ -42,14 +27,14 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
         fileNamespace: string,
         refactorDetails: NamespaceRefactorDetailsType
     ): string {
-        const newFullyQualifiedNamespace = `${refactorDetails.newNamespace}\\${refactorDetails.newIdentifier}`;
+        const newFullyQualifiedNamespace = `${refactorDetails.new.namespace}\\${refactorDetails.new.identifier}`;
         const useStatementRegExp = this.namespaceRegExpProvider.getUseStatementRegExp(newFullyQualifiedNamespace);
-        if (!useStatementRegExp.test(content) && fileNamespace !== refactorDetails.newNamespace) {
+        if (!useStatementRegExp.test(content) && fileNamespace !== refactorDetails.new.namespace) {
             return content;
         }
 
-        const identifierRegExp = this.namespaceRegExpProvider.getIdentifierRegExp(refactorDetails.oldIdentifier);
-        return content.replace(identifierRegExp, refactorDetails.newIdentifier);
+        const identifierRegExp = this.namespaceRegExpProvider.getIdentifierRegExp(refactorDetails.old.identifier);
+        return content.replace(identifierRegExp, refactorDetails.new.identifier);
     }
 
     /**
@@ -129,36 +114,5 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
      */
     protected findOpenEditor(uri: vscode.Uri): vscode.TextEditor | undefined {
         return findEditorByUri(uri);
-    }
-
-    /**
-     * Retrieves comprehensive details about the namespace refactor operation.
-     * Compares old and new namespaces and identifiers to determine what changes are needed.
-     * @param oldUri The URI of the old file location.
-     * @param newUri The URI of the new file location.
-     * @returns An object containing detailed information about the refactor operation.
-     */
-    protected async getRefactorDetails(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<NamespaceRefactorDetailsType> {
-        const oldNamespace = (await this.namespaceResolver.resolve(oldUri)) || "";
-        const newNamespace = (await this.namespaceResolver.resolve(newUri)) || "";
-        const oldIdentifier = getUriFileName(oldUri);
-        const newIdentifier = getUriFileName(newUri);
-        const hasNamespaces = !!oldNamespace && !!newNamespace;
-        const hasNamespaceChanged = oldNamespace !== newNamespace;
-        const hasIdentifierChanged = oldIdentifier !== newIdentifier;
-        const hasChanged = hasNamespaceChanged || hasIdentifierChanged;
-
-        return {
-            oldUri: oldUri,
-            newUri: newUri,
-            oldIdentifier: oldIdentifier,
-            newIdentifier: newIdentifier,
-            oldNamespace: oldNamespace,
-            newNamespace: newNamespace,
-            hasNamespaces: hasNamespaces,
-            hasNamespaceChanged: hasNamespaceChanged,
-            hasIdentifierChanged: hasIdentifierChanged,
-            hasChanged: hasChanged,
-        };
     }
 }

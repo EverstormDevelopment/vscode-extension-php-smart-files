@@ -14,10 +14,22 @@
   "Create PHP Enum": "Créer un enum PHP",
   "Enter enum name": "Entrez le nom de l'enum",
   "Enter a name for the new PHP enum": "Entrez un nom pour le nouvel enum PHP",
-  
+
   "Create PHP Trait": "Créer un trait PHP",
   "Enter trait name": "Entrez le nom du trait",
   "Enter a name for the new PHP trait": "Entrez un nom pour le nouveau trait PHP",
+
+  "Create Symfony Controller": "Créer un Symfony Controller",
+  "Enter controller name": "Entrez le nom du controller",
+  "Enter a name for the new Symfony Controller": "Entrez un nom pour le nouveau Symfony Controller",
+
+  "Create Symfony Command": "Créer un Symfony Command",
+  "Enter command name": "Entrez le nom du command",
+  "Enter a name for the new Symfony Command": "Entrez un nom pour le nouveau Symfony Command",
+
+  "Create Symfony Form": "Créer un Symfony Form",
+  "Enter form name": "Entrez le nom du form",
+  "Enter a name for the new Symfony Form": "Entrez un nom pour le nouveau Symfony Form",
   
   "Please select a workspace folder": "Veuillez sélectionner un dossier de travail",
   "No target folder selected or no workspace opened.": "Aucun dossier cible sélectionné ou aucun espace de travail ouvert.",

@@ -14,10 +14,22 @@
   "Create PHP Enum": "Создать PHP перечисление",
   "Enter enum name": "Введите имя перечисления",
   "Enter a name for the new PHP enum": "Введите имя для нового PHP перечисления",
-  
+
   "Create PHP Trait": "Создать PHP трейт",
   "Enter trait name": "Введите имя трейта",
   "Enter a name for the new PHP trait": "Введите имя для нового PHP трейта",
+
+  "Create Symfony Controller": "Создать Symfony Controller",
+  "Enter controller name": "Введите имя controller",
+  "Enter a name for the new Symfony Controller": "Введите имя для нового Symfony Controller",
+
+  "Create Symfony Command": "Создать Symfony Command",
+  "Enter command name": "Введите имя command",
+  "Enter a name for the new Symfony Command": "Введите имя для нового Symfony Command",
+
+  "Create Symfony Form": "Создать Symfony Form",
+  "Enter form name": "Введите имя form",
+  "Enter a name for the new Symfony Form": "Введите имя для нового Symfony Form",
   
   "Please select a workspace folder": "Пожалуйста, выберите рабочую папку",
   "No target folder selected or no workspace opened.": "Целевая папка не выбрана или рабочая область не открыта.",

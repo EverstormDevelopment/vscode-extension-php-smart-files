@@ -18,6 +18,18 @@
   "Create PHP Trait": "PHP-Trait erstellen",
   "Enter trait name": "Trait-Name eingeben",
   "Enter a name for the new PHP trait": "Geben Sie einen Namen für den neuen PHP-Trait ein",
+
+  "Create Symfony Controller": "Symfony Controller erstellen",
+  "Enter controller name": "Controller-Name eingeben",
+  "Enter a name for the new Symfony Controller": "Geben Sie einen Namen für den neuen Symfony Controller ein",
+
+  "Create Symfony Command": "Symfony Command erstellen",
+  "Enter command name": "Command-Name eingeben",
+  "Enter a name for the new Symfony Command": "Geben Sie einen Namen für den neuen Symfony Command ein",
+
+  "Create Symfony Form": "Symfony Form erstellen",
+  "Enter form name": "Form-Name eingeben",
+  "Enter a name for the new Symfony Form": "Geben Sie einen Namen für das neue Symfony Form ein",
   
   "Please select a workspace folder": "Bitte wählen Sie einen Arbeitsbereichsordner aus",
   "No target folder selected or no workspace opened.": "Kein Zielordner ausgewählt oder kein Arbeitsbereich geöffnet.",

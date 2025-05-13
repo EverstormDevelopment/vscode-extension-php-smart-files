@@ -4,9 +4,9 @@ import { findEditorByUri } from "../../../utils/vscode/findEditorByUri";
 import { getFileContentByUri } from "../../../utils/vscode/getFileContentByUri";
 import { setFileContentByUri } from "../../../utils/vscode/setFileContentByUri";
 import { NamespaceRefactorerInterface } from "../interface/NamespaceRefactorerInterface";
+import { NamespaceResolver } from "../model/NamespaceResolver";
 import { NamespaceRegExpProvider } from "../provider/NamespaceRegExpProvider";
 import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailType";
-import { NamespaceResolver } from "./NamespaceResolver";
 
 /**
  * Abstract class for refactoring namespaces in PHP files.
@@ -18,7 +18,7 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
      */
     constructor(
         protected readonly namespaceResolver: NamespaceResolver,
-        protected readonly namespaceRegExpProvider: NamespaceRegExpProvider,
+        protected readonly namespaceRegExpProvider: NamespaceRegExpProvider
     ) {}
 
     /**

@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
+import { NamespaceRefactorerAbstract } from "../abstract/NamespaceRefactorerAbstract";
 import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailType";
-import { NamespaceRefactorerAbstract } from "./NamespaceRefactorerAbstract";
 
 /**
  * Handles the refactoring of namespace declarations and class identifiers in PHP files

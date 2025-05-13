@@ -3,10 +3,12 @@ import { FileTypeEnum } from "../../../utils/enum/FileTypeEnum";
 import { InputBoxFactoryInterface } from "../interface/InputBoxFactoryInterface";
 import { InputBoxInterface } from "../interface/InputInterface";
 import { InputPhpFileNameProcessor } from "../processor/InputPhpFileNameProcessor";
+import { InputSymfonyCommandProcessor } from "../processor/InputSymfonyCommandProcessor";
+import { InputSymfonyControllerProcessor } from "../processor/InputSymfonyControllerProcessor";
+import { InputSymfonyFormProcessor } from "../processor/InputSymfonyFormProcessor";
 import { InputDefinitionNameValidator } from "../validator/InputDefinitionNameValidator";
 import { InputFileNameValidator } from "../validator/InputFileNameValidator";
 import { InputBoxBuilder } from "./InputBoxBuilder";
-import { InputSymfonyControllerProcessor } from "../processor/InputSymfonyControllerProcessor";
 
 /**
  * Factory for creating input boxes based on PHP file types.
@@ -36,9 +38,11 @@ export class InputBoxFactory implements InputBoxFactoryInterface {
             case FileTypeEnum.TemplateTrait:
                 return this.createTraitInputBox();
             case FileTypeEnum.SymfonyController:
-            case FileTypeEnum.SymfonyCommand:
-            case FileTypeEnum.SymfonyForm:
                 return this.createSymfonyControllerInputBox();
+            case FileTypeEnum.SymfonyCommand:
+                return this.createSymfonyCommandInputBox();
+            case FileTypeEnum.SymfonyForm:
+                return this.createSymfonyFormInputBox();
             default:
                 throw new Error(`Unknown input box type: ${type}`);
         }
@@ -114,6 +118,11 @@ export class InputBoxFactory implements InputBoxFactoryInterface {
             .build();
     }
 
+    /**
+     * Creates an input box configured for Symfony controller creation.
+     * Configures the box with appropriate validators and processors for Symfony controller naming conventions.
+     * @returns An input box interface implementation for Symfony controllers
+     */
     private createSymfonyControllerInputBox(): InputBoxInterface {
         return new InputBoxBuilder()
             .setTitle(vscode.l10n.t("Create Symfony Controller"))
@@ -121,6 +130,36 @@ export class InputBoxFactory implements InputBoxFactoryInterface {
             .setPrompt(vscode.l10n.t("Enter a name for the new Symfony Controller"))
             .setInputValidator(new InputDefinitionNameValidator())
             .setInputProcessor(new InputSymfonyControllerProcessor())
+            .build();
+    }
+
+    /**
+     * Creates an input box configured for Symfony command creation.
+     * Configures the box with appropriate validators and processors for Symfony command naming conventions.
+     * @returns An input box interface implementation for Symfony commands
+     */
+    private createSymfonyCommandInputBox(): InputBoxInterface {
+        return new InputBoxBuilder()
+            .setTitle(vscode.l10n.t("Create Symfony Command"))
+            .setPlaceholder(vscode.l10n.t("Enter command name"))
+            .setPrompt(vscode.l10n.t("Enter a name for the new Symfony Command"))
+            .setInputValidator(new InputDefinitionNameValidator())
+            .setInputProcessor(new InputSymfonyCommandProcessor())
+            .build();
+    }
+
+    /**
+     * Creates an input box configured for Symfony form creation.
+     * Configures the box with appropriate validators and processors for Symfony form naming conventions.
+     * @returns An input box interface implementation for Symfony forms
+     */
+    private createSymfonyFormInputBox(): InputBoxInterface {
+        return new InputBoxBuilder()
+            .setTitle(vscode.l10n.t("Create Symfony Form"))
+            .setPlaceholder(vscode.l10n.t("Enter form name"))
+            .setPrompt(vscode.l10n.t("Enter a name for the new Symfony Form"))
+            .setInputValidator(new InputDefinitionNameValidator())
+            .setInputProcessor(new InputSymfonyFormProcessor())
             .build();
     }
 }

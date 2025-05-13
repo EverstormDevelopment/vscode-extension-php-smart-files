@@ -19,7 +19,7 @@ export class SnippetTemplateClassFactory extends SnippetClassFactory {
     protected addConstructor(): this {
         this.addIndentation();
         this.snippet.appendText("public function __construct(");
-        this.snippet.appendPlaceholder("", this.tabstop++);
+        this.snippet.appendTabstop(this.tabstop++);
         this.snippet.appendText(")");
         this.snippet.appendText("\n");
         this.addIndentation();
@@ -41,7 +41,7 @@ export class SnippetTemplateClassFactory extends SnippetClassFactory {
         this.snippet.appendText("public function ");
         this.snippet.appendPlaceholder("methodName", this.tabstop++);
         this.snippet.appendText("(");
-        this.snippet.appendPlaceholder("", this.tabstop++);
+        this.snippet.appendTabstop(this.tabstop++);
         this.snippet.appendText("): ");
         this.snippet.appendPlaceholder("void", this.tabstop++);
         this.snippet.appendText("\n");

@@ -79,7 +79,7 @@ export class SnippetSymfonyControllerFactory extends SnippetFactoryAbstract {
         this.snippet.appendText("public function ");
         this.snippet.appendPlaceholder("index", functioNameTabstop);
         this.snippet.appendText("(");
-        this.snippet.appendPlaceholder("", this.tabstop++);
+        this.snippet.appendTabstop(this.tabstop++);
         this.snippet.appendText("): ");
         this.snippet.appendPlaceholder("Response", this.tabstop++);
         this.snippet.appendText("\n");

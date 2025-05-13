@@ -9,7 +9,7 @@ export class SnippetTemplateInterfaceFactory extends SnippetInterfaceFactory {
      * @returns This instance for method chaining
      */
     protected addContent(): this {
-        this.snippet.appendText("    ");
+        this.addIndentation();
         this.snippet.appendText("public function ");
         this.snippet.appendPlaceholder("methodName", this.tabstop++);
         this.snippet.appendText("(");

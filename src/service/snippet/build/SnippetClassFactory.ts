@@ -28,7 +28,7 @@ export class SnippetClassFactory extends SnippetFactoryAbstract {
      * @returns This instance for method chaining
      */
     protected addContent(): this {
-        this.snippet.appendText("    ");
+        this.addIndentation();
         this.snippet.appendTabstop(this.tabstop++);
         this.snippet.appendText("\n");
         return this;

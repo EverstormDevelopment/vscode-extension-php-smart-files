@@ -1,3 +1,4 @@
+import { SnippetSymfonyControllerFactory } from './SnippetSymfonyControllerFactory';
 import * as vscode from "vscode";
 import { FileTypeEnum } from "../../../utils/enum/FileTypeEnum";
 import { SnippetFactoryInterface } from "../interface/SnippetFactoryInterface";
@@ -31,6 +32,10 @@ export class SnippetFactory implements SnippetFactoryInterface {
         [FileTypeEnum.TemplateInterface]: () => new SnippetTemplateInterfaceFactory(),
         [FileTypeEnum.TemplateEnum]: () => new SnippetTemplateEnumFactory(),
         [FileTypeEnum.TemplateTrait]: () => new SnippetTemplateTraitFactory(),
+
+        [FileTypeEnum.SymfonyController]: () => new SnippetSymfonyControllerFactory(),
+        [FileTypeEnum.SymfonyCommand]: () => new SnippetSymfonyControllerFactory(),
+        [FileTypeEnum.SymfonyForm]: () => new SnippetSymfonyControllerFactory(),
     };
 
     /**

@@ -17,16 +17,17 @@ export class SnippetTemplateClassFactory extends SnippetClassFactory {
      * @returns This instance for method chaining
      */
     protected addConstructor(): this {
-        this.snippet.appendText("    ");
+        this.addIndentation();
         this.snippet.appendText("public function __construct(");
         this.snippet.appendPlaceholder("", this.tabstop++);
         this.snippet.appendText(")");
         this.snippet.appendText("\n");
         this.snippet.appendText("    {\n");
-        this.snippet.appendText("        ");
+        this.addIndentation(2);
         this.snippet.appendPlaceholder("\/\/ TODO: Implementation", this.tabstop++);
         this.snippet.appendText("\n");
-        this.snippet.appendText("    }\n");
+        this.addIndentation();
+        this.snippet.appendText("}\n");
         return this;
     }
 
@@ -35,7 +36,7 @@ export class SnippetTemplateClassFactory extends SnippetClassFactory {
      * @returns This instance for method chaining
      */
     protected addMethod(): this {
-        this.snippet.appendText("    ");
+        this.addIndentation();
         this.snippet.appendText("public function ");
         this.snippet.appendPlaceholder("methodName", this.tabstop++);
         this.snippet.appendText("(");
@@ -43,11 +44,13 @@ export class SnippetTemplateClassFactory extends SnippetClassFactory {
         this.snippet.appendText("): ");
         this.snippet.appendPlaceholder("void", this.tabstop++);
         this.snippet.appendText("\n");
-        this.snippet.appendText("    {\n");
-        this.snippet.appendText("        ");
+        this.addIndentation();
+        this.snippet.appendText("{\n");
+        this.addIndentation(2);
         this.snippet.appendPlaceholder("\/\/ TODO: Implementation", this.tabstop++);
         this.snippet.appendText("\n");
-        this.snippet.appendText("    }\n");
+        this.addIndentation();
+        this.snippet.appendText("}\n");
         return this;
     }
 }

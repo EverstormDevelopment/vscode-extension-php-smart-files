@@ -32,6 +32,7 @@
     "psr-4",
     "productivity",
     "workflow",
+    "symfony",
     "phpstorm"
   ],
   "icon": "images/icon.png",

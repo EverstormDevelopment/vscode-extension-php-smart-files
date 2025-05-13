@@ -63,7 +63,7 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
      * @returns The content with the updated namespace declaration.
      */
     private refactorNamespace(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
-        const namespaceRegExp = this.getNamespaceDeclarationRegExp();
+        const namespaceRegExp = this.namespaceRegExpProvider.getNamespaceDeclarationRegExp();
         const hasMatch = namespaceRegExp.test(content);
         if (!hasMatch) {
             return content;

@@ -1,10 +1,10 @@
 import * as vscode from "vscode";
 import { getUriFileName } from "../../../utils/filesystem/getUriFileName";
-import { escapeRegExp } from "../../../utils/regexp/escapeRegExp";
 import { findEditorByUri } from "../../../utils/vscode/findEditorByUri";
 import { getFileContentByUri } from "../../../utils/vscode/getFileContentByUri";
 import { setFileContentByUri } from "../../../utils/vscode/setFileContentByUri";
 import { NamespaceRefactorerInterface } from "../interface/NamespaceRefactorerInterface";
+import { NamespaceRegExpProvider } from "../provider/NamespaceRegExpProvider";
 import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailType";
 import { NamespaceResolver } from "./NamespaceResolver";
 
@@ -16,7 +16,10 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
      * Initializes the NamespaceRefactorer with a NamespaceResolver.
      * @param namespaceResolver Resolves namespaces for given file URIs.
      */
-    constructor(protected readonly namespaceResolver: NamespaceResolver) {}
+    constructor(
+        protected readonly namespaceResolver: NamespaceResolver,
+        protected readonly namespaceRegExpProvider: NamespaceRegExpProvider,
+    ) {}
 
     /**
      * Refactors the namespace and identifiers in a PHP file.
@@ -40,12 +43,12 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
         refactorDetails: NamespaceRefactorDetailsType
     ): string {
         const newFullyQualifiedNamespace = `${refactorDetails.newNamespace}\\${refactorDetails.newIdentifier}`;
-        const useStatementRegExp = this.getUseStatementRegExp(newFullyQualifiedNamespace);
+        const useStatementRegExp = this.namespaceRegExpProvider.getUseStatementRegExp(newFullyQualifiedNamespace);
         if (!useStatementRegExp.test(content) && fileNamespace !== refactorDetails.newNamespace) {
             return content;
         }
 
-        const identifierRegExp = this.getIdentifierRegExp(refactorDetails.oldIdentifier);
+        const identifierRegExp = this.namespaceRegExpProvider.getIdentifierRegExp(refactorDetails.oldIdentifier);
         return content.replace(identifierRegExp, refactorDetails.newIdentifier);
     }
 
@@ -59,12 +62,12 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
      */
     protected addUseStatement(content: string, namespace: string, identifier: string): string {
         const fullQualifiedNamespace = `${namespace}\\${identifier}`;
-        const hasUseStatementRegExp = this.getUseStatementByIdentiferRegExp(identifier);
+        const hasUseStatementRegExp = this.namespaceRegExpProvider.getUseStatementByIdentiferRegExp(identifier);
         if (hasUseStatementRegExp.test(content)) {
             return content;
         }
 
-        const namespaceDeclarationRegExp = this.getNamespaceDeclarationRegExp();
+        const namespaceDeclarationRegExp = this.namespaceRegExpProvider.getNamespaceDeclarationRegExp();
         const namespaceDeclarationMatch = content.match(namespaceDeclarationRegExp);
         if (!namespaceDeclarationMatch) {
             return content;
@@ -72,7 +75,7 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
 
         const useStatement = `use ${fullQualifiedNamespace};`;
 
-        const lastUseStatementRegExp = this.getLastUseStatementRegExp();
+        const lastUseStatementRegExp = this.namespaceRegExpProvider.getLastUseStatementRegExp();
         const lastUseStatementMatch = content.match(lastUseStatementRegExp);
         if (lastUseStatementMatch) {
             const lastUseMatch = lastUseStatementMatch[lastUseStatementMatch.length - 1];
@@ -91,7 +94,7 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
      */
     protected removeUseStatement(content: string, namespace: string, identifier: string): string {
         const fullQualifiedNamespace = `${namespace}\\${identifier}`;
-        const useStatementRegExp = this.getUseStatementRegExp(fullQualifiedNamespace);
+        const useStatementRegExp = this.namespaceRegExpProvider.getUseStatementRegExp(fullQualifiedNamespace);
         const useStatementWithLineBreakRegExp = new RegExp(
             `${useStatementRegExp.source}\\s*?\\r?\\n?\\r?`,
             useStatementRegExp.flags
@@ -157,54 +160,5 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
             hasIdentifierChanged: hasIdentifierChanged,
             hasChanged: hasChanged,
         };
-    }
-
-    /**
-     * Creates a regular expression to match any namespace declaration.
-     * @returns A regular expression that captures the namespace name.
-     */
-    protected getNamespaceDeclarationRegExp(): RegExp {
-        return new RegExp(/[^\r\n\s]*namespace\s+([\p{L}\d_\\]+)\s*;/mu);
-    }
-
-    /**
-     * Creates a regular expression to match `use` statements for a specific namespace.
-     * @param fullyQualifiedNamespace The fully qualified namespace to match in use statements.
-     * @returns A regular expression for matching use statements.
-     */
-    protected getUseStatementRegExp(fullyQualifiedNamespace: string): RegExp {
-        const escapedNamespace = escapeRegExp(fullyQualifiedNamespace);
-        return new RegExp(`use\\s+${escapedNamespace}\\s*;`, "gu");
-    }
-
-    /**
-     * Creates a regular expression to match `use` statements for a specific identifier.
-     * @param identifier The identifier to match in use statements.
-     * @returns A regular expression for matching use statements.
-     */
-    protected getUseStatementByIdentiferRegExp(identifier: string): RegExp {
-        const escapedIdentifier = escapeRegExp(identifier);
-        // Ensure at least one `\` precedes the identifier, so we exclude `use` statements for other classes.
-        return new RegExp(`use\\s+[\\p{L}\\d_\\\\]+\\\\${escapedIdentifier}\\s*;`, "gu");
-    }
-
-    /**
-     * Creates a regular expression to match the last `use` statement in a file.
-     * Used to determine where to add new use statements.
-     * @returns A regular expression for matching use statements.
-     */
-    protected getLastUseStatementRegExp(): RegExp {
-        return new RegExp(/^use\s+[\p{L}\d_\\]+\s*;/gmu);
-    }
-
-    /**
-     * Creates a regular expression to match standalone identifiers.
-     * Includes word boundary checks to prevent partial matches.
-     * @param identifier The identifier to match.
-     * @returns A regular expression for matching the identifier.
-     */
-    protected getIdentifierRegExp(identifier: string): RegExp {
-        const escapedIdentifier = escapeRegExp(identifier);
-        return new RegExp(`(?<![\\p{L}\\d_\\\\])${escapedIdentifier}(?![\\p{L}\\d_\\\\])`, "gu");
     }
 }

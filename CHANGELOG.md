@@ -71,7 +71,7 @@ All notable changes to the extension will be documented in this file.
 - Added setting `fallbackNamespace` to define the namespace when `useFallbackNamespace` is enabled (default: `App`)
 
 ### Fixed
-- Missleading and wrong translations
+- Misleading and wrong translations
 
 
 

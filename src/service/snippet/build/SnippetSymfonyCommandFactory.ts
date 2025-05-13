@@ -60,7 +60,7 @@ export class SnippetSymfonyCommandFactory extends SnippetFactoryAbstract {
 
     /**
      * Adds required Symfony use statements for command functionality.
-     * Includes imports for AsCommand attribute, Command base class, 
+     * Includes imports for AsCommand attribute, Command base class,
      * input/output interfaces, and SymfonyStyle helper.
      * @returns The current instance for method chaining
      */
@@ -94,7 +94,7 @@ export class SnippetSymfonyCommandFactory extends SnippetFactoryAbstract {
     protected addConstructor(): this {
         this.addIndentation();
         this.snippet.appendText("public function __construct(");
-        this.snippet.appendPlaceholder("", this.tabstop++);
+        this.snippet.appendTabstop(this.tabstop++);
         this.snippet.appendText(")");
         this.snippet.appendText("\n");
         this.addIndentation();
@@ -143,9 +143,14 @@ export class SnippetSymfonyCommandFactory extends SnippetFactoryAbstract {
         this.addIndentation(2);
         this.snippet.appendText("$io = new SymfonyStyle($input, $output);\n");
         this.addIndentation(2);
-        this.snippet.appendText("//$arg1 = $input->getArgument('arg1');\n");
+        this.snippet.appendPlaceholder("//$arg1 = $input->getArgument('arg1');", this.tabstop++);
+        this.snippet.appendText("\n");
         this.addIndentation(2);
-        this.snippet.appendText("//$option1 = $input->getOption('option1')\n\n");
+        this.snippet.appendPlaceholder("//$option1 = $input->getOption('option1');", this.tabstop++);
+        this.snippet.appendText("\n\n");
+        this.addIndentation(2);
+        this.snippet.appendPlaceholder("// TODO: Implement your logic", this.tabstop++);
+        this.snippet.appendText("\n\n");
         this.addIndentation(2);
         this.snippet.appendText(
             "$io->success('You have a new command! Now make it your own! Pass --help to see your options.');\n\n"

@@ -1,3 +1,4 @@
+import { convertToSnakeCase } from "../../../utils/string/convertToSnakeCase";
 import { SnippetFactoryAbstract } from "./SnippetFactoryAbstract";
 
 /**
@@ -32,7 +33,7 @@ export class SnippetSymfonyControllerFactory extends SnippetFactoryAbstract {
     }
 
     protected addContent(identifier?: string): this {
-        return this.addAttibute().addMethod();
+        return this.addAttibute().addMethod(identifier);
     }
 
     protected addAttibute(): this {
@@ -46,11 +47,10 @@ export class SnippetSymfonyControllerFactory extends SnippetFactoryAbstract {
         return this;
     }
 
-    /**
-     * Adds a standard method to the class with parameters, return type, and implementation placeholders
-     * @returns This instance for method chaining
-     */
-    protected addMethod(): this {
+    protected addMethod(identifier?: string): this {
+        identifier ??= "MyController";
+        const baseIdentifier = identifier.replace(/Controller$/, '');
+        const snakeCaseIdentifier = convertToSnakeCase(baseIdentifier);
         const functioNameTabstop = this.tabstop++;
 
         this.addIndentation();
@@ -64,18 +64,19 @@ export class SnippetSymfonyControllerFactory extends SnippetFactoryAbstract {
         this.addIndentation();
         this.snippet.appendText("{\n");
         this.addIndentation(2);
-        this.snippet.appendText("return $this->render(");
-        this.snippet.appendPlaceholder("XXXXXXXXXXXXXXXX", this.tabstop++);
+        this.snippet.appendText("return $this->render('");
+        this.snippet.appendPlaceholder(snakeCaseIdentifier, this.tabstop++);
         this.snippet.appendText("/");
         this.snippet.appendPlaceholder("index", functioNameTabstop);
-        this.snippet.appendText(".html.twig, [\n");
+        this.snippet.appendText(".html.twig', [\n");
         this.addIndentation(3);
         this.snippet.appendText("'");
         this.snippet.appendPlaceholder("controller_name", this.tabstop++);
         this.snippet.appendText("' => '");
-        this.snippet.appendPlaceholder("YYYYYYYYYYYYYYYYYY", this.tabstop++);
-        this.addIndentation(2);
+        this.snippet.appendPlaceholder(identifier, this.tabstop++);
         this.snippet.appendText("'\n");
+        this.addIndentation(2);
+        this.snippet.appendText("]);\n");
         this.addIndentation();
         this.snippet.appendText("}\n");
         return this;

@@ -6,6 +6,7 @@ import { InputPhpFileNameProcessor } from "../processor/InputPhpFileNameProcesso
 import { InputDefinitionNameValidator } from "../validator/InputDefinitionNameValidator";
 import { InputFileNameValidator } from "../validator/InputFileNameValidator";
 import { InputBoxBuilder } from "./InputBoxBuilder";
+import { InputSymfonyControllerProcessor } from "../processor/InputSymfonyControllerProcessor";
 
 /**
  * Factory for creating input boxes based on PHP file types.
@@ -34,6 +35,10 @@ export class InputBoxFactory implements InputBoxFactoryInterface {
             case FileTypeEnum.Trait:
             case FileTypeEnum.TemplateTrait:
                 return this.createTraitInputBox();
+            case FileTypeEnum.SymfonyController:
+            case FileTypeEnum.SymfonyCommand:
+            case FileTypeEnum.SymfonyForm:
+                return this.createSymfonyControllerInputBox();
             default:
                 throw new Error(`Unknown input box type: ${type}`);
         }
@@ -106,6 +111,16 @@ export class InputBoxFactory implements InputBoxFactoryInterface {
             .setPrompt(vscode.l10n.t("Enter a name for the new PHP trait"))
             .setInputValidator(new InputDefinitionNameValidator())
             .setInputProcessor(new InputPhpFileNameProcessor())
+            .build();
+    }
+
+    private createSymfonyControllerInputBox(): InputBoxInterface {
+        return new InputBoxBuilder()
+            .setTitle(vscode.l10n.t("Create Symfony Controller"))
+            .setPlaceholder(vscode.l10n.t("Enter controller name"))
+            .setPrompt(vscode.l10n.t("Enter a name for the new Symfony Controller"))
+            .setInputValidator(new InputDefinitionNameValidator())
+            .setInputProcessor(new InputSymfonyControllerProcessor())
             .build();
     }
 }

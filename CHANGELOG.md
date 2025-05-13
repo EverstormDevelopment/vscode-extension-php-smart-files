@@ -10,6 +10,7 @@ All notable changes to the extension will be documented in this file.
   - Controller with proper route attributes and render method
   - Command with complete structure following Symfony console conventions
   - Form Type with buildForm and configureOptions methods
+- Added support for refactoring when renaming from invalid to valid PHP filenames instead of aborting the operation
 
 ### Changed
 - Optimized extension performance by only activating file observers when PHP files exist in workspace

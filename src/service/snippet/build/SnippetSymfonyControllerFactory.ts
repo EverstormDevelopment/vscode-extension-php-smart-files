@@ -2,13 +2,15 @@ import { convertToSnakeCase } from "../../../utils/string/convertToSnakeCase";
 import { SnippetFactoryAbstract } from "./SnippetFactoryAbstract";
 
 /**
- * Factory for creating PHP class snippets with template content.
+ * Factory class for generating Symfony controller code snippets.
+ * Extends the abstract snippet factory to provide specific implementation
+ * for Symfony controller generation with proper structure and syntax.
  */
 export class SnippetSymfonyControllerFactory extends SnippetFactoryAbstract {
     /**
-     * Adds the opening declaration for a Symfony controller class
+     * Creates the opening part of the class declaration with proper Symfony controller inheritance.
      * @param identifier - The name of the controller class
-     * @returns This instance for method chaining
+     * @returns The current instance for method chaining
      */
     protected openDeclaration(identifier?: string): this {
         this.snippet.appendText(`final class ${identifier} extends AbstractController\n{\n`);
@@ -16,14 +18,19 @@ export class SnippetSymfonyControllerFactory extends SnippetFactoryAbstract {
     }
 
     /**
-     * Closes the class declaration block
-     * @returns This instance for method chaining
+     * Adds the closing bracket for the class declaration.
+     * @returns The current instance for method chaining
      */
     protected closeDeclaration(): this {
         this.snippet.appendText(`}\n`);
         return this;
     }
 
+    /**
+     * Adds required Symfony use statements for controller functionality.
+     * Includes AbstractController, Response, and Route attribute.
+     * @returns The current instance for method chaining
+     */
     protected addUseStatements(): this {
         this.snippet.appendText("use Symfony\\Bundle\\FrameworkBundle\\Controller\\AbstractController;\n");
         this.snippet.appendText("use Symfony\\Component\\HttpFoundation\\Response;\n");
@@ -32,10 +39,19 @@ export class SnippetSymfonyControllerFactory extends SnippetFactoryAbstract {
         return this;
     }
 
+    /**
+     * Adds the main content of the controller by adding the route attribute and method.
+     * @param identifier - The name of the controller class
+     * @returns The current instance for method chaining
+     */
     protected addContent(identifier?: string): this {
         return this.addAttibute().addMethod(identifier);
     }
 
+    /**
+     * Adds a Symfony Route attribute with configurable path and route name.
+     * @returns The current instance for method chaining
+     */
     protected addAttibute(): this {
         this.addIndentation();
         this.snippet.appendText("#[Route('");
@@ -47,9 +63,15 @@ export class SnippetSymfonyControllerFactory extends SnippetFactoryAbstract {
         return this;
     }
 
+    /**
+     * Adds a controller action method with appropriate parameters and return type.
+     * Creates a render statement with template path based on the controller name.
+     * @param identifier - The name of the controller class
+     * @returns The current instance for method chaining
+     */
     protected addMethod(identifier?: string): this {
         identifier ??= "MyController";
-        const baseIdentifier = identifier.replace(/Controller$/, '');
+        const baseIdentifier = identifier.replace(/Controller$/, "");
         const snakeCaseIdentifier = convertToSnakeCase(baseIdentifier);
         const functioNameTabstop = this.tabstop++;
 

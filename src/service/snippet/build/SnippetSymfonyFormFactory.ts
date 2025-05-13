@@ -67,7 +67,7 @@ export class SnippetSymfonyFormFactory extends SnippetFactoryAbstract {
         this.snippet.appendText("->add('");
         this.snippet.appendPlaceholder("field_name", this.tabstop++);
         this.snippet.appendText("')");
-        this.snippet.appendPlaceholder("", this.tabstop++);
+        this.snippet.appendTabstop(this.tabstop++);
         this.snippet.appendText("\n");
         this.addIndentation(2);
         this.snippet.appendText(";\n");

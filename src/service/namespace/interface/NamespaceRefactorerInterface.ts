@@ -1,5 +1,5 @@
-import * as vscode from "vscode";
+import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailsType";
 
 export interface NamespaceRefactorerInterface {
-    refactor(newUri: vscode.Uri, oldUri: vscode.Uri): Promise<boolean>;
+    refactor(refactorDetails: NamespaceRefactorDetailsType): Promise<boolean>;
 }

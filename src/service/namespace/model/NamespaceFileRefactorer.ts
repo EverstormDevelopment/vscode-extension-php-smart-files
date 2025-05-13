@@ -1,32 +1,25 @@
 import * as vscode from "vscode";
 import { NamespaceRefactorerAbstract } from "../abstract/NamespaceRefactorerAbstract";
-import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailType";
+import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailsType";
 
 /**
  * Handles the refactoring of namespace declarations and class identifiers in PHP files
  * when a file is moved or renamed.
  */
 export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
-    /**
-     * Refactors namespace and class identifiers in a PHP file after it has been moved or renamed.
-     * @param oldUri The original URI of the file before moving/renaming.
-     * @param newUri The new URI of the file after moving/renaming.
-     * @returns Promise resolving to true if refactoring was successful, false otherwise.
-     */
-    public async refactor(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<boolean> {
+    public async refactor(refactorDetails: NamespaceRefactorDetailsType): Promise<boolean> {
         try {
-            const refactorDetails = await this.getRefactorDetails(oldUri, newUri);
             if (!refactorDetails.hasNamespaces || !refactorDetails.hasChanged) {
                 return false;
             }
 
-            const fileContent = await this.getFileContent(refactorDetails.newUri);
+            const fileContent = await this.getFileContent(refactorDetails.new.uri);
             const updatedContent = this.refactorContent(fileContent, refactorDetails);
             if (updatedContent === fileContent) {
                 return false;
             }
 
-            await this.setFileContent(refactorDetails.newUri, updatedContent);
+            await this.setFileContent(refactorDetails.new.uri, updatedContent);
             return true;
         } catch (error) {
             const errorDetails = error instanceof Error ? error.message : String(error);
@@ -50,7 +43,7 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
         }
         if (refactorDetails.hasIdentifierChanged) {
             content = this.refactorDefinition(content, refactorDetails);
-            content = this.refactorIdentifier(content, refactorDetails.newNamespace, refactorDetails);
+            content = this.refactorIdentifier(content, refactorDetails.new.namespace, refactorDetails);
         }
         return content;
     }
@@ -69,7 +62,7 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
             return content;
         }
 
-        return content.replace(namespaceRegExp, `namespace ${refactorDetails.newNamespace};`);
+        return content.replace(namespaceRegExp, `namespace ${refactorDetails.new.namespace};`);
     }
 
     /**
@@ -82,8 +75,8 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
      */
     private refactorDefinition(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
         const validationRegExp = this.namespaceRegExpProvider.getIdentifierValidationRegExp();
-        const oldIdentifier = refactorDetails.oldIdentifier;
-        const newIdentifier = refactorDetails.newIdentifier;
+        const oldIdentifier = refactorDetails.old.identifier;
+        const newIdentifier = refactorDetails.new.identifier;
 
         if (!validationRegExp.test(oldIdentifier)) {
             const message = vscode.l10n.t(
@@ -110,7 +103,7 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
             throw new Error(message);
         }
 
-        const newDefinition = `${definitionMatch[1]} ${refactorDetails.newIdentifier}`;
+        const newDefinition = `${definitionMatch[1]} ${refactorDetails.new.identifier}`;
         return content.replace(definitionRegExp, newDefinition);
     }
 
@@ -127,8 +120,8 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
             return content;
         }
 
-        content = this.addUseStatements(content, refactorDetails.oldNamespace, nonQualifiedReferences);
-        content = this.removeUseStatements(content, refactorDetails.newNamespace, nonQualifiedReferences);
+        content = this.addUseStatements(content, refactorDetails.old.namespace, nonQualifiedReferences);
+        content = this.removeUseStatements(content, refactorDetails.new.namespace, nonQualifiedReferences);
 
         return content;
     }

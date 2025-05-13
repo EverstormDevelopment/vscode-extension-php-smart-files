@@ -1,4 +1,6 @@
 import * as vscode from "vscode";
+import { NamespaceRefactorDetailsProvider } from "../provider/NamespaceRefactorDetailsProvider";
+import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailsType";
 import { NamespaceFileRefactorer } from "./NamespaceFileRefactorer";
 import { NamespaceReferencesRefactorer } from "./NamespaceReferencesRefactorer";
 
@@ -13,6 +15,7 @@ export class NamespaceRefactorService {
      * @param namespaceReferencesRefactorer Handles refactoring references in other files
      */
     constructor(
+        private readonly namespaceRefactorDetailsProvider: NamespaceRefactorDetailsProvider,
         private readonly namespaceFileRefactorer: NamespaceFileRefactorer,
         private readonly namespaceReferencesRefactorer: NamespaceReferencesRefactorer
     ) {}
@@ -24,31 +27,20 @@ export class NamespaceRefactorService {
      * @param newUri The new URI of the file after moving/renaming
      */
     public async refactorFileAndReferences(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<void> {
-        const updatedFile = await this.refactorFile(oldUri, newUri);
+        const refactorDetrails = await this.namespaceRefactorDetailsProvider.get(oldUri, newUri);
+        const updatedFile = await this.refactorFile(refactorDetrails);
         if (!updatedFile) {
             return;
         }
 
-        await this.refactorReferences(oldUri, newUri);
+        await this.refactorReferences(refactorDetrails);
     }
 
-    /**
-     * Updates namespace declarations and class definitions in the moved/renamed file.
-     * @param oldUri The original URI of the file before moving/renaming
-     * @param newUri The new URI of the file after moving/renaming
-     * @returns Promise resolving to true if refactoring was performed, false otherwise
-     */
-    public async refactorFile(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<boolean> {
-        return this.namespaceFileRefactorer.refactor(oldUri, newUri);
+    private async refactorFile(refactorDetrails: NamespaceRefactorDetailsType): Promise<boolean> {
+        return this.namespaceFileRefactorer.refactor(refactorDetrails);
     }
 
-    /**
-     * Updates references to the file's namespace and class in other PHP files.
-     * @param oldUri The original URI of the file before moving/renaming
-     * @param newUri The new URI of the file after moving/renaming
-     * @returns Promise resolving to true if refactoring was performed, false otherwise
-     */
-    public async refactorReferences(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<boolean> {
-        return this.namespaceReferencesRefactorer.refactor(oldUri, newUri);
+    private async refactorReferences(refactorDetrails: NamespaceRefactorDetailsType): Promise<boolean> {
+        return this.namespaceReferencesRefactorer.refactor(refactorDetrails);
     }
 }

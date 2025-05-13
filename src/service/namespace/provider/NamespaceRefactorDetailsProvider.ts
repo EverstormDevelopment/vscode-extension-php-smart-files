@@ -28,7 +28,7 @@ export class NamespaceRefactorDetailsProvider {
      * @returns An object containing details about the refactor operation.
      */
     public async get(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<NamespaceRefactorDetailsType> {
-        const oldUriDetails = await this.getUriDetails(oldUri);
+        const oldUriDetails = await this.getUriDetails(oldUri, newUri);
         const newUriDetails = await this.getUriDetails(newUri);
 
         const hasNamespaces = !!oldUriDetails.namespace && !!newUriDetails.namespace;
@@ -98,10 +98,11 @@ export class NamespaceRefactorDetailsProvider {
         const content = await getFileContentByUri(uri);
         const definitionRegExp = this.namespaceRegExpProvider.getDefinitionRegExp();
         const definitionMatch = definitionRegExp.exec(content);
-        if (!definitionMatch?.[1]) {
+        const identifier = definitionMatch?.[2];
+        if (!identifier) {
             return "";
         }
 
-        return definitionMatch[1];
+        return identifier;
     }
 }

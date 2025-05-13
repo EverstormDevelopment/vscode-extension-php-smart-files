@@ -9,24 +9,44 @@ import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailsTy
 export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
     public async refactor(refactorDetails: NamespaceRefactorDetailsType): Promise<boolean> {
         try {
-            if (!refactorDetails.hasNamespaces || !refactorDetails.hasChanged) {
+            if (!this.isRefactorable(refactorDetails)) {
                 return false;
             }
 
-            const fileContent = await this.getFileContent(refactorDetails.new.uri);
-            const updatedContent = this.refactorContent(fileContent, refactorDetails);
-            if (updatedContent === fileContent) {
-                return false;
-            }
-
-            await this.setFileContent(refactorDetails.new.uri, updatedContent);
-            return true;
+            return await this.refactorFile(refactorDetails);
         } catch (error) {
             const errorDetails = error instanceof Error ? error.message : String(error);
             const errorMessage = vscode.l10n.t("Error during namespace refactoring: {0}", errorDetails);
             vscode.window.showErrorMessage(errorMessage);
             return false;
         }
+    }
+
+    private isRefactorable(refactorDetails: NamespaceRefactorDetailsType): boolean {
+        if (!refactorDetails.new.isFileNameValid) {
+            const message = vscode.l10n.t(
+                "The provided name '{0}' is not a valid PHP identifier. The refactoring process has been canceled.",
+                refactorDetails.new.fileName
+            );
+            throw new Error(message);
+        }
+
+        if (!refactorDetails.hasNamespaces || !refactorDetails.hasChanged) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private async refactorFile(refactorDetails: NamespaceRefactorDetailsType): Promise<boolean> {
+        const fileContent = await this.getFileContent(refactorDetails.new.uri);
+        const updatedContent = this.refactorContent(fileContent, refactorDetails);
+        if (updatedContent === fileContent) {
+            return false;
+        }
+
+        await this.setFileContent(refactorDetails.new.uri, updatedContent);
+        return true;
     }
 
     /**
@@ -65,35 +85,7 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
         return content.replace(namespaceRegExp, `namespace ${refactorDetails.new.namespace};`);
     }
 
-    /**
-     * Refactors the class/interface/trait definition to use the new identifier.
-     * Ensures the new identifier is valid and updates the definition accordingly.
-     * @param content The original file content.
-     * @param refactorDetails Details about what needs to be refactored.
-     * @returns The content with the updated definition.
-     * @throws Error if the new identifier is invalid or if no valid definition is found.
-     */
     private refactorDefinition(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
-        const validationRegExp = this.namespaceRegExpProvider.getIdentifierValidationRegExp();
-        const oldIdentifier = refactorDetails.old.identifier;
-        const newIdentifier = refactorDetails.new.identifier;
-
-        if (!validationRegExp.test(oldIdentifier)) {
-            const message = vscode.l10n.t(
-                "The previous name '{0}' was not a valid PHP identifier. The refactoring process has been canceled.",
-                oldIdentifier
-            );
-            throw new Error(message);
-        }
-
-        if (!validationRegExp.test(newIdentifier)) {
-            const message = vscode.l10n.t(
-                "The provided name '{0}' is not a valid PHP identifier. The refactoring process has been canceled.",
-                newIdentifier
-            );
-            throw new Error(message);
-        }
-
         const definitionRegExp = this.namespaceRegExpProvider.getDefinitionRegExp();
         const definitionMatch = definitionRegExp.exec(content);
         if (!definitionMatch) {

@@ -81,7 +81,7 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
      * @throws Error if the new identifier is invalid or if no valid definition is found.
      */
     private refactorDefinition(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
-        const validationRegExp = this.getIdentifierValidationRegExp();
+        const validationRegExp = this.namespaceRegExpProvider.getIdentifierValidationRegExp();
         const oldIdentifier = refactorDetails.oldIdentifier;
         const newIdentifier = refactorDetails.newIdentifier;
 
@@ -101,7 +101,7 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
             throw new Error(message);
         }
 
-        const definitionRegExp = this.getDefinitionRegExp();
+        const definitionRegExp = this.namespaceRegExpProvider.getDefinitionRegExp();
         const definitionMatch = definitionRegExp.exec(content);
         if (!definitionMatch) {
             const message = vscode.l10n.t(
@@ -168,53 +168,12 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
      * @returns A list of unique non-qualified references.
      */
     private getNonQualifiedReferences(content: string): string[] {
-        const regex = this.getNonQualifiedReferenceRegExp();
+        const regex = this.namespaceRegExpProvider.getNonQualifiedReferenceRegExp();
         const matches = Array.from(content.matchAll(regex));
 
         const extractedNames = matches.map((match) => match.slice(1).find(Boolean)).filter(Boolean) as string[];
 
         const classNames = new Set(extractedNames);
         return Array.from(classNames);
-    }
-
-    /**
-     * Creates a regular expression to match PHP class/interface/enum/trait definitions.
-     * Used to find and update the main definition in the file.
-     * @returns A regular expression that captures the definition type and name.
-     */
-    protected getDefinitionRegExp(): RegExp {
-        return new RegExp(`\\b(class|interface|enum|trait)\\s+([\\p{L}_][\\p{L}\\d_]*)`, "gu");
-    }
-
-    /**
-     * Creates a regular expression to validate PHP identifiers.
-     * Ensures the identifier follows PHP naming rules.
-     * @returns A regular expression for validating PHP identifiers.
-     */
-    protected getIdentifierValidationRegExp(): RegExp {
-        return new RegExp(`^[\\p{L}_][\\p{L}\\d_]*$`, "u");
-    }
-
-    /**
-     * Creates a regular expression to match non-qualified references in PHP code.
-     * Used to find references that need to be updated to fully qualified names.
-     * @returns A regular expression for matching non-qualified references.
-     */
-    private getNonQualifiedReferenceRegExp(): RegExp {
-        const patterns = [
-            // Attribute annotations (PHP 8+)
-            "#\\[\\s*([\\p{L}_][\\p{L}\\d_]*)",
-            // Extends/implements clauses
-            "(?:extends|implements)\\s+([\\p{L}_][\\p{L}\\d_]*)(?!\\s*\\\\)",
-            // New instantiations
-            "new\\s+([\\p{L}_][\\p{L}\\d_]*)(?!\\s*\\\\)",
-            // use statements (single-level namespaces only)
-            "use\\s+([\\p{L}_][\\p{L}\\d_]*)\\s*;",
-            // Static access
-            "\\b([\\p{L}_][\\p{L}\\d_]*)(?!\\s*\\\\)::",
-        ];
-
-        // Combine patterns with OR
-        return new RegExp(patterns.join("|"), "gu");
     }
 }

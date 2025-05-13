@@ -20,7 +20,7 @@ export class SnippetTemplateTraitFactory extends SnippetTraitFactory {
         this.addIndentation();
         this.snippet.appendText("{\n");
         this.addIndentation(2);
-        this.snippet.appendPlaceholder("\/\/ TODO: Implementation", this.tabstop++);
+        this.snippet.appendPlaceholder("// TODO: Implementation", this.tabstop++);
         this.snippet.appendText("\n");
         this.addIndentation();
         this.snippet.appendText("}\n");

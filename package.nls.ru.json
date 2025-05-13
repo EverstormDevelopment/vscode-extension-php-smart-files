@@ -10,6 +10,9 @@
   "php-smart-files.commands.newTemplatePhpInterface.title": "PHP интерфейс из шаблона",
   "php-smart-files.commands.newTemplatePhpEnum.title": "PHP enum из шаблона",
   "php-smart-files.commands.newTemplatePhpTrait.title": "PHP трейт из шаблона",
+  "php-smart-files.commands.newSymfonyController.title": "Symfony Controller из шаблона",
+  "php-smart-files.commands.newSymfonyCommand.title": "Symfony Command из шаблона",
+  "php-smart-files.commands.newSymfonyForm.title": "Symfony Form из шаблона",
 
   "php-smart-files.config.useStrictTypeInTemplates.description": "Определяет, будет ли `declare(strict_types=1);` включен в сгенерированные файлы.",
 

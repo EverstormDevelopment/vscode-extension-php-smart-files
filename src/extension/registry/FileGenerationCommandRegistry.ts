@@ -18,4 +18,8 @@ export const FileGenerationCommandRegistry: Record<string, FileTypeEnum> = {
     newTemplatePhpInterface: FileTypeEnum.TemplateInterface,
     newTemplatePhpEnum: FileTypeEnum.TemplateEnum,
     newTemplatePhpTrait: FileTypeEnum.TemplateTrait,
+
+    newSymfonyController: FileTypeEnum.SymfonyController,
+    newSymfonyCommand: FileTypeEnum.SymfonyCommand,
+    newSymfonyForm: FileTypeEnum.SymfonyForm,
 };

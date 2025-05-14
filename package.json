@@ -1,5 +1,5 @@
 {
-  "version": "0.5.1",
+  "version": "0.6.0",
   "name": "php-smart-files",
   "displayName": "PHP Smart Files",
   "description": "Effortlessly create PHP files with auto-detected namespaces and smart refactoring. Seamlessly updates references when moving or renaming files.",
@@ -32,6 +32,7 @@
     "psr-4",
     "productivity",
     "workflow",
+    "symfony",
     "phpstorm"
   ],
   "icon": "images/icon.png",
@@ -174,6 +175,18 @@
       {
         "command": "php-smart-files.newTemplatePhpTrait",
         "title": "%php-smart-files.commands.newTemplatePhpTrait.title%"
+      },
+      {
+        "command": "php-smart-files.newSymfonyController",
+        "title": "%php-smart-files.commands.newSymfonyController.title%"
+      },
+      {
+        "command": "php-smart-files.newSymfonyCommand",
+        "title": "%php-smart-files.commands.newSymfonyCommand.title%"
+      },
+      {
+        "command": "php-smart-files.newSymfonyForm",
+        "title": "%php-smart-files.commands.newSymfonyForm.title%"
       }
     ],
     "menus": {
@@ -206,19 +219,31 @@
         },
         {
           "command": "php-smart-files.newTemplatePhpClass",
-          "group": "2_creation_template@2"
+          "group": "2_creation_template@1"
         },
         {
           "command": "php-smart-files.newTemplatePhpInterface",
-          "group": "2_creation_template@3"
+          "group": "2_creation_template@2"
         },
         {
           "command": "php-smart-files.newTemplatePhpEnum",
-          "group": "2_creation_template@4"
+          "group": "2_creation_template@3"
         },
         {
           "command": "php-smart-files.newTemplatePhpTrait",
-          "group": "2_creation_template@5"
+          "group": "2_creation_template@4"
+        },
+        {
+          "command": "php-smart-files.newSymfonyController",
+          "group": "3_creation_symfony@1"
+        },
+        {
+          "command": "php-smart-files.newSymfonyCommand",
+          "group": "3_creation_symfony@2"
+        },
+        {
+          "command": "php-smart-files.newSymfonyForm",
+          "group": "3_creation_symfony@3"
         }
       ]
     },

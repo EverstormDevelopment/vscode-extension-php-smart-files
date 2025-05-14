@@ -5,9 +5,22 @@ All notable changes to the extension will be documented in this file.
 
 ## [Unreleased]
 
+
+
+## [0.6.0] - 2025-05-14
+
+### Added
+- Added specialized templates for Symfony components:
+  - Controller with proper route attributes and render method
+  - Command with complete structure following Symfony console conventions
+  - Form Type with buildForm and configureOptions methods
+- Added support for refactoring when renaming from invalid to valid PHP filenames instead of aborting the operation
+- Added support for detecting and refactoring use statements with aliases when moving or renaming PHP files
+
 ### Changed
 - Optimized extension performance by only activating file observers when PHP files exist in workspace
-- Fixed method name typo from `addFileOvservers` to `addFileObservers`
+- Renamed extension from "PHP File Creator" to "PHP Smart Files" to better reflect its expanded capabilities
+- Improved wording of placeholders in code templates for better clarity and usability
 
 
 
@@ -70,7 +83,7 @@ All notable changes to the extension will be documented in this file.
 - Added setting `fallbackNamespace` to define the namespace when `useFallbackNamespace` is enabled (default: `App`)
 
 ### Fixed
-- Missleading and wrong translations
+- Misleading and wrong translations
 
 
 

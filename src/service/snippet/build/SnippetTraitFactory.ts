@@ -28,8 +28,8 @@ export class SnippetTraitFactory extends SnippetFactoryAbstract {
      * @returns This instance for method chaining
      */
     protected addContent(): this {
-        this.snippet.appendText("    ");
-        this.snippet.appendTabstop(this.tabstop++);
+        this.addIndentation();
+        this.snippet.appendPlaceholder("// TODO: Implement trait methods", this.tabstop++);
         this.snippet.appendText("\n");
         return this;
     }

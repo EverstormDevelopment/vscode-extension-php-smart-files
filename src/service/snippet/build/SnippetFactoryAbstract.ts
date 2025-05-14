@@ -35,8 +35,9 @@ export abstract class SnippetFactoryAbstract implements SnippetTypeFactoryInterf
             .addStrictType()
             .addLineBreak()
             .addNamespace(namespace)
-            .openDeclaration(identifier)
-            .addContent()
+            .addUseStatements(identifier, namespace)
+            .openDeclaration(identifier, namespace)
+            .addContent(identifier, namespace)
             .closeDeclaration()
             .getSnippet();
     }
@@ -79,12 +80,22 @@ export abstract class SnippetFactoryAbstract implements SnippetTypeFactoryInterf
      * @param namespace - The namespace to add, undefined to skip
      * @returns This instance for method chaining
      */
-    private addNamespace(namespace: string | undefined): this {
-        if (namespace === undefined) {
+    private addNamespace(namespace?: string): this {
+        if (!namespace) {
             return this;
         }
 
         this.snippet.appendText(`namespace ${namespace};\n\n`);
+        return this;
+    }
+
+    /**
+     * Adds use statements to the snippet
+     * @param identifier - The name of the PHP definition
+     * @param namespace - The namespace of the PHP definition
+     * @returns This instance for method chaining
+     */
+    protected addUseStatements(identifier?: string, namespace?: string): this {
         return this;
     }
 
@@ -94,6 +105,18 @@ export abstract class SnippetFactoryAbstract implements SnippetTypeFactoryInterf
      */
     protected addLineBreak(): this {
         this.snippet.appendText("\n");
+        return this;
+    }
+
+    /**
+     * Adds indentation to the snippet
+     * @param amount - The number of indentation levels to add
+     * @returns This instance for method chaining
+     */
+    protected addIndentation(amount: number = 1): this {
+        for (let i = 0; i < amount; i++) {
+            this.snippet.appendText("    ");
+        }
         return this;
     }
 
@@ -108,19 +131,24 @@ export abstract class SnippetFactoryAbstract implements SnippetTypeFactoryInterf
     /**
      * Opens the declaration block for the PHP definition
      * @param identifier - The name of the PHP definition
+     * @param namespace - The namespace of the PHP definition
      * @returns This instance for method chaining
      */
-    protected abstract openDeclaration(identifier: string): this;
+    protected abstract openDeclaration(identifier?: string, namespace?: string): this;
 
     /**
      * Closes the declaration block for the PHP definition
+     * @param identifier - The name of the PHP definition
+     * @param namespace - The namespace of the PHP definition
      * @returns This instance for method chaining
      */
-    protected abstract closeDeclaration(): this;
+    protected abstract closeDeclaration(identifier?: string, namespace?: string): this;
 
     /**
-     * Adds the content inside the declaration block
+     * Adds content to the snippet, such as methods or properties
+     * @param identifier - The name of the PHP definition
+     * @param namespace - The namespace of the PHP definition
      * @returns This instance for method chaining
      */
-    protected abstract addContent(): this;
+    protected abstract addContent(identifier?: string, namespace?: string): this;
 }

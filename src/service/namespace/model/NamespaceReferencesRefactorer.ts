@@ -1,8 +1,7 @@
 import * as vscode from "vscode";
 import { getPathNormalized } from "../../../utils/filesystem/getPathNormalized";
-import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailType";
-import { NamespaceRefactorerAbstract } from "./NamespaceRefactorerAbstract";
-import { escapeRegExp } from "../../../utils/regex/escapeRegExp";
+import { NamespaceRefactorerAbstract } from "../abstract/NamespaceRefactorerAbstract";
+import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailsType";
 
 /**
  * Handles refactoring of namespace references across multiple PHP files when a file
@@ -10,14 +9,11 @@ import { escapeRegExp } from "../../../utils/regex/escapeRegExp";
  */
 export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
     /**
-     * Refactors namespace references in all PHP files within the workspace
-     * after a file has been moved or renamed.
-     * @param oldUri The original URI of the file before moving/renaming.
-     * @param newUri The new URI of the file after moving/renaming.
-     * @returns Promise resolving to true if refactoring was performed, false otherwise.
+     * Processes namespace reference updates across the workspace.
+     * @param refactorDetails Contains information about the old and new namespace/identifier values
+     * @returns Promise resolving to true if refactoring was performed, false otherwise
      */
-    public async refactor(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<boolean> {
-        const refactorDetails = await this.getRefactorDetails(oldUri, newUri);
+    public async refactor(refactorDetails: NamespaceRefactorDetailsType): Promise<boolean> {
         if (!refactorDetails.hasNamespaces || !refactorDetails.hasChanged) {
             return false;
         }
@@ -28,7 +24,7 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
 
     /**
      * Shows a progress notification while updating references in all relevant files.
-     * @param refactorDetails Details about what needs to be refactored.
+     * @param refactorDetails Details about what needs to be refactored
      */
     private async progressUpdateReferences(refactorDetails: NamespaceRefactorDetailsType): Promise<void> {
         const options: vscode.ProgressOptions = {
@@ -36,13 +32,13 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
             location: vscode.ProgressLocation.Notification,
             title: vscode.l10n.t(
                 'Updating references from "{0}" to "{1}"',
-                refactorDetails.oldNamespace,
-                refactorDetails.newNamespace
+                refactorDetails.old.namespace,
+                refactorDetails.new.namespace
             ),
         };
 
         await vscode.window.withProgress(options, async (progress) => {
-            const files = await this.findFilesToRefactor(refactorDetails.newUri);
+            const files = await this.findFilesToRefactor(refactorDetails.new.uri);
             const progressIncrement = 100 / files.length;
 
             for (let fileIndex = 0; fileIndex < files.length; fileIndex++) {
@@ -65,7 +61,7 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
     private async updateReference(uri: vscode.Uri, refactorDetails: NamespaceRefactorDetailsType): Promise<void> {
         try {
             const fileContent = await this.getFileContent(uri);
-            const namespaceDeclarationRegExp = this.getNamespaceDeclarationRegExp();
+            const namespaceDeclarationRegExp = this.namespaceRegExpProvider.getNamespaceDeclarationRegExp();
             const namespaceDeclarationMatch = fileContent.match(namespaceDeclarationRegExp);
             const fileNamespace = namespaceDeclarationMatch?.[1];
             if (!fileNamespace) {
@@ -80,7 +76,7 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
                 return;
             }
 
-            await this.updateFileContent(uri, fileContentUpdated);
+            await this.setFileContent(uri, fileContentUpdated);
         } catch (error) {
             const errorDetails = error instanceof Error ? error.message : String(error);
             const errorMessage = vscode.l10n.t("Error updating references in file {0}: {1}", uri.fsPath, errorDetails);
@@ -101,11 +97,11 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
         fileNamespace: string,
         refactorDetails: NamespaceRefactorDetailsType
     ): string {
-        const oldFullyQualifiedNamespace = `\\${refactorDetails.oldNamespace}\\${refactorDetails.oldIdentifier}`;
-        const newFullyQualifiedNamespace = `\\${refactorDetails.newNamespace}\\${refactorDetails.newIdentifier}`;
+        const oldFullyQualifiedNamespace = `\\${refactorDetails.old.namespace}\\${refactorDetails.old.identifier}`;
+        const newFullyQualifiedNamespace = `\\${refactorDetails.new.namespace}\\${refactorDetails.new.identifier}`;
 
-        if (fileNamespace === refactorDetails.newNamespace) {
-            return this.replaceFullyQualified(content, oldFullyQualifiedNamespace, refactorDetails.newIdentifier);
+        if (fileNamespace === refactorDetails.new.namespace) {
+            return this.replaceFullyQualified(content, oldFullyQualifiedNamespace, refactorDetails.new.identifier);
         }
 
         return this.replaceFullyQualified(content, oldFullyQualifiedNamespace, newFullyQualifiedNamespace);
@@ -123,7 +119,7 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
         oldFullyQualifiedNamespace: string,
         newFullyQualifiedNamespace: string
     ): string {
-        const fqcnRegExp = this.getFullyQualifiedNamespaceRegExp(oldFullyQualifiedNamespace);
+        const fqcnRegExp = this.namespaceRegExpProvider.getFullyQualifiedNamespaceRegExp(oldFullyQualifiedNamespace);
         return content.replace(fqcnRegExp, newFullyQualifiedNamespace);
     }
 
@@ -140,12 +136,10 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
         fileNamespace: string,
         refactorDetails: NamespaceRefactorDetailsType
     ): string {
-        if (fileNamespace === refactorDetails.oldNamespace) {
-            return this.addReferenceUseStatement(content, refactorDetails);
-        }
-
-        if (fileNamespace === refactorDetails.newNamespace) {
-            return this.removeReferenceUseStatement(content, refactorDetails);
+        if (fileNamespace === refactorDetails.old.namespace) {
+            content = this.addReferenceUseStatement(content, refactorDetails);
+        } else if (fileNamespace === refactorDetails.new.namespace) {
+            content = this.removeReferenceUseStatement(content, refactorDetails);
         }
 
         return this.replaceReferenceUseStatement(content, refactorDetails);
@@ -158,10 +152,13 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
      * @returns The updated content with replaced use statements.
      */
     private replaceReferenceUseStatement(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
-        const oldFullQualifiedNamespace = `${refactorDetails.oldNamespace}\\${refactorDetails.oldIdentifier}`;
-        const newFullQualifiedNamespace = `${refactorDetails.newNamespace}\\${refactorDetails.newIdentifier}`;
-        const useRegExp = this.getUseStatementRegExp(oldFullQualifiedNamespace);
-        return content.replace(useRegExp, `use ${newFullQualifiedNamespace};`);
+        const oldFullQualifiedNamespace = `${refactorDetails.old.namespace}\\${refactorDetails.old.identifier}`;
+        const newFullQualifiedNamespace = `${refactorDetails.new.namespace}\\${refactorDetails.new.identifier}`;
+        const useRegExp = this.namespaceRegExpProvider.getUseStatementRegExp(oldFullQualifiedNamespace, { includeAlias: true });
+
+        return content.replace(useRegExp, (match, namespace, alias) => {
+            return `use ${newFullQualifiedNamespace}${alias ? ` as ${alias}` : ""};`;
+        });
     }
 
     /**
@@ -171,11 +168,11 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
      * @returns The updated content with the added use statement.
      */
     private addReferenceUseStatement(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
-        const hasIdentifierRegExp = this.getIdentifierRegExp(refactorDetails.newIdentifier);
+        const hasIdentifierRegExp = this.namespaceRegExpProvider.getIdentifierRegExp(refactorDetails.new.identifier);
         if (!hasIdentifierRegExp.test(content)) {
             return content;
         }
-        return this.addUseStatement(content, refactorDetails.newNamespace, refactorDetails.newIdentifier);
+        return this.addUseStatement(content, refactorDetails.new.namespace, refactorDetails.new.identifier);
     }
 
     /**
@@ -185,7 +182,7 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
      * @returns The updated content with the removed use statement.
      */
     private removeReferenceUseStatement(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
-        return this.removeUseStatement(content, refactorDetails.oldNamespace, refactorDetails.oldIdentifier);
+        return this.removeUseStatement(content, refactorDetails.old.namespace, refactorDetails.old.identifier);
     }
 
     /**
@@ -203,16 +200,5 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
 
         const excludePattern = `{${[...excludedFolders, excludedFile].join(",")}}`;
         return vscode.workspace.findFiles("**/*.php", excludePattern);
-    }
-
-    /**
-     * Creates a regular expression to match fully qualified namespace references.
-     * Includes word boundary checks to prevent partial matches.
-     * @param fullyQualifiedNamespace The fully qualified namespace to match.
-     * @returns A regular expression for matching the fully qualified namespace.
-     */
-    protected getFullyQualifiedNamespaceRegExp(fullyQualifiedNamespace: string): RegExp {
-        const escapedNamespace = escapeRegExp(fullyQualifiedNamespace);
-        return new RegExp(`(?<![\\p{L}\\d_])${escapedNamespace}(?![\\p{L}\\d_\\\\])`, "gu");
     }
 }

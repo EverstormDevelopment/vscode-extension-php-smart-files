@@ -6,6 +6,9 @@ import { SnippetClassFactory } from "./SnippetClassFactory";
 import { SnippetEnumFactory } from "./SnippetEnumFactory";
 import { SnippetFileFactory } from "./SnippetFileFactory";
 import { SnippetInterfaceFactory } from "./SnippetInterfaceFactory";
+import { SnippetSymfonyCommandFactory } from "./SnippetSymfonyCommandFactory";
+import { SnippetSymfonyControllerFactory } from "./SnippetSymfonyControllerFactory";
+import { SnippetSymfonyFormFactory } from "./SnippetSymfonyFormFactory";
 import { SnippetTemplateClassFactory } from "./SnippetTemplateClassFactory";
 import { SnippetTemplateEnumFactory } from "./SnippetTemplateEnumFactory";
 import { SnippetTemplateInterfaceFactory } from "./SnippetTemplateInterfaceFactory";
@@ -31,6 +34,10 @@ export class SnippetFactory implements SnippetFactoryInterface {
         [FileTypeEnum.TemplateInterface]: () => new SnippetTemplateInterfaceFactory(),
         [FileTypeEnum.TemplateEnum]: () => new SnippetTemplateEnumFactory(),
         [FileTypeEnum.TemplateTrait]: () => new SnippetTemplateTraitFactory(),
+
+        [FileTypeEnum.SymfonyController]: () => new SnippetSymfonyControllerFactory(),
+        [FileTypeEnum.SymfonyCommand]: () => new SnippetSymfonyCommandFactory(),
+        [FileTypeEnum.SymfonyForm]: () => new SnippetSymfonyFormFactory(),
     };
 
     /**

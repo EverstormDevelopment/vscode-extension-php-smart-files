@@ -18,6 +18,18 @@
   "Create PHP Trait": "Create PHP Trait",
   "Enter trait name": "Enter trait name",
   "Enter a name for the new PHP trait": "Enter a name for the new PHP trait",
+
+  "Create Symfony Controller": "Create Symfony Controller",
+  "Enter controller name": "Enter controller name",
+  "Enter a name for the new Symfony Controller": "Enter a name for the new Symfony Controller",
+
+  "Create Symfony Command": "Create Symfony Command",
+  "Enter command name": "Enter command name",
+  "Enter a name for the new Symfony Command": "Enter a name for the new Symfony Command",
+
+  "Create Symfony Form": "Create Symfony Form",
+  "Enter form name": "Enter form name",
+  "Enter a name for the new Symfony Form": "Enter a name for the new Symfony Form",
   
   "Please select a workspace folder": "Please select a workspace folder",
   "No target folder selected or no workspace opened.": "No target folder selected or no workspace opened.",

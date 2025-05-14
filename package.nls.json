@@ -10,6 +10,9 @@
   "php-smart-files.commands.newTemplatePhpInterface.title": "PHP Interface from Template",
   "php-smart-files.commands.newTemplatePhpEnum.title": "PHP Enum from Template",
   "php-smart-files.commands.newTemplatePhpTrait.title": "PHP Trait from Template",
+  "php-smart-files.commands.newSymfonyController.title": "Symfony Controller from Template",
+  "php-smart-files.commands.newSymfonyCommand.title": "Symfony Command from Template",
+  "php-smart-files.commands.newSymfonyForm.title": "Symfony Form from Template",
 
   "php-smart-files.config.useStrictTypeInTemplates.description": "Determines whether `declare(strict_types=1);` is included in generated files.",
 

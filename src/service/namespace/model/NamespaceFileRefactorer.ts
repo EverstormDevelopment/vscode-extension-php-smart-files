@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
-import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailType";
-import { NamespaceRefactorerAbstract } from "./NamespaceRefactorerAbstract";
+import { NamespaceRefactorerAbstract } from "../abstract/NamespaceRefactorerAbstract";
+import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailsType";
 
 /**
  * Handles the refactoring of namespace declarations and class identifiers in PHP files
@@ -8,32 +8,62 @@ import { NamespaceRefactorerAbstract } from "./NamespaceRefactorerAbstract";
  */
 export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
     /**
-     * Refactors namespace and class identifiers in a PHP file after it has been moved or renamed.
-     * @param oldUri The original URI of the file before moving/renaming.
-     * @param newUri The new URI of the file after moving/renaming.
-     * @returns Promise resolving to true if refactoring was successful, false otherwise.
+     * Performs the refactoring based on the provided details.
+     * @param refactorDetails The details for the refactoring operation.
+     * @returns True if refactoring was successfully performed, otherwise False.
      */
-    public async refactor(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<boolean> {
+    public async refactor(refactorDetails: NamespaceRefactorDetailsType): Promise<boolean> {
         try {
-            const refactorDetails = await this.getRefactorDetails(oldUri, newUri);
-            if (!refactorDetails.hasNamespaces || !refactorDetails.hasChanged) {
+            if (!this.isRefactorable(refactorDetails)) {
                 return false;
             }
 
-            const fileContent = await this.getFileContent(refactorDetails.newUri);
-            const updatedContent = this.refactorContent(fileContent, refactorDetails);
-            if (updatedContent === fileContent) {
-                return false;
-            }
-
-            await this.updateFileContent(refactorDetails.newUri, updatedContent);
-            return true;
+            return await this.refactorFile(refactorDetails);
         } catch (error) {
             const errorDetails = error instanceof Error ? error.message : String(error);
             const errorMessage = vscode.l10n.t("Error during namespace refactoring: {0}", errorDetails);
             vscode.window.showErrorMessage(errorMessage);
             return false;
         }
+    }
+
+    /**
+     * Checks if the file is suitable for refactoring.
+     * @param refactorDetails The details for the refactoring operation.
+     * @returns True if the file can be refactored, otherwise False.
+     * @throws Error if the filename is not a valid PHP identifier.
+     */
+    private isRefactorable(refactorDetails: NamespaceRefactorDetailsType): boolean {
+        if (!refactorDetails.new.isFileNameValid) {
+            const message = vscode.l10n.t(
+                "The provided name '{0}' is not a valid PHP identifier. The refactoring process has been canceled.",
+                refactorDetails.new.fileName
+            );
+            throw new Error(message);
+        }
+
+        if (!refactorDetails.hasNamespaces || !refactorDetails.hasChanged) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Performs the actual refactoring of the file.
+     * Reads the file content, updates it, and writes it back.
+     * @param refactorDetails The details for the refactoring operation.
+     * @returns True if changes were made, otherwise False.
+     */
+    private async refactorFile(refactorDetails: NamespaceRefactorDetailsType): Promise<boolean> {
+        const fileContent = await this.getFileContent(refactorDetails.new.uri);
+        const updatedContent = this.refactorContent(fileContent, refactorDetails);
+        if (updatedContent === fileContent) {
+            return false;
+        }
+
+        await this.setFileContent(refactorDetails.new.uri, updatedContent);
+        return true;
     }
 
     /**
@@ -50,7 +80,7 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
         }
         if (refactorDetails.hasIdentifierChanged) {
             content = this.refactorDefinition(content, refactorDetails);
-            content = this.refactorIdentifier(content, refactorDetails.newNamespace, refactorDetails);
+            content = this.refactorIdentifier(content, refactorDetails.new.namespace, refactorDetails);
         }
         return content;
     }
@@ -63,45 +93,17 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
      * @returns The content with the updated namespace declaration.
      */
     private refactorNamespace(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
-        const namespaceRegExp = this.getNamespaceDeclarationRegExp();
+        const namespaceRegExp = this.namespaceRegExpProvider.getNamespaceDeclarationRegExp();
         const hasMatch = namespaceRegExp.test(content);
         if (!hasMatch) {
             return content;
         }
 
-        return content.replace(namespaceRegExp, `namespace ${refactorDetails.newNamespace};`);
+        return content.replace(namespaceRegExp, `namespace ${refactorDetails.new.namespace};`);
     }
 
-    /**
-     * Refactors the class/interface/trait definition to use the new identifier.
-     * Ensures the new identifier is valid and updates the definition accordingly.
-     * @param content The original file content.
-     * @param refactorDetails Details about what needs to be refactored.
-     * @returns The content with the updated definition.
-     * @throws Error if the new identifier is invalid or if no valid definition is found.
-     */
     private refactorDefinition(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
-        const validationRegExp = this.getIdentifierValidationRegExp();
-        const oldIdentifier = refactorDetails.oldIdentifier;
-        const newIdentifier = refactorDetails.newIdentifier;
-
-        if (!validationRegExp.test(oldIdentifier)) {
-            const message = vscode.l10n.t(
-                "The previous name '{0}' was not a valid PHP identifier. The refactoring process has been canceled.",
-                oldIdentifier
-            );
-            throw new Error(message);
-        }
-
-        if (!validationRegExp.test(newIdentifier)) {
-            const message = vscode.l10n.t(
-                "The provided name '{0}' is not a valid PHP identifier. The refactoring process has been canceled.",
-                newIdentifier
-            );
-            throw new Error(message);
-        }
-
-        const definitionRegExp = this.getDefinitionRegExp();
+        const definitionRegExp = this.namespaceRegExpProvider.getDefinitionRegExp();
         const definitionMatch = definitionRegExp.exec(content);
         if (!definitionMatch) {
             const message = vscode.l10n.t(
@@ -110,7 +112,7 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
             throw new Error(message);
         }
 
-        const newDefinition = `${definitionMatch[1]} ${refactorDetails.newIdentifier}`;
+        const newDefinition = `${definitionMatch[1]} ${refactorDetails.new.identifier}`;
         return content.replace(definitionRegExp, newDefinition);
     }
 
@@ -127,9 +129,8 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
             return content;
         }
 
-        content = this.addUseStatements(content, refactorDetails.oldNamespace, nonQualifiedReferences);
-        content = this.removeUseStatements(content, refactorDetails.newNamespace, nonQualifiedReferences);
-
+        content = this.addUseStatements(content, refactorDetails.old.namespace, nonQualifiedReferences);
+        content = this.removeUseStatements(content, refactorDetails.new.namespace, nonQualifiedReferences);
         return content;
     }
 
@@ -168,53 +169,12 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
      * @returns A list of unique non-qualified references.
      */
     private getNonQualifiedReferences(content: string): string[] {
-        const regex = this.getNonQualifiedReferenceRegExp();
+        const regex = this.namespaceRegExpProvider.getNonQualifiedReferenceRegExp();
         const matches = Array.from(content.matchAll(regex));
 
         const extractedNames = matches.map((match) => match.slice(1).find(Boolean)).filter(Boolean) as string[];
 
         const classNames = new Set(extractedNames);
         return Array.from(classNames);
-    }
-
-    /**
-     * Creates a regular expression to match PHP class/interface/enum/trait definitions.
-     * Used to find and update the main definition in the file.
-     * @returns A regular expression that captures the definition type and name.
-     */
-    protected getDefinitionRegExp(): RegExp {
-        return new RegExp(`\\b(class|interface|enum|trait)\\s+([\\p{L}_][\\p{L}\\d_]*)`, "gu");
-    }
-
-    /**
-     * Creates a regular expression to validate PHP identifiers.
-     * Ensures the identifier follows PHP naming rules.
-     * @returns A regular expression for validating PHP identifiers.
-     */
-    protected getIdentifierValidationRegExp(): RegExp {
-        return new RegExp(`^[\\p{L}_][\\p{L}\\d_]*$`, "u");
-    }
-
-    /**
-     * Creates a regular expression to match non-qualified references in PHP code.
-     * Used to find references that need to be updated to fully qualified names.
-     * @returns A regular expression for matching non-qualified references.
-     */
-    private getNonQualifiedReferenceRegExp(): RegExp {
-        const patterns = [
-            // Attribute annotations (PHP 8+)
-            "#\\[\\s*([\\p{L}_][\\p{L}\\d_]*)",
-            // Extends/implements clauses
-            "(?:extends|implements)\\s+([\\p{L}_][\\p{L}\\d_]*)(?!\\s*\\\\)",
-            // New instantiations
-            "new\\s+([\\p{L}_][\\p{L}\\d_]*)(?!\\s*\\\\)",
-            // use statements (single-level namespaces only)
-            "use\\s+([\\p{L}_][\\p{L}\\d_]*)\\s*;",
-            // Static access
-            "\\b([\\p{L}_][\\p{L}\\d_]*)(?!\\s*\\\\)::",
-        ];
-
-        // Combine patterns with OR
-        return new RegExp(patterns.join("|"), "gu");
     }
 }

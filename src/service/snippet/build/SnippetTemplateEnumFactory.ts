@@ -22,7 +22,7 @@ export class SnippetTemplateEnumFactory extends SnippetEnumFactory {
      * @returns This instance for method chaining
      */
     protected addContent(): this {
-        this.snippet.appendText("    ");
+        this.addIndentation();
         this.snippet.appendText("case ");
         this.snippet.appendPlaceholder("CaseName", this.tabstop++);
         this.snippet.appendText(" = '");

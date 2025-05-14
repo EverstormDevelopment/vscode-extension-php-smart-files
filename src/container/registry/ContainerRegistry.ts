@@ -11,6 +11,8 @@ import { NamespaceFileRefactorer } from "../../service/namespace/model/Namespace
 import { NamespaceRefactorService } from "../../service/namespace/model/NamespaceRefactorService";
 import { NamespaceReferencesRefactorer } from "../../service/namespace/model/NamespaceReferencesRefactorer";
 import { NamespaceResolver } from "../../service/namespace/model/NamespaceResolver";
+import { NamespaceRefactorDetailsProvider } from "../../service/namespace/provider/NamespaceRefactorDetailsProvider";
+import { NamespaceRegExpProvider } from "../../service/namespace/provider/NamespaceRegExpProvider";
 import { SnippetFactory } from "../../service/snippet/build/SnippetFactory";
 import { ContainerRegistrationType } from "../type/ContainerRegistrationType";
 
@@ -56,16 +58,24 @@ export const ContainerRegistry: ContainerRegistrationType[] = [
         dependencies: [UriFolderResolver, InputBoxFactory, FileCreator, NamespaceResolver, SnippetFactory],
     },
     {
+        constructor: NamespaceRegExpProvider,
+        dependencies: [],
+    },
+    {
+        constructor: NamespaceRefactorDetailsProvider,
+        dependencies: [NamespaceResolver, NamespaceRegExpProvider],
+    },    
+    {
         constructor: NamespaceFileRefactorer,
-        dependencies: [NamespaceResolver],
+        dependencies: [NamespaceRegExpProvider],
     },
     {
         constructor: NamespaceReferencesRefactorer,
-        dependencies: [NamespaceResolver],
+        dependencies: [NamespaceRegExpProvider],
     },
     {
         constructor: NamespaceRefactorService,
-        dependencies: [NamespaceFileRefactorer, NamespaceReferencesRefactorer],
+        dependencies: [NamespaceRefactorDetailsProvider, NamespaceFileRefactorer, NamespaceReferencesRefactorer],
     },
     {
         constructor: FileMovedObserver,

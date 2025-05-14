@@ -1,4 +1,4 @@
-import { FileRenameOperationTypeEnum } from "../../service/filesystem/file/enum/FileRenameOperationTypeEnum";
+import { FilesystemOperationTypeEnum } from "../../service/filesystem/observer/enum/FilesystemOperationTypeEnum";
 import { NamespaceRefactorService } from "../../service/namespace/model/NamespaceRefactorService";
 import { FileRenameObserverAbstract } from "./FileRenameObserverAbstract";
 
@@ -14,7 +14,7 @@ export class FileMovedObserver extends FileRenameObserverAbstract {
     constructor(protected readonly namespaceRefactorService: NamespaceRefactorService) {
         super(
             namespaceRefactorService,
-            FileRenameOperationTypeEnum.Moved,
+            FilesystemOperationTypeEnum.Moved,
             "refactorNamespacesOnFileMoved",
             'Would you like to update the namespace for "{0}" and all its references?'
         );

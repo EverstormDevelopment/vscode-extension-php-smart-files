@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
-import { FileRenameOperationTypeEnum } from "../../service/filesystem/file/enum/FileRenameOperationTypeEnum";
-import { FileRenameOperationEvent } from "../../service/filesystem/file/event/FileRenameOperationEvent";
-import { FileObserverInterface } from "../../service/filesystem/file/interface/FileObserverInterface";
-import { FileRenameTracker } from "../../service/filesystem/file/model/FileRenameTracker";
+import { FilesystemOperationTypeEnum } from "../../service/filesystem/observer/enum/FilesystemOperationTypeEnum";
+import { FilesystemOperationEvent } from "../../service/filesystem/observer/event/FilesystemOperationEvent";
+import { FilesystemObserverInterface } from "../../service/filesystem/observer/interface/FileObserverInterface";
+import { FilesystemObserver } from "../../service/filesystem/observer/model/FilesystemObserver";
 import { NamespaceRefactorService } from "../../service/namespace/model/NamespaceRefactorService";
 import { getUriFileName } from "../../utils/filesystem/getUriFileName";
 
@@ -10,19 +10,19 @@ import { getUriFileName } from "../../utils/filesystem/getUriFileName";
  * Observer that handles file move operations in the workspace.
  * Updates namespaces and references when PHP files are moved.
  */
-export class FileRenameObserverAbstract implements FileObserverInterface {
+export class FileRenameObserverAbstract implements FilesystemObserverInterface {
     /**
      * Tracks file rename and move operations in the workspace.
      */
-    private readonly fileRenameTracker: FileRenameTracker;
+    private readonly fileRenameTracker: FilesystemObserver;
 
     constructor(
         protected readonly namespaceRefactorService: NamespaceRefactorService,
-        private readonly fileRenameOperationTypeEnum: FileRenameOperationTypeEnum,
+        private readonly fileRenameOperationTypeEnum: FilesystemOperationTypeEnum,
         private readonly refactorOptionName: string,
         private readonly refactorMessage: string
     ) {
-        this.fileRenameTracker = new FileRenameTracker();
+        this.fileRenameTracker = new FilesystemObserver();
     }
 
     /**
@@ -30,9 +30,9 @@ export class FileRenameObserverAbstract implements FileObserverInterface {
      * @param context The VS Code extension context used to register disposables
      */
     public watch(context: vscode.ExtensionContext): void {
-        this.fileRenameTracker.start(context);
+        this.fileRenameTracker.watch(context);
 
-        this.fileRenameTracker.onDidRenameFile(async (event: FileRenameOperationEvent) => {
+        this.fileRenameTracker.onDidRenameFile(async (event: FilesystemOperationEvent) => {
             this.handleFileRenameOperationEvent(event);
         });
     }
@@ -41,7 +41,7 @@ export class FileRenameObserverAbstract implements FileObserverInterface {
      * Handles file rename operation events by filtering for move operations only.
      * @param event The file rename operation event to handle
      */
-    private async handleFileRenameOperationEvent(event: FileRenameOperationEvent): Promise<void> {
+    private async handleFileRenameOperationEvent(event: FilesystemOperationEvent): Promise<void> {
         if (event.operationType !== this.fileRenameOperationTypeEnum) {
             return;
         }

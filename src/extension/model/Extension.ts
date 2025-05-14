@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { ContainerFactory } from "../../container/build/ContainerFactory";
 import { ContainerInterface } from "../../container/interface/ContainerInterface";
 import { ConstructorType } from "../../container/type/ConstructorType";
-import { FileObserverInterface } from "../../service/filesystem/file/interface/FileObserverInterface";
+import { FilesystemObserverInterface } from "../../service/filesystem/observer/interface/FileObserverInterface";
 import { FileTypeEnum } from "../../utils/enum/FileTypeEnum";
 import { ExtensionInterface } from "../interface/ExtensionInterface";
 import { FileGenerationCommandRegistry } from "../registry/FileGenerationCommandRegistry";
@@ -106,7 +106,7 @@ export class Extension implements ExtensionInterface {
     private addFileObserver(
         context: vscode.ExtensionContext,
         name: string,
-        observer: ConstructorType<FileObserverInterface>
+        observer: ConstructorType<FilesystemObserverInterface>
     ): void {
         const observerInstance = this.container.get(observer);
         if (!observerInstance) {

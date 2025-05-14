@@ -9,6 +9,11 @@ import { FilesystemObserverInterface } from "../interface/FileObserverInterface"
  */
 export class FilesystemObserver implements FilesystemObserverInterface {
     /**
+     * Flag to indicate if the observer is currently watching for events
+     */
+    private isWatching = false;
+
+    /**
      * Event emitter for file rename operations
      */
     private readonly onDidRenameFileEmitter = new vscode.EventEmitter<FilesystemOperationEvent>();
@@ -21,15 +26,17 @@ export class FilesystemObserver implements FilesystemObserverInterface {
     /**
      * Starts watching filesystem rename operations
      * @param context VS Code extension context
-     * @returns This instance for chaining
      */
-    public watch(context: vscode.ExtensionContext): this {
+    public watch(context: vscode.ExtensionContext): void {
+        if (this.isWatching) {
+            return;
+        }
+        this.isWatching = true;
+        
         const renameDisposable = vscode.workspace.onWillRenameFiles((event) => {
             this.handleRenamedFiles(event);
         });
         context.subscriptions.push(renameDisposable, this.onDidRenameFileEmitter);
-
-        return this;
     }
 
     /**

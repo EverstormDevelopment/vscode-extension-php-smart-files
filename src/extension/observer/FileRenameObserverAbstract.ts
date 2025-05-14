@@ -11,18 +11,14 @@ import { getUriFileName } from "../../utils/filesystem/getUriFileName";
  * Updates namespaces and references when PHP files are moved.
  */
 export class FileRenameObserverAbstract implements FilesystemObserverInterface {
-    /**
-     * Tracks file rename and move operations in the workspace.
-     */
-    private readonly fileRenameTracker: FilesystemObserver;
 
     constructor(
+        protected readonly filesystemObserver: FilesystemObserver,
         protected readonly namespaceRefactorService: NamespaceRefactorService,
         private readonly fileRenameOperationTypeEnum: FilesystemOperationTypeEnum,
         private readonly refactorOptionName: string,
         private readonly refactorMessage: string
     ) {
-        this.fileRenameTracker = new FilesystemObserver();
     }
 
     /**
@@ -30,9 +26,9 @@ export class FileRenameObserverAbstract implements FilesystemObserverInterface {
      * @param context The VS Code extension context used to register disposables
      */
     public watch(context: vscode.ExtensionContext): void {
-        this.fileRenameTracker.watch(context);
+        this.filesystemObserver.watch(context);
 
-        this.fileRenameTracker.onDidRenameFile(async (event: FilesystemOperationEvent) => {
+        this.filesystemObserver.onDidRenameFile(async (event: FilesystemOperationEvent) => {
             this.handleFileRenameOperationEvent(event);
         });
     }

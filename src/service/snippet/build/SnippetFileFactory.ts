@@ -26,7 +26,7 @@ export class SnippetFileFactory extends SnippetFactoryAbstract {
      * @returns This instance for method chaining
      */
     protected addContent(): this {
-        this.snippet.appendTabstop(this.tabstop++);
+        this.snippet.appendPlaceholder("// TODO: Add code here", this.tabstop++);
         this.snippet.appendText("\n");
 
         return this;

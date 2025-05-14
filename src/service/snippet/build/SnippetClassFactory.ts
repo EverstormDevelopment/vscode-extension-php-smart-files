@@ -29,7 +29,7 @@ export class SnippetClassFactory extends SnippetFactoryAbstract {
      */
     protected addContent(): this {
         this.addIndentation();
-        this.snippet.appendTabstop(this.tabstop++);
+        this.snippet.appendPlaceholder("// TODO: Implement class", this.tabstop++);
         this.snippet.appendText("\n");
         return this;
     }

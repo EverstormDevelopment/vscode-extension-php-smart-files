@@ -29,7 +29,7 @@ export class SnippetEnumFactory extends SnippetFactoryAbstract {
      */
     protected addContent(): this {
         this.addIndentation();
-        this.snippet.appendTabstop(this.tabstop++);
+        this.snippet.appendPlaceholder("// TODO: Add enum cases", this.tabstop++);
         this.snippet.appendText("\n");
         return this;
     }

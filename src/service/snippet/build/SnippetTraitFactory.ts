@@ -29,7 +29,7 @@ export class SnippetTraitFactory extends SnippetFactoryAbstract {
      */
     protected addContent(): this {
         this.addIndentation();
-        this.snippet.appendTabstop(this.tabstop++);
+        this.snippet.appendPlaceholder("// TODO: Implement trait methods", this.tabstop++);
         this.snippet.appendText("\n");
         return this;
     }

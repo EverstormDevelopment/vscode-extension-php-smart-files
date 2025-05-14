@@ -149,7 +149,7 @@ export class SnippetSymfonyCommandFactory extends SnippetFactoryAbstract {
         this.snippet.appendPlaceholder("//$option1 = $input->getOption('option1');", this.tabstop++);
         this.snippet.appendText("\n\n");
         this.addIndentation(2);
-        this.snippet.appendPlaceholder("// TODO: Implement your logic", this.tabstop++);
+        this.snippet.appendPlaceholder("// TODO: Implement command logic", this.tabstop++);
         this.snippet.appendText("\n\n");
         this.addIndentation(2);
         this.snippet.appendText(

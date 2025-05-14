@@ -16,6 +16,7 @@ All notable changes to the extension will be documented in this file.
 ### Changed
 - Optimized extension performance by only activating file observers when PHP files exist in workspace
 - Renamed extension from "PHP File Creator" to "PHP Smart Files" to better reflect its expanded capabilities
+- Improved wording of placeholders in code templates for better clarity and usability
 
 
 

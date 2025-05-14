@@ -137,11 +137,9 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
         refactorDetails: NamespaceRefactorDetailsType
     ): string {
         if (fileNamespace === refactorDetails.old.namespace) {
-            return this.addReferenceUseStatement(content, refactorDetails);
-        }
-
-        if (fileNamespace === refactorDetails.new.namespace) {
-            return this.removeReferenceUseStatement(content, refactorDetails);
+            content = this.addReferenceUseStatement(content, refactorDetails);
+        } else if (fileNamespace === refactorDetails.new.namespace) {
+            content = this.removeReferenceUseStatement(content, refactorDetails);
         }
 
         return this.replaceReferenceUseStatement(content, refactorDetails);
@@ -156,8 +154,11 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
     private replaceReferenceUseStatement(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
         const oldFullQualifiedNamespace = `${refactorDetails.old.namespace}\\${refactorDetails.old.identifier}`;
         const newFullQualifiedNamespace = `${refactorDetails.new.namespace}\\${refactorDetails.new.identifier}`;
-        const useRegExp = this.namespaceRegExpProvider.getUseStatementRegExp(oldFullQualifiedNamespace);
-        return content.replace(useRegExp, `use ${newFullQualifiedNamespace};`);
+        const useRegExp = this.namespaceRegExpProvider.getUseStatementRegExp(oldFullQualifiedNamespace, { includeAlias: true });
+
+        return content.replace(useRegExp, (match, namespace, alias) => {
+            return `use ${newFullQualifiedNamespace}${alias ? ` as ${alias}` : ""};`;
+        });
     }
 
     /**

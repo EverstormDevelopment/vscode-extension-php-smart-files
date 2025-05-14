@@ -19,8 +19,8 @@ export class NamespaceRegExpProvider {
      * Matches fully qualified namespace references with word boundary checks.
      */
     public getFullyQualifiedNamespaceRegExp(fullyQualifiedNamespace: string): RegExp {
-        const ns = this.escape(fullyQualifiedNamespace);
-        return new RegExp(`(?<![\\p{L}\\d_])${ns}(?![\\p{L}\\d_\\\\])`, "gu");
+        const namespace = this.escape(fullyQualifiedNamespace);
+        return new RegExp(`(?<![\\p{L}\\d_])${namespace}(?![\\p{L}\\d_\\\\])`, "gu");
     }
 
     /**
@@ -34,32 +34,34 @@ export class NamespaceRegExpProvider {
      * Matches PHP class/interface/enum/trait definitions and captures type and name.
      */
     public getDefinitionRegExp(): RegExp {
-        return new RegExp(`\\b(class|interface|enum|trait)\\s+(${NamespaceRegExpProvider.identifierPattern})`, "gu");
+        const identifierPattern = NamespaceRegExpProvider.identifierPattern;
+        return new RegExp(`\\b(class|interface|enum|trait)\\s+(${identifierPattern})`, "gu");
     }
 
     /**
      * Validates PHP identifiers according to naming rules.
      */
     public getIdentifierValidationRegExp(): RegExp {
-        return new RegExp(`^${NamespaceRegExpProvider.identifierPattern}$`, "u");
+        const identifierPattern = NamespaceRegExpProvider.identifierPattern;
+        return new RegExp(`^${identifierPattern}$`, "u");
     }
 
     /**
      * Matches non-qualified references in PHP code for updating to FQNs.
      */
     public getNonQualifiedReferenceRegExp(): RegExp {
-        const id = NamespaceRegExpProvider.identifierPattern;
+        const identifierPattern = NamespaceRegExpProvider.identifierPattern;
         const patterns = [
             // Attribute annotations (PHP 8+)
-            `#\\[\\s*(${id})`,
+            `#\\[\\s*(${identifierPattern})`,
             // Extends/implements clauses
-            `(?:extends|implements)\\s+(${id})(?!\\s*\\\\)`,
+            `(?:extends|implements)\\s+(${identifierPattern})(?!\\s*\\\\)`,
             // New instantiations
-            `new\\s+(${id})(?!\\s*\\\\)`,
+            `new\\s+(${identifierPattern})(?!\\s*\\\\)`,
             // use statements (single-level namespaces only)
-            `use\\s+(${id})\\s*;`,
+            `use\\s+(${identifierPattern})\\s*;`,
             // Static access
-            `\\b(${id})(?!\\s*\\\\)::`,
+            `\\b(${identifierPattern})(?!\\s*\\\\)::`,
         ];
         return new RegExp(patterns.join("|"), "gu");
     }
@@ -73,19 +75,36 @@ export class NamespaceRegExpProvider {
     }
 
     /**
-     * Matches `use` statements for a specific fully qualified namespace.
+     * Returns a RegExp matching a PHP `use` statement.
+     * @param value Fully qualified namespace, partial namespace, or alias.
+     * @param options matchType: 'fullQualified' | 'partial' | 'alias'; includeAlias: match optional alias.
+     * @returns RegExp for matching the use statement.
      */
-    public getUseStatementRegExp(fullyQualifiedNamespace: string): RegExp {
-        const ns = this.escape(fullyQualifiedNamespace);
-        return new RegExp(`use\\s+${ns}\\s*;`, "gu");
-    }
+    public getUseStatementRegExp(
+        value: string,
+        options?: { matchType?: "fullQualified" | "partial" | "alias"; includeAlias?: boolean }
+    ): RegExp {
+        const escapedValue = this.escape(value);
+        const identifierPattern = NamespaceRegExpProvider.identifierPattern;
 
-    /**
-     * Matches `use` statements for a specific identifier (with at least one namespace separator).
-     */
-    public getUseStatementByIdentiferRegExp(identifier: string): RegExp {
-        const id = this.escape(identifier);
-        return new RegExp(`use\\s+[\\p{L}\\d_\\\\]+\\\\${id}\\s*;`, "gu");
+        let namespacePattern: string;
+        let aliasPattern = options?.includeAlias ? `(?:\\s+as\\s+(${identifierPattern}))?` : "";
+
+        switch (options?.matchType) {
+            case "partial":
+                namespacePattern = `[\\p{L}\\d_\\\\]+\\\\${escapedValue}`;
+                break;
+            case "alias":
+                namespacePattern = `[\\p{L}\\d_\\\\]+`;
+                aliasPattern = `\\s+as\\s+${escapedValue}`;
+                break;
+            case "fullQualified":
+            default:
+                namespacePattern = escapedValue;
+                break;
+        }
+
+        return new RegExp(`use\\s+(${namespacePattern})${aliasPattern}\\s*;`, "gu");
     }
 
     /**

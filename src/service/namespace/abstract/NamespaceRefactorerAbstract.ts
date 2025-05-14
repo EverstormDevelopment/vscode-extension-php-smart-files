@@ -13,6 +13,11 @@ import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailsTy
 export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorerInterface {
     constructor(protected readonly namespaceRegExpProvider: NamespaceRegExpProvider) {}
 
+    /**
+     * Performs namespace refactoring according to the provided details.
+     * @param refactorDetails Details about the namespace and identifier changes.
+     * @returns Promise resolving to true if refactoring was performed, false otherwise.
+     */
     public abstract refactor(refactorDetails: NamespaceRefactorDetailsType): Promise<boolean>;
 
     /**
@@ -29,7 +34,7 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
     ): string {
         const newFullyQualifiedNamespace = `${refactorDetails.new.namespace}\\${refactorDetails.new.identifier}`;
         const useStatementRegExp = this.namespaceRegExpProvider.getUseStatementRegExp(newFullyQualifiedNamespace);
-        if (!useStatementRegExp.test(content) && fileNamespace !== refactorDetails.new.namespace) {
+        if (fileNamespace !== refactorDetails.new.namespace && !useStatementRegExp.test(content)) {
             return content;
         }
 
@@ -46,9 +51,7 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
      * @returns The updated content with the new `use` statement.
      */
     protected addUseStatement(content: string, namespace: string, identifier: string): string {
-        const fullQualifiedNamespace = `${namespace}\\${identifier}`;
-        const hasUseStatementRegExp = this.namespaceRegExpProvider.getUseStatementByIdentiferRegExp(identifier);
-        if (hasUseStatementRegExp.test(content)) {
+        if (this.hasUseStatementForIdentifier(content, identifier)) {
             return content;
         }
 
@@ -58,7 +61,7 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
             return content;
         }
 
-        const useStatement = `use ${fullQualifiedNamespace};`;
+        const useStatement = `use ${namespace}\\${identifier};`;
 
         const lastUseStatementRegExp = this.namespaceRegExpProvider.getLastUseStatementRegExp();
         const lastUseStatementMatch = content.match(lastUseStatementRegExp);
@@ -68,6 +71,25 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
         }
 
         return content.replace(namespaceDeclarationMatch[0], `${namespaceDeclarationMatch[0]}\n\n${useStatement}`);
+    }
+
+    /**
+     * Checks if a `use` statement for the given identifier exists in the file content.
+     * @param content The content of the file to search.
+     * @param identifier The class name or alias to look for in `use` statements.
+     * @returns True if a matching `use` statement is found, otherwise false.
+     */
+    protected hasUseStatementForIdentifier(content: string, identifier: string): boolean {
+        const useStatementRegExp = this.namespaceRegExpProvider.getUseStatementRegExp(identifier, {
+            matchType: "partial",
+            includeAlias: true,
+        });
+
+        const aliasRegExp = this.namespaceRegExpProvider.getUseStatementRegExp(identifier, {
+            matchType: "alias",
+        });
+
+        return useStatementRegExp.test(content) || aliasRegExp.test(content);
     }
 
     /**

@@ -131,7 +131,6 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
 
         content = this.addUseStatements(content, refactorDetails.old.namespace, nonQualifiedReferences);
         content = this.removeUseStatements(content, refactorDetails.new.namespace, nonQualifiedReferences);
-
         return content;
     }
 

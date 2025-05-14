@@ -1,5 +1,5 @@
 {
-  "version": "0.5.1",
+  "version": "0.6.0",
   "name": "php-smart-files",
   "displayName": "PHP Smart Files",
   "description": "Effortlessly create PHP files with auto-detected namespaces and smart refactoring. Seamlessly updates references when moving or renaming files.",

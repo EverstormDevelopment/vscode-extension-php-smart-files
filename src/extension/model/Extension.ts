@@ -6,7 +6,7 @@ import { FilesystemObserverInterface } from "../../service/filesystem/observer/i
 import { FileTypeEnum } from "../../utils/enum/FileTypeEnum";
 import { ExtensionInterface } from "../interface/ExtensionInterface";
 import { FileGenerationCommandRegistry } from "../registry/FileGenerationCommandRegistry";
-import { FileObserverRegistry } from "../registry/FileObserverRegistry";
+import { ObserverRegistry } from "../registry/ObserverRegistry";
 import { FileGenerationCommand } from "./../command/FileGenerationCommand";
 
 /**
@@ -38,7 +38,7 @@ export class Extension implements ExtensionInterface {
     public activate(context: vscode.ExtensionContext): this {
         this.initialize(context);
         this.addFileCreationCommands(context);
-        this.addFileOvservers(context);
+        this.addObservers(context);
         return this;
     }
 
@@ -83,38 +83,38 @@ export class Extension implements ExtensionInterface {
     }
 
     /**
-     * Registers all file observers with VS Code
+     * Registers all observers with VS Code
      * @param context The VS Code extension context
      */
-    private async addFileOvservers(context: vscode.ExtensionContext): Promise<void> {
+    private async addObservers(context: vscode.ExtensionContext): Promise<void> {
         if (!(await this.hasPhpFilesInWorkspace())) {
             return;
         }
 
-        const observerRegisty = FileObserverRegistry;
+        const observerRegisty = ObserverRegistry;
         for (const [observerName, observer] of Object.entries(observerRegisty)) {
-            this.addFileObserver(context, observerName, observer);
+            this.addObserver(context, observerName, observer);
         }
     }
 
     /**
-     * Registers a single file observer with VS Code
+     * Registers a single observer with VS Code
      * @param context The VS Code extension context
      * @param name The name of the observer
      * @param observer The constructor type of the observer to register
      */
-    private addFileObserver(
+    private addObserver(
         context: vscode.ExtensionContext,
         name: string,
         observer: ConstructorType<FilesystemObserverInterface>
     ): void {
         const observerInstance = this.container.get(observer);
         if (!observerInstance) {
-            vscode.window.showErrorMessage(`Observer ${name} not found`);
+            vscode.window.showErrorMessage(`Observer \`${name}\` not found`);
             return;
         }
         if (typeof observerInstance.watch !== "function") {
-            vscode.window.showErrorMessage(`Observer ${name} does not implement \`watch\``);
+            vscode.window.showErrorMessage(`Observer \`${name}\` does not implement \`watch\``);
             return;
         }
         observerInstance.watch(context);

@@ -3,10 +3,10 @@ import { FileMovedObserver } from "../observer/FileMovedObserver";
 import { FileRenamedObserver } from "../observer/FileRenamedObserver";
 
 /**
- * Registry for all file observers in the application that should
+ * Registry for all observers in the application that should
  * be started when the extension is activated.
  */
-export const FileObserverRegistry: Record<string, ConstructorType<any>> = {
-    namespaceFileMovedObserver: FileMovedObserver,
-    namespaceFileRenamedObserver: FileRenamedObserver,
+export const ObserverRegistry: Record<string, ConstructorType<any>> = {
+    fileMovedObserver: FileMovedObserver,
+    fileRenamedObserver: FileRenamedObserver,
 };

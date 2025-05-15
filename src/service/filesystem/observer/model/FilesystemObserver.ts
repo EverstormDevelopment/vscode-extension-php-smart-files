@@ -1,7 +1,7 @@
 import path from "path";
 import * as vscode from "vscode";
-import { FilesystemOperationTypeEnum } from "../enum/FilesystemOperationTypeEnum";
-import { FilesystemOperationEvent } from "../event/FilesystemOperationEvent";
+import { FilesystemOperationEnum } from "../enum/FilesystemOperationEnum";
+import { FilesystemObserverEvent } from "../event/FilesystemObserverEvent";
 import { FilesystemObserverInterface } from "../interface/FileObserverInterface";
 
 /**
@@ -16,7 +16,7 @@ export class FilesystemObserver implements FilesystemObserverInterface {
     /**
      * Event emitter for file rename operations
      */
-    private readonly onDidRenameFileEmitter = new vscode.EventEmitter<FilesystemOperationEvent>();
+    private readonly onDidRenameFileEmitter = new vscode.EventEmitter<FilesystemObserverEvent>();
 
     /**
      * Event that fires when a file is renamed or moved
@@ -32,7 +32,7 @@ export class FilesystemObserver implements FilesystemObserverInterface {
             return;
         }
         this.isWatching = true;
-        
+
         const renameDisposable = vscode.workspace.onWillRenameFiles((event) => {
             this.handleRenamedFiles(event);
         });
@@ -50,7 +50,7 @@ export class FilesystemObserver implements FilesystemObserverInterface {
             }
 
             const operationType = this.determineOperationType(oldUri, newUri);
-            this.onDidRenameFileEmitter.fire({ oldUri, newUri, operationType });
+            this.onDidRenameFileEmitter.fire({ oldUri, newUri, operation: operationType });
         }
     }
 
@@ -60,11 +60,11 @@ export class FilesystemObserver implements FilesystemObserverInterface {
      * @param newUri New file URI
      * @returns The operation type enum value
      */
-    private determineOperationType(oldUri: vscode.Uri, newUri: vscode.Uri): FilesystemOperationTypeEnum {
+    private determineOperationType(oldUri: vscode.Uri, newUri: vscode.Uri): FilesystemOperationEnum {
         const oldDirname = path.dirname(oldUri.fsPath);
         const newDirname = path.dirname(newUri.fsPath);
 
-        return oldDirname === newDirname ? FilesystemOperationTypeEnum.Renamed : FilesystemOperationTypeEnum.Moved;
+        return oldDirname === newDirname ? FilesystemOperationEnum.Renamed : FilesystemOperationEnum.Moved;
     }
 
     /**

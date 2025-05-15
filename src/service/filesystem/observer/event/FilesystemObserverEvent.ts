@@ -1,10 +1,10 @@
 import * as vscode from "vscode";
-import { FilesystemOperationTypeEnum } from "../enum/FilesystemOperationTypeEnum";
+import { FilesystemOperationEnum } from "../enum/FilesystemOperationEnum";
 
 /**
  * Event data for file rename operations
  */
-export interface FilesystemOperationEvent {
+export interface FilesystemObserverEvent {
     /**
      * Original URI of the file before renaming
      */
@@ -18,5 +18,5 @@ export interface FilesystemOperationEvent {
     /**
      * Type of operation performed
      */
-    operationType: FilesystemOperationTypeEnum;
+    operation: FilesystemOperationEnum;
 }

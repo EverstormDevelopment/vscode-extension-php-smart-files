@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
-import { FilesystemOperationTypeEnum } from "../../service/filesystem/observer/enum/FilesystemOperationTypeEnum";
-import { FilesystemOperationEvent } from "../../service/filesystem/observer/event/FilesystemOperationEvent";
+import { FilesystemOperationEnum } from "../../service/filesystem/observer/enum/FilesystemOperationEnum";
+import { FilesystemObserverEvent } from "../../service/filesystem/observer/event/FilesystemObserverEvent";
 import { FilesystemObserverInterface } from "../../service/filesystem/observer/interface/FileObserverInterface";
 import { FilesystemObserver } from "../../service/filesystem/observer/model/FilesystemObserver";
 import { NamespaceRefactorService } from "../../service/namespace/model/NamespaceRefactorService";
@@ -11,15 +11,13 @@ import { getUriFileName } from "../../utils/filesystem/getUriFileName";
  * Updates namespaces and references when PHP files are moved.
  */
 export class FileRenameObserverAbstract implements FilesystemObserverInterface {
-
     constructor(
         protected readonly filesystemObserver: FilesystemObserver,
         protected readonly namespaceRefactorService: NamespaceRefactorService,
-        private readonly fileRenameOperationTypeEnum: FilesystemOperationTypeEnum,
+        private readonly fileRenameOperationTypeEnum: FilesystemOperationEnum,
         private readonly refactorOptionName: string,
         private readonly refactorMessage: string
-    ) {
-    }
+    ) {}
 
     /**
      * Begins observing file move operations in the workspace.
@@ -28,7 +26,7 @@ export class FileRenameObserverAbstract implements FilesystemObserverInterface {
     public watch(context: vscode.ExtensionContext): void {
         this.filesystemObserver.watch(context);
 
-        this.filesystemObserver.onDidRenameFile(async (event: FilesystemOperationEvent) => {
+        this.filesystemObserver.onDidRenameFile(async (event: FilesystemObserverEvent) => {
             this.handleFileRenameOperationEvent(event);
         });
     }
@@ -37,8 +35,8 @@ export class FileRenameObserverAbstract implements FilesystemObserverInterface {
      * Handles file rename operation events by filtering for move operations only.
      * @param event The file rename operation event to handle
      */
-    private async handleFileRenameOperationEvent(event: FilesystemOperationEvent): Promise<void> {
-        if (event.operationType !== this.fileRenameOperationTypeEnum) {
+    private async handleFileRenameOperationEvent(event: FilesystemObserverEvent): Promise<void> {
+        if (event.operation !== this.fileRenameOperationTypeEnum) {
             return;
         }
 

@@ -63,7 +63,7 @@ export abstract class ObserverAbstract implements FilesystemObserverInterface {
      * @param event The filesystem observer event.
      */
     private async handleChangeEvent(event: FilesystemObserverEvent): Promise<void> {
-        if (await this.isValidEvent(event)) {
+        if (!await this.isValidEvent(event)) {
             return;
         }
 

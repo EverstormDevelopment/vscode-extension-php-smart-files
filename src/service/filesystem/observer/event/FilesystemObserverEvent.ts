@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
-import { FilesystemOperationEnum } from "../enum/FilesystemOperationEnum";
+import { FilesystemObserverOperationEnum } from "../enum/FilesystemObserverOperationEnum";
+import { FilesystemObserverResourceEnum } from "../enum/FilesystemObserverResourceEnum";
 
 /**
  * Event data for file rename operations
@@ -16,7 +17,12 @@ export interface FilesystemObserverEvent {
     newUri: vscode.Uri;
 
     /**
+     * Type of filesystem resource (file or directory)
+     */
+    resource: FilesystemObserverResourceEnum;
+
+    /**
      * Type of operation performed
      */
-    operation: FilesystemOperationEnum;
+    operation: FilesystemObserverOperationEnum;
 }

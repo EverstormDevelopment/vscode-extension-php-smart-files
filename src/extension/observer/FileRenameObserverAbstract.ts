@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { FilesystemOperationEnum } from "../../service/filesystem/observer/enum/FilesystemOperationEnum";
+import { FilesystemObserverOperationEnum } from "../../service/filesystem/observer/enum/FilesystemObserverOperationEnum";
 import { FilesystemObserverEvent } from "../../service/filesystem/observer/event/FilesystemObserverEvent";
 import { FilesystemObserverInterface } from "../../service/filesystem/observer/interface/FileObserverInterface";
 import { FilesystemObserver } from "../../service/filesystem/observer/model/FilesystemObserver";
@@ -14,7 +14,7 @@ export class FileRenameObserverAbstract implements FilesystemObserverInterface {
     constructor(
         protected readonly filesystemObserver: FilesystemObserver,
         protected readonly namespaceRefactorService: NamespaceRefactorService,
-        private readonly fileRenameOperationTypeEnum: FilesystemOperationEnum,
+        private readonly fileRenameOperationTypeEnum: FilesystemObserverOperationEnum,
         private readonly refactorOptionName: string,
         private readonly refactorMessage: string
     ) {}
@@ -26,7 +26,7 @@ export class FileRenameObserverAbstract implements FilesystemObserverInterface {
     public watch(context: vscode.ExtensionContext): void {
         this.filesystemObserver.watch(context);
 
-        this.filesystemObserver.onDidRenameFile(async (event: FilesystemObserverEvent) => {
+        this.filesystemObserver.onDidChange(async (event: FilesystemObserverEvent) => {
             this.handleFileRenameOperationEvent(event);
         });
     }

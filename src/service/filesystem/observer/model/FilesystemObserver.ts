@@ -61,7 +61,7 @@ export class FilesystemObserver implements FilesystemObserverInterface {
      */
     private async handleFileRenamed(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<void> {
         const operation = this.determineOperation(oldUri, newUri);
-        const resource = await this.determineRecource(oldUri);
+        const resource = await this.determineRecource(newUri);
         if (!resource) {
             return;
         }

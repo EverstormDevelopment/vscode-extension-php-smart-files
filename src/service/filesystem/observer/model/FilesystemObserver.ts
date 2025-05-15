@@ -5,7 +5,7 @@ import { isUriFile } from "../../../../utils/filesystem/isUriFile";
 import { FilesystemObserverOperationEnum } from "../enum/FilesystemObserverOperationEnum";
 import { FilesystemObserverResourceEnum } from "../enum/FilesystemObserverResourceEnum";
 import { FilesystemObserverEvent } from "../event/FilesystemObserverEvent";
-import { FilesystemObserverInterface } from "../interface/FileObserverInterface";
+import { FilesystemObserverInterface } from "../interface/FilesystemObserverInterface";
 
 /**
  * Observes filesystem changes (rename/move) for files and directories within the workspace.

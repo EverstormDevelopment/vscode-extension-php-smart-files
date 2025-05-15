@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { ContainerFactory } from "../../container/build/ContainerFactory";
 import { ContainerInterface } from "../../container/interface/ContainerInterface";
 import { ConstructorType } from "../../container/type/ConstructorType";
-import { FilesystemObserverInterface } from "../../service/filesystem/observer/interface/FileObserverInterface";
+import { FilesystemObserverInterface } from "../../service/filesystem/observer/interface/FilesystemObserverInterface";
 import { FileTypeEnum } from "../../utils/enum/FileTypeEnum";
 import { ExtensionInterface } from "../interface/ExtensionInterface";
 import { FileGenerationCommandRegistry } from "../registry/FileGenerationCommandRegistry";

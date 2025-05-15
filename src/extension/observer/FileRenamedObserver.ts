@@ -1,19 +1,31 @@
+import * as vscode from "vscode";
 import { FilesystemObserverOperationEnum } from "../../service/filesystem/observer/enum/FilesystemObserverOperationEnum";
-import { FilesystemObserver } from "../../service/filesystem/observer/model/FilesystemObserver";
-import { NamespaceRefactorService } from "../../service/namespace/model/NamespaceRefactorService";
-import { FileRenameObserverAbstract } from "./FileRenameObserverAbstract";
+import { FilesystemObserverResourceEnum } from "../../service/filesystem/observer/enum/FilesystemObserverResourceEnum";
+import { FilesystemObserverEvent } from "../../service/filesystem/observer/event/FilesystemObserverEvent";
+import { getUriFileName } from "../../utils/filesystem/getUriFileName";
+import { ObserverAbstract } from "./ObserverAbstract";
 
-export class FileRenamedObserver extends FileRenameObserverAbstract {
-    constructor(
-        protected readonly filesystemObserver: FilesystemObserver,
-        protected readonly namespaceRefactorService: NamespaceRefactorService
-    ) {
-        super(
-            filesystemObserver,
-            namespaceRefactorService,
-            FilesystemObserverOperationEnum.Renamed,
-            "refactorNamespacesOnFileRenamed",
-            'Would you like to update the declaration identifer to "{0}" and update its references?'
+export class FileRenamedObserver extends ObserverAbstract {
+    protected getConfigurationOptionName(): string {
+        return "refactorNamespacesOnFileRenamed";
+    }
+
+    protected async getConfirmationMessage(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<string> {
+        const name = getUriFileName(newUri);
+        return vscode.l10n.t(
+            'Would you like to update the declaration identifer to "{0}" and update its references?',
+            name
         );
+    }
+
+    protected async isValidEvent(event: FilesystemObserverEvent): Promise<boolean> {
+        return (
+            event.resource === FilesystemObserverResourceEnum.File &&
+            event.operation === FilesystemObserverOperationEnum.Renamed
+        );
+    }
+
+    protected async onRefactorAccepted(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<void> {
+        await this.namespaceRefactorService.refactorFileAndReferences(oldUri, newUri);
     }
 }

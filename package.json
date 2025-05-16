@@ -109,6 +109,19 @@
           ],
           "order": 5
         },
+        "phpSmartFiles.refactorNamespacesOnDirectoryChanges": {
+          "type": "string",
+          "enum": ["confirm", "always", "never"],
+          "default": "confirm",
+          "description": "%php-smart-files.config.refactorNamespacesOnDirectoryChanges.description%",
+          "markdownDescription": "%php-smart-files.config.refactorNamespacesOnDirectoryChanges.description%",
+          "enumDescriptions": [
+            "%php-smart-files.config.refactorNamespacesOnDirectoryChanges.confirm%",
+            "%php-smart-files.config.refactorNamespacesOnDirectoryChanges.always%",
+            "%php-smart-files.config.refactorNamespacesOnDirectoryChanges.never%"
+          ],
+          "order": 6
+        },
         "phpSmartFiles.refactorNamespacesExcludeDirectories": {
           "type": "array",
           "default": [
@@ -135,7 +148,7 @@
           "items": {
             "type": "string"
           },
-          "order": 6
+          "order": 7
         }
       }
     },

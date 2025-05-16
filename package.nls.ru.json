@@ -30,5 +30,10 @@
   "php-smart-files.config.refactorNamespacesOnFileRenamed.always": "Всегда без подтверждения",
   "php-smart-files.config.refactorNamespacesOnFileRenamed.never": "Никогда",
 
+  "php-smart-files.config.refactorNamespacesOnDirectoryChanges.description": "Определяет, следует ли после перемещения или переименования каталога рефакторить пространства имен во всех файлах внутри этого каталога и их ссылках.",
+  "php-smart-files.config.refactorNamespacesOnDirectoryChanges.confirm": "С подтверждением",
+  "php-smart-files.config.refactorNamespacesOnDirectoryChanges.always": "Всегда без подтверждения",
+  "php-smart-files.config.refactorNamespacesOnDirectoryChanges.never": "Никогда",
+
   "php-smart-files.config.refactorNamespacesExcludeDirectories.description": "Указанные каталоги будут исключены при рефакторинге пространств имен. (Примечание: Ввод должен быть в формате шаблона Glob, например, `/vendor/**`, `var/cache/**` или `**/temp/**`.)"
 }

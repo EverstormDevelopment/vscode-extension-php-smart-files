@@ -30,5 +30,10 @@
   "php-smart-files.config.refactorNamespacesOnFileRenamed.always": "Toujours sans confirmation",
   "php-smart-files.config.refactorNamespacesOnFileRenamed.never": "Jamais",
 
+  "php-smart-files.config.refactorNamespacesOnDirectoryChanges.description": "Détermine si, après le déplacement ou le renommage d'un répertoire, les espaces de noms dans tous les fichiers de ce répertoire et leurs références doivent être refactorisés.",
+  "php-smart-files.config.refactorNamespacesOnDirectoryChanges.confirm": "Avec confirmation",
+  "php-smart-files.config.refactorNamespacesOnDirectoryChanges.always": "Toujours sans confirmation",
+  "php-smart-files.config.refactorNamespacesOnDirectoryChanges.never": "Jamais",
+
   "php-smart-files.config.refactorNamespacesExcludeDirectories.description": "Les répertoires spécifiés seront exclus lors du refactoring des espaces de noms. (Remarque : Les entrées doivent être au format de motif Glob, par exemple, `/vendor/**`, `var/cache/**` ou `**/temp/**`.)"
 }

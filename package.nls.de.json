@@ -30,5 +30,10 @@
   "php-smart-files.config.refactorNamespacesOnFileRenamed.always": "Immer ohne Nachfrage",
   "php-smart-files.config.refactorNamespacesOnFileRenamed.never": "Niemals",
   
+  "php-smart-files.config.refactorNamespacesOnDirectoryChanges.description": "Bestimmt, ob nach dem Verschieben oder Umbenennen eines Verzeichnisses die Namespaces in allen Dateien innerhalb dieses Verzeichnisses und deren Referenzen refaktoriert werden sollen.",
+  "php-smart-files.config.refactorNamespacesOnDirectoryChanges.confirm": "Nach Bestätigung",
+  "php-smart-files.config.refactorNamespacesOnDirectoryChanges.always": "Immer ohne Nachfrage",
+  "php-smart-files.config.refactorNamespacesOnDirectoryChanges.never": "Niemals",
+  
   "php-smart-files.config.refactorNamespacesExcludeDirectories.description": "Die angegebenen Verzeichnisse werden beim Refactoring von Namespaces ausgeschlossen. (Anmerkung: Die Angaben werden im Glob-Muster erwartet, z.B. `/vendor/**`, `var/cache/**` oder `**/temp/**`.)"
 }

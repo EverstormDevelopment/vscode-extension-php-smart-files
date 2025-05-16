@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { FilesystemObserverResourceEnum } from "../../service/filesystem/observer/enum/FilesystemObserverResourceEnum";
 import { FilesystemObserverEvent } from "../../service/filesystem/observer/event/FilesystemObserverEvent";
+import { hasFilesInUriDirectory } from "../../utils/filesystem/hasFilesInUriDirectory";
 import { ObserverAbstract } from "./ObserverAbstract";
 
 export class DirectoryChangeObserver extends ObserverAbstract {
@@ -19,13 +20,7 @@ export class DirectoryChangeObserver extends ObserverAbstract {
     }
 
     protected async onRefactorAccepted(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<void> {
-        const phpFiles = await this.getPhpFilesInDirectory(newUri);
-        for (const newFileUri of phpFiles) {
-            const oldPath = newFileUri.path.replace(newUri.path, oldUri.path);
-            const oldFileUri = newFileUri.with({ path: oldPath });
-
-            await this.namespaceRefactorService.refactorFileAndReferences(oldFileUri, newFileUri);
-        }
+        this.namespaceRefactorService.refactorDirectoryAndReferences(oldUri, newUri);
     }
 
     private isDirectoryChangeEvent(event: FilesystemObserverEvent): boolean {
@@ -33,14 +28,6 @@ export class DirectoryChangeObserver extends ObserverAbstract {
     }
 
     protected async hasPhpFilesInDirectory(directoryUri: vscode.Uri): Promise<boolean> {
-        const phpFiles = await this.getPhpFilesInDirectory(directoryUri, 1);
-        return phpFiles.length > 0;
+        return await hasFilesInUriDirectory(directoryUri, "**/*.php");
     }
-
-    private async getPhpFilesInDirectory(directoryUri: vscode.Uri, limit?: number): Promise<vscode.Uri[]> {
-        const globPattern = new vscode.RelativePattern(directoryUri.fsPath, "**/*.php");
-        const phpFiles = await vscode.workspace.findFiles(globPattern, null, limit);
-
-        return phpFiles;
-    } 
 }

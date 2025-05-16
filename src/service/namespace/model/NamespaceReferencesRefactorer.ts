@@ -18,15 +18,15 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
             return false;
         }
 
-        await this.progressUpdateReferences(refactorDetails);
+        await this.startUpdateReferences(refactorDetails);
         return true;
     }
 
     /**
-     * Shows a progress notification while updating references in all relevant files.
-     * @param refactorDetails Details about what needs to be refactored
+     * Displays a progress notification while updating references in all relevant files.
+     * @param refactorDetails Contains information about the namespaces and identifiers to be updated
      */
-    private async progressUpdateReferences(refactorDetails: NamespaceRefactorDetailsType): Promise<void> {
+    private async startUpdateReferences(refactorDetails: NamespaceRefactorDetailsType): Promise<void> {
         const options: vscode.ProgressOptions = {
             cancellable: false,
             location: vscode.ProgressLocation.Notification,
@@ -38,25 +38,47 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
         };
 
         await vscode.window.withProgress(options, async (progress) => {
-            const files = await this.findFilesToRefactor(refactorDetails.new.uri);
-            const progressIncrement = 100 / files.length;
-
-            for (let fileIndex = 0; fileIndex < files.length; fileIndex++) {
-                const progressMessage = vscode.l10n.t("Processing file {0} of {1}", fileIndex + 1, files.length);
-                progress.report({
-                    increment: progressIncrement,
-                    message: progressMessage,
-                });
-
-                await this.updateReference(files[fileIndex], refactorDetails);
-            }
+            await this.progressUpdateReferences(progress, refactorDetails);
         });
     }
 
     /**
+     * Performs the actual reference updates with progress reporting.
+     * Processes all found files in parallel and updates the progress indicator.
+     * @param progress The VS Code Progress object for displaying progress
+     * @param refactorDetails Contains information about the namespaces and identifiers to be updated
+     */
+    private async progressUpdateReferences(
+        progress: vscode.Progress<{
+            message?: string;
+            increment?: number;
+        }>,
+        refactorDetails: NamespaceRefactorDetailsType
+    ): Promise<void> {
+        const files = await this.findFilesToRefactor(refactorDetails.new.uri);
+        const progressIncrement = 100 / files.length;
+        const processPromises: Promise<void>[] = [];
+
+        let completed = 0;
+        for (let fileIndex = 0; fileIndex < files.length; fileIndex++) {
+            const fileUri = files[fileIndex];
+            const promise = this.updateReference(fileUri, refactorDetails).then(() => {
+                completed++;
+                progress.report({
+                    increment: progressIncrement,
+                    message: vscode.l10n.t("Processing file {0} of {1}", completed, files.length),
+                });
+            });
+            processPromises.push(promise);
+        }
+
+        await Promise.all(processPromises);
+    }
+
+    /**
      * Updates namespace references in a single file.
-     * @param uri The URI of the file to update.
-     * @param refactorDetails Details about what needs to be refactored.
+     * @param uri The URI of the file to update
+     * @param refactorDetails Contains information about the old and new namespace/identifier values
      */
     private async updateReference(uri: vscode.Uri, refactorDetails: NamespaceRefactorDetailsType): Promise<void> {
         try {
@@ -154,7 +176,9 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
     private replaceReferenceUseStatement(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
         const oldFullQualifiedNamespace = `${refactorDetails.old.namespace}\\${refactorDetails.old.identifier}`;
         const newFullQualifiedNamespace = `${refactorDetails.new.namespace}\\${refactorDetails.new.identifier}`;
-        const useRegExp = this.namespaceRegExpProvider.getUseStatementRegExp(oldFullQualifiedNamespace, { includeAlias: true });
+        const useRegExp = this.namespaceRegExpProvider.getUseStatementRegExp(oldFullQualifiedNamespace, {
+            includeAlias: true,
+        });
 
         return content.replace(useRegExp, (match, namespace, alias) => {
             return `use ${newFullQualifiedNamespace}${alias ? ` as ${alias}` : ""};`;

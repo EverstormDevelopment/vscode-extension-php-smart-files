@@ -7,7 +7,7 @@ import { ObserverAbstract } from "./ObserverAbstract";
 
 export class DirectoryChangeObserver extends ObserverAbstract {
     protected getConfigurationOptionName(): string {
-        return "refactorNamespacesOnFileMoved";
+        return "refactorNamespacesOnDirectoryChanges";
     }
 
     protected async getConfirmationMessage(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<string> {

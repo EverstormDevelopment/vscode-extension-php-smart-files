@@ -24,6 +24,11 @@ export class Extension implements ExtensionInterface {
     private container: ContainerInterface;
 
     /**
+     * Tracks if observers have been registered
+     */
+    private hasObserversRegistered: boolean | undefined;
+
+    /**
      * Creates a new Extension instance with default container
      */
     constructor() {
@@ -38,7 +43,7 @@ export class Extension implements ExtensionInterface {
     public activate(context: vscode.ExtensionContext): this {
         this.initialize(context);
         this.addFileCreationCommands(context);
-        this.addObservers(context);
+        this.addLazyObserverRegistration(context);
         return this;
     }
 
@@ -86,15 +91,17 @@ export class Extension implements ExtensionInterface {
      * Registers all observers with VS Code
      * @param context The VS Code extension context
      */
-    private async addObservers(context: vscode.ExtensionContext): Promise<void> {
-        if (!(await this.hasPhpFilesInWorkspace())) {
-            return;
+    private async addObservers(context: vscode.ExtensionContext): Promise<boolean> {
+        if (this.hasObserversRegistered || !(await this.hasPhpFilesInWorkspace())) {
+            return false;
         }
+        this.hasObserversRegistered = true;
 
         const observerRegisty = ObserverRegistry;
         for (const [observerName, observer] of Object.entries(observerRegisty)) {
             this.addObserver(context, observerName, observer);
         }
+        return true;
     }
 
     /**
@@ -136,6 +143,29 @@ export class Extension implements ExtensionInterface {
             console.error("Error checking for PHP files:", error);
             return false;
         }
+    }
+
+    /**
+     * Sets up a lazy registration mechanism for file system observers
+     * Observers are only registered if PHP files are present in the workspace
+     * If no PHP files exist initially, a watcher is set up to detect when PHP files are created
+     * @param context The VS Code extension context
+     */
+    private async addLazyObserverRegistration(context: vscode.ExtensionContext): Promise<void> {
+        const observersRegistered = await this.addObservers(context);
+        if (observersRegistered) {
+            return;
+        }
+
+        const phpFileWatcher = vscode.workspace.createFileSystemWatcher("**/*.php", false, false, true);
+        phpFileWatcher.onDidCreate(async (uri) => {
+            const observersRegistered = await this.addObservers(context);
+            if (observersRegistered) {
+                phpFileWatcher.dispose();
+            }
+        });
+
+        context.subscriptions.push(phpFileWatcher);
     }
 
     /**

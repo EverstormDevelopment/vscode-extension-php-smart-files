@@ -5,6 +5,19 @@ All notable changes to the extension will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- Added support for directory operations (renaming/moving):
+  - All files within a changed directory are now refactored as if they were individually moved
+  - Namespace declarations in all affected files are automatically adjusted
+  - All references to the affected files in the workspace are updated accordingly
+- Added configuration `refactorNamespacesOnDirectoryChanges` to control behavior when directories are renamed or moved:
+  - `confirm` (default): Prompts for confirmation before refactoring
+  - `always`: Automatically refactors without confirmation
+  - `never`: Disables the feature
+
+### Changed
+- Significantly improved performance by processing reference updates in parallel
+- Now preserving line break styles (CR, LF, CRLF) in all refactored files
 
 
 ## [0.6.0] - 2025-05-14

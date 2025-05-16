@@ -3,7 +3,7 @@
 All notable changes to the "PHP Smart Files" extension will be documented in this file.
 <!-- Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file. -->
 
-## [Unreleased]
+## [0.7.0] - 2025-05-16
 
 ### Added
 - Added support for directory operations (renaming/moving):

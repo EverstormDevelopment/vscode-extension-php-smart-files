@@ -102,6 +102,14 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
         return content.replace(namespaceRegExp, `namespace ${refactorDetails.new.namespace};`);
     }
 
+    /**
+     * Refactors the class, interface, or trait definition in the file content to
+     * reflect the new identifier.
+     * @param content The original file content.
+     * @param refactorDetails Details about what needs to be refactored.
+     * @returns The content with the updated definition.
+     * @throws Error if no valid definition is found in the content.
+     */
     private refactorDefinition(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
         const definitionRegExp = this.namespaceRegExpProvider.getDefinitionRegExp();
         const definitionMatch = definitionRegExp.exec(content);

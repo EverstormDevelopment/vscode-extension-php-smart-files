@@ -3,6 +3,16 @@
 All notable changes to the "PHP Smart Files" extension will be documented in this file.
 <!-- Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file. -->
 
+## [Unreleased]
+
+### Changed
+- Improved file and directory observers to work in a truly lazy manner:
+  - Observers register only when PHP files exist in the workspace
+  - Observers now dynamically register when the first PHP file is added to a previously non-PHP project
+  - This ensures proper refactoring support even when PHP files are added later to an initially non-PHP project
+
+
+
 ## [0.7.0] - 2025-05-16
 
 ### Added
@@ -18,6 +28,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 ### Changed
 - Significantly improved performance by processing reference updates in parallel
 - Now preserving line break styles (CR, LF, CRLF) in all refactored files
+
 
 
 ## [0.6.0] - 2025-05-14

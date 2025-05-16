@@ -1,3 +1,4 @@
+import path from "path";
 import * as vscode from "vscode";
 import { FilesystemObserverResourceEnum } from "../../service/filesystem/observer/enum/FilesystemObserverResourceEnum";
 import { FilesystemObserverEvent } from "../../service/filesystem/observer/event/FilesystemObserverEvent";
@@ -10,9 +11,11 @@ export class DirectoryChangeObserver extends ObserverAbstract {
     }
 
     protected async getConfirmationMessage(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<string> {
-        // const name = getUriFileName(newUri);
-        // return vscode.l10n.t("XXXXXXXXXXXXXXXXXXXXXXX?", name);
-        return vscode.l10n.t("XXXXXXXXXXXXXXXXXXXXXXX?");
+        const directory = this.getLastPathSegment(newUri);
+        return vscode.l10n.t(
+            "Would you like to update all files and their references for directory \"{0}\"? This operation may take some time depending on the directory content and project size.",
+            directory
+        );
     }
 
     protected async isValidEvent(event: FilesystemObserverEvent): Promise<boolean> {
@@ -29,5 +32,9 @@ export class DirectoryChangeObserver extends ObserverAbstract {
 
     protected async hasPhpFilesInDirectory(directoryUri: vscode.Uri): Promise<boolean> {
         return await hasFilesInUriDirectory(directoryUri, "**/*.php");
+    }
+
+    protected getLastPathSegment(uri: vscode.Uri): string {
+        return path.basename(uri.fsPath.replace(/[\/\\]$/, ""));
     }
 }

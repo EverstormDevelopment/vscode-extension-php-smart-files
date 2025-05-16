@@ -1,4 +1,5 @@
 import { ConstructorType } from "../../container/type/ConstructorType";
+import { DirectoryChangeObserver } from "../observer/DirectoryChangeObserver";
 import { FileMovedObserver } from "../observer/FileMovedObserver";
 import { FileRenamedObserver } from "../observer/FileRenamedObserver";
 
@@ -9,4 +10,5 @@ import { FileRenamedObserver } from "../observer/FileRenamedObserver";
 export const ObserverRegistry: Record<string, ConstructorType<any>> = {
     fileMovedObserver: FileMovedObserver,
     fileRenamedObserver: FileRenamedObserver,
+    directoryChangeObserver: DirectoryChangeObserver
 };

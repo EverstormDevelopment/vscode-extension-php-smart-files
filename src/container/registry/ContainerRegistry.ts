@@ -1,4 +1,5 @@
 import { FileGenerationCommand } from "../../extension/command/FileGenerationCommand";
+import { DirectoryChangeObserver } from "../../extension/observer/DirectoryChangeObserver";
 import { FileMovedObserver } from "../../extension/observer/FileMovedObserver";
 import { FileRenamedObserver } from "../../extension/observer/FileRenamedObserver";
 import { ComposerJsonFinder } from "../../service/composer/model/ComposerJsonFinder";
@@ -88,6 +89,10 @@ export const ContainerRegistry: ContainerRegistrationType[] = [
     },
     {
         constructor: FileRenamedObserver,
+        dependencies: [FilesystemObserver, NamespaceRefactorService],
+    },
+    {
+        constructor: DirectoryChangeObserver,
         dependencies: [FilesystemObserver, NamespaceRefactorService],
     },
 ];

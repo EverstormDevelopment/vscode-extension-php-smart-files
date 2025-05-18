@@ -18,6 +18,10 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
   - Updated descriptions of `useFallbackNamespace` and `fallbackNamespace` settings to better explain the new namespace construction mechanism
   - Added clear examples showing how directory structure is incorporated into the namespace
   - Made descriptions more consistent and comprehensive across all supported languages
+- Refined filename validation with more specific error messages:
+  - Split generic "invalid characters" error into two distinct messages
+  - Added specific feedback for filesystem-invalid characters
+  - Added warning for characters that may cause issues with PHP includes or URLs
 
 
 

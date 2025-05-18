@@ -101,9 +101,15 @@ export class InputBox implements InputBoxInterface {
      * @returns True if the input is valid, false otherwise
      */
     private async validate(value: string): Promise<boolean> {
-        const validationMessage = (await this.options.inputValidator?.validate(value)) || "";
-        this.inputBox.validationMessage = validationMessage;
-        return validationMessage === "";
+        const validationResult = await this.options.inputValidator?.validate(value);
+
+        if (validationResult === undefined) {
+            this.inputBox.validationMessage = "";
+            return true;
+        }
+
+        this.inputBox.validationMessage = validationResult.message;
+        return validationResult.severity !== vscode.InputBoxValidationSeverity.Error;
     }
 
     /**

@@ -16,23 +16,32 @@ export class InputFileNameValidator implements InputValidatorInterface {
      * - No problematic characters for PHP includes or URLs like #&%[]{}^~`;
      * - No spaces (common PHP best practice)
      * @param input The file name to validate
-     * @returns Error message if validation fails, or empty string if valid
+     * @returns Validation message object if validation fails, or undefined if valid
      */
-    public async validate(input: string): Promise<string> {
+    public async validate(input: string): Promise<vscode.InputBoxValidationMessage | undefined> {
         if (!input || input.trim().length === 0) {
-            return vscode.l10n.t("Please enter a valid filename");
+            return {
+                message: vscode.l10n.t("Please enter a valid filename"),
+                severity: vscode.InputBoxValidationSeverity.Error,
+            };
         }
 
         const invalidFileSystemChars = /[\\/:*?"<>|]/;
         if (invalidFileSystemChars.test(input)) {
-            return vscode.l10n.t("Filename contains characters not allowed by the file system");
+            return {
+                message: vscode.l10n.t("Filename contains characters not allowed by the file system"),
+                severity: vscode.InputBoxValidationSeverity.Error,
+            };
         }
 
         const problematicChars = /[ #&%\[\]{}^~`+;]/;
         if (problematicChars.test(input)) {
-            return vscode.l10n.t("Filename contains characters that may cause issues with PHP includes or URLs");
+            return {
+                message: vscode.l10n.t("Filename contains characters that may cause issues with PHP includes or URLs"),
+                severity: vscode.InputBoxValidationSeverity.Warning,
+            };
         }
 
-        return "";
+        return undefined;
     }
 }

@@ -41,7 +41,9 @@
   "Error reading composer.json": "Error reading composer.json",
 
   "Please enter a valid filename": "Please enter a valid filename",
-  "Filename contains invalid characters": "Filename contains invalid characters",
+  "Filename contains characters not allowed by the file system": "Filename contains characters not allowed by the file system",
+  "Filename contains characters that may cause issues with PHP includes or URLs": "Filename contains characters that may cause issues with PHP includes or URLs",
+
   "Please enter a valid definition name": "Please enter a valid definition name",
   "Definition name must start with a letter or underscore": "Definition name must start with a letter or underscore",
   "Definition name must start with an uppercase letter or underscore": "Definition name must start with an uppercase letter or underscore",

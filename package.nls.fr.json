@@ -16,8 +16,9 @@
 
   "php-smart-files.config.useStrictTypeInTemplates.description": "Détermine si `declare(strict_types=1);` est inclus dans les fichiers générés.",
 
-  "php-smart-files.config.useFallbackNamespace.description": "Détermine s'il faut utiliser un espace de noms de secours lorsqu'aucun espace de noms n'a pu être résolu. Quand désactivé, aucun espace de noms ne sera ajouté.",
-  "php-smart-files.config.fallbackNamespace.description": "Définit l'espace de noms à utiliser lorsque l'espace de noms de secours est activé et qu'aucun autre espace de noms n'a pu être trouvé.",
+  "php-smart-files.config.useFallbackNamespace.description": "Détermine s'il faut utiliser un espace de noms de secours lorsqu'aucun espace de noms n'a pu être résolu via composer.json. Lorsqu'il est activé, construit un espace de noms basé sur le chemin relatif du fichier depuis le répertoire de l'espace de travail, en commençant par l'espace de noms de secours comme préfixe. Lorsqu'il est désactivé, aucun espace de noms ne sera ajouté.",
+  
+  "php-smart-files.config.fallbackNamespace.description": "Définit le préfixe de base de l'espace de noms à utiliser lorsque l'espace de noms de secours est activé. L'espace de noms complet sera construit en combinant ce préfixe avec la structure de répertoires du fichier (par exemple, 'App' + '\\SousRépertoire\\AutreRépertoire' devient 'App\\SousRépertoire\\AutreRépertoire').",
   "php-smart-files.config.fallbackNamespace.patternErrorMessage": "L'espace de noms doit être un espace de noms PHP valide selon PSR-4 (par exemple, 'App', 'Vendor\\Service'). Chaque segment doit commencer par une lettre majuscule.",
   
   "php-smart-files.config.refactorNamespacesOnFileMoved.description": "Détermine si, après le déplacement d'un fichier, l'espace de noms dans le fichier et dans ses références doit être refactorisé.",

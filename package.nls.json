@@ -16,8 +16,9 @@
 
   "php-smart-files.config.useStrictTypeInTemplates.description": "Determines whether `declare(strict_types=1);` is included in generated files.",
 
-  "php-smart-files.config.useFallbackNamespace.description": "Determines whether to use a fallback namespace when no namespace could be resolved. When disabled, no namespace will be added.",
-  "php-smart-files.config.fallbackNamespace.description": "Defines the namespace to use when fallback namespace is enabled and no other namespace could be found.",
+  "php-smart-files.config.useFallbackNamespace.description": "Determines whether to use a fallback namespace when no namespace could be resolved via composer.json. When enabled, builds a namespace based on the file's relative path from the workspace directory, starting with the fallback namespace as prefix. When disabled, no namespace will be added.",
+  
+  "php-smart-files.config.fallbackNamespace.description": "Defines the base namespace prefix to use when fallback namespace is enabled. The complete namespace will be constructed by combining this prefix with the file's directory structure (e.g., 'App' + '\\SubDirectory\\AnotherDirectory' becomes 'App\\SubDirectory\\AnotherDirectory').",
   "php-smart-files.config.fallbackNamespace.patternErrorMessage": "The namespace must be a valid PHP namespace according to PSR-4 (e.g. 'App', 'Vendor\\Service'). Each segment must start with an uppercase letter.",
   
   "php-smart-files.config.refactorNamespacesOnFileMoved.description": "Determines whether, after a file is moved, the namespace in the file and its references should be refactored.",

@@ -10,6 +10,14 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
   - Observers register only when PHP files exist in the workspace
   - Observers now dynamically register when the first PHP file is added to a previously non-PHP project
   - This ensures proper refactoring support even when PHP files are added later to an initially non-PHP project
+- Enhanced fallback namespace mechanism:
+  - When enabled, the fallback namespace now builds the complete namespace based on the file location relative to the workspace directory
+  - Previously, it would only use the configured fallback namespace value without considering the file path structure
+  - This provides a more intuitive namespace structure that mirrors the directory hierarchy even when composer.json is absent
+- Improved configuration descriptions for namespace settings:
+  - Updated descriptions of `useFallbackNamespace` and `fallbackNamespace` settings to better explain the new namespace construction mechanism
+  - Added clear examples showing how directory structure is incorporated into the namespace
+  - Made descriptions more consistent and comprehensive across all supported languages
 
 
 

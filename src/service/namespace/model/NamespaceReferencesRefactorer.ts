@@ -158,7 +158,7 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
         fileNamespace: string,
         refactorDetails: NamespaceRefactorDetailsType
     ): string {
-        if (fileNamespace === refactorDetails.old.namespace) {
+        if (fileNamespace === refactorDetails.old.namespace && refactorDetails.hasNamespaceChanged) {
             content = this.addReferenceUseStatement(content, refactorDetails);
         } else if (fileNamespace === refactorDetails.new.namespace) {
             content = this.removeReferenceUseStatement(content, refactorDetails);
@@ -192,7 +192,7 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
      * @returns The updated content with the added use statement.
      */
     private addReferenceUseStatement(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
-        const hasIdentifierRegExp = this.namespaceRegExpProvider.getIdentifierRegExp(refactorDetails.new.identifier);
+        const hasIdentifierRegExp = this.namespaceRegExpProvider.getIdentifierRegExp(refactorDetails.old.identifier);
         if (!hasIdentifierRegExp.test(content)) {
             return content;
         }

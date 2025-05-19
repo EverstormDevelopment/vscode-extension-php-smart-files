@@ -58,10 +58,10 @@
   "Updating references from \"{0}\" to \"{1}\"": "Aktualisiere Referenzen von \"{0}\" zu \"{1}\"",
   "Processing file {0} of {1}": "Verarbeite Datei {0} von {1}",
   "Error updating references in file {0}: {1}": "Fehler beim Aktualisieren von Referenzen in Datei {0}: {1}",
-
+  
   "Would you like to update the declaration identifer to \"{0}\" and update its references?": "Möchten Sie den Deklarationsbezeichner in \"{0}\" ändern und alle Referenzen aktualisieren?",
+  "The detected namespace '{0}' is not a valid PHP namespace. The refactoring process has been canceled.": "Der erkannte Namespace '{0}' ist kein gültiger PHP-Namespace. Der Refactoring-Prozess wurde abgebrochen.",
   "The provided name '{0}' is not a valid PHP identifier. The refactoring process has been canceled.": "Der angegebene Name '{0}' ist kein gültiger PHP-Bezeichner. Der Refactoring-Prozess wurde abgebrochen.",
-  "The previous name '{0}' was not a valid PHP identifier. The refactoring process has been canceled.": "Der vorherige Name '{0}' war kein gültiger PHP-Bezeichner. Der Refactoring-Prozess wurde abgebrochen.",
   "Unable to locate a valid definition. The refactoring process has been canceled.": "Es konnte keine gültige Definition gefunden werden. Der Refactoring-Prozess wurde abgebrochen.",
 
   "Would you like to update all files and their references for directory \"{0}\"? This operation may take some time depending on the directory content and project size.": "Möchten Sie alle Dateien und deren Referenzen für den Ordner \"{0}\" aktualisieren? Dieser Vorgang kann je nach Inhalt des Ordners und der Größe des Projekts einige Zeit in Anspruch nehmen."

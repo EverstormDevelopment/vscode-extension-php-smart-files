@@ -58,11 +58,11 @@
   "Updating references from \"{0}\" to \"{1}\"": "Обновление ссылок с \"{0}\" на \"{1}\"",
   "Processing file {0} of {1}": "Обработка файла {0} из {1}",
   "Error updating references in file {0}: {1}": "Ошибка обновления ссылок в файле {0}: {1}",
-
+  
   "Would you like to update the declaration identifer to \"{0}\" and update its references?": "Хотите обновить идентификатор объявления на \"{0}\" и обновить все его ссылки?",
+  "The detected namespace '{0}' is not a valid PHP namespace. The refactoring process has been canceled.": "Обнаруженное пространство имен '{0}' не является допустимым пространством имен PHP. Процесс рефакторинга отменен.",
   "The provided name '{0}' is not a valid PHP identifier. The refactoring process has been canceled.": "Указанное имя '{0}' не является допустимым идентификатором PHP. Процесс рефакторинга отменен.",
   "Unable to locate a valid definition. The refactoring process has been canceled.": "Не удалось найти действительное определение. Процесс рефакторинга отменен.",
-  "The previous name '{0}' was not a valid PHP identifier. The refactoring process has been canceled.": "Предыдущее имя '{0}' не является допустимым идентификатором PHP. Процесс рефакторинга был отменен.",
-
+  
   "Would you like to update all files and their references for directory \"{0}\"? This operation may take some time depending on the directory content and project size.": "Хотите обновить все файлы и их ссылки для каталога \"{0}\"? Эта операция может занять некоторое время в зависимости от содержимого каталога и размера проекта."
 }

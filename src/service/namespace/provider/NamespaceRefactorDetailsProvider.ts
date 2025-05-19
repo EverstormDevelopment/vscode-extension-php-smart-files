@@ -7,6 +7,7 @@ import { NamespaceRefactorUriDetailsType } from "../type/NamespaceRefactorUriDet
 import { NamespaceRegExpProvider } from "./NamespaceRegExpProvider";
 import { NamespacePathValidator } from "../validator/NamespacePathValidator";
 import { NamespaceIdentifierValidator } from "../validator/NamespaceIdentifierValidator";
+import { isUriFile } from "../../../utils/filesystem/isUriFile";
 
 /**
  * Provides details about namespace refactoring operations for PHP files.
@@ -31,8 +32,10 @@ export class NamespaceRefactorDetailsProvider {
         const newUriDetails = await this.getUriDetails(newUri);
 
         const hasNamespaces = !!oldUriDetails.namespace && !!newUriDetails.namespace;
-        const hasNamespaceChanged = oldUriDetails.namespace !== newUriDetails.namespace;
-        const hasIdentifierChanged = oldUriDetails.identifier !== newUriDetails.identifier;
+        const hasNamespaceChanged =
+            oldUriDetails.isNamespaceValid || oldUriDetails.namespace !== newUriDetails.namespace;
+        const hasIdentifierChanged =
+            oldUriDetails.isIdentifierValid || oldUriDetails.identifier !== newUriDetails.identifier;
         const hasChanged = hasNamespaceChanged || hasIdentifierChanged;
 
         return {
@@ -61,23 +64,28 @@ export class NamespaceRefactorDetailsProvider {
         sourceContentUri?: vscode.Uri
     ): Promise<NamespaceRefactorUriDetailsType> {
         const contentUri = sourceContentUri || uri;
+        const isContentFile = await isUriFile(contentUri);
 
         const namespace = await this.getNamespaceUnsafe(uri);
         const identifier = await this.getIdentifierUnsafe(uri);
         const isNamespaceValid = await this.namespacePathValidator.validate(namespace);
         const isIdentifierValid = await this.namespaceIdentifierValidator.validate(identifier);
 
-        if (isNamespaceValid && isIdentifierValid) {
+        if (!isContentFile || (isNamespaceValid && isIdentifierValid)) {
             return { uri, namespace, identifier, isNamespaceValid, isIdentifierValid };
         }
 
         const contentInfo = await this.parseInformationFromContent(contentUri);
         return {
             uri,
+
             namespace: isNamespaceValid ? namespace : contentInfo.namespace,
-            identifier: isIdentifierValid ? identifier : contentInfo.identifier,
-            isNamespaceValid,
-            isIdentifierValid,
+            namespaceInvalid: isNamespaceValid ? undefined : namespace,
+            isNamespaceValid: isNamespaceValid,
+
+            identifier: isNamespaceValid && isIdentifierValid ? identifier : contentInfo.identifier,
+            identifierInvalid: isIdentifierValid ? undefined : identifier,
+            isIdentifierValid: isIdentifierValid,
         };
     }
 

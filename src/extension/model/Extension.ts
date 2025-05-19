@@ -117,11 +117,11 @@ export class Extension implements ExtensionInterface {
     ): void {
         const observerInstance = this.container.get(observer);
         if (!observerInstance) {
-            vscode.window.showErrorMessage(`Observer \`${name}\` not found`);
+            console.error(`Observer \`${name}\` not found`);
             return;
         }
         if (typeof observerInstance.watch !== "function") {
-            vscode.window.showErrorMessage(`Observer \`${name}\` does not implement \`watch\``);
+            console.error(`Observer \`${name}\` does not implement \`watch\``);
             return;
         }
         observerInstance.watch(context);

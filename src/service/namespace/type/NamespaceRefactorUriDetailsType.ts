@@ -11,22 +11,24 @@ export type NamespaceRefactorUriDetailsType = {
     uri: vscode.Uri;
 
     /**
-     * The PHP class/interface/trait identifier (name)
-     */
-    identifier: string;
-
-    /**
      * The PHP namespace of the file
      */
     namespace: string;
 
     /**
-     * The filename without path
+     * The PHP class/interface/trait identifier (name)
      */
-    fileName: string;
+    identifier: string;
 
     /**
-     * Flag indicating if the filename is a valid PHP identifier
+     * Indicates whether the namespace follows PHP namespace conventions and is valid
+     * in the current context
      */
-    isFileNameValid: boolean;
+    isNamespaceValid: boolean;
+
+    /**
+     * Indicates whether the class/interface/trait identifier follows PHP naming conventions
+     * and is valid in the current context
+     */
+    isIdentifierValid: boolean;
 };

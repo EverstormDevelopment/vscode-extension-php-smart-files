@@ -15,7 +15,7 @@ import { NamespaceReferencesRefactorer } from "../../service/namespace/model/Nam
 import { NamespaceResolver } from "../../service/namespace/model/NamespaceResolver";
 import { NamespaceRefactorDetailsProvider } from "../../service/namespace/provider/NamespaceRefactorDetailsProvider";
 import { NamespaceRegExpProvider } from "../../service/namespace/provider/NamespaceRegExpProvider";
-import { NamespaceIdenfifierValidator } from "../../service/namespace/validator/NamespaceIdentifierValidator";
+import { NamespaceIdentifierValidator } from "../../service/namespace/validator/NamespaceIdentifierValidator";
 import { SnippetFactory } from "../../service/snippet/build/SnippetFactory";
 import { ContainerRegistrationType } from "../type/ContainerRegistrationType";
 import { NamespacePathValidator } from "./../../service/namespace/validator/NamespacePathValidator";
@@ -62,7 +62,7 @@ export const ContainerRegistry: ContainerRegistrationType[] = [
         dependencies: [NamespaceRegExpProvider],
     },
     {
-        constructor: NamespaceIdenfifierValidator,
+        constructor: NamespaceIdentifierValidator,
         dependencies: [NamespaceRegExpProvider],
     },
     {
@@ -75,7 +75,7 @@ export const ContainerRegistry: ContainerRegistrationType[] = [
     },
     {
         constructor: NamespaceRefactorDetailsProvider,
-        dependencies: [NamespaceResolver, NamespaceRegExpProvider],
+        dependencies: [NamespaceResolver, NamespaceRegExpProvider, NamespacePathValidator, NamespaceIdentifierValidator],
     },
     {
         constructor: NamespaceFileRefactorer,

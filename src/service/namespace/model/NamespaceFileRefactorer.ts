@@ -34,10 +34,10 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
      * @throws Error if the filename is not a valid PHP identifier.
      */
     private isRefactorable(refactorDetails: NamespaceRefactorDetailsType): boolean {
-        if (!refactorDetails.new.isFileNameValid) {
+        if (!refactorDetails.new.isIdentifierValid) {
             const message = vscode.l10n.t(
                 "The provided name '{0}' is not a valid PHP identifier. The refactoring process has been canceled.",
-                refactorDetails.new.fileName
+                refactorDetails.new.identifier
             );
             throw new Error(message);
         }

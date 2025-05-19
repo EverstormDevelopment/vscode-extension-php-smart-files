@@ -5,20 +5,19 @@ import { NamespaceResolver } from "../model/NamespaceResolver";
 import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailsType";
 import { NamespaceRefactorUriDetailsType } from "../type/NamespaceRefactorUriDetailsType";
 import { NamespaceRegExpProvider } from "./NamespaceRegExpProvider";
+import { NamespacePathValidator } from "../validator/NamespacePathValidator";
+import { NamespaceIdentifierValidator } from "../validator/NamespaceIdentifierValidator";
 
 /**
  * Provides details about namespace refactoring operations for PHP files.
  * Gathers information about old and new URIs, identifiers, and namespaces.
  */
 export class NamespaceRefactorDetailsProvider {
-    /**
-     * Initializes the provider with a NamespaceResolver and RegExp provider.
-     * @param namespaceResolver Resolves namespaces for given file URIs.
-     * @param namespaceRegExpProvider Provides RegExp utilities for PHP identifiers and namespaces.
-     */
     constructor(
         protected readonly namespaceResolver: NamespaceResolver,
-        protected readonly namespaceRegExpProvider: NamespaceRegExpProvider
+        protected readonly namespaceRegExpProvider: NamespaceRegExpProvider,
+        protected readonly namespacePathValidator: NamespacePathValidator,
+        protected readonly namespaceIdentifierValidator: NamespaceIdentifierValidator
     ) {}
 
     /**
@@ -47,66 +46,81 @@ export class NamespaceRefactorDetailsProvider {
     }
 
     /**
-     * Gathers details for a specific file URI, including identifier and namespace.
-     * If the file name is not a valid PHP identifier, attempts to extract the identifier from file content.
-     * @param uri The file URI to analyze.
-     * @param finalUri Optional: The final URI to use for content lookup.
-     * @returns An object with URI details.
+     * Retrieves and validates namespace and identifier information for a PHP file.
+     *
+     * This method first attempts to resolve namespace and identifier using path-based resolution.
+     * If either is invalid according to PHP naming conventions, it falls back to analyzing the
+     * file content to extract this information directly using regex patterns.
+     *
+     * @param uri The URI of the PHP file to analyze
+     * @param sourceContentUri Optional URI to use for content extraction (used when a file is being moved)
+     * @returns Details containing the URI, namespace, identifier and validation status
      */
-    private async getUriDetails(uri: vscode.Uri, finalUri?: vscode.Uri): Promise<NamespaceRefactorUriDetailsType> {
-        finalUri = finalUri || uri;
-        const namespace = await this.getNamespace(uri);
-        const fileName = getUriFileName(uri);
-        const isFileNameValid = this.isFileNameValid(fileName);
-        const identifier = isFileNameValid ? fileName : await this.getIdentifierFromContent(finalUri);
+    private async getUriDetails(
+        uri: vscode.Uri,
+        sourceContentUri?: vscode.Uri
+    ): Promise<NamespaceRefactorUriDetailsType> {
+        const contentUri = sourceContentUri || uri;
 
+        const namespace = await this.getNamespaceUnsafe(uri);
+        const identifier = await this.getIdentifierUnsafe(uri);
+        const isNamespaceValid = await this.namespacePathValidator.validate(namespace);
+        const isIdentifierValid = await this.namespaceIdentifierValidator.validate(identifier);
+
+        if (isNamespaceValid && isIdentifierValid) {
+            return { uri, namespace, identifier, isNamespaceValid, isIdentifierValid };
+        }
+
+        const contentInfo = await this.parseInformationFromContent(contentUri);
         return {
-            uri: uri,
-            identifier: identifier,
-            namespace: namespace,
-            fileName: fileName,
-            isFileNameValid: isFileNameValid,
+            uri,
+            namespace: isNamespaceValid ? namespace : contentInfo.namespace,
+            identifier: isIdentifierValid ? identifier : contentInfo.identifier,
+            isNamespaceValid,
+            isIdentifierValid,
         };
     }
 
     /**
-     * Resolves the namespace for a given file URI.
-     * @param uri The file URI.
-     * @returns The resolved namespace or an empty string.
+     * Attempts to resolve a PHP namespace from the given URI path.
+     * @param uri The URI to resolve the namespace from
+     * @returns The resolved PHP namespace or empty string
      */
-    private async getNamespace(uri: vscode.Uri): Promise<string> {
-        try {
-            const namespace = await this.namespaceResolver.resolve(uri);
-            return namespace || "";
-        } catch (error) {
-            return "";
-        }
+    private async getNamespaceUnsafe(uri: vscode.Uri): Promise<string> {
+        return (await this.namespaceResolver.resolveUnsafe(uri)) || "";
     }
 
     /**
-     * Checks if a given file name is a valid PHP identifier.
-     * @param fileName The file name to validate.
-     * @returns True if valid, false otherwise.
+     * Extracts the filename from a URI to use as PHP class identifier.
+     * @param uri The URI to get the filename from
+     * @returns The filename without extension to use as PHP identifier
      */
-    private isFileNameValid(fileName: string): boolean {
-        const validationRegExp = this.namespaceRegExpProvider.getIdentifierPatternRegExp();
-        return validationRegExp.test(fileName);
+    private async getIdentifierUnsafe(uri: vscode.Uri): Promise<string> {
+        return getUriFileName(uri);
     }
 
     /**
-     * Extracts the identifier (class/interface/trait/enum name) from file content.
-     * @param uri The file URI.
-     * @returns The identifier if found, otherwise an empty string.
+     * Parses PHP file content to extract namespace declaration and class/interface/trait definition.
+     * @param uri The URI of the PHP file to analyze
+     * @returns Object containing the extracted namespace and identifier
      */
-    private async getIdentifierFromContent(uri: vscode.Uri): Promise<string> {
+    private async parseInformationFromContent(uri: vscode.Uri): Promise<{
+        namespace: string;
+        identifier: string;
+    }> {
         const content = await getFileContentByUri(uri);
+
         const definitionRegExp = this.namespaceRegExpProvider.getDefinitionRegExp();
         const definitionMatch = definitionRegExp.exec(content);
-        const identifier = definitionMatch?.[2];
-        if (!identifier) {
-            return "";
-        }
+        const identifier = definitionMatch?.[2] || "";
 
-        return identifier;
+        const namespaceRegExp = this.namespaceRegExpProvider.getNamespaceDeclarationRegExp();
+        const namespaceMatch = namespaceRegExp.exec(content);
+        const namespace = namespaceMatch?.[1] || "";
+
+        return {
+            namespace: namespace,
+            identifier: identifier,
+        };
     }
 }

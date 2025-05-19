@@ -75,8 +75,13 @@ export class NamespaceRefactorDetailsProvider {
      * @returns The resolved namespace or an empty string.
      */
     private async getNamespace(uri: vscode.Uri): Promise<string> {
-        const namespace = await this.namespaceResolver.resolve(uri);
-        return namespace || "";
+        try {
+            const namespace = await this.namespaceResolver.resolve(uri);
+            return namespace || "";
+        } catch (error) {
+            debugger;
+            return "";
+        }
     }
 
     /**
@@ -85,7 +90,7 @@ export class NamespaceRefactorDetailsProvider {
      * @returns True if valid, false otherwise.
      */
     private isFileNameValid(fileName: string): boolean {
-        const validationRegExp = this.namespaceRegExpProvider.getIdentifierValidationRegExp();
+        const validationRegExp = this.namespaceRegExpProvider.getIdentifierPatternRegExp();
         return validationRegExp.test(fileName);
     }
 

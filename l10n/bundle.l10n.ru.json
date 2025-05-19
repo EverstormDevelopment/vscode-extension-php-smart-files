@@ -39,10 +39,11 @@
   "Cancel": "Отмена",
   "Error creating file: {0}": "Ошибка при создании файла: {0}",
   "Error reading composer.json": "Ошибка чтения composer.json",
-
+  
   "Please enter a valid filename": "Пожалуйста, введите корректное имя файла",
   "Filename contains characters not allowed by the file system": "Имя файла содержит символы, не допустимые файловой системой",
   "Filename contains characters that may cause issues with PHP includes or URLs": "Имя файла содержит символы, которые могут вызвать проблемы с PHP-включениями или URL-адресами",
+  "Namespace skipped: The detected namespace was invalid due to invalid names in the directory structure.": "Пространство имён пропущено: Обнаруженное пространство имён было недействительным из-за некорректных имён в структуре каталогов.",
   
   "Please enter a valid definition name": "Пожалуйста, введите корректное имя определения",
   "Definition name must start with a letter or underscore": "Имя определения должно начинаться с буквы или подчеркивания",

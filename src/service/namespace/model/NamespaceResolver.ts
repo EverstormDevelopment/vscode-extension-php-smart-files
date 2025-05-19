@@ -4,6 +4,7 @@ import { getPathNormalized } from "../../../utils/filesystem/getPathNormalized";
 import { ComposerJsonService } from "../../composer/model/ComposerJsonService";
 import { AutoloadConfigsType } from "../../composer/type/AutoloadConfigsType";
 import { NamespaceMatchType } from "../type/NamespaceMatchType";
+import { NamespacePathValidator } from "../validator/NamespacePathValidator";
 
 /**
  * Resolves PHP namespaces based on file paths and Composer autoload configurations.
@@ -14,15 +15,41 @@ export class NamespaceResolver {
     /**
      * Creates a new instance of the NamespaceResolver.
      * @param composerJsonService Service for retrieving and parsing composer.json files
+     * @param namespacePathValidator Validator for ensuring namespace paths are valid
      */
-    constructor(private readonly composerJsonService: ComposerJsonService) {}
+    constructor(
+        private readonly composerJsonService: ComposerJsonService,
+        private readonly namespacePathValidator: NamespacePathValidator
+    ) {}
 
     /**
-     * Resolves the PHP namespace for a given file URI.
+     * Safely resolves the PHP namespace for a given file URI.
+     * Validates the namespace after resolution.
+     * @param uri The URI of the file to resolve the namespace for
+     * @returns The resolved and validated PHP namespace or undefined if not resolvable
+     * @throws Error if the resolved namespace is invalid
+     */
+    public async resolve(uri: vscode.Uri): Promise<string | undefined> {
+        const namespace = await this.resolveUnsafe(uri);
+        if (!namespace) {
+            return undefined;
+        }
+
+        if (!(await this.namespacePathValidator.validate(namespace))) {
+            throw new Error(`Invalid namespace path: ${namespace}`);
+        }
+
+        return namespace;
+    }
+
+    /**
+     * Resolves the PHP namespace for a given file URI without validation.
+     * This method attempts to resolve namespaces via composer.json first,
+     * then falls back to alternative methods if needed.
      * @param uri The URI of the file to resolve the namespace for
      * @returns The resolved PHP namespace or undefined if not resolvable
      */
-    public async resolve(uri: vscode.Uri): Promise<string | undefined> {
+    public async resolveUnsafe(uri: vscode.Uri): Promise<string | undefined> {
         const composerNamespace = await this.resolveByComposerJson(uri);
         if (composerNamespace) {
             return composerNamespace;

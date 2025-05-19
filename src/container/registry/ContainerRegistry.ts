@@ -15,8 +15,10 @@ import { NamespaceReferencesRefactorer } from "../../service/namespace/model/Nam
 import { NamespaceResolver } from "../../service/namespace/model/NamespaceResolver";
 import { NamespaceRefactorDetailsProvider } from "../../service/namespace/provider/NamespaceRefactorDetailsProvider";
 import { NamespaceRegExpProvider } from "../../service/namespace/provider/NamespaceRegExpProvider";
+import { NamespaceIdenfifierValidator } from "../../service/namespace/validator/NamespaceIdentifierValidator";
 import { SnippetFactory } from "../../service/snippet/build/SnippetFactory";
 import { ContainerRegistrationType } from "../type/ContainerRegistrationType";
+import { NamespacePathValidator } from "./../../service/namespace/validator/NamespacePathValidator";
 
 /**
  * Registry for all services in the application that should
@@ -44,29 +46,37 @@ export const ContainerRegistry: ContainerRegistrationType[] = [
         dependencies: [],
     },
     {
-        constructor: SnippetFactory,
-        dependencies: [],
-    },
-    {
         constructor: ComposerJsonService,
         dependencies: [ComposerJsonFinder, ComposerJsonParser],
     },
     {
-        constructor: NamespaceResolver,
-        dependencies: [ComposerJsonService],
-    },
-    {
-        constructor: FileGenerationCommand,
-        dependencies: [UriFolderResolver, InputBoxFactory, FileCreator, NamespaceResolver, SnippetFactory],
+        constructor: SnippetFactory,
+        dependencies: [],
     },
     {
         constructor: NamespaceRegExpProvider,
         dependencies: [],
     },
     {
+        constructor: NamespacePathValidator,
+        dependencies: [NamespaceRegExpProvider],
+    },
+    {
+        constructor: NamespaceIdenfifierValidator,
+        dependencies: [NamespaceRegExpProvider],
+    },
+    {
+        constructor: NamespaceResolver,
+        dependencies: [ComposerJsonService, NamespacePathValidator],
+    },
+    {
+        constructor: FileGenerationCommand,
+        dependencies: [UriFolderResolver, InputBoxFactory, FileCreator, NamespaceResolver, SnippetFactory],
+    },
+    {
         constructor: NamespaceRefactorDetailsProvider,
         dependencies: [NamespaceResolver, NamespaceRegExpProvider],
-    },    
+    },
     {
         constructor: NamespaceFileRefactorer,
         dependencies: [NamespaceRegExpProvider],

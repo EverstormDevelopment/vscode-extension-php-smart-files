@@ -39,10 +39,11 @@
   "Cancel": "Annuler",
   "Error creating file: {0}": "Erreur lors de la création du fichier : {0}",
   "Error reading composer.json": "Erreur de lecture du fichier composer.json",
-
+  
   "Please enter a valid filename": "Veuillez entrer un nom de fichier valide",
   "Filename contains characters not allowed by the file system": "Le nom du fichier contient des caractères non autorisés par le système de fichiers",
   "Filename contains characters that may cause issues with PHP includes or URLs": "Le nom du fichier contient des caractères qui pourraient causer des problèmes avec les includes PHP ou les URLs",
+  "Namespace skipped: The detected namespace was invalid due to invalid names in the directory structure.": "Espace de noms ignoré : L'espace de noms détecté était invalide en raison de noms invalides dans la structure de répertoires.",
   
   "Please enter a valid definition name": "Veuillez entrer un nom de définition valide",
   "Definition name must start with a letter or underscore": "Le nom de définition doit commencer par une lettre ou un underscore",

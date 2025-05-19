@@ -111,7 +111,14 @@ export class FileGenerationCommand {
      * @returns Promise resolving to the namespace or undefined if not determinable
      */
     private async getNamespace(filePath: vscode.Uri): Promise<string | undefined> {
-        return this.namespaceResolver.resolve(filePath);
+        try {
+            return await this.namespaceResolver.resolve(filePath);
+        } catch (error) {
+            // Text emphasis conveyed through wording rather than formatting
+            const message = vscode.l10n.t("Namespace skipped: The detected namespace was invalid due to invalid names in the directory structure.");
+            vscode.window.showWarningMessage(message);
+            return undefined;
+        }
     }
 
     /**

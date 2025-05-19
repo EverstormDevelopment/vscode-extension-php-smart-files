@@ -25,6 +25,10 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 - Added namespace validation to prevent invalid namespaces:
   - Invalid directory structures no longer generate invalid PHP namespaces
   - Validation ensures all namespaces are valid PHP identifiers
+- Improved error handling with better messaging:
+  - Converted acceptable but important issues from error messages to warnings
+  - Redesigned notification messages to communicate problems more clearly and effectively
+  - Enhanced visual distinction between critical errors and important warnings
 
 ### Fixed
 - Fixed refactoring issue with files that were previously in invalid directories:

@@ -22,6 +22,16 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
   - Split generic "invalid characters" error into two distinct messages
   - Added specific feedback for filesystem-invalid characters
   - Added warning for characters that may cause issues with PHP includes or URLs
+- Added namespace validation to prevent invalid namespaces:
+  - Invalid directory structures no longer generate invalid PHP namespaces
+  - Validation ensures all namespaces are valid PHP identifiers
+
+### Fixed
+- Fixed refactoring issue with files that were previously in invalid directories:
+  - Corrected handling of files that are moved from invalid to valid directories
+  - Fixed namespace updates when an invalid directory is renamed to a valid one
+  - Now properly updates class definition and all references when namespace becomes valid after a move/rename operation
+  - Ensures consistent refactoring even when files transition from invalid to valid namespace contexts
 
 
 

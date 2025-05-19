@@ -4,6 +4,7 @@ import { getPathNormalized } from "../../../utils/filesystem/getPathNormalized";
 import { ComposerJsonService } from "../../composer/model/ComposerJsonService";
 import { AutoloadConfigsType } from "../../composer/type/AutoloadConfigsType";
 import { NamespaceMatchType } from "../type/NamespaceMatchType";
+import { NamespacePathValidator } from "../validator/NamespacePathValidator";
 
 /**
  * Resolves PHP namespaces based on file paths and Composer autoload configurations.
@@ -14,30 +15,94 @@ export class NamespaceResolver {
     /**
      * Creates a new instance of the NamespaceResolver.
      * @param composerJsonService Service for retrieving and parsing composer.json files
+     * @param namespacePathValidator Validator for ensuring namespace paths are valid
      */
-    constructor(private readonly composerJsonService: ComposerJsonService) {}
+    constructor(
+        private readonly composerJsonService: ComposerJsonService,
+        private readonly namespacePathValidator: NamespacePathValidator
+    ) {}
 
     /**
-     * Resolves the PHP namespace for a given file URI.
+     * Safely resolves the PHP namespace for a given file URI.
+     * Validates the namespace after resolution.
+     * @param uri The URI of the file to resolve the namespace for
+     * @returns The resolved and validated PHP namespace or undefined if not resolvable
+     * @throws Error if the resolved namespace is invalid
+     */
+    public async resolve(uri: vscode.Uri): Promise<string | undefined> {
+        const namespace = await this.resolveUnsafe(uri);
+        if (!namespace) {
+            return undefined;
+        }
+
+        if (!(await this.namespacePathValidator.validate(namespace))) {
+            throw new Error(`Invalid namespace path: ${namespace}`);
+        }
+
+        return namespace;
+    }
+
+    /**
+     * Resolves the PHP namespace for a given file URI without validation.
+     * This method attempts to resolve namespaces via composer.json first,
+     * then falls back to alternative methods if needed.
      * @param uri The URI of the file to resolve the namespace for
      * @returns The resolved PHP namespace or undefined if not resolvable
      */
-    public async resolve(uri: vscode.Uri): Promise<string | undefined> {
+    public async resolveUnsafe(uri: vscode.Uri): Promise<string | undefined> {
+        const composerNamespace = await this.resolveByComposerJson(uri);
+        if (composerNamespace) {
+            return composerNamespace;
+        }
+
+        return await this.resolveByFallback(uri);
+    }
+
+    /**
+     * Attempts to resolve a namespace by looking up composer.json autoload configurations.
+     * This is the primary namespace resolution strategy and follows Composer's autoloading rules.
+     * @param uri The URI of the file to resolve the namespace for
+     * @returns The resolved namespace from composer.json or undefined if not found
+     */
+    private async resolveByComposerJson(uri: vscode.Uri): Promise<string | undefined> {
         const composerJsonUri = await this.composerJsonService.find(uri);
         if (!composerJsonUri) {
-            return this.getNamespaceFallback();
+            return undefined;
         }
 
         const autoloadConfigs = await this.composerJsonService.resolveAutoloadConfigs(composerJsonUri);
         if (!autoloadConfigs) {
-            return this.getNamespaceFallback();
+            return undefined;
         }
 
         const composerDirectory = path.dirname(composerJsonUri.fsPath);
         const relativeFilePath = path.relative(composerDirectory, uri.fsPath);
-        const namespace = this.findNamespace(relativeFilePath, autoloadConfigs);
+        return this.findNamespace(relativeFilePath, autoloadConfigs);
+    }
 
-        return namespace ?? this.getNamespaceFallback();
+    /**
+     * Fallback namespace resolution strategy when composer.json cannot be found or
+     * doesn't contain applicable autoload configurations. Uses the workspace folder
+     * structure and configuration settings to determine a namespace.
+     * @param uri The URI of the file to resolve the namespace for
+     * @returns The resolved fallback namespace or undefined if fallback is disabled
+     */
+    private async resolveByFallback(uri: vscode.Uri): Promise<string | undefined> {
+        const fallbackNamespace = this.getNamespaceFallback();
+        if (!fallbackNamespace) {
+            return undefined;
+        }
+
+        const workspaceFolder = vscode.workspace.getWorkspaceFolder(uri);
+        if (!workspaceFolder) {
+            return fallbackNamespace;
+        }
+
+        const workspacePath = workspaceFolder.uri.fsPath;
+        const relativeFilePath = path.relative(workspacePath, uri.fsPath);
+        const namespace = this.buildNamespace(relativeFilePath, { namespace: fallbackNamespace + "\\", directory: "" });
+
+        return namespace || fallbackNamespace;
     }
 
     /**
@@ -148,7 +213,7 @@ export class NamespaceResolver {
      */
     private getDirectoryMatch(path: string, directory: string, namespace: string): NamespaceMatchType | undefined {
         const normalizedDirectory = getPathNormalized(directory);
-        if (path.startsWith(normalizedDirectory + "/") || path === normalizedDirectory) {
+        if (!normalizedDirectory || path.startsWith(normalizedDirectory + "/") || path === normalizedDirectory) {
             return { namespace: namespace, directory: normalizedDirectory };
         }
         return undefined;
@@ -184,7 +249,7 @@ export class NamespaceResolver {
      * @param isPsr0 Whether to use PSR-0 or PSR-4 autoloading rules
      * @returns The complete namespace string
      */
-    private buildNamespace(filePath: string, namespaceMatch: NamespaceMatchType, isPsr0: boolean): string {
+    private buildNamespace(filePath: string, namespaceMatch: NamespaceMatchType, isPsr0?: boolean): string {
         const relativeFilePath = path.relative(namespaceMatch.directory, filePath);
         const parsedFilePath = path.parse(relativeFilePath);
 
@@ -207,7 +272,7 @@ export class NamespaceResolver {
      * @param isPsr0 Whether to apply PSR-0 specific rules
      * @returns An array of namespace segments
      */
-    private getNamespaceSegmentsFromPath(relativePath: string, namespacePrefix: string, isPsr0: boolean): string[] {
+    private getNamespaceSegmentsFromPath(relativePath: string, namespacePrefix: string, isPsr0?: boolean): string[] {
         if (!relativePath) {
             return [];
         }

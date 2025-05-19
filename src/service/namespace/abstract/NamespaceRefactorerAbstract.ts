@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { detectLinebreakType } from "../../../utils/string/detectLinebreakType";
 import { findEditorByUri } from "../../../utils/vscode/findEditorByUri";
 import { getFileContentByUri } from "../../../utils/vscode/getFileContentByUri";
 import { setFileContentByUri } from "../../../utils/vscode/setFileContentByUri";
@@ -61,16 +62,20 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
             return content;
         }
 
+        const linebreakType = detectLinebreakType(content);
         const useStatement = `use ${namespace}\\${identifier};`;
 
         const lastUseStatementRegExp = this.namespaceRegExpProvider.getLastUseStatementRegExp();
         const lastUseStatementMatch = content.match(lastUseStatementRegExp);
         if (lastUseStatementMatch) {
             const lastUseMatch = lastUseStatementMatch[lastUseStatementMatch.length - 1];
-            return content.replace(lastUseMatch, `${lastUseMatch}\n${useStatement}`);
+            return content.replace(lastUseMatch, `${lastUseMatch}${linebreakType}${useStatement}`);
         }
 
-        return content.replace(namespaceDeclarationMatch[0], `${namespaceDeclarationMatch[0]}\n\n${useStatement}`);
+        return content.replace(
+            namespaceDeclarationMatch[0],
+            `${namespaceDeclarationMatch[0]}${linebreakType}${useStatement}`
+        );
     }
 
     /**
@@ -103,7 +108,7 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
         const fullQualifiedNamespace = `${namespace}\\${identifier}`;
         const useStatementRegExp = this.namespaceRegExpProvider.getUseStatementRegExp(fullQualifiedNamespace);
         const useStatementWithLineBreakRegExp = new RegExp(
-            `${useStatementRegExp.source}\\s*?\\r?\\n?\\r?`,
+            `${useStatementRegExp.source}\\s*?\\r?\\n?`,
             useStatementRegExp.flags
         );
 

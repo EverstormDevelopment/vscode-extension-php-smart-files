@@ -13,40 +13,17 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
      * @returns True if refactoring was successfully performed, otherwise False.
      */
     public async refactor(refactorDetails: NamespaceRefactorDetailsType): Promise<boolean> {
-        try {
-            if (!this.isRefactorable(refactorDetails)) {
-                return false;
-            }
-
-            return await this.refactorFile(refactorDetails);
-        } catch (error) {
-            const errorDetails = error instanceof Error ? error.message : String(error);
-            const errorMessage = vscode.l10n.t("Error during namespace refactoring: {0}", errorDetails);
-            vscode.window.showErrorMessage(errorMessage);
-            return false;
-        }
-    }
-
-    /**
-     * Checks if the file is suitable for refactoring.
-     * @param refactorDetails The details for the refactoring operation.
-     * @returns True if the file can be refactored, otherwise False.
-     * @throws Error if the filename is not a valid PHP identifier.
-     */
-    private isRefactorable(refactorDetails: NamespaceRefactorDetailsType): boolean {
-        if (!refactorDetails.new.isFileNameValid) {
-            const message = vscode.l10n.t(
-                "The provided name '{0}' is not a valid PHP identifier. The refactoring process has been canceled.",
-                refactorDetails.new.fileName
-            );
-            throw new Error(message);
-        }
-
         if (!refactorDetails.hasNamespaces || !refactorDetails.hasChanged) {
             return false;
         }
 
-        return true;
+        try {
+            return await this.refactorFile(refactorDetails);
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            vscode.window.showWarningMessage(errorMessage);
+            return false;
+        }
     }
 
     /**
@@ -102,6 +79,14 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
         return content.replace(namespaceRegExp, `namespace ${refactorDetails.new.namespace};`);
     }
 
+    /**
+     * Refactors the class, interface, or trait definition in the file content to
+     * reflect the new identifier.
+     * @param content The original file content.
+     * @param refactorDetails Details about what needs to be refactored.
+     * @returns The content with the updated definition.
+     * @throws Error if no valid definition is found in the content.
+     */
     private refactorDefinition(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
         const definitionRegExp = this.namespaceRegExpProvider.getDefinitionRegExp();
         const definitionMatch = definitionRegExp.exec(content);

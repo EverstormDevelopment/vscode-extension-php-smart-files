@@ -16,8 +16,9 @@
 
   "php-smart-files.config.useStrictTypeInTemplates.description": "Bestimmt, ob `declare(strict_types=1);` in die generierten Dateien eingefügt werden soll.",
 
-  "php-smart-files.config.useFallbackNamespace.description": "Bestimmt, ob bei fehlendem Namespace der Fallback-Namespace verwendet werden soll. Wenn deaktiviert, wird kein Namespace hinzugefügt.",
-  "php-smart-files.config.fallbackNamespace.description": "Definiert den Namespace, der verwendet wird, wenn der Fallback-Namespace aktiviert ist und kein anderer Namespace gefunden werden konnte.",
+  "php-smart-files.config.useFallbackNamespace.description": "Bestimmt, ob ein Fallback-Namespace verwendet werden soll, wenn kein Namespace über composer.json aufgelöst werden konnte. Wenn aktiviert, wird ein Namespace basierend auf dem relativen Pfad der Datei vom Arbeitsverzeichnis aus erstellt, beginnend mit dem Fallback-Namespace als Präfix. Wenn deaktiviert, wird kein Namespace hinzugefügt.",
+  
+  "php-smart-files.config.fallbackNamespace.description": "Definiert den Basis-Namespace-Präfix, der verwendet wird, wenn der Fallback-Namespace aktiviert ist. Der vollständige Namespace wird durch die Kombination dieses Präfixes mit der Verzeichnisstruktur der Datei erstellt (z.B. wird aus 'App' + '\\UnterVerzeichnis\\WeiteresVerzeichnis' der Namespace 'App\\UnterVerzeichnis\\WeiteresVerzeichnis').",
   "php-smart-files.config.fallbackNamespace.patternErrorMessage": "Der Namespace muss ein gültiger PHP-Namespace gemäß PSR-4 sein (z.B. 'App', 'Vendor\\Service'). Jedes Segment muss mit einem Großbuchstaben beginnen.",
   
   "php-smart-files.config.refactorNamespacesOnFileMoved.description": "Bestimmt, ob nach dem Verschieben einer Datei der Namespace in der Datei und in deren Referenzen refaktoriert werden soll.",
@@ -29,6 +30,11 @@
   "php-smart-files.config.refactorNamespacesOnFileRenamed.confirm": "Nach Bestätigung",
   "php-smart-files.config.refactorNamespacesOnFileRenamed.always": "Immer ohne Nachfrage",
   "php-smart-files.config.refactorNamespacesOnFileRenamed.never": "Niemals",
+  
+  "php-smart-files.config.refactorNamespacesOnDirectoryChanges.description": "Bestimmt, ob nach dem Verschieben oder Umbenennen eines Verzeichnisses die Namespaces in allen Dateien innerhalb dieses Verzeichnisses und deren Referenzen refaktoriert werden sollen.",
+  "php-smart-files.config.refactorNamespacesOnDirectoryChanges.confirm": "Nach Bestätigung",
+  "php-smart-files.config.refactorNamespacesOnDirectoryChanges.always": "Immer ohne Nachfrage",
+  "php-smart-files.config.refactorNamespacesOnDirectoryChanges.never": "Niemals",
   
   "php-smart-files.config.refactorNamespacesExcludeDirectories.description": "Die angegebenen Verzeichnisse werden beim Refactoring von Namespaces ausgeschlossen. (Anmerkung: Die Angaben werden im Glob-Muster erwartet, z.B. `/vendor/**`, `var/cache/**` oder `**/temp/**`.)"
 }

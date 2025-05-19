@@ -14,10 +14,10 @@ export type AutoloadConfigsType = {
     /**
      * PSR-4 autoloading configuration where namespace prefixes map directly to directories
      */
-    psr4: AutoloadConfigType;
+    psr4?: AutoloadConfigType;
 
     /**
      * PSR-0 autoloading configuration with underscores in class names mapping to directory separators
      */
-    psr0: AutoloadConfigType;
+    psr0?: AutoloadConfigType;
 };

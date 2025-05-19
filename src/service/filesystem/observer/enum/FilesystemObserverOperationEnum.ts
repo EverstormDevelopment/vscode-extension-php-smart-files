@@ -1,7 +1,7 @@
 /**
- * Enum representing the types of file rename operations.
+ * Enum representing the types of filesystem operations.
  */
-export enum FileRenameOperationTypeEnum {
+export enum FilesystemObserverOperationEnum {
     /**
      * File was moved to a new location
      */

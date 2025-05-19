@@ -1,9 +1,59 @@
 # Change Log
 
-All notable changes to the extension will be documented in this file.
+All notable changes to the "PHP Smart Files" extension will be documented in this file.
 <!-- Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file. -->
 
-## [Unreleased]
+## [0.8.0] - 2025-05-19
+
+### Changed
+- Improved file and directory observers to work in a truly lazy manner:
+  - Observers register only when PHP files exist in the workspace
+  - Observers now dynamically register when the first PHP file is added to a previously non-PHP project
+  - This ensures proper refactoring support even when PHP files are added later to an initially non-PHP project
+- Enhanced fallback namespace mechanism:
+  - When enabled, the fallback namespace now builds the complete namespace based on the file location relative to the workspace directory
+  - Previously, it would only use the configured fallback namespace value without considering the file path structure
+  - This provides a more intuitive namespace structure that mirrors the directory hierarchy even when composer.json is absent
+- Improved configuration descriptions for namespace settings:
+  - Updated descriptions of `useFallbackNamespace` and `fallbackNamespace` settings to better explain the new namespace construction mechanism
+  - Added clear examples showing how directory structure is incorporated into the namespace
+  - Made descriptions more consistent and comprehensive across all supported languages
+- Refined filename validation with more specific error messages:
+  - Split generic "invalid characters" error into two distinct messages
+  - Added specific feedback for filesystem-invalid characters
+  - Added warning for characters that may cause issues with PHP includes or URLs
+- Added namespace validation to prevent invalid namespaces:
+  - Invalid directory structures no longer generate invalid PHP namespaces
+  - Validation ensures all namespaces are valid PHP identifiers
+- Improved error handling with better messaging:
+  - Converted acceptable but important issues from error messages to warnings
+  - Redesigned notification messages to communicate problems more clearly and effectively
+  - Enhanced visual distinction between critical errors and important warnings
+
+### Fixed
+- Fixed refactoring issue with files that were previously in invalid directories:
+  - Corrected handling of files that are moved from invalid to valid directories
+  - Fixed namespace updates when an invalid directory is renamed to a valid one
+  - Now properly updates class definition and all references when namespace becomes valid after a move/rename operation
+  - Ensures consistent refactoring even when files transition from invalid to valid namespace contexts
+
+
+
+## [0.7.0] - 2025-05-16
+
+### Added
+- Added support for directory operations (renaming/moving):
+  - All files within a changed directory are now refactored as if they were individually moved
+  - Namespace declarations in all affected files are automatically adjusted
+  - All references to the affected files in the workspace are updated accordingly
+- Added configuration `refactorNamespacesOnDirectoryChanges` to control behavior when directories are renamed or moved:
+  - `confirm` (default): Prompts for confirmation before refactoring
+  - `always`: Automatically refactors without confirmation
+  - `never`: Disables the feature
+
+### Changed
+- Significantly improved performance by processing reference updates in parallel
+- Now preserving line break styles (CR, LF, CRLF) in all refactored files
 
 
 

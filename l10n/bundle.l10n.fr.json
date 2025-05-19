@@ -39,9 +39,12 @@
   "Cancel": "Annuler",
   "Error creating file: {0}": "Erreur lors de la création du fichier : {0}",
   "Error reading composer.json": "Erreur de lecture du fichier composer.json",
-
+  
   "Please enter a valid filename": "Veuillez entrer un nom de fichier valide",
-  "Filename contains invalid characters": "Le nom du fichier contient des caractères non valides",
+  "Filename contains characters not allowed by the file system": "Le nom du fichier contient des caractères non autorisés par le système de fichiers",
+  "Filename contains characters that may cause issues with PHP includes or URLs": "Le nom du fichier contient des caractères qui pourraient causer des problèmes avec les includes PHP ou les URLs",
+  "Namespace skipped: The detected namespace was invalid due to invalid names in the directory structure.": "Espace de noms ignoré : L'espace de noms détecté était invalide en raison de noms invalides dans la structure de répertoires.",
+  
   "Please enter a valid definition name": "Veuillez entrer un nom de définition valide",
   "Definition name must start with a letter or underscore": "Le nom de définition doit commencer par une lettre ou un underscore",
   "Definition name must start with an uppercase letter or underscore": "Le nom de définition doit commencer par une lettre majuscule ou un underscore",
@@ -55,9 +58,11 @@
   "Updating references from \"{0}\" to \"{1}\"": "Mise à jour des références de \"{0}\" vers \"{1}\"",
   "Processing file {0} of {1}": "Traitement du fichier {0} sur {1}",
   "Error updating references in file {0}: {1}": "Erreur lors de la mise à jour des références dans le fichier {0} : {1}",
-
+  
   "Would you like to update the declaration identifer to \"{0}\" and update its references?": "Souhaitez-vous mettre à jour l'identifiant de déclaration en \"{0}\" et mettre à jour ses références ?",
+  "The detected namespace '{0}' is not a valid PHP namespace. The refactoring process has been canceled.": "L'espace de noms détecté '{0}' n'est pas un espace de noms PHP valide. Le processus de refactoring a été annulé.",
   "The provided name '{0}' is not a valid PHP identifier. The refactoring process has been canceled.": "Le nom fourni '{0}' n'est pas un identifiant PHP valide. Le processus de refactoring a été annulé.",
   "Unable to locate a valid definition. The refactoring process has been canceled.": "Impossible de localiser une définition valide. Le processus de refactoring a été annulé.",
-  "The previous name '{0}' was not a valid PHP identifier. The refactoring process has been canceled.": "Le nom précédent '{0}' n'était pas un identifiant PHP valide. Le processus de refactorisation a été annulé."
+  
+  "Would you like to update all files and their references for directory \"{0}\"? This operation may take some time depending on the directory content and project size.": "Souhaitez-vous mettre à jour tous les fichiers et leurs références pour le répertoire \"{0}\" ? Cette opération peut prendre du temps selon le contenu du répertoire et la taille du projet."
 }

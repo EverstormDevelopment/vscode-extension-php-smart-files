@@ -21,16 +21,9 @@ export class ComposerJsonParser {
             const content = await vscode.workspace.fs.readFile(composerJsonUri);
             return JSON.parse(Buffer.from(content).toString("utf8")) as ComposerJsonType;
         } catch (error: unknown) {
-            this.showErrorMessage(vscode.l10n.t("Error reading composer.json"));
+            const message = vscode.l10n.t("Error reading composer.json");
+            vscode.window.showErrorMessage(message);
             throw error;
         }
-    }
-
-    /**
-     * Shows an error message to the user.
-     * @param message The main error message to display
-     */
-    private showErrorMessage(message: string): void {
-        vscode.window.showErrorMessage(message);
     }
 }

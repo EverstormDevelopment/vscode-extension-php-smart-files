@@ -1,10 +1,12 @@
 import { FileGenerationCommand } from "../../extension/command/FileGenerationCommand";
+import { DirectoryChangeObserver } from "../../extension/observer/DirectoryChangeObserver";
 import { FileMovedObserver } from "../../extension/observer/FileMovedObserver";
 import { FileRenamedObserver } from "../../extension/observer/FileRenamedObserver";
 import { ComposerJsonFinder } from "../../service/composer/model/ComposerJsonFinder";
 import { ComposerJsonParser } from "../../service/composer/model/ComposerJsonParser";
 import { ComposerJsonService } from "../../service/composer/model/ComposerJsonService";
 import { FileCreator } from "../../service/filesystem/file/model/FileCreator";
+import { FilesystemObserver } from "../../service/filesystem/observer/model/FilesystemObserver";
 import { UriFolderResolver } from "../../service/filesystem/uri/UriFolderResolver";
 import { InputBoxFactory } from "../../service/input/build/InputBoxFactory";
 import { NamespaceFileRefactorer } from "../../service/namespace/model/NamespaceFileRefactorer";
@@ -13,8 +15,10 @@ import { NamespaceReferencesRefactorer } from "../../service/namespace/model/Nam
 import { NamespaceResolver } from "../../service/namespace/model/NamespaceResolver";
 import { NamespaceRefactorDetailsProvider } from "../../service/namespace/provider/NamespaceRefactorDetailsProvider";
 import { NamespaceRegExpProvider } from "../../service/namespace/provider/NamespaceRegExpProvider";
+import { NamespaceIdentifierValidator } from "../../service/namespace/validator/NamespaceIdentifierValidator";
 import { SnippetFactory } from "../../service/snippet/build/SnippetFactory";
 import { ContainerRegistrationType } from "../type/ContainerRegistrationType";
+import { NamespacePathValidator } from "./../../service/namespace/validator/NamespacePathValidator";
 
 /**
  * Registry for all services in the application that should
@@ -42,29 +46,37 @@ export const ContainerRegistry: ContainerRegistrationType[] = [
         dependencies: [],
     },
     {
-        constructor: SnippetFactory,
-        dependencies: [],
-    },
-    {
         constructor: ComposerJsonService,
         dependencies: [ComposerJsonFinder, ComposerJsonParser],
     },
     {
-        constructor: NamespaceResolver,
-        dependencies: [ComposerJsonService],
-    },
-    {
-        constructor: FileGenerationCommand,
-        dependencies: [UriFolderResolver, InputBoxFactory, FileCreator, NamespaceResolver, SnippetFactory],
+        constructor: SnippetFactory,
+        dependencies: [],
     },
     {
         constructor: NamespaceRegExpProvider,
         dependencies: [],
     },
     {
+        constructor: NamespacePathValidator,
+        dependencies: [NamespaceRegExpProvider],
+    },
+    {
+        constructor: NamespaceIdentifierValidator,
+        dependencies: [NamespaceRegExpProvider],
+    },
+    {
+        constructor: NamespaceResolver,
+        dependencies: [ComposerJsonService, NamespacePathValidator],
+    },
+    {
+        constructor: FileGenerationCommand,
+        dependencies: [UriFolderResolver, InputBoxFactory, FileCreator, NamespaceResolver, SnippetFactory],
+    },
+    {
         constructor: NamespaceRefactorDetailsProvider,
-        dependencies: [NamespaceResolver, NamespaceRegExpProvider],
-    },    
+        dependencies: [NamespaceResolver, NamespaceRegExpProvider, NamespacePathValidator, NamespaceIdentifierValidator],
+    },
     {
         constructor: NamespaceFileRefactorer,
         dependencies: [NamespaceRegExpProvider],
@@ -78,11 +90,19 @@ export const ContainerRegistry: ContainerRegistrationType[] = [
         dependencies: [NamespaceRefactorDetailsProvider, NamespaceFileRefactorer, NamespaceReferencesRefactorer],
     },
     {
+        constructor: FilesystemObserver,
+        dependencies: [],
+    },
+    {
         constructor: FileMovedObserver,
-        dependencies: [NamespaceRefactorService],
+        dependencies: [FilesystemObserver, NamespaceRefactorService],
     },
     {
         constructor: FileRenamedObserver,
-        dependencies: [NamespaceRefactorService],
+        dependencies: [FilesystemObserver, NamespaceRefactorService],
+    },
+    {
+        constructor: DirectoryChangeObserver,
+        dependencies: [FilesystemObserver, NamespaceRefactorService],
     },
 ];

@@ -41,7 +41,10 @@
   "Error reading composer.json": "Error reading composer.json",
 
   "Please enter a valid filename": "Please enter a valid filename",
-  "Filename contains invalid characters": "Filename contains invalid characters",
+  "Filename contains characters not allowed by the file system": "Filename contains characters not allowed by the file system",
+  "Filename contains characters that may cause issues with PHP includes or URLs": "Filename contains characters that may cause issues with PHP includes or URLs",
+  "Namespace skipped: The detected namespace was invalid due to invalid names in the directory structure.": "Namespace skipped: The detected namespace was invalid due to invalid names in the directory structure.",
+
   "Please enter a valid definition name": "Please enter a valid definition name",
   "Definition name must start with a letter or underscore": "Definition name must start with a letter or underscore",
   "Definition name must start with an uppercase letter or underscore": "Definition name must start with an uppercase letter or underscore",
@@ -57,7 +60,9 @@
   "Error updating references in file {0}: {1}": "Error updating references in file {0}: {1}",
 
   "Would you like to update the declaration identifer to \"{0}\" and update its references?": "Would you like to update the declaration identifer to \"{0}\" and update its references?",
+  "The detected namespace '{0}' is not a valid PHP namespace. The refactoring process has been canceled.": "The detected namespace '{0}' is not a valid PHP namespace. The refactoring process has been canceled.",
   "The provided name '{0}' is not a valid PHP identifier. The refactoring process has been canceled.": "The provided name '{0}' is not a valid PHP identifier. The refactoring process has been canceled.",
-  "The previous name '{0}' was not a valid PHP identifier. The refactoring process has been canceled.": "The previous name '{0}' was not a valid PHP identifier. The refactoring process has been canceled.",
-  "Unable to locate a valid definition. The refactoring process has been canceled.": "Unable to locate a valid definition. The refactoring process has been canceled."
+  "Unable to locate a valid definition. The refactoring process has been canceled.": "Unable to locate a valid definition. The refactoring process has been canceled.",
+
+  "Would you like to update all files and their references for directory \"{0}\"? This operation may take some time depending on the directory content and project size.": "Would you like to update all files and their references for directory \"{0}\"? This operation may take some time depending on the directory content and project size."
 }

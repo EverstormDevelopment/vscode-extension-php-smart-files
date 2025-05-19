@@ -39,9 +39,12 @@
   "Cancel": "Отмена",
   "Error creating file: {0}": "Ошибка при создании файла: {0}",
   "Error reading composer.json": "Ошибка чтения composer.json",
-
+  
   "Please enter a valid filename": "Пожалуйста, введите корректное имя файла",
-  "Filename contains invalid characters": "Имя файла содержит недопустимые символы",
+  "Filename contains characters not allowed by the file system": "Имя файла содержит символы, не допустимые файловой системой",
+  "Filename contains characters that may cause issues with PHP includes or URLs": "Имя файла содержит символы, которые могут вызвать проблемы с PHP-включениями или URL-адресами",
+  "Namespace skipped: The detected namespace was invalid due to invalid names in the directory structure.": "Пространство имён пропущено: Обнаруженное пространство имён было недействительным из-за некорректных имён в структуре каталогов.",
+  
   "Please enter a valid definition name": "Пожалуйста, введите корректное имя определения",
   "Definition name must start with a letter or underscore": "Имя определения должно начинаться с буквы или подчеркивания",
   "Definition name must start with an uppercase letter or underscore": "Имя определения должно начинаться с заглавной буквы или подчеркивания",
@@ -57,7 +60,9 @@
   "Error updating references in file {0}: {1}": "Ошибка обновления ссылок в файле {0}: {1}",
   
   "Would you like to update the declaration identifer to \"{0}\" and update its references?": "Хотите обновить идентификатор объявления на \"{0}\" и обновить все его ссылки?",
+  "The detected namespace '{0}' is not a valid PHP namespace. The refactoring process has been canceled.": "Обнаруженное пространство имен '{0}' не является допустимым пространством имен PHP. Процесс рефакторинга отменен.",
   "The provided name '{0}' is not a valid PHP identifier. The refactoring process has been canceled.": "Указанное имя '{0}' не является допустимым идентификатором PHP. Процесс рефакторинга отменен.",
   "Unable to locate a valid definition. The refactoring process has been canceled.": "Не удалось найти действительное определение. Процесс рефакторинга отменен.",
-  "The previous name '{0}' was not a valid PHP identifier. The refactoring process has been canceled.": "Предыдущее имя '{0}' не является допустимым идентификатором PHP. Процесс рефакторинга был отменен."
+  
+  "Would you like to update all files and their references for directory \"{0}\"? This operation may take some time depending on the directory content and project size.": "Хотите обновить все файлы и их ссылки для каталога \"{0}\"? Эта операция может занять некоторое время в зависимости от содержимого каталога и размера проекта."
 }

@@ -38,7 +38,7 @@ export class FileGenerationCommand {
     async execute(fileType: FileTypeEnum, uri?: vscode.Uri): Promise<void> {
         const targetFolder = await this.getTargetFolder(uri);
         if (!targetFolder) {
-            vscode.window.showErrorMessage(vscode.l10n.t("No target folder selected or no workspace opened."));
+            vscode.window.showWarningMessage(vscode.l10n.t("No target folder selected or no workspace opened."));
             return;
         }
 

@@ -21,7 +21,7 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
             return await this.refactorFile(refactorDetails);
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : String(error);
-            vscode.window.showErrorMessage(errorMessage);
+            vscode.window.showWarningMessage(errorMessage);
             return false;
         }
     }

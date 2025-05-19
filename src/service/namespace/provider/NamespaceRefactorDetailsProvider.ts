@@ -79,7 +79,6 @@ export class NamespaceRefactorDetailsProvider {
             const namespace = await this.namespaceResolver.resolve(uri);
             return namespace || "";
         } catch (error) {
-            debugger;
             return "";
         }
     }

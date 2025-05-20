@@ -9,7 +9,7 @@
 
 ### Seamless PHP File Creation & Intelligent Namespace Management
 
-**Accelerate your PHP development!** Create perfectly structured files with smart templates while automatic namespace management takes care of the rest
+**Streamline your PHP development!** Create properly structured files with smart templates while automatic namespace management handles refactoring and references
 
 </div>
 
@@ -18,7 +18,7 @@
 - [Usage](#usage)
 - [Extension Settings](#extension-settings)
 - [Why PHP Smart Files?](#why-php-smart-files)
-- [Supported Languages](#supported-languages)
+- [Localization](#localization)
 - [Requirements](#requirements)
 - [Release Notes](#release-notes)
 - [Feedback and Contributions](#feedback-and-contributions)
@@ -26,7 +26,7 @@
 
 ## Features
 
-PHP Smart Files is a powerful extension for VS Code that streamlines your PHP development workflow by automating file creation and comprehensive namespace management:
+PHP Smart Files extends VS Code to enhance your PHP development workflow through automated file creation and intelligent namespace management:
 
 ### 🚀 Smart PHP File Creation
 
@@ -57,7 +57,7 @@ Save time and prevent bugs with comprehensive namespace management:
   - Removes redundant use statements when files share namespace
   - Updates fully qualified namespace references
   - Supports use statements with aliases
-- **Performance Optimized**: Processes reference updates in parallel
+- **Efficient Processing**: Handles reference updates in parallel for better performance
 - **Flexible Configuration**: Control refactoring behavior for each operation type
 
 ![Namespace Refactoring](images/refactoring.gif)
@@ -121,14 +121,14 @@ PHP Smart Files offers comprehensive configuration options:
 - **Works with Composer**: Connect seamlessly with your project's PSR-4 configuration
 - **Supports Symfony**: Access specialized templates for Symfony development
 
-### Compared to Other Extensions
-- **Detect namespaces**: Use your composer.json for accurate namespace resolution with intelligent fallback
-- **Refactor completely**: Update both the changed files AND all references to them
-- **Supports directories**: Handle directory operations with the same intelligence as file operations
-- **Optimize performance**: Process updates in parallel for faster operations in large projects
-- **Preserve line endings**: Maintain your preferred line break style (CR, LF, CRLF)
+### What Makes It Special
+- **Smart namespace handling**: Use your composer.json for accurate namespace resolution with intelligent fallback
+- **Full-scope refactoring**: Update both the changed files AND all references to them
+- **Directory-aware operations**: Intelligently process directory-level changes with the same precision as file operations
+- **Efficient reference handling**: Process reference updates in parallel to speed up operations in large projects
+- **Format integrity**: Respects your preferred line break style (CR, LF, CRLF) during file operations
 
-## Supported Languages
+## Localization
 
 This extension is available in multiple languages:
 - English

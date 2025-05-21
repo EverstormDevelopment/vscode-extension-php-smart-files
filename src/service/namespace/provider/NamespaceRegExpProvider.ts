@@ -4,8 +4,26 @@ import { escapeRegExp } from "../../../utils/regexp/escapeRegExp";
  * Provides regular expressions for PHP namespace and identifier operations.
  */
 export class NamespaceRegExpProvider {
-    // General PHP identifier pattern (Unicode letters, digits, underscore)
+    /**
+     * General PHP identifier pattern (Unicode letters, digits, underscore)
+     */
     private static readonly identifierPattern = "[\\p{L}_][\\p{L}\\d_]*";
+
+    /**
+     * PHP keywords as case-insensitive patterns.
+     */
+    private static readonly keywordPatterns = {
+        namespace: "[nN][aA][mM][eE][sS][pP][aA][cC][eE]",
+        use: "[uU][sS][eE]",
+        as: "[aA][sS]",
+        class: "[cC][lL][aA][sS][sS]",
+        interface: "[iI][nN][tT][eE][rR][fF][aA][cC][eE]",
+        enum: "[eE][nN][uU][mM]",
+        trait: "[tT][rR][aA][iI][tT]",
+        extends: "[eE][xX][tT][eE][nN][dD][sS]",
+        implements: "[iI][mM][pP][lL][eE][mM][eE][nN][tT][sS]",
+        new: "[nN][eE][wW]",
+    };
 
     /**
      * Escapes a string for use in a regular expression.
@@ -40,7 +58,8 @@ export class NamespaceRegExpProvider {
      * @returns RegExp for finding namespace declarations.
      */
     public getNamespaceDeclarationRegExp(): RegExp {
-        return new RegExp(/[^\r\n\s]*namespace\s+([\p{L}\d_\\]+)\s*;/mu);
+        const namespacePattern = NamespaceRegExpProvider.keywordPatterns.namespace;
+        return new RegExp(`[^\\r\\n\\s]*${namespacePattern}\\s+([\\p{L}\\d_\\\\]+)\\s*;`, "mu");
     }
 
     /**
@@ -48,8 +67,18 @@ export class NamespaceRegExpProvider {
      * @returns RegExp for finding PHP definitions.
      */
     public getDefinitionRegExp(): RegExp {
+        const {
+            class: classPattern,
+            interface: interfacePattern,
+            enum: enumPattern,
+            trait: traitPattern,
+        } = NamespaceRegExpProvider.keywordPatterns;
         const identifierPattern = NamespaceRegExpProvider.identifierPattern;
-        return new RegExp(`\\b(class|interface|enum|trait)\\s+(${identifierPattern})`, "gu");
+
+        return new RegExp(
+            `\\b(${classPattern}|${interfacePattern}|${enumPattern}|${traitPattern})\\s+(${identifierPattern})`,
+            "gu"
+        );
     }
 
     /**
@@ -66,20 +95,27 @@ export class NamespaceRegExpProvider {
      * @returns RegExp for finding non-qualified references.
      */
     public getNonQualifiedReferenceRegExp(): RegExp {
+        const {
+            extends: extendsPattern,
+            implements: implementsPattern,
+            new: newPattern,
+            use: usePattern,
+        } = NamespaceRegExpProvider.keywordPatterns;
         const identifierPattern = NamespaceRegExpProvider.identifierPattern;
-        const patterns = [
+
+        const orPatterns = [
             // Attribute annotations (PHP 8+)
             `#\\[\\s*(${identifierPattern})`,
             // Extends/implements clauses
-            `(?:extends|implements)\\s+(${identifierPattern})(?!\\s*\\\\)`,
+            `(?:${extendsPattern}|${implementsPattern})\\s+(${identifierPattern})(?!\\s*\\\\)`,
             // New instantiations
-            `new\\s+(${identifierPattern})(?!\\s*\\\\)`,
+            `${newPattern}\\s+(${identifierPattern})(?!\\s*\\\\)`,
             // use statements (single-level namespaces only)
-            `use\\s+(${identifierPattern})\\s*;`,
+            `${usePattern}\\s+(${identifierPattern})\\s*;`,
             // Static access
             `\\b(${identifierPattern})(?!\\s*\\\\)::`,
         ];
-        return new RegExp(patterns.join("|"), "gu");
+        return new RegExp(orPatterns.join("|"), "gu");
     }
 
     /**
@@ -106,9 +142,10 @@ export class NamespaceRegExpProvider {
     ): RegExp {
         const escapedValue = this.escape(value);
         const identifierPattern = NamespaceRegExpProvider.identifierPattern;
+        const { use: usePattern, as: asPattern } = NamespaceRegExpProvider.keywordPatterns;
 
         let namespacePattern: string;
-        let aliasPattern = options?.includeAlias ? `(?:\\s+as\\s+(${identifierPattern}))?` : "";
+        let aliasPattern = options?.includeAlias ? `(?:\\s+${asPattern}\\s+(${identifierPattern}))?` : "";
 
         switch (options?.matchType) {
             case "partial":
@@ -116,7 +153,7 @@ export class NamespaceRegExpProvider {
                 break;
             case "alias":
                 namespacePattern = `[\\p{L}\\d_\\\\]+`;
-                aliasPattern = `\\s+as\\s+${escapedValue}`;
+                aliasPattern = `\\s+${asPattern}\\s+${escapedValue}`;
                 break;
             case "fullQualified":
             default:
@@ -124,7 +161,7 @@ export class NamespaceRegExpProvider {
                 break;
         }
 
-        return new RegExp(`use\\s+(${namespacePattern})${aliasPattern}\\s*;`, "gu");
+        return new RegExp(`${usePattern}\\s+(${namespacePattern})${aliasPattern}\\s*;`, "gu");
     }
 
     /**
@@ -133,6 +170,7 @@ export class NamespaceRegExpProvider {
      * @returns RegExp for finding all use statements.
      */
     public getLastUseStatementRegExp(): RegExp {
-        return new RegExp(/^use\s+[\p{L}\d_\\]+\s*;/gmu);
+        const { use: usePattern } = NamespaceRegExpProvider.keywordPatterns;
+        return new RegExp(`^${usePattern}\\s+[\\p{L}\\d_\\\\]+\\s*;`, "gmu");
     }
 }

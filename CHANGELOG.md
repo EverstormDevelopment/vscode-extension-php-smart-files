@@ -12,7 +12,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 
 ### Fixed
 - Fixed case-insensitive recognition of PHP keywords:
-  - Now properly recognizes PHP keywords like `namespace`, `use`, `class`, `interface`, `enum`, `trait`, etc. in any case variant (e.g., `Namespace`, `USE`, `Class`)
+  - Now properly recognizes PHP keywords like `namespace`, `use`, `class`, `interface`, `enum`, `trait`, etc. in any case variant (e.g., `NameSpace`, `USE`, `Class`)
   - This resolves issues where statements like `Namespace App\Foo` or `use App\Foo AS Bar` were not correctly recognized
   - All regex patterns for PHP keywords have been updated to handle case-insensitivity, matching PHP's own case-insensitive keyword handling
 

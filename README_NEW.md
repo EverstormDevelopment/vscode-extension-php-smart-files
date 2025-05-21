@@ -126,7 +126,7 @@ PHP Smart Files offers comprehensive configuration options:
 - **Full-scope refactoring**: Update both the changed files AND all references to them
 - **Directory-aware operations**: Intelligently process directory-level changes with the same precision as file operations
 - **Efficient reference handling**: Process reference updates in parallel to speed up operations in large projects
-- **Format integrity**: Respects your preferred line break style (CR, LF, CRLF) during file operations
+- **Format integrity**: Preserves your preferred line break style (CR, LF, CRLF) during all file operations
 
 ## Available Languages
 

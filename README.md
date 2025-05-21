@@ -168,9 +168,15 @@ This extension is available in multiple languages:
 
 ## Release Notes
 
-### Current Version: 0.8.0
+### Current Version: 0.8.1
 
-This version includes significant improvements:
+This version includes visual improvements and bug fixes:
+- Added extension icon and demonstration GIFs
+- Significantly improved README documentation
+- Fixed case-insensitive recognition of PHP keywords
+- Better handling of statements like `namespace`, `use AS` etc. in mixed case variants
+
+Previous version (0.8.0) included:
 - Enhanced fallback namespace with directory structure integration
 - Support for directory operations (move/rename)
 - Parallel processing for performance improvements

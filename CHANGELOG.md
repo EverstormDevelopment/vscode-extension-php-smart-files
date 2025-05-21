@@ -3,7 +3,7 @@
 All notable changes to the "PHP Smart Files" extension will be documented in this file.
 <!-- Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file. -->
 
-## [Unreleased]
+## [0.8.1] - 2025-05-21
 
 ### Changed
 - Added extension icon/logo

@@ -106,10 +106,10 @@ The extension automatically refactors namespaces and references during standard 
 |---------|-------------|---------|
 | `phpSmartFiles.useStrictTypeInTemplates` | Include `declare(strict_types=1);` in generated files | `false` |
 | `phpSmartFiles.useFallbackNamespace` | Use fallback namespace when no namespace could be resolved | `false` |
-| `phpSmartFiles.fallbackNamespace` | Base namespace for fallback (builds complete namespace based on file location) | `App` |
+| `phpSmartFiles.fallbackNamespace` | Base namespace for fallback (builds namespace based on file location) | `App` |
 | `phpSmartFiles.refactorNamespacesOnFileMoved` | Control behavior when files are moved<br>- `confirm`: Prompt for confirmation<br>- `always`: Automatically refactor<br>- `never`: Disable feature | `confirm` |
-| `phpSmartFiles.refactorNamespacesOnFileRenamed` | Control behavior when files are renamed<br>- `confirm`: Prompt for confirmation<br>- `always`: Automatically refactor<br>- `never`: Disable feature | `confirm` |
-| `phpSmartFiles.refactorNamespacesOnDirectoryChanges` | Control behavior when directories are moved or renamed<br>- `confirm`: Prompt for confirmation<br>- `always`: Automatically refactor<br>- `never`: Disable feature | `confirm` |
+| `phpSmartFiles.refactorNamespacesOnFileRenamed` | Control behavior when files are renamed (same options as `refactorNamespacesOnFileMoved`) | `confirm` |
+| `phpSmartFiles.refactorNamespacesOnDirectoryChanges` | Control behavior when directories are moved or renamed (same options as `refactorNamespacesOnFileMoved`) | `confirm` |
 | `phpSmartFiles.refactorNamespacesExcludeDirectories` | Directories to exclude when searching for references | Common directories like `vendor`, `node_modules`, etc. |
 
 ### Example Configuration

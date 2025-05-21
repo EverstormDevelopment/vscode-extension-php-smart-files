@@ -100,7 +100,7 @@ The extension automatically refactors namespaces and references during standard 
 
 ## Extension Settings
 
-PHP Smart Files offers comprehensive configuration options:
+### Configuration Options
 
 | Setting | Description | Default |
 |---------|-------------|---------|
@@ -111,6 +111,27 @@ PHP Smart Files offers comprehensive configuration options:
 | `phpSmartFiles.refactorNamespacesOnFileRenamed` | Control behavior when files are renamed<br>- `confirm`: Prompt for confirmation<br>- `always`: Automatically refactor<br>- `never`: Disable feature | `confirm` |
 | `phpSmartFiles.refactorNamespacesOnDirectoryChanges` | Control behavior when directories are moved or renamed<br>- `confirm`: Prompt for confirmation<br>- `always`: Automatically refactor<br>- `never`: Disable feature | `confirm` |
 | `phpSmartFiles.refactorNamespacesExcludeDirectories` | Directories to exclude when searching for references | Common directories like `vendor`, `node_modules`, etc. |
+
+### Example Configuration
+
+You can add these settings to your `settings.json` file:
+
+```json
+{
+  "phpSmartFiles.useStrictTypeInTemplates": true,
+  "phpSmartFiles.useFallbackNamespace": true,
+  "phpSmartFiles.fallbackNamespace": "MyProject",
+  "phpSmartFiles.refactorNamespacesOnFileMoved": "always",
+  "phpSmartFiles.refactorNamespacesExcludeDirectories": ["vendor/**", "tests/**"]
+}
+```
+
+This example configuration:
+- Enables strict type declarations in all generated files
+- Uses fallback namespace when no namespace configuration is found
+- Sets "MyProject" as the base namespace for fallbacks
+- Automatically refactors namespaces without confirmation when files are moved
+- Excludes the "vendor" and "tests" directories when searching for references
 
 ## Why PHP Smart Files?
 

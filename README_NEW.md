@@ -18,7 +18,7 @@
 - [Usage](#usage)
 - [Extension Settings](#extension-settings)
 - [Why PHP Smart Files?](#why-php-smart-files)
-- [Localization](#localization)
+- [Available Languages](#available-languages)
 - [Requirements](#requirements)
 - [Release Notes](#release-notes)
 - [Feedback and Contributions](#feedback-and-contributions)
@@ -107,9 +107,9 @@ PHP Smart Files offers comprehensive configuration options:
 | `phpSmartFiles.useStrictTypeInTemplates` | Include `declare(strict_types=1);` in generated files | `false` |
 | `phpSmartFiles.useFallbackNamespace` | Use fallback namespace when no namespace could be resolved | `false` |
 | `phpSmartFiles.fallbackNamespace` | Base namespace for fallback (builds complete namespace based on file location) | `App` |
-| `phpSmartFiles.refactorNamespacesOnFileMoved` | Control behavior when files are moved:<br>- `confirm`: Prompt for confirmation<br>- `always`: Automatically refactor<br>- `never`: Disable feature | `confirm` |
+| `phpSmartFiles.refactorNamespacesOnFileMoved` | Control behavior when files are moved<br>- `confirm`: Prompt for confirmation<br>- `always`: Automatically refactor<br>- `never`: Disable feature | `confirm` |
 | `phpSmartFiles.refactorNamespacesOnFileRenamed` | Control behavior when files are renamed<br>- `confirm`: Prompt for confirmation<br>- `always`: Automatically refactor<br>- `never`: Disable feature | `confirm` |
-| `phpSmartFiles.refactorNamespacesOnDirectoryChanges` | Control behavior when directories are moved/renamed<br>- `confirm`: Prompt for confirmation<br>- `always`: Automatically refactor<br>- `never`: Disable feature | `confirm` |
+| `phpSmartFiles.refactorNamespacesOnDirectoryChanges` | Control behavior when directories are moved or renamed<br>- `confirm`: Prompt for confirmation<br>- `always`: Automatically refactor<br>- `never`: Disable feature | `confirm` |
 | `phpSmartFiles.refactorNamespacesExcludeDirectories` | Directories to exclude when searching for references | Common directories like `vendor`, `node_modules`, etc. |
 
 ## Why PHP Smart Files?
@@ -117,7 +117,7 @@ PHP Smart Files offers comprehensive configuration options:
 ### For PHP Developers
 - **Save time**: Eliminate manual namespace updates when refactoring
 - **Prevent errors**: Maintain namespace consistency across your project
-- **Simplifies workflow**: Create properly structured PHP files with a single click
+- **Improve workflow**: Create properly structured PHP files with a single click
 - **Works with Composer**: Connect seamlessly with your project's PSR-4 configuration
 - **Supports Symfony**: Access specialized templates for Symfony development
 
@@ -128,7 +128,7 @@ PHP Smart Files offers comprehensive configuration options:
 - **Efficient reference handling**: Process reference updates in parallel to speed up operations in large projects
 - **Format integrity**: Respects your preferred line break style (CR, LF, CRLF) during file operations
 
-## Localization
+## Available Languages
 
 This extension is available in multiple languages:
 - English

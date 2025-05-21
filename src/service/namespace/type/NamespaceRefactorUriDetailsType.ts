@@ -36,7 +36,7 @@ export type NamespaceRefactorUriDetailsType = {
      * The invalid or problematic identifier value when isIdentifierValid is false
      * Stores the original, non-sanitized identifier string
      */
-    identifierInvalid?: string
+    identifierInvalid?: string;
 
     /**
      * Indicates whether the class/interface/trait identifier follows PHP naming conventions

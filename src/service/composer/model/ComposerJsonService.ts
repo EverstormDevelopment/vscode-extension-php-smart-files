@@ -1,9 +1,9 @@
 import * as vscode from "vscode";
-import { ComposerJsonFinder } from "./ComposerJsonFinder";
-import { ComposerJsonParser } from "./ComposerJsonParser";
 import { AutoloadConfigType } from "../type/AutoloadConfigType";
 import { AutoloadConfigsType } from "../type/AutoloadConfigsType";
 import { ComposerJsonType } from "../type/ComposerJsonType";
+import { ComposerJsonFinder } from "./ComposerJsonFinder";
+import { ComposerJsonParser } from "./ComposerJsonParser";
 
 /**
  * Service for resolving and parsing composer.json files in PHP projects.

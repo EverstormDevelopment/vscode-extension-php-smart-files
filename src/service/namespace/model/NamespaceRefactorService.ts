@@ -52,7 +52,7 @@ export class NamespaceRefactorService {
      */
     public async refactorDirectoryAndReferences(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<void> {
         const directoryRefactorDetails = await this.namespaceRefactorDetailsProvider.get(oldUri, newUri);
-        if(!this.isRefactorable(directoryRefactorDetails)) {
+        if (!this.isRefactorable(directoryRefactorDetails)) {
             return;
         }
 
@@ -86,7 +86,6 @@ export class NamespaceRefactorService {
     /**
      * Checks if the PHP file can be safely refactored based on namespace and identifier validity.
      * Shows appropriate warning messages to the user when validation fails.
-     * 
      * @param refactorDetails Details about the namespace refactoring operation
      * @returns true if refactoring can proceed, false otherwise
      */

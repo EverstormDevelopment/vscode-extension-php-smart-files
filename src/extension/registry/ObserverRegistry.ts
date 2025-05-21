@@ -10,5 +10,5 @@ import { FileRenamedObserver } from "../observer/FileRenamedObserver";
 export const ObserverRegistry: Record<string, ConstructorType<any>> = {
     fileMovedObserver: FileMovedObserver,
     fileRenamedObserver: FileRenamedObserver,
-    directoryChangeObserver: DirectoryChangeObserver
+    directoryChangeObserver: DirectoryChangeObserver,
 };

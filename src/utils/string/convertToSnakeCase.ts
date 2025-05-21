@@ -8,8 +8,6 @@ export function convertToSnakeCase(input: string): string {
         return "";
     }
 
-    const result = input
-        .replace(/(\p{Ll})(\p{Lu})/gu, "$1_$2")
-        .replace(/(\p{Lu}+)(\p{Lu}\p{Ll})/gu, "$1_$2");
+    const result = input.replace(/(\p{Ll})(\p{Lu})/gu, "$1_$2").replace(/(\p{Lu}+)(\p{Lu}\p{Ll})/gu, "$1_$2");
     return result.toLowerCase();
 }

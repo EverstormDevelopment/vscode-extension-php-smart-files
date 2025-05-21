@@ -11,9 +11,7 @@ export class NamespacePathValidator implements NamespaceValidatorInterface {
     /**
      * @param namespaceRegExpProvider Provides regex patterns for validation
      */
-    constructor(
-        private readonly namespaceRegExpProvider: NamespaceRegExpProvider,
-    ) {}
+    constructor(private readonly namespaceRegExpProvider: NamespaceRegExpProvider) {}
 
     /**
      * Validates a complete namespace path

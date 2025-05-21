@@ -3,7 +3,7 @@ import { NamespaceRegExpProvider } from "../provider/NamespaceRegExpProvider";
 
 /**
  * Validates individual PHP namespace identifiers
- * 
+ *
  * Uses regex patterns to check if namespace segments follow PHP naming rules
  * (e.g., "App", "Controller" in "App\Controller\UserController")
  */

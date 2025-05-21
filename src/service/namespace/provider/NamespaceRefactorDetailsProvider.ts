@@ -32,7 +32,7 @@ export class NamespaceRefactorDetailsProvider {
         const newUriDetails = await this.getUriDetails(newUri);
 
         const hasNamespaces = !!oldUriDetails.namespace && !!newUriDetails.namespace;
-        const hasNamespaceChanged =  oldUriDetails.namespace !== newUriDetails.namespace;
+        const hasNamespaceChanged = oldUriDetails.namespace !== newUriDetails.namespace;
         const hasIdentifierChanged = oldUriDetails.identifier !== newUriDetails.identifier;
         const hasChanged = hasNamespaceChanged || hasIdentifierChanged;
 

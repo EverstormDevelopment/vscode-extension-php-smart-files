@@ -115,7 +115,9 @@ export class FileGenerationCommand {
             return await this.namespaceResolver.resolve(filePath);
         } catch (error) {
             // Text emphasis conveyed through wording rather than formatting
-            const message = vscode.l10n.t("Namespace skipped: The detected namespace was invalid due to invalid names in the directory structure.");
+            const message = vscode.l10n.t(
+                "Namespace skipped: The detected namespace was invalid due to invalid names in the directory structure."
+            );
             vscode.window.showWarningMessage(message);
             return undefined;
         }

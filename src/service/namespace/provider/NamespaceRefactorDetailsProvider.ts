@@ -1,13 +1,13 @@
 import * as vscode from "vscode";
 import { getUriFileName } from "../../../utils/filesystem/getUriFileName";
+import { isUriFile } from "../../../utils/filesystem/isUriFile";
 import { getFileContentByUri } from "../../../utils/vscode/getFileContentByUri";
 import { NamespaceResolver } from "../model/NamespaceResolver";
 import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailsType";
 import { NamespaceRefactorUriDetailsType } from "../type/NamespaceRefactorUriDetailsType";
-import { NamespaceRegExpProvider } from "./NamespaceRegExpProvider";
-import { NamespacePathValidator } from "../validator/NamespacePathValidator";
 import { NamespaceIdentifierValidator } from "../validator/NamespaceIdentifierValidator";
-import { isUriFile } from "../../../utils/filesystem/isUriFile";
+import { NamespacePathValidator } from "../validator/NamespacePathValidator";
+import { NamespaceRegExpProvider } from "./NamespaceRegExpProvider";
 
 /**
  * Provides details about namespace refactoring operations for PHP files.

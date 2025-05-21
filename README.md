@@ -2,24 +2,29 @@
 
 <div align="center">
 
-![Version](https://img.shields.io/badge/version-0.5.1-blue)
-![Installs](https://img.shields.io/badge/installs-new-green)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)     
+[![Version](https://img.shields.io/visual-studio-marketplace/v/everstorm.php-smart-files)](https://marketplace.visualstudio.com/items?itemName=everstorm.php-smart-files)
+[![Installs](https://img.shields.io/visual-studio-marketplace/i/everstorm.php-smart-files)](https://marketplace.visualstudio.com/items?itemName=everstorm.php-smart-files)
+[![Rating](https://img.shields.io/visual-studio-marketplace/r/everstorm.php-smart-files)](https://marketplace.visualstudio.com/items?itemName=everstorm.php-smart-files&ssr=false#review-details)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-### Seamless PHP File Creation & Intelligent Namespace Management
+### Smart PHP File Creation & Intelligent Namespace Management
 
-
-**Accelerate your PHP development!** Create perfectly structured files with smart templates while automatic namespace management takes care of the rest
+**Simplify your PHP development!** Create properly structured files with smart templates while automatic namespace management handles refactoring and references
 
 </div>
 
+## Key Benefits
+- 🚀 **Automated workflow**: Create properly structured PHP files with auto-detected namespaces in one click
+- 🔄 **Zero-effort refactoring**: Move or rename files without breaking namespace references
+- 📂 **PSR-4 compliant**: Works seamlessly with your Composer configuration or uses intelligent fallbacks
+- 🛠 **Highly configurable**: Customize behavior to match your development preferences
+- 🌐 **Multilingual support**: Available in five languages
 
 ## Table of Contents
 - [Features](#features)
 - [Usage](#usage)
 - [Extension Settings](#extension-settings)
-- [Why PHP Smart Files?](#why-php-smart-files)
-- [Supported Languages](#supported-languages)
+- [Available Languages](#available-languages)
 - [Requirements](#requirements)
 - [Release Notes](#release-notes)
 - [Feedback and Contributions](#feedback-and-contributions)
@@ -27,29 +32,40 @@
 
 ## Features
 
-PHP Smart Files is a powerful extension for VS Code that streamlines your PHP development workflow by automating file creation and namespace management:
+PHP Smart Files extends VS Code to enhance your PHP development workflow through automated file creation and intelligent namespace management:
 
 ### 🚀 Smart PHP File Creation
 
 Create PHP files with auto-detected namespaces based on your project's Composer configuration:
 
 - **File Types**: Classes, interfaces, traits, and enums
-- **Automatic Namespaces**: Intelligently follows PSR-4 standards from composer.json
-- **Templates**: Create empty files or use pre-populated templates  
+- **Automatic Namespaces**: Intelligently follows PSR-4 standards from composer.json with optional fallback to directory structure
+- **Template Options**:
+  - Basic empty files
+  - Pre-populated templates with boilerplate code
+  - Specialized Symfony templates (Controllers, Commands, Form Types)
 - **Context Menu Integration**: Right-click in the explorer to create PHP files
+
+> 💡 **Tip:** You can enable strict type declarations (`declare(strict_types=1);`) for all generated files through the extension settings
 
 ![File Creation](images/file-creation.gif)
 
 ### 🔄 Intelligent Namespace Refactoring
 
-Save time and prevent bugs with automatic namespace handling when moving or renaming files:
+Save time and prevent bugs with comprehensive namespace management:
 
-- **Move Files**: Automatically adjusts namespaces and all references to moved files
-- **Rename Files**: Updates class/interface/trait/enum names and all references automatically
+- **File Operations**:
+  - Move files: Automatically adjust namespaces and all references
+  - Rename files: Update class/interface/trait/enum names and all references
+  - Manage directories: Refactor all files within moved/renamed directories
 - **Smart Use Statement Management**:
   - Adds missing use statements when needed
-  - Removes redundant use statements when files share the same namespace
+  - Removes redundant use statements when files share namespace
   - Updates fully qualified namespace references
+  - Supports use statements with aliases
+- **Efficient Processing**: Handles reference updates in parallel for better performance
+- **Flexible Configuration**: Control refactoring behavior for each operation type
+- **Format Integrity**: Preserves your preferred line break style (CR, LF, CRLF) during all file operations
 
 ![Namespace Refactoring](images/refactoring.gif)
 
@@ -59,7 +75,7 @@ Save time and prevent bugs with automatic namespace handling when moving or rena
 
 Right-click in the Explorer and select from the "Create PHP File" submenu:
 
-#### Empty Files
+#### Basic Files
 - **Empty PHP File**: Creates a basic PHP file with namespace
 - **Empty PHP Class**: Creates a PHP class with namespace and class declaration
 - **Empty PHP Interface**: Creates a PHP interface with namespace
@@ -72,48 +88,54 @@ Right-click in the Explorer and select from the "Create PHP File" submenu:
 - **PHP Enum with Template**: Creates a PHP enum with case examples
 - **PHP Trait with Template**: Creates a PHP trait with method examples
 
-All created files automatically detect the proper namespace based on your project's PSR-4 configuration in composer.json.
+#### Symfony Templates
+- **Symfony Controller**: Creates a controller with route attributes and render method
+- **Symfony Command**: Creates a command with complete structure following Symfony console conventions
+- **Symfony Form Type**: Creates a form type with buildForm and configureOptions methods
+
+All created files automatically detect the proper namespace based on your project's PSR-4 configuration in composer.json or (when enabled) fall back to an intelligent directory-based namespace structure.
 
 ### Namespace Refactoring
 
-Simply move or rename PHP files in your project, and PHP Smart Files will:
+The extension automatically refactors namespaces and references during standard file operations:
 
-1. Detect the namespace change based on your project structure
-2. Update the namespace within the file
-3. Find and update all references to that file throughout your project
-4. Adjust `use` statements as needed:
-   - Adds missing use statements when files are moved to different namespaces
-   - Removes redundant use statements when files are moved to the same namespace
-   - Updates fully qualified namespace references
+- Simply **move files** between directories or **rename files** in your editor or file explorer
+- When prompted, confirm the refactoring operation (if using default settings)
+- That's it! The extension handles all namespace updates, class renames, and reference adjustments
+
+> 💡 **Tip:** Use the extension settings to control whether confirmations are shown or to disable specific refactoring features
 
 ## Extension Settings
 
-PHP Smart Files offers the following configuration options:
+### Configuration Options
 
 | Setting | Description | Default |
 |---------|-------------|---------|
 | `phpSmartFiles.useStrictTypeInTemplates` | Include `declare(strict_types=1);` in generated files | `false` |
 | `phpSmartFiles.useFallbackNamespace` | Use fallback namespace when no namespace could be resolved | `false` |
-| `phpSmartFiles.fallbackNamespace` | Define the fallback namespace to use | `App` |
-| `phpSmartFiles.refactorNamespacesOnFileMoved` | Control behavior when files are moved:<br>- `confirm`: Prompt for confirmation<br>- `always`: Automatically refactor<br>- `never`: Disable feature | `confirm` |
-| `phpSmartFiles.refactorNamespacesOnFileRenamed` | Control behavior when files are renamed:<br>- `confirm`: Prompt for confirmation<br>- `always`: Automatically refactor<br>- `never`: Disable feature | `confirm` |
-| `phpSmartFiles.refactorNamespacesExcludeDirectories` | Directories to exclude when searching for references | *See configuration* |
+| `phpSmartFiles.fallbackNamespace` | Base namespace for fallback (builds namespace based on file location) | `App` |
+| `phpSmartFiles.refactorNamespacesOnFileMoved` | Control behavior when files are moved<br>- `confirm`: Prompt for confirmation<br>- `always`: Automatically refactor<br>- `never`: Disable feature | `confirm` |
+| `phpSmartFiles.refactorNamespacesOnFileRenamed` | Control behavior when files are renamed (same options as `refactorNamespacesOnFileMoved`) | `confirm` |
+| `phpSmartFiles.refactorNamespacesOnDirectoryChanges` | Control behavior when directories are moved or renamed (same options as `refactorNamespacesOnFileMoved`) | `confirm` |
+| `phpSmartFiles.refactorNamespacesExcludeDirectories` | Directories to exclude when searching for references | Common directories like `vendor`, `node_modules`, etc. |
 
-## Why PHP Smart Files?
+### Example Configuration
 
-### For PHP Developers
-- **Save Time**: No more manual namespace updates when refactoring
-- **Prevent Errors**: Automatically maintain namespace consistency across your project
-- **Smooth Workflow**: Create properly structured PHP files with a single click
-- **Works with Composer**: Seamless integration with your project's PSR-4 configuration
+You can add these settings to your `settings.json` file:
 
-### Compared to Other Extensions
-- **Smart Namespace Detection**: Uses your composer.json for accurate namespace resolution
-- **Full Refactoring**: Updates both the moved/renamed file AND all references to it
-- **Intelligent Use Statement Management**: Adds or removes use statements as needed
-- **File Templates**: Provides both empty files and useful templates for quick starts
+```json
+{
+  "phpSmartFiles.useStrictTypeInTemplates": true,
+  "phpSmartFiles.useFallbackNamespace": true,
+  "phpSmartFiles.fallbackNamespace": "MyProject",
+  "phpSmartFiles.refactorNamespacesOnFileMoved": "always",
+  "phpSmartFiles.refactorNamespacesExcludeDirectories": ["vendor/**", "tests/**"]
+}
+```
 
-## Supported Languages
+This example configuration enables strict type declarations, uses intelligent namespace fallback with "MyProject" as the base, automatically refactors code when files are moved, and excludes vendor/tests directories from reference searches.
+
+## Available Languages
 
 This extension is available in multiple languages:
 - English
@@ -129,11 +151,14 @@ This extension is available in multiple languages:
 
 ## Release Notes
 
-### Current Version: 0.5.1
+### Current Version: 0.8.0
 
-This version includes improvements to namespace refactoring and bug fixes:
-- Fixed cancellation of refactoring when renaming files to/from invalid PHP identifiers
-- Enhanced namespace refactoring with intelligent `use` statement management
+This version includes significant improvements:
+- Enhanced fallback namespace with directory structure integration
+- Support for directory operations (move/rename)
+- Parallel processing for performance improvements
+- Improved error handling with clearer warning and error messages
+- Specialized Symfony templates (Controller, Command, Form Type)
 
 For a detailed list of changes in this and previous versions, please see the [CHANGELOG](CHANGELOG.md).
 

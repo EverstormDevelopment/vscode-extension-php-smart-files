@@ -7,9 +7,9 @@
 [![Rating](https://img.shields.io/visual-studio-marketplace/r/everstorm.php-smart-files)](https://marketplace.visualstudio.com/items?itemName=everstorm.php-smart-files&ssr=false#review-details)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-### Seamless PHP File Creation & Intelligent Namespace Management
+### Smart PHP File Creation & Intelligent Namespace Management
 
-**Streamline your PHP development!** Create properly structured files with smart templates while automatic namespace management handles refactoring and references
+**Simplify your PHP development!** Create properly structured files with smart templates while automatic namespace management handles refactoring and references
 
 </div>
 

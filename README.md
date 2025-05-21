@@ -48,7 +48,12 @@ Create PHP files with auto-detected namespaces based on your project's Composer 
 
 > 💡 **Tip:** You can enable strict type declarations (`declare(strict_types=1);`) for all generated files through the extension settings
 
-![File Creation](images/file-creation.gif)
+<figure style="margin: 0; margin-top: 20px; margin-bottom: 30px; padding: 0;">
+  <img src="images/example/file-creation.gif" alt="File Creation Demo" />
+  <figcaption>
+    <i><strong>Demo:</strong> Creating a PHP class from template with automatic namespace detection</i>
+  </figcaption>
+</figure>
 
 ### 🔄 Intelligent Namespace Refactoring
 
@@ -67,7 +72,19 @@ Save time and prevent bugs with comprehensive namespace management:
 - **Flexible Configuration**: Control refactoring behavior for each operation type
 - **Format Integrity**: Preserves your preferred line break style (CR, LF, CRLF) during all file operations
 
-![Namespace Refactoring](images/refactoring.gif)
+<figure style="margin: 0; margin-top: 20px; margin-bottom: 20px; padding: 0;">
+  <img src="images/example/file-move.gif" alt="File Move Demo" />
+  <figcaption>
+    <i><strong>Demo:</strong> Moving a PHP file with automatic namespace and reference updates</i>
+  </figcaption>
+</figure>
+
+<figure style="margin: 0; margin-top: 20px; margin-bottom: 30px; padding: 0;">
+  <img src="images/example/file-rename.gif" alt="File Rename Demo" />
+  <figcaption>
+    <i><strong>Demo:</strong> Renaming a PHP file with automatic definition and reference updates</i>
+  </figcaption>
+</figure>
 
 ## Usage
 

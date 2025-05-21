@@ -9,7 +9,6 @@
 export interface NamespaceValidatorInterface {
     /**
      * Validates a namespace string or namespace component
-     *
      * @param toValidate The string to validate (can be a complete namespace or a namespace component)
      * @returns A Promise<boolean> that resolves to true if valid, false otherwise
      */

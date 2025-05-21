@@ -7,6 +7,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 
 ### Changed
 - Significantly improved README documentation
+- Added extension icon/logo
 
 
 

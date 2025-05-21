@@ -5,6 +5,9 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 
 ## [Unreleased]
 
+### Changed
+- Significantly improved README documentation
+
 
 
 ## [0.8.0] - 2025-05-19

@@ -122,10 +122,10 @@ PHP Smart Files offers comprehensive configuration options:
 - **Supports Symfony**: Access specialized templates for Symfony development
 
 ### What Makes It Special
-- **Smart namespace handling**: Use your composer.json for accurate namespace resolution with intelligent fallback
-- **Full-scope refactoring**: Update both the modified files AND all references to them
-- **Directory-aware operations**: Intelligently process directory-level changes with the same precision as file operations
-- **Efficient reference handling**: Process reference updates in parallel to speed up operations in large projects
+- **Smart namespace handling**: Uses your composer.json for accurate namespace resolution with intelligent fallback
+- **Full-scope refactoring**: Updates both the modified files AND all references to them
+- **Directory-aware operations**: Intelligently processes directory-level changes with the same precision as file operations
+- **Efficient reference handling**: Processes reference updates in parallel to speed up operations in large projects
 - **Format integrity**: Preserves your preferred line break style (CR, LF, CRLF) during all file operations
 
 ## Available Languages

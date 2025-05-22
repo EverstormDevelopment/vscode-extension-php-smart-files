@@ -112,6 +112,8 @@ export class NamespaceRegExpProvider {
             `${newPattern}\\s+(${identifierPattern})(?!\\s*\\\\)`,
             // use statements (single-level namespaces only)
             `${usePattern}\\s+(${identifierPattern})\\s*;`,
+            // Trait use statement inside a class (first trait)
+            `\\{[^\\}]*?${usePattern}\\s+(${identifierPattern})(?!\\s*\\\\)`,
             // Static access - only match non-namespaced identifiers
             `(?<![\\p{L}\\d_\\\\])(${identifierPattern})(?![\\p{L}\\d_\\\\])::`,
             // Type hints in function parameters (matches only non-qualified types)

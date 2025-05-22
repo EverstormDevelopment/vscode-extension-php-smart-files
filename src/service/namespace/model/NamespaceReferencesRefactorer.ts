@@ -130,6 +130,17 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
         return content.replace(fqnRegExp, replaceWith);
     }
 
+    /**
+     * Updates partially qualified class name references in file content.
+     * Handles various namespace relationship scenarios:
+     * 1. When in the same namespace: Replace with just the new identifier
+     * 2. When new namespace is sub-namespace of file: Use relative path
+     * 3. When namespaces are unrelated: Use fully qualified namespace
+     * @param content The content of the file to refactor
+     * @param fileNamespace The namespace of the current file
+     * @param refactorDetails Details about old and new namespace/identifier values
+     * @returns The updated content with refactored partially qualified references
+     */
     private refactorPartialQualified(
         content: string,
         fileNamespace: string,

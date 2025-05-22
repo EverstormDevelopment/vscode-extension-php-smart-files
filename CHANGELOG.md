@@ -3,6 +3,8 @@
 All notable changes to the "PHP Smart Files" extension will be documented in this file.
 <!-- Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file. -->
 
+
+
 ## [0.8.2] - 2025-05-22
 
 ### Improved
@@ -25,6 +27,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
   - Changed detection mechanism from checking visible editors to checking all text documents
   - This ensures that modifications to files in non-visible tabs are correctly captured and processed
   - Prevents potential data loss when refactoring files that are open but not visible
+
 
 
 ## [0.8.1] - 2025-05-21

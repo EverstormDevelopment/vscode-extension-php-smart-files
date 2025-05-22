@@ -9,6 +9,8 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 - Enhanced file creation workflow by automatically saving files after template insertion, eliminating the need for manual saves
 
 ### Fixed
+- Fixed issue with self-references in class files during namespace changes:
+  - Prevented unnecessary `use` statements when a class references itself (e.g., using `MyClass::$SOMETHING`) after moving to a different namespace
 - Fixed critical issue with file content handling:
   - Now properly detects changes in all open documents, not just visible tabs
   - Changed detection mechanism from checking visible editors to checking all text documents

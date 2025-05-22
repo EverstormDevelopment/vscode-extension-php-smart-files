@@ -1,85 +1,11 @@
 import * as vscode from "vscode";
+import { ReservedKeywords } from "../../../utils/php/ReservedKeywords";
 import { InputValidatorInterface } from "../interface/InputValidatorInterface";
 
 /**
  * Validator for PHP definition names (classes, interfaces, traits, enums).
  */
 export class InputDefinitionNameValidator implements InputValidatorInterface {
-    /**
-     * List of PHP reserved keywords that cannot be used as definition names
-     */
-    private readonly reservedKeywords = [
-        "abstract",
-        "and",
-        "array",
-        "as",
-        "break",
-        "callable",
-        "case",
-        "catch",
-        "class",
-        "clone",
-        "const",
-        "continue",
-        "declare",
-        "default",
-        "die",
-        "do",
-        "echo",
-        "else",
-        "elseif",
-        "empty",
-        "enddeclare",
-        "endfor",
-        "endforeach",
-        "endif",
-        "endswitch",
-        "endwhile",
-        "eval",
-        "exit",
-        "extends",
-        "final",
-        "finally",
-        "fn",
-        "for",
-        "foreach",
-        "function",
-        "global",
-        "goto",
-        "if",
-        "implements",
-        "include",
-        "include_once",
-        "instanceof",
-        "insteadof",
-        "interface",
-        "isset",
-        "list",
-        "match",
-        "namespace",
-        "new",
-        "or",
-        "print",
-        "private",
-        "protected",
-        "public",
-        "require",
-        "require_once",
-        "return",
-        "static",
-        "switch",
-        "throw",
-        "trait",
-        "try",
-        "unset",
-        "use",
-        "var",
-        "while",
-        "xor",
-        "yield",
-        "enum",
-    ];
-
     /**
      * Creates a new validator for PHP definition names
      * @param allowLowercaseStart Whether to allow identifiers to start with lowercase letters
@@ -130,7 +56,7 @@ export class InputDefinitionNameValidator implements InputValidatorInterface {
             };
         }
 
-        if (this.reservedKeywords.includes(input.toLowerCase())) {
+        if (ReservedKeywords.has(input.toLowerCase())) {
             return {
                 message: vscode.l10n.t("Cannot use PHP reserved keyword as definition name"),
                 severity: vscode.InputBoxValidationSeverity.Error,

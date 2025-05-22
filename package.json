@@ -1,5 +1,5 @@
 {
-  "version": "0.8.1",
+  "version": "0.8.2",
   "name": "php-smart-files",
   "displayName": "PHP Smart Files",
   "description": "Smart PHP file creation and intelligent namespace handling.",

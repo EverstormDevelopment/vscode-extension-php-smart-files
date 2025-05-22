@@ -3,6 +3,20 @@
 All notable changes to the "PHP Smart Files" extension will be documented in this file.
 <!-- Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file. -->
 
+
+
+## [Unreleased]
+
+### Fixed
+- Fixed handling of multiple interfaces in class declarations:
+  - Properly recognizes and refactors all interfaces in comma-separated lists when implementing multiple interfaces
+  - Ensures consistent refactoring of all interfaces in `implements` clauses
+- Improved detection of static access to prevent incorrect refactoring:
+  - Fixed issue where the last segment of a fully qualified namespace was incorrectly detected as a standalone class reference
+  - Prevents adding unnecessary `use` statements for classes that are already referenced with their full namespace
+
+
+
 ## [0.8.2] - 2025-05-22
 
 ### Improved
@@ -25,6 +39,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
   - Changed detection mechanism from checking visible editors to checking all text documents
   - This ensures that modifications to files in non-visible tabs are correctly captured and processed
   - Prevents potential data loss when refactoring files that are open but not visible
+
 
 
 ## [0.8.1] - 2025-05-21

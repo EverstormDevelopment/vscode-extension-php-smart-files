@@ -123,24 +123,9 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
         const newFullyQualifiedNamespace = `\\${refactorDetails.new.namespace}\\${refactorDetails.new.identifier}`;
         const isSameNamespace = fileNamespace === refactorDetails.new.namespace;
 
-        const replaceWith = isSameNamespace ? refactorDetails.new.identifier : newFullyQualifiedNamespace;
-        return this.replaceFullyQualified(content, oldFullyQualifiedNamespace, replaceWith);
-    }
-
-    /**
-     * Replaces fully qualified namespace references in the content.
-     * @param content The content to modify.
-     * @param oldFullyQualifiedNamespace The old fully qualified namespace.
-     * @param newFullyQualifiedNamespace The new fully qualified namespace.
-     * @returns The updated content with replaced references.
-     */
-    private replaceFullyQualified(
-        content: string,
-        oldFullyQualifiedNamespace: string,
-        newFullyQualifiedNamespace: string
-    ): string {
         const fqcnRegExp = this.namespaceRegExpProvider.getFullyQualifiedNamespaceRegExp(oldFullyQualifiedNamespace);
-        return content.replace(fqcnRegExp, newFullyQualifiedNamespace);
+        const replaceWith = isSameNamespace ? refactorDetails.new.identifier : newFullyQualifiedNamespace;
+        return content.replace(fqcnRegExp, replaceWith);
     }
 
     /**

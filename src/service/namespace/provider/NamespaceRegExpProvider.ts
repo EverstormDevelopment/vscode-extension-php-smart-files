@@ -162,7 +162,7 @@ export class NamespaceRegExpProvider {
         ];
 
         return new RegExp(contexts.join("|"), "gu");
-    }    
+    }
 
     /**
      * Creates a regular expression for standalone identifiers with word boundary checks.

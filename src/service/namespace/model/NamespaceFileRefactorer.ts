@@ -159,13 +159,10 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
      * @param refactorDetails Details about what needs to be refactored.
      * @returns The content with updated partially qualified namespace references.
      */
-    private refactorPartialQualified(
-        content: string,
-        refactorDetails: NamespaceRefactorDetailsType
-    ): string {
+    private refactorPartialQualified(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
         const pqnRegExp = this.namespaceRegExpProvider.getPartiallyQualifiedReferenceRegExp();
         const escapedNewNamespace = escapeRegExp(`${refactorDetails.new.namespace}\\`);
-        const newNamespaceMatchRegExp = new RegExp(`^${escapedNewNamespace}`, "u");        
+        const newNamespaceMatchRegExp = new RegExp(`^${escapedNewNamespace}`, "u");
 
         return content.replace(pqnRegExp, (match: string, ...groups: (string | undefined)[]) => {
             const partiallyQualifiedReference = groups.find((group) => group !== undefined);

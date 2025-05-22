@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { NamespaceRefactorerAbstract } from "../abstract/NamespaceRefactorerAbstract";
 import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailsType";
+import { ReservedKeywords } from "../../../utils/php/ReservedKeywords";
 
 /**
  * Handles the refactoring of namespace declarations and class identifiers in PHP files
@@ -109,11 +110,12 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
      * @returns The content with updated `use` statements.
      */
     private refactorUseStatements(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
-        const nonQualifiedReferences = this.getNonQualifiedReferences(content);
-        if (nonQualifiedReferences.length === 0) {
+        const references = this.getNonQualifiedReferences(content);
+        if (references.length === 0) {
             return content;
         }
 
+        const nonQualifiedReferences = references.filter((reference) => reference !== refactorDetails.old.identifier);
         content = this.addUseStatements(content, refactorDetails.old.namespace, nonQualifiedReferences);
         content = this.removeUseStatements(content, refactorDetails.new.namespace, nonQualifiedReferences);
         return content;
@@ -156,10 +158,10 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
     private getNonQualifiedReferences(content: string): string[] {
         const regex = this.namespaceRegExpProvider.getNonQualifiedReferenceRegExp();
         const matches = Array.from(content.matchAll(regex));
-
         const extractedNames = matches.map((match) => match.slice(1).find(Boolean)).filter(Boolean) as string[];
+        const filteredClassNames = extractedNames.filter((name) => !ReservedKeywords.has(name.toLowerCase()));
 
-        const classNames = new Set(extractedNames);
+        const classNames = new Set(filteredClassNames);
         return Array.from(classNames);
     }
 }

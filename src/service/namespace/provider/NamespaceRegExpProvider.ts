@@ -142,13 +142,15 @@ export class NamespaceRegExpProvider {
 
         // Pattern for a partially qualified namespace (at least one backslash, not at the beginning)
         const partiallyQualifiedPattern = `(${identifierPattern}(?:\\\\${identifierPattern})+)`;
+        const escapedSpecialChars = escapeRegExp(";,{}()=.:[]+-/%<>?!$&|^~@#");
+        const allowedPrefixPattern = `[${escapedSpecialChars}\\s*]+`;
 
         // The different contexts where partially qualified namespaces can appear
         const contexts = [
             // After extends/implements or after commas for multiple interfaces
             `(?:${extendsPattern}|${implementsPattern}|,)\\s+${partiallyQualifiedPattern}\\b`,
-            // In static access
-            `${partiallyQualifiedPattern}::`,
+            // In static access - check that there's at least one on allowed sign and no backslash at the beginning
+            `${allowedPrefixPattern}${partiallyQualifiedPattern}::`,
             // In parameter type hints
             `[,\\(]\\s*${partiallyQualifiedPattern}\\s+\\$${identifierPattern}`,
             // In return type declarations

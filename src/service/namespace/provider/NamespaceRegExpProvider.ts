@@ -124,6 +124,43 @@ export class NamespaceRegExpProvider {
     }
 
     /**
+     * Creates a regular expression for finding partially qualified namespace references.
+     * These are references that contain at least one namespace separator but don't start with a backslash.
+     * Only matches in specific contexts where partially qualified namespaces are expected.
+     * @returns RegExp that matches partially qualified namespace references.
+     */
+    public getPartiallyQualifiedReferenceRegExp(): RegExp {
+        const identifierPattern = NamespaceRegExpProvider.identifierPattern;
+        const {
+            extends: extendsPattern,
+            implements: implementsPattern,
+            use: usePattern,
+            new: newPattern,
+        } = NamespaceRegExpProvider.keywordPatterns;
+
+        // Pattern for a partially qualified namespace (at least one backslash, not at the beginning)
+        const partiallyQualifiedPattern = `(${identifierPattern}(?:\\\\${identifierPattern})+)`;
+
+        // The different contexts where partially qualified namespaces can appear
+        const contexts = [
+            // After extends/implements or after commas for multiple interfaces
+            `(?:${extendsPattern}|${implementsPattern}|,)\\s+${partiallyQualifiedPattern}\\b`,
+            // In static access
+            `${partiallyQualifiedPattern}::`,
+            // In parameter type hints
+            `[,\\(]\\s*${partiallyQualifiedPattern}\\s+\\$${identifierPattern}`,
+            // In return type declarations
+            `\\)\\s*:\\s*(?:\\?\\s*)?${partiallyQualifiedPattern}\\b`,
+            // In trait use statements inside classes
+            `\\{[^\\}]*?${usePattern}\\s+${partiallyQualifiedPattern}\\s*;`,
+            // In new instantiations
+            `${newPattern}\\s+${partiallyQualifiedPattern}\\b`,
+        ];
+
+        return new RegExp(contexts.join("|"), "gu");
+    }    
+
+    /**
      * Creates a regular expression for standalone identifiers with word boundary checks.
      * @param identifier The identifier to match.
      * @returns RegExp for finding the specific identifier.

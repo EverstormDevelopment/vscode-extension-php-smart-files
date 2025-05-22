@@ -121,12 +121,10 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
     ): string {
         const oldFullyQualifiedNamespace = `\\${refactorDetails.old.namespace}\\${refactorDetails.old.identifier}`;
         const newFullyQualifiedNamespace = `\\${refactorDetails.new.namespace}\\${refactorDetails.new.identifier}`;
+        const isSameNamespace = fileNamespace === refactorDetails.new.namespace;
 
-        if (fileNamespace === refactorDetails.new.namespace) {
-            return this.replaceFullyQualified(content, oldFullyQualifiedNamespace, refactorDetails.new.identifier);
-        }
-
-        return this.replaceFullyQualified(content, oldFullyQualifiedNamespace, newFullyQualifiedNamespace);
+        const replaceWith = isSameNamespace ? refactorDetails.new.identifier : newFullyQualifiedNamespace;
+        return this.replaceFullyQualified(content, oldFullyQualifiedNamespace, replaceWith);
     }
 
     /**

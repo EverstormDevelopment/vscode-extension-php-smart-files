@@ -106,19 +106,20 @@ export class NamespaceRegExpProvider {
         const orPatterns = [
             // Attribute annotations (PHP 8+)
             `#\\[\\s*(${identifierPattern})`,
-            // Extends/implements clauses
-            `(?:${extendsPattern}|${implementsPattern})\\s+(${identifierPattern})(?!\\s*\\\\)`,
+            // Extends/implements clauses - also matches interfaces after commas
+            `(?:${extendsPattern}|${implementsPattern}|,)\\s+(${identifierPattern})(?!\\s*\\\\)`,
             // New instantiations
             `${newPattern}\\s+(${identifierPattern})(?!\\s*\\\\)`,
             // use statements (single-level namespaces only)
             `${usePattern}\\s+(${identifierPattern})\\s*;`,
-            // Static access
-            `\\b(${identifierPattern})(?!\\s*\\\\)::`,
+            // Static access - only match non-namespaced identifiers
+            `(?<![\\p{L}\\d_\\\\])(${identifierPattern})(?![\\p{L}\\d_\\\\])::`,
             // Type hints in function parameters (matches only non-qualified types)
             `[,\\(]\\s*(${identifierPattern})(?!\\s*\\\\)\\s+\\$${identifierPattern}\\b`,
             // Return type declarations (matches only non-qualified types)
             `\\)\\s*:(?:\\s*\\?)?\\s*(${identifierPattern})(?!\\s*\\\\)\\b`,
         ];
+
         return new RegExp(orPatterns.join("|"), "gu");
     }
 

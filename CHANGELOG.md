@@ -7,6 +7,14 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 
 ## [Unreleased]
 
+### Added
+- Added comprehensive support for partially qualified namespaces during refactoring:
+  - Intelligent handling of partially qualified references when files are moved or renamed
+  - Automatically simplifies references when files move into the same namespace
+  - Adjusts partial qualification paths by either shortening or extending them when relative paths can be preserved
+  - Converts to fully qualified references only when relative paths cannot be maintained
+  - Maintains correct namespace relationships while preserving identifier names during renames
+
 ### Fixed
 - Fixed handling of multiple interfaces in class declarations:
   - Properly recognizes and refactors all interfaces in comma-separated lists when implementing multiple interfaces

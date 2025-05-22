@@ -114,6 +114,10 @@ export class NamespaceRegExpProvider {
             `${usePattern}\\s+(${identifierPattern})\\s*;`,
             // Static access
             `\\b(${identifierPattern})(?!\\s*\\\\)::`,
+            // Type hints in function parameters (matches only non-qualified types)
+            `[,\\(]\\s*(${identifierPattern})(?!\\s*\\\\)\\s+\\$${identifierPattern}\\b`,
+            // Return type declarations (matches only non-qualified types)
+            `\\)\\s*:(?:\\s*\\?)?\\s*(${identifierPattern})(?!\\s*\\\\)\\b`,
         ];
         return new RegExp(orPatterns.join("|"), "gu");
     }

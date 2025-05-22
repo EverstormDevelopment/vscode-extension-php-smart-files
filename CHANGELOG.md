@@ -7,8 +7,17 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 
 ### Improved
 - Enhanced file creation workflow by automatically saving files after template insertion, eliminating the need for manual saves
+- Improved PHP reserved keywords handling:
+  - Expanded and optimized the centralized list of PHP reserved keywords and types
+  - Standardized keyword validation across the extension for consistency
+  - Improved filtering of found references to prevent false positives (like `void` or `boolean`)
+  - Enhanced filename validation to properly reject all reserved PHP keywords
 
 ### Fixed
+- Fixed incomplete refactoring of type references:
+  - Now properly detects and updates type hints in function parameters when classes are moved or renamed
+  - Now properly detects and updates return type declarations when referenced classes are moved or renamed
+  - Ensures complete refactoring of all code references, which was previously incomplete
 - Fixed issue with self-references in class files during namespace changes:
   - Prevented unnecessary `use` statements when a class references itself (e.g., using `MyClass::$SOMETHING`) after moving to a different namespace
 - Fixed critical issue with file content handling:

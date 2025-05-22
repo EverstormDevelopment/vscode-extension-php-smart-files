@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { getPathNormalized } from "../../../utils/filesystem/getPathNormalized";
+import { escapeRegExp } from "../../../utils/regexp/escapeRegExp";
 import { NamespaceRefactorerAbstract } from "../abstract/NamespaceRefactorerAbstract";
 import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailsType";
 
@@ -92,6 +93,7 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
 
             let fileContentUpdated = fileContent;
             fileContentUpdated = this.refactorFullyQualified(fileContentUpdated, fileNamespace, refactorDetails);
+            fileContentUpdated = this.refactorPartialQualified(fileContentUpdated, fileNamespace, refactorDetails);
             fileContentUpdated = this.refactorUseStatement(fileContentUpdated, fileNamespace, refactorDetails);
             fileContentUpdated = this.refactorIdentifier(fileContentUpdated, fileNamespace, refactorDetails);
             if (fileContentUpdated === fileContent) {
@@ -121,11 +123,50 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
     ): string {
         const oldFullyQualifiedNamespace = `\\${refactorDetails.old.namespace}\\${refactorDetails.old.identifier}`;
         const newFullyQualifiedNamespace = `\\${refactorDetails.new.namespace}\\${refactorDetails.new.identifier}`;
-        const fqcnRegExp = this.namespaceRegExpProvider.getFullyQualifiedNamespaceRegExp(oldFullyQualifiedNamespace);
-        
+        const fqnRegExp = this.namespaceRegExpProvider.getFullyQualifiedNamespaceRegExp(oldFullyQualifiedNamespace);
+
         const isSameNamespace = fileNamespace === refactorDetails.new.namespace;
         const replaceWith = isSameNamespace ? refactorDetails.new.identifier : newFullyQualifiedNamespace;
-        return content.replace(fqcnRegExp, replaceWith);
+        return content.replace(fqnRegExp, replaceWith);
+    }
+
+    private refactorPartialQualified(
+        content: string,
+        fileNamespace: string,
+        refactorDetails: NamespaceRefactorDetailsType
+    ): string {
+        const oldFullyQualifiedNamespace = `\\${refactorDetails.old.namespace}\\${refactorDetails.old.identifier}`;
+        const newFullyQualifiedNamespace = `\\${refactorDetails.new.namespace}\\${refactorDetails.new.identifier}`;
+        const pqnRegExp = this.namespaceRegExpProvider.getPartiallyQualifiedReferenceRegExp();
+
+        return content.replace(pqnRegExp, (match: string, ...groups: (string | undefined)[]) => {
+            const partiallyQualifiedReference = groups.find((group) => group !== undefined);
+            if (!partiallyQualifiedReference) {
+                return match;
+            }
+
+            const fullyQualifiedReference = `\\${fileNamespace}\\${partiallyQualifiedReference}`;
+            const isCorrectReference = fullyQualifiedReference === oldFullyQualifiedNamespace;
+            if (!isCorrectReference) {
+                return match;
+            }
+
+            const isSameNamespace = fileNamespace === refactorDetails.new.namespace;
+            if (isSameNamespace) {
+                return match.replace(partiallyQualifiedReference, refactorDetails.new.identifier);
+            }
+
+            const escapedFileNamespace = escapeRegExp(`${fileNamespace}\\`);
+            const subNamespaceRegExp = new RegExp(`^${escapedFileNamespace}`, "u");
+            const isSubNamespace = !!refactorDetails.new.namespace.match(subNamespaceRegExp);
+            if (!isSubNamespace) {
+                return match.replace(partiallyQualifiedReference, newFullyQualifiedNamespace);
+            }
+
+            const refactoredNamespace = refactorDetails.new.namespace.replace(subNamespaceRegExp, "");
+            const refactoredReference = `${refactoredNamespace}\\${refactorDetails.new.identifier}`;
+            return match.replace(partiallyQualifiedReference, refactoredReference);
+        });
     }
 
     /**

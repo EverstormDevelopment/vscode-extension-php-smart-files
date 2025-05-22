@@ -133,13 +133,4 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
     protected async setFileContent(uri: vscode.Uri, content: string): Promise<void> {
         return setFileContentByUri(uri, content);
     }
-
-    /**
-     * Finds an open TextEditor for the specified file URI.
-     * @param uri The URI of the file to find.
-     * @returns The open TextEditor, or undefined if no editor is open for the file.
-     */
-    protected findOpenEditor(uri: vscode.Uri): vscode.TextEditor | undefined {
-        return findEditorByUri(uri);
-    }
 }

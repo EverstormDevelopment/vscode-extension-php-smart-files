@@ -54,13 +54,7 @@ export class FileGenerationCommand {
             return;
         }
 
-        const editor = await this.openFileInEditor(fileUri);
-
-        const identifier = getUriFileName(fileUri);
-        const namespace = await this.getNamespace(fileUri);
-        const snippet = this.getSnippet(fileType, identifier, namespace);
-
-        await this.insertSnippet(editor, snippet);
+        await this.applySnippet(fileUri, fileType);
     }
 
     /**
@@ -124,18 +118,36 @@ export class FileGenerationCommand {
     }
 
     /**
-     * Creates a code snippet for the specified file type and identifier.
-     * @param fileType The type of PHP file to create
-     * @param identifier The identifier (class/interface/enum name)
-     * @param namespace Optional namespace for the PHP element
-     * @returns A VS Code snippet string representing the PHP code
+     * Applies a code snippet to the file based on file type and saves it
+     * @param uri The URI of the file to apply the snippet to
+     * @param fileType The type of PHP file determining which snippet to apply
      */
-    private getSnippet(
-        fileType: FileTypeEnum,
-        identifier: string,
-        namespace: string | undefined
-    ): vscode.SnippetString {
+    private async applySnippet(uri: vscode.Uri, fileType: FileTypeEnum): Promise<void> {
+        const snippet = await this.createSnippet(uri, fileType);
+        await this.saveSnippet(uri, snippet);
+    }
+
+    /**
+     * Creates a snippet based on file type, identifier and namespace
+     * @param uri The URI of the file to create a snippet for
+     * @param fileType The type of PHP file determining the snippet template
+     * @returns Promise resolving to the snippet content
+     */
+    private async createSnippet(uri: vscode.Uri, fileType: FileTypeEnum): Promise<vscode.SnippetString> {
+        const identifier = getUriFileName(uri);
+        const namespace = await this.getNamespace(uri);
         return this.snippedFactory.create(fileType, identifier, namespace);
+    }
+
+    /**
+     * Saves a snippet to the specified file and ensures it is saved to disk
+     * @param uri The URI of the file to save the snippet to
+     * @param snippet The snippet content to insert into the file
+     */
+    private async saveSnippet(uri: vscode.Uri, snippet: vscode.SnippetString): Promise<void> {
+        const editor = await this.openFileInEditor(uri);
+        await editor.insertSnippet(snippet, new vscode.Position(0, 0));
+        await editor.document.save();
     }
 
     /**
@@ -153,15 +165,5 @@ export class FileGenerationCommand {
         }
 
         return editor;
-    }
-
-    /**
-     * Inserts a snippet at the beginning of the file.
-     * @param editor The TextEditor where the snippet will be inserted
-     * @param snippet The snippet to insert
-     * @returns Promise resolving when the insertion is complete
-     */
-    private async insertSnippet(editor: vscode.TextEditor, snippet: vscode.SnippetString): Promise<void> {
-        editor.insertSnippet(snippet, new vscode.Position(0, 0));
     }
 }

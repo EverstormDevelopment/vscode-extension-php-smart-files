@@ -14,6 +14,9 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 - Improved detection of static access to prevent incorrect refactoring:
   - Fixed issue where the last segment of a fully qualified namespace was incorrectly detected as a standalone class reference
   - Prevents adding unnecessary `use` statements for classes that are already referenced with their full namespace
+- Fixed detection of traits in class use statements:
+  - Fixed issue where traits in `use` statements inside classes were not properly recognized
+  - Now correctly identifies and refactors all traits in a comma-separated list within a class body
 
 
 

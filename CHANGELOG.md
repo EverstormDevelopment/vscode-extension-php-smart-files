@@ -3,6 +3,19 @@
 All notable changes to the "PHP Smart Files" extension will be documented in this file.
 <!-- Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file. -->
 
+## [Unreleased]
+
+### Improved
+- Enhanced file creation workflow by automatically saving files after template insertion, eliminating the need for manual saves
+
+### Fixed
+- Fixed critical issue with file content handling:
+  - Now properly detects changes in all open documents, not just visible tabs
+  - Changed detection mechanism from checking visible editors to checking all text documents
+  - This ensures that modifications to files in non-visible tabs are correctly captured and processed
+  - Prevents potential data loss when refactoring files that are open but not visible
+
+
 ## [0.8.1] - 2025-05-21
 
 ### Changed

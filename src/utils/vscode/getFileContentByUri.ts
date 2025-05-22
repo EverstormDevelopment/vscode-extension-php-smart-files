@@ -1,17 +1,17 @@
 import * as vscode from "vscode";
-import { findEditorByUri } from "./findEditorByUri";
+import { findDocumentByUri } from "./findDocumentByUri";
 
 /**
- * Retrieves the content of a file by its URI. If the file is open in
- * an editor, it returns the content from the editor. Otherwise, it
- * reads the file from the filesystem.
- * @param uri - The URI of the file to read.
- * @returns The content of the file as a string.
+ * Retrieves the content of a file by its URI. This function first checks if the file
+ * is already open in an editor, in which case it reads from the document in memory.
+ * Otherwise, it reads the file directly from the filesystem to get its content.
+ * @param uri - The URI of the file to read
+ * @returns A promise that resolves to the content of the file as a string
  */
 export async function getFileContentByUri(uri: vscode.Uri): Promise<string> {
-    const editor = findEditorByUri(uri);
-    if (editor) {
-        return editor.document.getText();
+    const document = findDocumentByUri(uri);
+    if (document) {
+        return document.getText();
     }
 
     const fileContent = await vscode.workspace.fs.readFile(uri);

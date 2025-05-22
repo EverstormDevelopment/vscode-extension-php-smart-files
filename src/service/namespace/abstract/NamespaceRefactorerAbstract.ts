@@ -1,6 +1,5 @@
 import * as vscode from "vscode";
 import { detectLinebreakType } from "../../../utils/string/detectLinebreakType";
-import { findEditorByUri } from "../../../utils/vscode/findEditorByUri";
 import { getFileContentByUri } from "../../../utils/vscode/getFileContentByUri";
 import { setFileContentByUri } from "../../../utils/vscode/setFileContentByUri";
 import { NamespaceRefactorerInterface } from "../interface/NamespaceRefactorerInterface";

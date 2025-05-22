@@ -151,6 +151,14 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
         return content;
     }
 
+    /**
+     * Refactors partially qualified namespace references in the file content.
+     * Updates references based on namespace changes, either by making them fully qualified
+     * or by simplifying them when they're part of the new namespace.
+     * @param content The original file content.
+     * @param refactorDetails Details about what needs to be refactored.
+     * @returns The content with updated partially qualified namespace references.
+     */
     private refactorPartialQualified(
         content: string,
         refactorDetails: NamespaceRefactorDetailsType

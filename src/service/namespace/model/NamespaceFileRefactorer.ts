@@ -1,7 +1,8 @@
 import * as vscode from "vscode";
+import { ReservedKeywords } from "../../../utils/php/ReservedKeywords";
+import { escapeRegExp } from "../../../utils/regexp/escapeRegExp";
 import { NamespaceRefactorerAbstract } from "../abstract/NamespaceRefactorerAbstract";
 import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailsType";
-import { ReservedKeywords } from "../../../utils/php/ReservedKeywords";
 
 /**
  * Handles the refactoring of namespace declarations and class identifiers in PHP files
@@ -55,6 +56,7 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
         if (refactorDetails.hasNamespaceChanged) {
             content = this.refactorNamespace(content, refactorDetails);
             content = this.refactorUseStatements(content, refactorDetails);
+            content = this.refactorPartialQualified(content, refactorDetails);
         }
         if (refactorDetails.hasIdentifierChanged) {
             content = this.refactorDefinition(content, refactorDetails);
@@ -147,6 +149,32 @@ export class NamespaceFileRefactorer extends NamespaceRefactorerAbstract {
             content = this.removeUseStatement(content, namespace, identifier);
         }
         return content;
+    }
+
+    private refactorPartialQualified(
+        content: string,
+        refactorDetails: NamespaceRefactorDetailsType
+    ): string {
+        const pqnRegExp = this.namespaceRegExpProvider.getPartiallyQualifiedReferenceRegExp();
+        const escapedNewNamespace = escapeRegExp(`${refactorDetails.new.namespace}\\`);
+        const newNamespaceMatchRegExp = new RegExp(`^${escapedNewNamespace}`, "u");        
+
+        return content.replace(pqnRegExp, (match: string, ...groups: (string | undefined)[]) => {
+            const partiallyQualifiedReference = groups.find((group) => group !== undefined);
+            if (!partiallyQualifiedReference) {
+                return match;
+            }
+
+            const qualifiedReference = `${refactorDetails.old.namespace}\\${partiallyQualifiedReference}`;
+            const isSubNamespace = !!qualifiedReference.match(newNamespaceMatchRegExp);
+            if (!isSubNamespace) {
+                const fullyQualifiedReference = `\\${qualifiedReference}`;
+                return match.replace(partiallyQualifiedReference, fullyQualifiedReference);
+            }
+
+            const newReference = qualifiedReference.replace(newNamespaceMatchRegExp, "");
+            return match.replace(partiallyQualifiedReference, newReference);
+        });
     }
 
     /**

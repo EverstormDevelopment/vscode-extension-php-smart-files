@@ -6,6 +6,7 @@ import { NamespaceResolver } from "../../service/namespace/model/NamespaceResolv
 import { SnippetFactoryInterface } from "../../service/snippet/interface/SnippetFactoryInterface";
 import { FileTypeEnum } from "../../utils/enum/FileTypeEnum";
 import { getUriFileName } from "../../utils/filesystem/getUriFileName";
+import { findDocumentByUri } from "../../utils/vscode/findDocumentByUri";
 
 /**
  * Command handler for creating new PHP files of various types.
@@ -47,16 +48,16 @@ export class FileGenerationCommand {
             return;
         }
 
-        const filePath = this.getFilePath(targetFolder, fileName);
-        const isFileCreated = await this.createFile(filePath);
+        const fileUri = this.getFileUri(targetFolder, fileName);
+        const isFileCreated = await this.createFile(fileUri);
         if (!isFileCreated) {
             return;
         }
 
-        const editor = await this.openFileInEditor(filePath);
+        const editor = await this.openFileInEditor(fileUri);
 
-        const identifier = getUriFileName(filePath);
-        const namespace = await this.getNamespace(filePath);
+        const identifier = getUriFileName(fileUri);
+        const namespace = await this.getNamespace(fileUri);
         const snippet = this.getSnippet(fileType, identifier, namespace);
 
         await this.insertSnippet(editor, snippet);
@@ -82,23 +83,23 @@ export class FileGenerationCommand {
     }
 
     /**
-     * Constructs the full file path from a target folder and filename.
+     * Constructs the full URI for the new file by combining the target folder and filename
      * @param targetFolder The folder URI where the file will be created
      * @param fileName The name of the file to create
-     * @returns The complete file URI
+     * @returns The complete URI for the new file
      */
-    private getFilePath(targetFolder: vscode.Uri, fileName: string): vscode.Uri {
+    private getFileUri(targetFolder: vscode.Uri, fileName: string): vscode.Uri {
         return vscode.Uri.joinPath(targetFolder, fileName);
     }
 
     /**
-     * Creates a new file at the specified path.
-     * @param filePath The URI where the file should be created
-     * @returns Promise resolving to true if successful, false otherwise
+     * Creates an empty file at the specified URI
+     * @param uri The URI where to create the file
+     * @returns Promise resolving to true if file was created successfully, false otherwise
      */
-    private async createFile(filePath: vscode.Uri): Promise<boolean> {
+    private async createFile(uri: vscode.Uri): Promise<boolean> {
         try {
-            await this.fileCreator.create(filePath);
+            await this.fileCreator.create(uri);
             return true;
         } catch (error) {
             return false;
@@ -106,15 +107,14 @@ export class FileGenerationCommand {
     }
 
     /**
-     * Resolves the PHP namespace for the given file path.
-     * @param filePath The URI of the file to get a namespace for
-     * @returns Promise resolving to the namespace or undefined if not determinable
+     * Resolves the appropriate namespace for the file based on its location
+     * @param uri The URI of the file
+     * @returns Promise resolving to the namespace string or undefined if namespace cannot be determined
      */
-    private async getNamespace(filePath: vscode.Uri): Promise<string | undefined> {
+    private async getNamespace(uri: vscode.Uri): Promise<string | undefined> {
         try {
-            return await this.namespaceResolver.resolve(filePath);
+            return await this.namespaceResolver.resolve(uri);
         } catch (error) {
-            // Text emphasis conveyed through wording rather than formatting
             const message = vscode.l10n.t(
                 "Namespace skipped: The detected namespace was invalid due to invalid names in the directory structure."
             );
@@ -139,15 +139,15 @@ export class FileGenerationCommand {
     }
 
     /**
-     * Opens the file in VS Code's editor.
-     * @param filePath The URI of the file to open
-     * @returns Promise resolving to the TextEditor instance
+     * Opens the newly created file in the editor and ensures it's in a clean state
+     * @param uri The URI of the file to open
+     * @returns Promise resolving to the TextEditor for the opened file
      */
-    private async openFileInEditor(filePath: vscode.Uri): Promise<vscode.TextEditor> {
-        const document = await vscode.workspace.openTextDocument(filePath);
+    private async openFileInEditor(uri: vscode.Uri): Promise<vscode.TextEditor> {
+        const document = await vscode.workspace.openTextDocument(uri);
         const editor = await vscode.window.showTextDocument(document);
 
-        const existingDocument = vscode.workspace.textDocuments.find((doc) => doc.uri.fsPath === filePath.fsPath);
+        const existingDocument = findDocumentByUri(document.uri);
         if (existingDocument) {
             await vscode.commands.executeCommand("workbench.action.files.revert", existingDocument.uri);
         }

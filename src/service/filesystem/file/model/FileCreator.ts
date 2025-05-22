@@ -7,18 +7,18 @@ import { isUriFile } from "../../../../utils/filesystem/isUriFile";
  */
 export class FileCreator {
     /**
-     * Creates a new file at the specified path.
-     * If the file already exists, asks the user for confirmation before overwriting.
-     * @param filePath URI to the file to create
-     * @throws Error if the file creation fails
+     * Creates a new file at the specified URI location
+     * @param uri The URI where the file should be created
+     * @returns Promise that resolves when the file is created or rejects if creation fails
+     * @throws Error if file creation fails
      */
-    public async create(filePath: vscode.Uri): Promise<void> {
-        if (!(await this.canCreateFile(filePath))) {
+    public async create(uri: vscode.Uri): Promise<void> {
+        if (!(await this.canCreateFile(uri))) {
             return;
         }
 
         try {
-            await this.createFile(filePath);
+            await this.createFile(uri);
         } catch (error: unknown) {
             this.showErrorMessage(error);
             throw error;
@@ -26,26 +26,26 @@ export class FileCreator {
     }
 
     /**
-     * Checks if a file can be created at the specified path.
-     * If the file exists, prompts the user for confirmation.
-     * @param filePath URI to check
-     * @returns True if file can be created, false otherwise
+     * Checks if a file can be created at the specified URI and try
+     * to get user permission to overwrite if the file already exists
+     * @param uri The URI to check
+     * @returns Promise resolving to true if file can be created, false otherwise
      */
-    private async canCreateFile(filePath: vscode.Uri): Promise<boolean> {
-        const isExisting = await isUriFile(filePath);
+    private async canCreateFile(uri: vscode.Uri): Promise<boolean> {
+        const isExisting = await isUriFile(uri);
         if (!isExisting) {
             return true;
         }
-        return this.askForOverwrite(filePath);
+        return this.askForOverwrite(uri);
     }
 
     /**
-     * Asks the user if they want to overwrite an existing file.
-     * @param fileUri URI to the file to overwrite
-     * @returns True if user confirms overwrite, false otherwise
+     * Prompts the user for permission to overwrite an existing file
+     * @param uri The URI of the existing file
+     * @returns Promise resolving to true if user confirms overwrite, false otherwise
      */
-    private async askForOverwrite(fileUri: vscode.Uri): Promise<boolean> {
-        const fileName = path.basename(fileUri.fsPath);
+    private async askForOverwrite(uri: vscode.Uri): Promise<boolean> {
+        const fileName = path.basename(uri.fsPath);
         const overwriteMessage = vscode.l10n.t("The file '{0}' already exists. Overwrite?", fileName);
         const overwriteButton = vscode.l10n.t("Overwrite");
         const cancelButton = vscode.l10n.t("Cancel");
@@ -59,12 +59,12 @@ export class FileCreator {
     }
 
     /**
-     * Creates an empty file at the specified path.
-     * @param filePath URI where to create the file
-     * @throws Error if file creation fails
+     * Creates an empty file at the specified URI
+     * @param uri The URI where to create the file
+     * @returns Promise that resolves when the file is created
      */
-    private async createFile(filePath: vscode.Uri): Promise<void> {
-        await vscode.workspace.fs.writeFile(filePath, Buffer.from("", "utf8"));
+    private async createFile(uri: vscode.Uri): Promise<void> {
+        await vscode.workspace.fs.writeFile(uri, Buffer.from("", "utf8"));
     }
 
     /**

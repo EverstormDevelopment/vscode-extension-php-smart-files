@@ -121,9 +121,9 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
     ): string {
         const oldFullyQualifiedNamespace = `\\${refactorDetails.old.namespace}\\${refactorDetails.old.identifier}`;
         const newFullyQualifiedNamespace = `\\${refactorDetails.new.namespace}\\${refactorDetails.new.identifier}`;
-        const isSameNamespace = fileNamespace === refactorDetails.new.namespace;
-
         const fqcnRegExp = this.namespaceRegExpProvider.getFullyQualifiedNamespaceRegExp(oldFullyQualifiedNamespace);
+        
+        const isSameNamespace = fileNamespace === refactorDetails.new.namespace;
         const replaceWith = isSameNamespace ? refactorDetails.new.identifier : newFullyQualifiedNamespace;
         return content.replace(fqcnRegExp, replaceWith);
     }

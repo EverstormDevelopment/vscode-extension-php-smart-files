@@ -27,6 +27,7 @@
 - [Available Languages](#available-languages)
 - [Requirements](#requirements)
 - [Release Notes](#release-notes)
+- [Current Limitations & Roadmap](#current-limitations--roadmap)
 - [Feedback and Contributions](#feedback-and-contributions)
 - [License](#license)
 
@@ -68,6 +69,7 @@ Save time and prevent bugs with comprehensive namespace management:
   - Removes redundant use statements when files share namespace
   - Updates fully qualified namespace references
   - Supports use statements with aliases
+  - *Note: Grouped use statements (e.g., `use MyNamespace\{ClassA, ClassB}`) are currently not supported but planned for a future release with PHP parser integration*
 - **Efficient Processing**: Handles reference updates in parallel for better performance
 - **Flexible Configuration**: Control refactoring behavior for each operation type
 - **Format Integrity**: Preserves your preferred line break style (CR, LF, CRLF) during all file operations
@@ -184,6 +186,42 @@ Previous version (0.8.0) included:
 - Specialized Symfony templates (Controller, Command, Form Type)
 
 For a detailed list of changes in this and previous versions, please see the [CHANGELOG](CHANGELOG.md).
+
+## Current Limitations & Roadmap
+
+### Grouped Namespace Statements
+
+The current version doesn't support grouped use statements in namespace refactoring:
+
+```php
+// Not fully supported yet:
+use MyNamespace\{ClassA, ClassB as B, SubNamespace\ClassC};
+```
+
+When using this PHP syntax feature, refactoring operations may be incomplete or require manual adjustments.
+
+---
+
+#### 🔮 Future Implementation
+
+I plan to enhance PHP Smart Files with:
+
+- ✅ **Full support for grouped namespace statements**
+- ✅ **Transition from text-based analysis to a robust PHP parser**
+- ✅ **Comprehensive support for all PHP syntax features**
+
+This architectural improvement will enable more reliable refactoring across all PHP syntax constructs.
+
+---
+
+#### 📢 Your Feedback Matters
+
+This enhancement will be prioritized based on community feedback. If this feature is important to your workflow:
+
+- [📝 Submit an issue](https://github.com/EverstormDevelopment/vscode-extension-php-smart-files/issues)
+- [⭐ Star the feature request](https://github.com/EverstormDevelopment/vscode-extension-php-smart-files/issues)
+
+I'm committed to improving PHP Smart Files based on real-world usage patterns and community needs!
 
 ## Feedback and Contributions
 

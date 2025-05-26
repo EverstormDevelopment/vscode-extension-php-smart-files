@@ -156,7 +156,7 @@ export class NamespaceRegExpProvider {
             // In return type declarations
             `\\)\\s*:\\s*(?:\\?\\s*)?${partiallyQualifiedPattern}\\b`,
             // In trait use statements inside classes
-            `\\{[^\\}]*?${usePattern}\\s+${partiallyQualifiedPattern}\\s*;`,
+            `(?<=\\{[^}]*?${usePattern}\\s+|\\{[^}]*?${usePattern}[^;]*?,\\s*)(${identifierPattern}(?:\\\\${identifierPattern})+)(?=\\s*[,;])`,
             // In new instantiations
             `${newPattern}\\s+${partiallyQualifiedPattern}\\b`,
         ];

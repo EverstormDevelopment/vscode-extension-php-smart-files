@@ -88,6 +88,29 @@ export class Extension implements ExtensionInterface {
     }
 
     /**
+     * Sets up a lazy registration mechanism for file system observers
+     * Observers are only registered if PHP files are present in the workspace
+     * If no PHP files exist initially, a watcher is set up to detect when PHP files are created
+     * @param context The VS Code extension context
+     */
+    private async addLazyObserverRegistration(context: vscode.ExtensionContext): Promise<void> {
+        const observersRegistered = await this.addObservers(context);
+        if (observersRegistered) {
+            return;
+        }
+
+        const phpFileWatcher = vscode.workspace.createFileSystemWatcher("**/*.php", false, false, true);
+        phpFileWatcher.onDidCreate(async (uri) => {
+            const observersRegistered = await this.addObservers(context);
+            if (observersRegistered) {
+                phpFileWatcher.dispose();
+            }
+        });
+
+        context.subscriptions.push(phpFileWatcher);
+    }
+
+    /**
      * Registers all observers with VS Code
      * @param context The VS Code extension context
      */
@@ -143,29 +166,6 @@ export class Extension implements ExtensionInterface {
             console.error("Error checking for PHP files:", error);
             return false;
         }
-    }
-
-    /**
-     * Sets up a lazy registration mechanism for file system observers
-     * Observers are only registered if PHP files are present in the workspace
-     * If no PHP files exist initially, a watcher is set up to detect when PHP files are created
-     * @param context The VS Code extension context
-     */
-    private async addLazyObserverRegistration(context: vscode.ExtensionContext): Promise<void> {
-        const observersRegistered = await this.addObservers(context);
-        if (observersRegistered) {
-            return;
-        }
-
-        const phpFileWatcher = vscode.workspace.createFileSystemWatcher("**/*.php", false, false, true);
-        phpFileWatcher.onDidCreate(async (uri) => {
-            const observersRegistered = await this.addObservers(context);
-            if (observersRegistered) {
-                phpFileWatcher.dispose();
-            }
-        });
-
-        context.subscriptions.push(phpFileWatcher);
     }
 
     /**

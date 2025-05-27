@@ -106,14 +106,14 @@ export class NamespaceRegExpProvider {
         const orPatterns = [
             // Attribute annotations (PHP 8+)
             `#\\[\\s*(${identifierPattern})`,
-            // Extends/implements clauses - also matches interfaces after commas
-            `(?:${extendsPattern}|${implementsPattern}|,)\\s+(${identifierPattern})(?!\\s*\\\\)`,
+            // Using negative lookahead to ensure we don't match parts of qualified names
+            `(?:${extendsPattern}|${implementsPattern}|,)\\s+(?!.*?(?:\\\\))\\s*(${identifierPattern})(?!\\s*\\\\)`,
             // New instantiations
             `${newPattern}\\s+(${identifierPattern})(?!\\s*\\\\)`,
             // use statements (single-level namespaces only)
             `${usePattern}\\s+(${identifierPattern})\\s*;`,
-            // Trait use statement inside a class (first trait)
-            `\\{[^\\}]*?${usePattern}\\s+(${identifierPattern})(?!\\s*\\\\)`,
+            // Trait use statement inside a class - match non-qualified trait names
+            `(?<=\\{[^}]*?${usePattern}\\s+|\\{[^}]*?${usePattern}[^;]*?,\\s*)(${identifierPattern})(?!\\\\)(?=\\s*[,;])`,
             // Static access - only match non-namespaced identifiers
             `(?<![\\p{L}\\d_\\\\])(${identifierPattern})(?![\\p{L}\\d_\\\\])::`,
             // Type hints in function parameters (matches only non-qualified types)

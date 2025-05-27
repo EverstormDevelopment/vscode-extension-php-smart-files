@@ -26,6 +26,7 @@
 - [Extension Settings](#extension-settings)
 - [Available Languages](#available-languages)
 - [Requirements](#requirements)
+- [About This Project](#about-this-project)
 - [Release Notes](#release-notes)
 - [Current Limitations & Roadmap](#current-limitations--roadmap)
 - [Feedback and Contributions](#feedback-and-contributions)
@@ -168,6 +169,32 @@ This extension is available in multiple languages:
 - Visual Studio Code 1.99.0 or higher
 - PHP project (preferably with a composer.json file for optimal namespace detection)
 
+## About This Project
+
+### 🌱 Project Origins
+
+PHP Smart Files began as a personal project to enhance my own development workflow. What started as a simple tool for creating properly namespaced PHP files has evolved organically into a more comprehensive solution through incremental feature additions and continuous refinement.
+
+Looking back, it's nice to see how far this project has come. The files actually became "smart" along the way - handling namespaces and refactoring automatically, which saves a lot of manual work I used to do.
+
+### 🧰 Development & Maintenance
+
+I maintain this extension in my spare time alongside a full-time job and other responsibilities. While I'm committed to its quality and stability, it's important to set realistic expectations:
+
+- Bug fixes and critical issues are prioritized
+- Feature requests are evaluated based on community interest and implementation complexity
+- Response times may vary depending on my availability
+
+### 💬 Community Involvement
+
+I genuinely appreciate feedback and contributions! This extension will become better thanks to community suggestions. If you encounter issues or have ideas:
+
+- Please be patient if responses aren't immediate
+- Detailed bug reports with reproduction steps are incredibly helpful
+- Pull requests are welcome, but I recommend discussing larger changes first
+
+I'll do my best to keep this extension reliable and useful while balancing its scope with available time.
+
 ## Release Notes
 
 ### Current Version: 0.8.1
@@ -229,6 +256,10 @@ Your feedback and contributions are welcome! If you encounter any issues or have
 
 - [Submit an issue](https://github.com/EverstormDevelopment/vscode-extension-php-smart-files/issues)
 - [Contribute on GitHub](https://github.com/EverstormDevelopment/vscode-extension-php-smart-files)
+
+
+
+
 
 ## License
 

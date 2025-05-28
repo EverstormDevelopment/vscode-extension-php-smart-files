@@ -48,7 +48,7 @@ export class DirectoryChangeObserver extends ObserverAbstract {
      * @param newUri The URI of the directory after the change
      */
     protected async onRefactorAccepted(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<void> {
-        this.namespaceRefactorService.refactorDirectoryAndReferences(oldUri, newUri);
+        this.namespaceRefactorService.refactorDirectory(oldUri, newUri);
     }
 
     /**

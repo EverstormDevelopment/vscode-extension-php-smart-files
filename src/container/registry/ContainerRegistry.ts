@@ -9,9 +9,11 @@ import { FileCreator } from "../../service/filesystem/file/model/FileCreator";
 import { FilesystemObserver } from "../../service/filesystem/observer/model/FilesystemObserver";
 import { UriFolderResolver } from "../../service/filesystem/uri/UriFolderResolver";
 import { InputBoxFactory } from "../../service/input/build/InputBoxFactory";
+import { NamespaceDirectoryRefactorer } from "../../service/namespace/component/NamespaceDirectoryRefactorer";
 import { NamespaceFileRefactorer } from "../../service/namespace/component/NamespaceFileRefactorer";
 import { NamespaceReferencesRefactorer } from "../../service/namespace/component/NamespaceReferencesRefactorer";
 import { NamespaceResolver } from "../../service/namespace/component/NamespaceResolver";
+import { NamespaceSourceRefactorer } from "../../service/namespace/component/NamespaceSourceRefactorer";
 import { NamespaceRefactorDetailsProvider } from "../../service/namespace/provider/NamespaceRefactorDetailsProvider";
 import { NamespaceRegExpProvider } from "../../service/namespace/provider/NamespaceRegExpProvider";
 import { NamespaceRefactorService } from "../../service/namespace/service/NamespaceRefactorService";
@@ -83,7 +85,7 @@ export const ContainerRegistry: ContainerRegistrationType[] = [
         ],
     },
     {
-        constructor: NamespaceFileRefactorer,
+        constructor: NamespaceSourceRefactorer,
         dependencies: [NamespaceRegExpProvider],
     },
     {
@@ -91,8 +93,16 @@ export const ContainerRegistry: ContainerRegistrationType[] = [
         dependencies: [NamespaceRegExpProvider],
     },
     {
+        constructor: NamespaceFileRefactorer,
+        dependencies: [NamespaceSourceRefactorer, NamespaceReferencesRefactorer],
+    },
+    {
+        constructor: NamespaceDirectoryRefactorer,
+        dependencies: [NamespaceRefactorDetailsProvider, NamespaceFileRefactorer],
+    },
+    {
         constructor: NamespaceRefactorService,
-        dependencies: [NamespaceRefactorDetailsProvider, NamespaceFileRefactorer, NamespaceReferencesRefactorer],
+        dependencies: [NamespaceRefactorDetailsProvider, NamespaceFileRefactorer, NamespaceDirectoryRefactorer],
     },
     {
         constructor: FilesystemObserver,

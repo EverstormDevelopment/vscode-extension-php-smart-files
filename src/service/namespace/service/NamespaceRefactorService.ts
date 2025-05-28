@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
-import { getFilesInUriDirectory } from "../../../utils/filesystem/getFilesInUriDirectory";
+import { NamespaceDirectoryRefactorer } from "../component/NamespaceDirectoryRefactorer";
 import { NamespaceFileRefactorer } from "../component/NamespaceFileRefactorer";
-import { NamespaceReferencesRefactorer } from "../component/NamespaceReferencesRefactorer";
 import { NamespaceRefactorDetailsProvider } from "../provider/NamespaceRefactorDetailsProvider";
 import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailsType";
 
@@ -11,76 +10,45 @@ import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailsTy
  */
 export class NamespaceRefactorService {
     /**
-     * Initializes the namespace refactoring service with its required dependencies.
-     * @param namespaceRefactorDetailsProvider Provider for refactoring details based on file changes
-     * @param namespaceFileRefactorer Handles refactoring within the moved/renamed file
-     * @param namespaceReferencesRefactorer Handles refactoring references in other files
+     * Creates a new instance of the NamespaceRefactorService.
+     * @param namespaceRefactorDetailsProvider Provider that generates refactor details from URIs
+     * @param namespaceFileRefactorer Component that handles refactoring of individual files
+     * @param namespaceDirectoryRefactorer Component that handles refactoring of directories
      */
     constructor(
         private readonly namespaceRefactorDetailsProvider: NamespaceRefactorDetailsProvider,
         private readonly namespaceFileRefactorer: NamespaceFileRefactorer,
-        private readonly namespaceReferencesRefactorer: NamespaceReferencesRefactorer
+        private readonly namespaceDirectoryRefactorer: NamespaceDirectoryRefactorer
     ) {}
 
     /**
-     * Performs a complete refactoring operation by updating both the file
-     * and its references across the workspace.
-     * @param oldUri The original URI of the file before moving/renaming
-     * @param newUri The new URI of the file after moving/renaming
-     * @returns A promise that resolves when the refactoring operations are complete
+     * Refactors a PHP file's namespace and references when it's moved or renamed.
+     * @param oldUri Original URI of the PHP file before moving/renaming
+     * @param newUri New URI of the PHP file after moving/renaming
+     * @returns A Promise that resolves when refactoring is complete
      */
-    public async refactorFileAndReferences(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<void> {
-        const refactorDetrails = await this.namespaceRefactorDetailsProvider.get(oldUri, newUri);
-        if (!this.isRefactorable(refactorDetrails)) {
+    public async refactorFile(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<void> {
+        const refactorDetails = await this.namespaceRefactorDetailsProvider.get(oldUri, newUri);
+        if (!this.isRefactorable(refactorDetails)) {
             return;
         }
 
-        const updatedFile = await this.refactorFile(refactorDetrails);
-        if (!updatedFile) {
-            return;
-        }
-
-        await this.refactorReferences(refactorDetrails);
+        await this.namespaceFileRefactorer.refactor(refactorDetails);
     }
 
     /**
-     * Recursively refactors all PHP files in a directory that has been moved/renamed.
-     * For each file, updates both its namespace and references to it across the workspace.
-     * @param oldUri The original URI of the directory before moving/renaming
-     * @param newUri The new URI of the directory after moving/renaming
-     * @returns A promise that resolves when all refactoring operations are complete
+     * Refactors namespaces for all PHP files within a directory when it's moved or renamed.
+     * @param oldUri Original URI of the directory before moving/renaming
+     * @param newUri New URI of the directory after moving/renaming
+     * @returns A Promise that resolves when refactoring is complete
      */
-    public async refactorDirectoryAndReferences(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<void> {
+    public async refactorDirectory(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<void> {
         const directoryRefactorDetails = await this.namespaceRefactorDetailsProvider.get(oldUri, newUri);
         if (!this.isRefactorable(directoryRefactorDetails)) {
             return;
         }
 
-        const phpFiles = await getFilesInUriDirectory(newUri, "**/*.php");
-        for (const newFileUri of phpFiles) {
-            const oldPath = newFileUri.path.replace(newUri.path, oldUri.path);
-            const oldFileUri = newFileUri.with({ path: oldPath });
-
-            await this.refactorFileAndReferences(oldFileUri, newFileUri);
-        }
-    }
-
-    /**
-     * Refactors the content of the moved/renamed file.
-     * @param refactorDetails Details about the refactoring operation
-     * @returns A promise that resolves to true if changes were made, false otherwise
-     */
-    private async refactorFile(refactorDetrails: NamespaceRefactorDetailsType): Promise<boolean> {
-        return this.namespaceFileRefactorer.refactor(refactorDetrails);
-    }
-
-    /**
-     * Updates references to the refactored file across the workspace.
-     * @param refactorDetails Details about the refactoring operation
-     * @returns A promise that resolves to true if changes were made, false otherwise
-     */
-    private async refactorReferences(refactorDetrails: NamespaceRefactorDetailsType): Promise<boolean> {
-        return this.namespaceReferencesRefactorer.refactor(refactorDetrails);
+        await this.namespaceDirectoryRefactorer.refactor(directoryRefactorDetails);
     }
 
     /**

@@ -19,6 +19,14 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
   - Displays both directory-level progress and individual file progress for better visibility
   - Provides clearer feedback during large directory refactoring operations
 
+### Changed
+- Improved README:
+  - Made documentation more compact and scannable
+  - Added detailed project information and background
+  - Clearly documented current limitations and missing features
+  - Improved organization with better section structure
+  - Enhanced formatting for better visual clarity
+
 ### Fixed
 - Fixed handling of multiple interfaces in class declarations:
   - Properly recognizes and refactors all interfaces in comma-separated lists when implementing multiple interfaces

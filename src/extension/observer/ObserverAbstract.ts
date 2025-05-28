@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { FilesystemObserverEvent } from "../../service/filesystem/observer/event/FilesystemObserverEvent";
 import { FilesystemObserverInterface } from "../../service/filesystem/observer/interface/FilesystemObserverInterface";
 import { FilesystemObserver } from "../../service/filesystem/observer/model/FilesystemObserver";
-import { NamespaceRefactorService } from "../../service/namespace/model/NamespaceRefactorService";
+import { NamespaceRefactorService } from "../../service/namespace/service/NamespaceRefactorService";
 
 /**
  * Abstract base class for observing file rename/move events and handling PHP namespace refactoring.

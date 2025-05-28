@@ -1,9 +1,9 @@
 import * as vscode from "vscode";
 import { getFilesInUriDirectory } from "../../../utils/filesystem/getFilesInUriDirectory";
+import { NamespaceFileRefactorer } from "../component/NamespaceFileRefactorer";
+import { NamespaceReferencesRefactorer } from "../component/NamespaceReferencesRefactorer";
 import { NamespaceRefactorDetailsProvider } from "../provider/NamespaceRefactorDetailsProvider";
 import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailsType";
-import { NamespaceFileRefactorer } from "./NamespaceFileRefactorer";
-import { NamespaceReferencesRefactorer } from "./NamespaceReferencesRefactorer";
 
 /**
  * Service class that coordinates namespace refactoring for PHP files.

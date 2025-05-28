@@ -14,6 +14,10 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
   - Adjusts partial qualification paths by either shortening or extending them when relative paths can be preserved
   - Converts to fully qualified references only when relative paths cannot be maintained
   - Maintains correct namespace relationships while preserving identifier names during renames
+- Added directory-level progress indication during refactoring:
+  - Shows overall progress when processing multiple files in a directory operation
+  - Displays both directory-level progress and individual file progress for better visibility
+  - Provides clearer feedback during large directory refactoring operations
 
 ### Fixed
 - Fixed handling of multiple interfaces in class declarations:

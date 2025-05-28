@@ -14,21 +14,19 @@
 </div>
 
 ## Key Benefits
-- 🚀 **Automated workflow**: Create properly structured PHP files with auto-detected namespaces in one click
-- 🔄 **Zero-effort refactoring**: Move or rename files without breaking namespace references
-- 📂 **PSR-4 compliant**: Works seamlessly with your Composer configuration or uses intelligent fallbacks
-- 🛠 **Highly configurable**: Customize behavior to match your development preferences
-- 🌐 **Multilingual support**: Available in five languages
+- 📁 **Simplified Creation**: One-click PHP file creation with smart templates and proper namespaces
+- 🔄 **Safe Refactoring**: Move, rename, and restructure without breaking namespace references
+- 🧩 **Developer-Focused**: Built for real PHP workflows with practical features and sensible defaults
+- 🌍 **Accessible**: Available in five languages with clear, customizable settings
 
 ## Table of Contents
 - [Features](#features)
 - [Usage](#usage)
 - [Extension Settings](#extension-settings)
 - [Available Languages](#available-languages)
-- [Requirements](#requirements)
 - [About This Project](#about-this-project)
 - [Release Notes](#release-notes)
-- [Current Limitations & Roadmap](#current-limitations--roadmap)
+- [Current Limitations](#current-limitations)
 - [Feedback and Contributions](#feedback-and-contributions)
 - [License](#license)
 
@@ -68,9 +66,8 @@ Save time and prevent bugs with comprehensive namespace management:
 - **Smart Use Statement Management**:
   - Adds missing use statements when needed
   - Removes redundant use statements when files share namespace
-  - Updates fully qualified namespace references
+  - Updates fully qualified and partially qualified namespace references
   - Supports use statements with aliases
-  - *Note: Grouped use statements (e.g., `use MyNamespace\{ClassA, ClassB}`) are currently not supported but planned for a future release with PHP parser integration*
 - **Efficient Processing**: Handles reference updates in parallel for better performance
 - **Flexible Configuration**: Control refactoring behavior for each operation type
 - **Format Integrity**: Preserves your preferred line break style (CR, LF, CRLF) during all file operations
@@ -127,7 +124,7 @@ The extension automatically refactors namespaces and references during standard 
 
 ## Extension Settings
 
-### Configuration Options
+All settings can be configured through VS Code settings (Gear icon → Extensions → PHP Smart Files) or in your settings.json file.
 
 | Setting | Description | Default |
 |---------|-------------|---------|
@@ -139,22 +136,6 @@ The extension automatically refactors namespaces and references during standard 
 | `phpSmartFiles.refactorNamespacesOnDirectoryChanges` | Control behavior when directories are moved or renamed (same options as `refactorNamespacesOnFileMoved`) | `confirm` |
 | `phpSmartFiles.refactorNamespacesExcludeDirectories` | Directories to exclude when searching for references | Common directories like `vendor`, `node_modules`, etc. |
 
-### Example Configuration
-
-You can add these settings to your `settings.json` file:
-
-```json
-{
-  "phpSmartFiles.useStrictTypeInTemplates": true,
-  "phpSmartFiles.useFallbackNamespace": true,
-  "phpSmartFiles.fallbackNamespace": "MyProject",
-  "phpSmartFiles.refactorNamespacesOnFileMoved": "always",
-  "phpSmartFiles.refactorNamespacesExcludeDirectories": ["vendor/**", "tests/**"]
-}
-```
-
-This example configuration enables strict type declarations, uses intelligent namespace fallback with "MyProject" as the base, automatically refactors code when files are moved, and excludes vendor/tests directories from reference searches.
-
 ## Available Languages
 
 This extension is available in multiple languages:
@@ -163,11 +144,6 @@ This extension is available in multiple languages:
 - French (Français)
 - Spanish (Español)
 - Russian (Русский)
-
-## Requirements
-
-- Visual Studio Code 1.99.0 or higher
-- PHP project (preferably with a composer.json file for optimal namespace detection)
 
 ## About This Project
 
@@ -203,7 +179,7 @@ This version includes visual improvements and bug fixes:
 - Added extension icon and demonstration GIFs
 - Significantly improved README documentation
 - Fixed case-insensitive recognition of PHP keywords
-- Better handling of statements like `namespace`, `use AS` etc. in mixed case variants
+- Better handling of statements like `namespace`, `use`, `as` etc. in mixed case variants
 
 Previous version (0.8.0) included:
 - Enhanced fallback namespace with directory structure integration
@@ -214,7 +190,7 @@ Previous version (0.8.0) included:
 
 For a detailed list of changes in this and previous versions, please see the [CHANGELOG](CHANGELOG.md).
 
-## Current Limitations & Roadmap
+## Current Limitations
 
 ### Grouped Namespace Statements
 
@@ -225,30 +201,7 @@ The current version doesn't support grouped use statements in namespace refactor
 use MyNamespace\{ClassA, ClassB as B, SubNamespace\ClassC};
 ```
 
-When using this PHP syntax feature, refactoring operations may be incomplete or require manual adjustments.
-
----
-
-#### 🔮 Future Implementation
-
-I plan to enhance PHP Smart Files with:
-
-- ✅ **Full support for grouped namespace statements**
-- ✅ **Transition from text-based analysis to a robust PHP parser**
-- ✅ **Comprehensive support for all PHP syntax features**
-
-This architectural improvement will enable more reliable refactoring across all PHP syntax constructs.
-
----
-
-#### 📢 Your Feedback Matters
-
-This enhancement will be prioritized based on community feedback. If this feature is important to your workflow:
-
-- [📝 Submit an issue](https://github.com/EverstormDevelopment/vscode-extension-php-smart-files/issues)
-- [⭐ Star the feature request](https://github.com/EverstormDevelopment/vscode-extension-php-smart-files/issues)
-
-I'm committed to improving PHP Smart Files based on real-world usage patterns and community needs!
+When using this PHP syntax feature, refactoring operations may be incomplete or require manual adjustments. Support for grouped namespace statements is planned for future releases. If this feature is important to your workflow, please see the "Feedback and Contributions" section below and let me know.
 
 ## Feedback and Contributions
 
@@ -256,10 +209,6 @@ Your feedback and contributions are welcome! If you encounter any issues or have
 
 - [Submit an issue](https://github.com/EverstormDevelopment/vscode-extension-php-smart-files/issues)
 - [Contribute on GitHub](https://github.com/EverstormDevelopment/vscode-extension-php-smart-files)
-
-
-
-
 
 ## License
 

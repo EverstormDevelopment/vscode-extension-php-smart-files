@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { FileCreator } from "../../service/filesystem/file/model/FileCreator";
 import { UriFolderResolver } from "../../service/filesystem/uri/UriFolderResolver";
 import { InputBoxFactoryInterface } from "../../service/input/interface/InputBoxFactoryInterface";
-import { NamespaceResolver } from "../../service/namespace/component/NamespaceResolver";
+import { NamespaceResolver } from "../../service/namespace/resolver/NamespaceResolver";
 import { SnippetFactoryInterface } from "../../service/snippet/interface/SnippetFactoryInterface";
 import { FileTypeEnum } from "../../utils/enum/FileTypeEnum";
 import { getUriFileName } from "../../utils/filesystem/getUriFileName";

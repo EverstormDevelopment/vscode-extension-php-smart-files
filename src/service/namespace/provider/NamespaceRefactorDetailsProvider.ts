@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { getUriFileName } from "../../../utils/filesystem/getUriFileName";
 import { isUriFile } from "../../../utils/filesystem/isUriFile";
 import { getFileContentByUri } from "../../../utils/vscode/getFileContentByUri";
-import { NamespaceResolver } from "../component/NamespaceResolver";
+import { NamespaceResolver } from "../resolver/NamespaceResolver";
 import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailsType";
 import { NamespaceRefactorUriDetailsType } from "../type/NamespaceRefactorUriDetailsType";
 import { NamespaceIdentifierValidator } from "../validator/NamespaceIdentifierValidator";

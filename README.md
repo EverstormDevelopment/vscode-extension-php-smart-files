@@ -213,7 +213,7 @@ use function App\Utils\someFunction;
 use const App\Config\SOME_CONSTANT;
 ```
 
-When using these import types, namespace references will not be updated during refactoring operations. Support for function and constant imports is planned for future versions. If this feature is important to your workflow, please see the "Feedback and Contributions" section below and let me know.
+When using these import types, namespace references will not be updated during refactoring operations. Support for function and constant imports is planned for the next release and is the top priority in the development roadmap.
 
 ## Feedback and Contributions
 

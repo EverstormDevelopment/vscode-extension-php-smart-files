@@ -203,6 +203,18 @@ use MyNamespace\{ClassA, ClassB as B, SubNamespace\ClassC};
 
 When using this PHP syntax feature, refactoring operations may be incomplete or require manual adjustments. Support for grouped namespace statements is planned for future releases. If this feature is important to your workflow, please see the "Feedback and Contributions" section below and let me know.
 
+### Function and Constant Imports
+
+The extension currently doesn't fully support refactoring of imported functions or constants:
+
+```php
+// Not supported yet:
+use function App\Utils\someFunction;
+use const App\Config\SOME_CONSTANT;
+```
+
+When using these import types, namespace references will not be updated during refactoring operations. Support for function and constant imports is planned for future versions. If this feature is important to your workflow, please see the "Feedback and Contributions" section below and let me know.
+
 ## Feedback and Contributions
 
 Your feedback and contributions are welcome! If you encounter any issues or have suggestions for improvements:

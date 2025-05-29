@@ -5,6 +5,22 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 
 
 
+## [Unreleased]
+
+### Fixed
+- Fixed namespace refactoring by excluding PHP built-in functions:
+  - Now properly skips global PHP functions during namespace refactoring operations
+  - Added centralized list of PHP built-in functions to prevent false positive replacements
+  - Ensures that common PHP functions (like array_map, str_replace, etc.) are not mistakenly treated as class references
+  - Improves refactoring stability and prevents invalid namespace imports
+- Fixed incorrect handling of partially qualified namespaces in new expressions:
+  - Resolved issue where `new SubDirectory\SomeClass();` would incorrectly generate a malformed `use SubDirector` statement
+  - Improved detection of qualified class names in object instantiation contexts
+  - Now correctly identifies namespace boundaries in partially qualified references
+  - Ensures proper namespace refactoring for all class instantiation patterns
+
+
+
 ## [0.9.1] - 2025-05-29
 
 ### Changed

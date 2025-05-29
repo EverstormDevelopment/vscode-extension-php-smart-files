@@ -48,12 +48,8 @@ Create PHP files with auto-detected namespaces based on your project's Composer 
 
 > 💡 **Tip:** You can enable strict type declarations (`declare(strict_types=1);`) for all generated files through the extension settings
 
-<figure style="margin: 0; margin-top: 20px; margin-bottom: 30px; padding: 0;">
-  <img src="images/readme/file-creation.gif" alt="File Creation Demo" />
-  <figcaption>
-    <i><strong>Demo:</strong> Creating a PHP class from template with automatic namespace detection</i>
-  </figcaption>
-</figure>
+![File Creation Demo](images/readme/file-creation.gif)<br />
+*__Demo__: Creating a PHP class from template with automatic namespace detection*
 
 ### 🔄 Intelligent Namespace Refactoring
 
@@ -72,19 +68,12 @@ Save time and prevent bugs with comprehensive namespace management:
 - **Flexible Configuration**: Control refactoring behavior for each operation type
 - **Format Integrity**: Preserves your preferred line break style (CR, LF, CRLF) during all file operations
 
-<figure style="margin: 0; margin-top: 20px; margin-bottom: 20px; padding: 0;">
-  <img src="images/readme/file-move.gif" alt="File Move Demo" />
-  <figcaption>
-    <i><strong>Demo:</strong> Moving a PHP file with automatic namespace and reference updates</i>
-  </figcaption>
-</figure>
+![File Move Demo](images/readme/file-move.gif)<br />
+*__Demo__: Moving a PHP file with automatic namespace and reference updates*
 
-<figure style="margin: 0; margin-top: 20px; margin-bottom: 30px; padding: 0;">
-  <img src="images/readme/file-rename.gif" alt="File Rename Demo" />
-  <figcaption>
-    <i><strong>Demo:</strong> Renaming a PHP file with automatic definition and reference updates</i>
-  </figcaption>
-</figure>
+
+![File Rename Demo](images/readme/file-rename.gif)<br />
+*__Demo__: Renaming a PHP file with automatic definition and reference updates*
 
 ## Usage
 

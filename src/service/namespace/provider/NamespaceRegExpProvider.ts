@@ -109,7 +109,7 @@ export class NamespaceRegExpProvider {
             // Using negative lookahead to ensure we don't match parts of qualified names
             `(?:${extendsPattern}|${implementsPattern}|,)\\s+(?!.*?(?:\\\\))\\s*(${identifierPattern})(?!\\s*\\\\)`,
             // New instantiations
-            `${newPattern}\\s+(${identifierPattern})(?!\\s*\\\\)`,
+            `${newPattern}\\s+(${identifierPattern})\\b\\s*\\(`,
             // use statements (single-level namespaces only)
             `${usePattern}\\s+(${identifierPattern})\\s*;`,
             // Trait use statement inside a class - match non-qualified trait names

@@ -18,6 +18,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
   - Improved detection of qualified class names in object instantiation contexts
   - Now correctly identifies namespace boundaries in partially qualified references
   - Ensures proper namespace refactoring for all class instantiation patterns
+- Fixed regular expression pattern for static class access detection
 
 
 

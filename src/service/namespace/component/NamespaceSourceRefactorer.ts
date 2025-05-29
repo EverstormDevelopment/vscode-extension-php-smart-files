@@ -3,6 +3,7 @@ import { ReservedKeywords } from "../../../utils/php/ReservedKeywords";
 import { escapeRegExp } from "../../../utils/regexp/escapeRegExp";
 import { NamespaceRefactorerAbstract } from "../abstract/NamespaceRefactorerAbstract";
 import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailsType";
+import { GlobalFunctions } from "../../../utils/php/GlobalFunctions";
 
 /**
  * Handles the refactoring of namespace declarations and class identifiers in PHP files
@@ -192,7 +193,9 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
         const regex = this.namespaceRegExpProvider.getNonQualifiedReferenceRegExp();
         const matches = Array.from(content.matchAll(regex));
         const extractedNames = matches.map((match) => match.slice(1).find(Boolean)).filter(Boolean) as string[];
-        const filteredClassNames = extractedNames.filter((name) => !ReservedKeywords.has(name.toLowerCase()));
+        const filteredClassNames = extractedNames.filter((name) => {
+            return !ReservedKeywords.has(name.toLowerCase()) && !GlobalFunctions.has(name.toLowerCase());
+        });
 
         const classNames = new Set(filteredClassNames);
         return Array.from(classNames);

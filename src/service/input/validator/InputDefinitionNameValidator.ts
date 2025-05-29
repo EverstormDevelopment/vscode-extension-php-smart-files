@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { ReservedKeywords } from "../../../utils/php/ReservedKeywords";
 import { InputValidatorInterface } from "../interface/InputValidatorInterface";
+import { GlobalFunctions } from "../../../utils/php/GlobalFunctions";
 
 /**
  * Validator for PHP definition names (classes, interfaces, traits, enums).
@@ -56,7 +57,7 @@ export class InputDefinitionNameValidator implements InputValidatorInterface {
             };
         }
 
-        if (ReservedKeywords.has(input.toLowerCase())) {
+        if (ReservedKeywords.has(input.toLowerCase()) || GlobalFunctions.has(input.toLowerCase())) {
             return {
                 message: vscode.l10n.t("Cannot use PHP reserved keyword as definition name"),
                 severity: vscode.InputBoxValidationSeverity.Error,

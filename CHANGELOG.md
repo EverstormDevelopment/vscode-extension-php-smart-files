@@ -5,7 +5,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 
 
 
-## [Unreleased]
+## [0.9.0] - 2025-05-29
 
 ### Added
 - Added comprehensive support for partially qualified namespaces during refactoring:

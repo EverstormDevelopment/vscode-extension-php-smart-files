@@ -5,6 +5,21 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 
 
 
+## [0.9.1] - 2025-05-29
+
+### Changed
+- Improved README documentation:
+  - Removed redundant "Community Involvement" section
+  - Made documentation more compact and focused on key information
+  - Streamlined content for better readability
+
+### Added
+- Added missing translation for directory update notifications:
+  - Added "Updating directory from X to Y" message in all supported languages (English, German, French, Spanish, Russian)
+  - Ensures consistent user feedback during directory refactoring operations
+
+
+
 ## [0.9.0] - 2025-05-29
 
 ### Added

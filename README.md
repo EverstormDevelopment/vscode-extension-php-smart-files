@@ -165,20 +165,20 @@ I'll do my best to keep this extension reliable and useful while balancing its s
 
 ## Release Notes
 
-### Current Version: 0.8.1
+### Current Version: 0.9.1
 
-This version includes visual improvements and bug fixes:
-- Added extension icon and demonstration GIFs
-- Significantly improved README documentation
-- Fixed case-insensitive recognition of PHP keywords
-- Better handling of statements like `namespace`, `use`, `as` etc. in mixed case variants
+This version includes documentation improvements and translation updates:
+- Improved README documentation with more compact and focused content
+- Added missing translations for directory update notifications in all supported languages
+- Streamlined documentation for better readability
 
-Previous version (0.8.0) included:
-- Enhanced fallback namespace with directory structure integration
-- Support for directory operations (move/rename)
-- Parallel processing for performance improvements
-- Improved error handling with clearer warning and error messages
-- Specialized Symfony templates (Controller, Command, Form Type)
+### Version 0.9.0
+
+Major features added in this version:
+- Comprehensive support for partially qualified namespaces during refactoring
+- Directory-level progress indication when processing multiple files
+- Improved handling of multiple interfaces in class declarations
+- Better detection of static access and traits in class use statements
 
 For a detailed list of changes in this and previous versions, please see the [CHANGELOG](CHANGELOG.md).
 

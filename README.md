@@ -49,7 +49,7 @@ Create PHP files with auto-detected namespaces based on your project's Composer 
 > 💡 **Tip:** You can enable strict type declarations (`declare(strict_types=1);`) for all generated files through the extension settings
 
 <figure style="margin: 0; margin-top: 20px; margin-bottom: 30px; padding: 0;">
-  <img src="images/example/file-creation.gif" alt="File Creation Demo" />
+  <img src="images/readme/file-creation.gif" alt="File Creation Demo" />
   <figcaption>
     <i><strong>Demo:</strong> Creating a PHP class from template with automatic namespace detection</i>
   </figcaption>
@@ -73,14 +73,14 @@ Save time and prevent bugs with comprehensive namespace management:
 - **Format Integrity**: Preserves your preferred line break style (CR, LF, CRLF) during all file operations
 
 <figure style="margin: 0; margin-top: 20px; margin-bottom: 20px; padding: 0;">
-  <img src="images/example/file-move.gif" alt="File Move Demo" />
+  <img src="images/readme/file-move.gif" alt="File Move Demo" />
   <figcaption>
     <i><strong>Demo:</strong> Moving a PHP file with automatic namespace and reference updates</i>
   </figcaption>
 </figure>
 
 <figure style="margin: 0; margin-top: 20px; margin-bottom: 30px; padding: 0;">
-  <img src="images/example/file-rename.gif" alt="File Rename Demo" />
+  <img src="images/readme/file-rename.gif" alt="File Rename Demo" />
   <figcaption>
     <i><strong>Demo:</strong> Renaming a PHP file with automatic definition and reference updates</i>
   </figcaption>
@@ -160,14 +160,6 @@ I maintain this extension in my spare time alongside a full-time job and other r
 - Bug fixes and critical issues are prioritized
 - Feature requests are evaluated based on community interest and implementation complexity
 - Response times may vary depending on my availability
-
-### 💬 Community Involvement
-
-I genuinely appreciate feedback and contributions! This extension will become better thanks to community suggestions. If you encounter issues or have ideas:
-
-- Please be patient if responses aren't immediate
-- Detailed bug reports with reproduction steps are incredibly helpful
-- Pull requests are welcome, but I recommend discussing larger changes first
 
 I'll do my best to keep this extension reliable and useful while balancing its scope with available time.
 

@@ -58,6 +58,7 @@
   "Updating references from \"{0}\" to \"{1}\"": "Обновление ссылок с \"{0}\" на \"{1}\"",
   "Processing file {0} of {1}": "Обработка файла {0} из {1}",
   "Error updating references in file {0}: {1}": "Ошибка обновления ссылок в файле {0}: {1}",
+  "Updating directory from \"{0}\" to \"{1}\"": "Обновление каталога с \"{0}\" на \"{1}\"",
   
   "Would you like to update the declaration identifer to \"{0}\" and update its references?": "Хотите обновить идентификатор объявления на \"{0}\" и обновить все его ссылки?",
   "The detected namespace '{0}' is not a valid PHP namespace. The refactoring process has been canceled.": "Обнаруженное пространство имен '{0}' не является допустимым пространством имен PHP. Процесс рефакторинга отменен.",

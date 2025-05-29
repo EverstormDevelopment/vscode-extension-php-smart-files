@@ -58,6 +58,7 @@
   "Updating references from \"{0}\" to \"{1}\"": "Actualizando referencias de \"{0}\" a \"{1}\"",
   "Processing file {0} of {1}": "Procesando archivo {0} de {1}",
   "Error updating references in file {0}: {1}": "Error al actualizar referencias en el archivo {0}: {1}",
+  "Updating directory from \"{0}\" to \"{1}\"": "Actualizando directorio de \"{0}\" a \"{1}\"",
   
   "Would you like to update the declaration identifer to \"{0}\" and update its references?": "¿Le gustaría actualizar el identificador de declaración a \"{0}\" y actualizar sus referencias?",
   "The detected namespace '{0}' is not a valid PHP namespace. The refactoring process has been canceled.": "El espacio de nombres detectado '{0}' no es un espacio de nombres PHP válido. El proceso de refactorización ha sido cancelado.",

@@ -58,6 +58,7 @@
   "Updating references from \"{0}\" to \"{1}\"": "Mise à jour des références de \"{0}\" vers \"{1}\"",
   "Processing file {0} of {1}": "Traitement du fichier {0} sur {1}",
   "Error updating references in file {0}: {1}": "Erreur lors de la mise à jour des références dans le fichier {0} : {1}",
+  "Updating directory from \"{0}\" to \"{1}\"": "Mise à jour du répertoire de \"{0}\" vers \"{1}\"",
   
   "Would you like to update the declaration identifer to \"{0}\" and update its references?": "Souhaitez-vous mettre à jour l'identifiant de déclaration en \"{0}\" et mettre à jour ses références ?",
   "The detected namespace '{0}' is not a valid PHP namespace. The refactoring process has been canceled.": "L'espace de noms détecté '{0}' n'est pas un espace de noms PHP valide. Le processus de refactoring a été annulé.",

@@ -1,3 +1,4 @@
+import { throws } from "assert";
 import { escapeRegExp } from "../../../utils/regexp/escapeRegExp";
 
 /**
@@ -23,6 +24,9 @@ export class NamespaceRegExpProvider {
         extends: "[eE][xX][tT][eE][nN][dD][sS]",
         implements: "[iI][mM][pP][lL][eE][mM][eE][nN][tT][sS]",
         new: "[nN][eE][wW]",
+        return: "[rR][eE][tT][uU][rR][nN]",
+        param: "[pP][aA][rR][aA][mM]",
+        throws: "[tT][hH][rR][oO][wW][sS]",
     };
 
     /**
@@ -138,28 +142,31 @@ export class NamespaceRegExpProvider {
             implements: implementsPattern,
             use: usePattern,
             new: newPattern,
+            return: returnPattern,
+            param: paramPattern,
+            throws: throwsPattern,
         } = NamespaceRegExpProvider.keywordPatterns;
 
         // Pattern for a partially qualified namespace (at least one backslash, not at the beginning)
         const partiallyQualifiedPattern = `(${identifierPattern}(?:\\\\${identifierPattern})+)`;
-        // Pattern for allowed characters before some types of partially qualified namespace
+        // Pattern for allowed for prefixes and postfixes (e.g., after certain keywords or symbols)
         const escapedSpecialChars = escapeRegExp(";,{}()=.:[]+-/%<>?!$&|^~@#");
-        const allowedPrefixPattern = `[${escapedSpecialChars}]+\\s*`;
+        const specialCharPattern = `\\s*[${escapedSpecialChars}]\\s*`;
 
         // The different contexts where partially qualified namespaces can appear
         const contexts = [
-            // After extends/implements or after commas for multiple interfaces
-            `(?:${extendsPattern}|${implementsPattern}|,)\\s+${partiallyQualifiedPattern}\\b`,
-            // In static access - check that there's at least one on allowed sign and no backslash at the beginning
-            `${allowedPrefixPattern}${partiallyQualifiedPattern}::`,
-            // In parameter type hints
-            `[,\\(]\\s*${partiallyQualifiedPattern}\\s+\\$${identifierPattern}`,
-            // In return type declarations
-            `\\)\\s*:\\s*(?:\\?\\s*)?${partiallyQualifiedPattern}\\b`,
-            // In trait use statements inside classes
-            `(?<=\\{[^}]*?${usePattern}\\s+|\\{[^}]*?${usePattern}[^;]*?,\\s*)(${identifierPattern}(?:\\\\${identifierPattern})+)(?=\\s*[,;])`,
+            // After extends/implements
+            `(?:${extendsPattern}|${implementsPattern})\\s+${partiallyQualifiedPattern}\\b`,
             // In new instantiations
             `${newPattern}\\s+${partiallyQualifiedPattern}\\b`,
+            // Used with return statements
+            `${returnPattern}\\s+${partiallyQualifiedPattern}\\b`,
+            // Used in doc comments for parameters, return types, and exceptions
+            `(?<=(?:@${paramPattern}|@${returnPattern}|@${throwsPattern})\s*)${partiallyQualifiedPattern}\\b`,
+            // In trait use statements inside classes
+            `(?<=\\{[^}]*?${usePattern}\\s+|\\{[^}]*?${usePattern}[^;]*?,\\s*)${partiallyQualifiedPattern}(?=\\s*[,;])`,
+            // General use like return type declarations, functions calls, parameter, const, etc.
+            `(?<=${specialCharPattern})${partiallyQualifiedPattern}(?=${specialCharPattern})`,
         ];
 
         return new RegExp(contexts.join("|"), "gu");

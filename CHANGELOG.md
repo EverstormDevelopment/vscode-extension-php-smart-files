@@ -18,7 +18,13 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
   - Improved detection of qualified class names in object instantiation contexts
   - Now correctly identifies namespace boundaries in partially qualified references
   - Ensures proper namespace refactoring for all class instantiation patterns
-- Fixed regular expression pattern for static class access detection
+- Improved detection of partially qualified namespaces:
+  - Enhanced recognition of functions and constants with partially qualified namespaces
+  - Now correctly identifies and refactors function calls like `Utils\function_name()`
+  - Added support for constant references with partially qualified names such as `Config\CONSTANT_NAME`
+  - Now detects partially qualified namespaces in PhpDoc blocks within `@param` and `@return` annotations
+  - Added detection of partially qualified namespaces in PHP 8 attributes (`#[Attributes\MyAttribute]`)
+  - Ensures comprehensive refactoring of all partially qualified namespaces regardless of context
 
 
 

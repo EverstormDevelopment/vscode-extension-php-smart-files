@@ -5,6 +5,27 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 
 
 
+## [1.0.0] - 2025-06-03
+
+### Added
+- Official release of the "PHP Smart Files" extension, version 1.0.0:
+  - Comprehensive support for PHP file creation, namespace refactoring, and directory operations
+  - Multi-language support (English, German, French, Spanish, Russian)
+  - Integration with VS Code Explorer context menu for seamless file operations
+  - Intelligent handling of PHP namespaces, including partially qualified references
+  - Advanced refactoring capabilities for files, directories, and namespaces
+  - Enhanced performance and stability for large-scale refactoring operations
+  - Improved user feedback with localized messages and progress indicators
+
+### Changed
+- Updated all dependencies to their latest versions for improved compatibility and security
+- Finalized testing to ensure stability and reliability for the first release
+
+### Fixed
+- Resolved all known issues from previous versions to deliver a polished and stable extension
+
+
+
 ## [0.9.2] - 2025-06-03
 
 ### Fixed

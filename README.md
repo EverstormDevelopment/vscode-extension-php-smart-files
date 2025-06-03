@@ -154,20 +154,16 @@ I'll do my best to keep this extension reliable and useful while balancing its s
 
 ## Release Notes
 
-### Current Version: 0.9.1
+### Current Version: 1.0.0
 
-This version includes documentation improvements and translation updates:
-- Improved README documentation with more compact and focused content
-- Added missing translations for directory update notifications in all supported languages
-- Streamlined documentation for better readability
-
-### Version 0.9.0
-
-Major features added in this version:
-- Comprehensive support for partially qualified namespaces during refactoring
-- Directory-level progress indication when processing multiple files
-- Improved handling of multiple interfaces in class declarations
-- Better detection of static access and traits in class use statements
+This version marks the official release of the "PHP Smart Files" extension:
+- Comprehensive support for PHP file creation, namespace refactoring, and directory operations
+- Multi-language support (English, German, French, Spanish, Russian)
+- Integration with VS Code Explorer context menu for seamless file operations
+- Intelligent handling of PHP namespaces, including partially qualified references
+- Advanced refactoring capabilities for files, directories, and namespaces
+- Enhanced performance and stability for large-scale refactoring operations
+- Improved user feedback with localized messages and progress indicators
 
 For a detailed list of changes in this and previous versions, please see the [CHANGELOG](CHANGELOG.md).
 

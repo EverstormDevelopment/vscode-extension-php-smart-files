@@ -3,13 +3,12 @@
 <div align="center">
 
 [![Version](https://img.shields.io/visual-studio-marketplace/v/everstorm.php-smart-files)](https://marketplace.visualstudio.com/items?itemName=everstorm.php-smart-files)
-[![Installs](https://img.shields.io/visual-studio-marketplace/i/everstorm.php-smart-files)](https://marketplace.visualstudio.com/items?itemName=everstorm.php-smart-files)
-[![Rating](https://img.shields.io/visual-studio-marketplace/r/everstorm.php-smart-files)](https://marketplace.visualstudio.com/items?itemName=everstorm.php-smart-files&ssr=false#review-details)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ### Smart PHP File Creation & Intelligent Namespace Management
 
-**Simplify your PHP development!** Create properly structured files with smart templates while automatic namespace management handles refactoring and references
+Create properly structured files with smart templates while automatic namespace management handles refactoring and references<br />
+**Simplify your PHP development!**
 
 </div>
 
@@ -138,7 +137,7 @@ This extension is available in multiple languages:
 
 ### 🌱 Project Origins
 
-PHP Smart Files began as a personal project to enhance my own development workflow. What started as a simple tool for creating properly namespaced PHP files has evolved organically into a more comprehensive solution through incremental feature additions and continuous refinement.
+PHP Smart Files began as a personal project to simplify my own development workflow. Initially created as a simple tool for generating correctly namespaced PHP files, it has grown into a comprehensive solution, driven by evolving requirements and continuous feature enhancements.
 
 Looking back, it's nice to see how far this project has come. The files actually became "smart" along the way - handling namespaces and refactoring automatically, which saves a lot of manual work I used to do.
 
@@ -154,7 +153,14 @@ I'll do my best to keep this extension reliable and useful while balancing its s
 
 ## Release Notes
 
-### Current Version: 1.0.0
+### Current Version: 1.0.1
+
+This version includes updates to the README documentation:
+- Improved formatting for better readability
+- Removed badges that were not functioning correctly
+- Revised "Project Origins" section
+
+### Version: 1.0.0
 
 This version marks the official release of the "PHP Smart Files" extension:
 - Comprehensive support for PHP file creation, namespace refactoring, and directory operations

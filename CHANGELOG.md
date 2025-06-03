@@ -5,6 +5,16 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 
 
 
+## [1.0.1] - 2025-06-03
+
+### Changed
+- Updated README documentation:
+  - Improved formatting for better readability
+  - Removed badges that were not functioning correctly
+  - Revised "Project Origins" section
+
+
+
 ## [1.0.0] - 2025-06-03
 
 ### Added

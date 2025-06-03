@@ -5,7 +5,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 
 
 
-## [Unreleased]
+## [0.9.2] - 2025-06-03
 
 ### Fixed
 - Fixed namespace refactoring by excluding PHP built-in functions:

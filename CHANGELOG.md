@@ -12,6 +12,12 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
   - Improved and clarified the extension description for better marketplace visibility
   - Refined and expanded the keywords list for improved discoverability
   - Added galleryBanner configuration for enhanced Visual Studio Marketplace presentation
+- Updated README.md:
+  - Improved and finalized the tagline for clarity and user focus
+  - Rewrote the "Feedback and Contributions" section to be more inviting and community-oriented
+  - Ensured consistent, modern language and formatting throughout the document
+- Updated logo/icon:
+  - Slightly adjusted the logo to better fit the Visual Studio Marketplace presentation
 
 
 

@@ -153,7 +153,13 @@ I'll do my best to keep this extension reliable and useful while balancing its s
 
 ## Release Notes
 
-### Current Version: 1.0.1
+### Current Version: 1.0.2
+
+This version includes improvements for the Visual Studio Marketplace:
+- Optimized extension logo and gallery banner
+- Enhanced extension description, keywords, and README for better discoverability and presentation
+
+### Version: 1.0.1
 
 This version includes updates to the README documentation:
 - Improved formatting for better readability

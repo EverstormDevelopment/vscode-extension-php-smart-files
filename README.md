@@ -200,10 +200,12 @@ When using these import types, namespace references will not be updated during r
 
 ## Feedback and Contributions
 
-Your feedback and contributions are welcome! If you encounter any issues or have suggestions for improvements:
+Your feedback, ideas, and contributions are truly appreciated! If you've found a bug, have a suggestion, or want to contribute:
 
 - [Submit an issue](https://github.com/EverstormDevelopment/vscode-extension-php-smart-files/issues)
 - [Contribute on GitHub](https://github.com/EverstormDevelopment/vscode-extension-php-smart-files)
+
+Thank you for helping improve PHP Smart Files!
 
 ## License
 

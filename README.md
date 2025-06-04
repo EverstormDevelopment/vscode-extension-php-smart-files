@@ -205,7 +205,7 @@ Your feedback, ideas, and contributions are truly appreciated! If you've found a
 - [Submit an issue](https://github.com/EverstormDevelopment/vscode-extension-php-smart-files/issues)
 - [Contribute on GitHub](https://github.com/EverstormDevelopment/vscode-extension-php-smart-files)
 
-Thank you for helping improve PHP Smart Files!
+Thanks for helping make PHP Smart Files better!
 
 ## License
 

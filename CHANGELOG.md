@@ -5,6 +5,15 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 
 
 
+## [1.0.2] - 2025-06-04
+
+### Changed
+- Updated package.json:
+  - Improved and clarified the extension description for better marketplace visibility
+  - Refined and expanded the keywords list for improved discoverability
+
+
+
 ## [1.0.1] - 2025-06-03
 
 ### Changed

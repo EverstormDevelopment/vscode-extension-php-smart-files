@@ -11,6 +11,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 - Updated package.json:
   - Improved and clarified the extension description for better marketplace visibility
   - Refined and expanded the keywords list for improved discoverability
+  - Added galleryBanner configuration for enhanced Visual Studio Marketplace presentation
 
 
 

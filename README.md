@@ -7,7 +7,7 @@
 
 ### Smart PHP File Creation & Intelligent Namespace Management
 
-Create properly structured files with smart templates while automatic namespace management handles refactoring and references<br />
+Create PHP files effortlessly with smart templates and automated namespace management for safe PSR-4 refactoring and consistent references.<br />
 **Simplify your PHP development!**
 
 </div>

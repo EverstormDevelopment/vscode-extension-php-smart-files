@@ -46,6 +46,10 @@
     "vscode php",
     "phpstorm"
   ],
+  "galleryBanner": {
+    "color": "#2C3E50",
+    "theme": "dark"
+  },
   "icon": "images/icon.png",
   "license": "MIT",
   "repository": {

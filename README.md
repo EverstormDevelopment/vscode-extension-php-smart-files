@@ -1,17 +1,14 @@
 # PHP Smart Files
 
-<div align="center">
+<p align="center">
+  <a href="https://marketplace.visualstudio.com/items?itemName=everstorm.php-smart-files"><img src="https://img.shields.io/visual-studio-marketplace/v/everstorm.php-smart-files" alt="Version" /></a>
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT" /></a>
+</p>
 
-[![Version](https://img.shields.io/visual-studio-marketplace/v/everstorm.php-smart-files)](https://marketplace.visualstudio.com/items?itemName=everstorm.php-smart-files)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+<h3 align="center">Smart PHP File Creation & Intelligent Namespace Management</h3>
+<p align="center">Create PHP files effortlessly with smart templates and automated namespace management for safe PSR-4 refactoring and consistent references.<br />
+<b>Simplify your PHP development!</b></p>
 
-### Smart PHP File Creation & Intelligent Namespace Management
-
-Create PHP files effortlessly with smart templates and automated namespace management for safe PSR-4 refactoring and consistent references.<br />
-**Simplify your PHP development!**
-
-
-</div>
 
 
 ## Key Benefits
@@ -160,34 +157,12 @@ I'll do my best to keep this extension reliable and useful while balancing its s
 
 ## Release Notes
 
-### Current Version: 1.0.3
+### Current Version: 1.0.4
 
-This version includes improvements for the Visual Studio Marketplace:
-- Updated README to ensure that all lists and sections are displayed correctly and consistently
+This version includes README improvements for the Visual Studio Marketplace:
 
-### Version: 1.0.2
-
-This version includes improvements for the Visual Studio Marketplace:
-- Optimized extension logo and gallery banner
-- Enhanced extension description, keywords, and README for better discoverability and presentation
-
-### Version: 1.0.1
-
-This version includes updates to the README documentation:
-- Improved formatting for better readability
-- Removed badges that were not functioning correctly
-- Revised "Project Origins" section
-
-### Version: 1.0.0
-
-This version marks the official release of the "PHP Smart Files" extension:
-- Comprehensive support for PHP file creation, namespace refactoring, and directory operations
-- Multi-language support (English, German, French, Spanish, Russian)
-- Integration with VS Code Explorer context menu for seamless file operations
-- Intelligent handling of PHP namespaces, including partially qualified references
-- Advanced refactoring capabilities for files, directories, and namespaces
-- Enhanced performance and stability for large-scale refactoring operations
-- Improved user feedback with localized messages and progress indicators
+- Improved README formatting for better rendering in the Visual Studio Marketplace
+- Ensured list rendering and section spacing is consistent
 
 For a detailed list of changes in this and previous versions, please see the [CHANGELOG](CHANGELOG.md).
 

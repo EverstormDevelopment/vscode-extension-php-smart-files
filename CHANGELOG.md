@@ -5,6 +5,15 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 
 
 
+## [1.0.4] - 2025-06-06
+
+### Changed
+Updated README.md:
+- Improved formatting for better rendering in the Visual Studio Marketplace
+- Ensured list rendering and section spacing is consistent
+
+
+
 ## [1.0.3] - 2025-06-06
 
 ### Changed

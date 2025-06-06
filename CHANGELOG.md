@@ -5,6 +5,13 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 
 
 
+## [1.0.3] - 2025-06-06
+
+### Changed
+- Updated README to ensure that all lists and sections are displayed correctly and consistently
+
+
+
 ## [1.0.2] - 2025-06-04
 
 ### Changed

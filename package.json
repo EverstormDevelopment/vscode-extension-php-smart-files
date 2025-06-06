@@ -1,5 +1,5 @@
 {
-  "version": "1.0.2",
+  "version": "1.0.3",
   "name": "php-smart-files",
   "displayName": "PHP Smart Files",
   "description": "Smart PHP file creation, automatic namespace detection, and safe PSR-4 namespace refactoring – optimized for modern PHP and Composer.",

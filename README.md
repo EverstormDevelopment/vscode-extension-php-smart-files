@@ -10,15 +10,19 @@
 Create PHP files effortlessly with smart templates and automated namespace management for safe PSR-4 refactoring and consistent references.<br />
 **Simplify your PHP development!**
 
+
 </div>
 
+
 ## Key Benefits
+
 - 📁 **Simplified Creation**: One-click PHP file creation with smart templates and proper namespaces
 - 🔄 **Safe Refactoring**: Move, rename, and restructure without breaking namespace references
 - 🧩 **Developer-Focused**: Built for real PHP workflows with practical features and sensible defaults
 - 🌍 **Accessible**: Available in five languages with clear, customizable settings
 
 ## Table of Contents
+
 - [Features](#features)
 - [Usage](#usage)
 - [Extension Settings](#extension-settings)
@@ -81,6 +85,7 @@ Save time and prevent bugs with comprehensive namespace management:
 Right-click in the Explorer and select from the "Create PHP File" submenu:
 
 #### Basic Files
+
 - **Empty PHP File**: Creates a basic PHP file with namespace
 - **Empty PHP Class**: Creates a PHP class with namespace and class declaration
 - **Empty PHP Interface**: Creates a PHP interface with namespace
@@ -88,12 +93,14 @@ Right-click in the Explorer and select from the "Create PHP File" submenu:
 - **Empty PHP Trait**: Creates a PHP trait with namespace
 
 #### Template Files
+
 - **PHP Class with Template**: Creates a PHP class with helpful boilerplate code
 - **PHP Interface with Template**: Creates a PHP interface with method templates
 - **PHP Enum with Template**: Creates a PHP enum with case examples
 - **PHP Trait with Template**: Creates a PHP trait with method examples
 
 #### Symfony Templates
+
 - **Symfony Controller**: Creates a controller with route attributes and render method
 - **Symfony Command**: Creates a command with complete structure following Symfony console conventions
 - **Symfony Form Type**: Creates a form type with buildForm and configureOptions methods
@@ -216,6 +223,7 @@ Thanks for helping make PHP Smart Files better!
 ## License
 
 This extension is licensed under the [MIT License](LICENSE).
+
 
 ---
 

@@ -157,12 +157,9 @@ I'll do my best to keep this extension reliable and useful while balancing its s
 
 ## Release Notes
 
-### Current Version: 1.0.4
+### Current Version: 1.0.5
 
-This version includes README improvements for the Visual Studio Marketplace:
-
-- Improved README formatting for better rendering in the Visual Studio Marketplace
-- Ensured list rendering and section spacing is consistent
+This release fixes an issue where non-namespaced entries in `extends` and `implements` lists could be missed if partially or fully qualified names were present. All relevant entries are now correctly identified and processed.
 
 For a detailed list of changes in this and previous versions, please see the [CHANGELOG](CHANGELOG.md).
 

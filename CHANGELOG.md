@@ -5,12 +5,19 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 
 
 
+## [1.0.5] - 2025-06-10
+
+### Fixed
+- Fixed an issue where non-namespaced entries in `extends` and `implements` lists were missed if partially or fully qualified names were present. All relevant entries are now correctly identified and processed.
+
+
+
 ## [1.0.4] - 2025-06-06
 
 ### Changed
-Updated README.md:
-- Improved formatting for better rendering in the Visual Studio Marketplace
-- Ensured list rendering and section spacing is consistent
+- Updated README.md:
+  - Improved formatting for better rendering in the Visual Studio Marketplace
+  - Ensured list rendering and section spacing is consistent
 
 
 

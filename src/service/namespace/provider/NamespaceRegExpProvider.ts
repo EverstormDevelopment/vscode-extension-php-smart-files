@@ -110,8 +110,8 @@ export class NamespaceRegExpProvider {
         const orPatterns = [
             // Attribute annotations (PHP 8+)
             `#\\[\\s*(${identifierPattern})`,
-            // Using negative lookahead to ensure we don't match parts of qualified names
-            `(?:${extendsPattern}|${implementsPattern}|,)\\s+(?!.*?(?:\\\\))\\s*(${identifierPattern})(?!\\s*\\\\)`,
+            // Match non-namespaced identifiers after extends/implements
+            `(?<=\\b(?:${extendsPattern}|${implementsPattern})\\s+|(?:${extendsPattern}|${implementsPattern})[^;{{]*?,\\s*)(${identifierPattern})(?=\\s*[,;{{])`,
             // New instantiations
             `${newPattern}\\s+(${identifierPattern})\\b\\s*\\(`,
             // use statements (single-level namespaces only)

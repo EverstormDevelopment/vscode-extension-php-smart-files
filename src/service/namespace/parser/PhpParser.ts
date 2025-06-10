@@ -1,12 +1,14 @@
 import type {
     Program as AST,
-    Node as PhpNode,
-    Namespace as PhpNamespace,
-    Declaration as PhpDeclaration,
     ConstantStatement as PhpConstantStatement,
+    Declaration as PhpDeclaration,
+    Namespace as PhpNamespace,
+    Node as PhpNode,
 } from "php-parser";
 import { Engine } from "php-parser";
 import { IdentifierType } from "../type/IdentifierType";
+import { IdentifierKindEnum } from "../enum/IdentifierKindEnum";
+
 
 export class PhpParser {
     private ast: AST;
@@ -102,7 +104,7 @@ export class PhpParser {
         const identifier = typeof declarationNode.name === "string" ? declarationNode.name : declarationNode.name.name;
         return {
             identifier: identifier,
-            type: node.kind,
+            kind: node.kind as IdentifierKindEnum,
         };
     }
 }

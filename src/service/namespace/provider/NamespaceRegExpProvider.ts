@@ -1,6 +1,5 @@
-import { IdentifierKindEnum } from "./../enum/IdentifierKindEnum";
-import { throws } from "assert";
 import { escapeRegExp } from "../../../utils/regexp/escapeRegExp";
+import { IdentifierKindEnum } from "./../enum/IdentifierKindEnum";
 
 /**
  * Provides regular expressions for PHP namespace and identifier operations.

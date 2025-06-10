@@ -135,7 +135,7 @@ export class NamespaceRegExpProvider {
      */
     public getNonQualifiedFunctionReferenceRegExp(): RegExp {
         const identifierPattern = NamespaceRegExpProvider.identifierPattern;
-        return new RegExp(`(?<!([\\p{L}\\d_\\\\:>$]|#\\[)\\s*)${identifierPattern}\\s*(?=\\()`, "gu");
+        return new RegExp(`(?<!([\\p{L}\\d_\\\\:>$]|#\\[)\\s*)(${identifierPattern})\\s*(?=\\()`, "gu");
     }
 
     /**

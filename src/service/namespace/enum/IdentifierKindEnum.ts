@@ -6,4 +6,5 @@ export enum IdentifierKindEnum {
     Enum = "enum",
     Function = "function",
     Constant = "constant",
+    Namespace = "namespace",
 }

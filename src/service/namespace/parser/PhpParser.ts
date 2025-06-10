@@ -9,10 +9,20 @@ import { Engine } from "php-parser";
 import { IdentifierType } from "../type/IdentifierType";
 import { IdentifierKindEnum } from "../enum/IdentifierKindEnum";
 
-
+/**
+ * Parser for PHP code that generates the AST and extracts various information.
+ */
 export class PhpParser {
+    /**
+     * The AST (Abstract Syntax Tree) of the parsed PHP code.
+     */
     private ast: AST;
 
+    /**
+     * Creates a new instance of PhpParser and parses the given PHP code.
+     * @param phpCode The PHP code to parse as a string
+     * @param fileName Optional file name for error reporting
+     */
     constructor(phpCode: string, fileName: string = "") {
         const parser = new Engine({
             parser: {
@@ -27,10 +37,18 @@ export class PhpParser {
         this.ast = parser.parseCode(phpCode, fileName);
     }
 
+    /**
+     * Returns the complete AST (Abstract Syntax Tree) of the parsed PHP code.
+     * @returns The AST object
+     */
     public getAST(): AST {
         return this.ast;
     }
 
+    /**
+     * Returns the namespace name if present in the parsed PHP code.
+     * @returns The namespace name as a string or undefined if none exists
+     */
     public getNamespace(): string | undefined {
         if (!this.ast || !this.ast.children) {
             return undefined;
@@ -44,6 +62,11 @@ export class PhpParser {
         return namespaceNode.name || undefined;
     }
 
+    /**
+     * Returns all top-level declarations (classes, interfaces, enums, traits, functions, constants)
+     * within the namespace node.
+     * @returns Array of IdentifierType for all found declarations
+     */
     public getTopLevelDeclarations(): any[] {
         const namespaceNode = this.getNamespaceNode();
         if (!namespaceNode) {
@@ -53,11 +76,11 @@ export class PhpParser {
         const declarations = [];
         for (const node of namespaceNode.children) {
             switch (node.kind) {
-                case "class":
-                case "interface":
-                case "enum":
-                case "trait":
-                case "function":
+                case IdentifierKindEnum.Class:
+                case IdentifierKindEnum.Interface:
+                case IdentifierKindEnum.Enum:
+                case IdentifierKindEnum.Trait:
+                case IdentifierKindEnum.Function:
                     const declaration = this.getDeclarationFromNode(node);
                     declarations.push(declaration);
                     break;
@@ -72,13 +95,17 @@ export class PhpParser {
         return declarations;
     }
 
+    /**
+     * Searches for and returns the namespace node from the AST, if present.
+     * @returns The namespace node or undefined if none exists
+     */
     private getNamespaceNode(): PhpNamespace | undefined {
         if (!this.ast || !this.ast.children) {
             return undefined;
         }
 
         for (const node of this.ast.children) {
-            if (node.kind === "namespace") {
+            if (node.kind === IdentifierKindEnum.Namespace) {
                 return node as PhpNamespace;
             }
         }
@@ -86,12 +113,17 @@ export class PhpParser {
         return undefined;
     }
 
+    /**
+     * Extracts all constant declarations from a ConstantStatement node.
+     * @param node The ConstantStatement node
+     * @returns Array of IdentifierType for each found constant
+     */
     private getConstantDeclarationsFromNode(node: PhpNode): IdentifierType[] {
         const constantNode = node as PhpConstantStatement;
         const declarations: IdentifierType[] = [];
 
         for (const child of constantNode.constants) {
-            if (child.kind === "constant") {
+            if (child.kind === IdentifierKindEnum.Constant) {
                 const declaration = this.getDeclarationFromNode(child);
                 declarations.push(declaration);
             }
@@ -99,6 +131,11 @@ export class PhpParser {
         return declarations;
     }
 
+    /**
+     * Creates an IdentifierType object from a declaration node (e.g. class, function, constant).
+     * @param node The declaration node
+     * @returns IdentifierType with the name and kind of the declaration
+     */
     private getDeclarationFromNode(node: PhpNode): IdentifierType {
         const declarationNode = node as PhpDeclaration;
         const identifier = typeof declarationNode.name === "string" ? declarationNode.name : declarationNode.name.name;

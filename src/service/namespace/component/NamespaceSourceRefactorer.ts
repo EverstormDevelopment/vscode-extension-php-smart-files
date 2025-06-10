@@ -128,6 +128,13 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
         return content;
     }
 
+    /**
+     * Adds use statements for the given non-qualified references to the file content.
+     * @param content The original file content.
+     * @param namespace The namespace to use for the use statements.
+     * @param nonQualifiedReferences List of non-qualified references to add as use statements.
+     * @returns The content with added use statements.
+     */
     private addUseStatements(content: string, namespace: string, nonQualifiedReferences: IdentifierType[]): string {
         for (const identifier of nonQualifiedReferences) {
             content = this.addUseStatement(content, namespace, identifier);
@@ -135,6 +142,13 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
         return content;
     }
 
+    /**
+     * Removes use statements for the given non-qualified references from the file content.
+     * @param content The original file content.
+     * @param namespace The namespace to remove from the use statements.
+     * @param nonQualifiedReferences List of non-qualified references to remove from use statements.
+     * @returns The content with removed use statements.
+     */
     private removeUseStatements(content: string, namespace: string, nonQualifiedReferences: IdentifierType[]): string {
         for (const identifier of nonQualifiedReferences) {
             content = this.removeUseStatement(content, namespace, identifier);
@@ -200,6 +214,14 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
         return result;
     }
 
+    /**
+     * Extracts unique non-qualified identifiers from the file content using the provided RegExp.
+     * Filters out reserved keywords, global functions, and excluded names.
+     * @param content The original file content.
+     * @param regExp The RegExp to match identifiers.
+     * @param exclude Set of names to exclude (already used).
+     * @returns Array of unique identifier names.
+     */
     private extractNonQualifiedIdentifiers(content: string, regExp: RegExp, exclude: Set<string>): string[] {
         const matches = Array.from(content.matchAll(regExp))
             .map((match) => match.slice(1).find(Boolean))

@@ -140,7 +140,7 @@ export class PhpParser {
         const declarationNode = node as PhpDeclaration;
         const identifier = typeof declarationNode.name === "string" ? declarationNode.name : declarationNode.name.name;
         return {
-            identifier: identifier,
+            name: identifier,
             kind: node.kind as IdentifierKindEnum,
         };
     }

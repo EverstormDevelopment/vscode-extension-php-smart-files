@@ -121,7 +121,7 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
         }
 
         const nonQualifiedReferences = references.filter(
-            (reference) => reference.identifier !== refactorDetails.old.identifier
+            (reference) => reference.name !== refactorDetails.old.identifier
         );
         content = this.addUseStatements(content, refactorDetails.old.namespace, nonQualifiedReferences);
         content = this.removeUseStatements(content, refactorDetails.new.namespace, nonQualifiedReferences);
@@ -200,14 +200,14 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
             [this.namespaceRegExpProvider.getNonQualifiedConstantReferenceRegExp(), IdentifierKindEnum.Constant],
         ];
 
-        let excludedNames = new Set<string>();
+        let excludedIdentifiers = new Set<string>();
         const result: IdentifierType[] = [];
 
         for (const [regExp, kind] of referencePatterns) {
-            const identifiers = this.extractNonQualifiedIdentifiers(content, regExp, excludedNames);
+            const identifiers = this.extractNonQualifiedIdentifiers(content, regExp, excludedIdentifiers);
             for (const identifier of identifiers) {
-                result.push({ identifier, kind });
-                excludedNames.add(identifier);
+                result.push({ name: identifier, kind });
+                excludedIdentifiers.add(identifier);
             }
         }
 

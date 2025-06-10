@@ -1,6 +1,6 @@
 import { IdentifierKindEnum } from "../enum/IdentifierKindEnum";
 
 export type IdentifierType = {
-    identifier: string;
+    name: string;
     kind: IdentifierKindEnum;
 }

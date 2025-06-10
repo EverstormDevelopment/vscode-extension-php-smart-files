@@ -147,7 +147,7 @@ export class NamespaceRegExpProvider {
      */
     public getNonQualifiedConstantReferenceRegExp(): RegExp {
         const identifierPattern = NamespaceRegExpProvider.identifierPattern;
-        return new RegExp(`(?<![\\p{L}\\d_\\:$'"]+\\s*|->)\\b(${identifierPattern})\\b(?!\\s*[\\p{L}\\d_\\:>(:'"$\\[])`, "gu");
+        return new RegExp(`(?<![\\p{L}\\d_\\\\:$'"]+\\s*|->)\\b(${identifierPattern})\\b(?!\\s*[\\p{L}\\d_\\\\:>(:'"$\\[])`, "gu");
     }
 
     /**

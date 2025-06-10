@@ -1,9 +1,11 @@
 import * as vscode from "vscode";
+import { GlobalFunctions } from "../../../utils/php/GlobalFunctions";
 import { ReservedKeywords } from "../../../utils/php/ReservedKeywords";
 import { escapeRegExp } from "../../../utils/regexp/escapeRegExp";
 import { NamespaceRefactorerAbstract } from "../abstract/NamespaceRefactorerAbstract";
+import { IdentifierKindEnum } from "../enum/IdentifierKindEnum";
+import { IdentifierType } from "../type/IdentifierType";
 import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailsType";
-import { GlobalFunctions } from "../../../utils/php/GlobalFunctions";
 
 /**
  * Handles the refactoring of namespace declarations and class identifiers in PHP files
@@ -118,34 +120,22 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
             return content;
         }
 
-        const nonQualifiedReferences = references.filter((reference) => reference !== refactorDetails.old.identifier);
+        const nonQualifiedReferences = references.filter(
+            (reference) => reference.identifier !== refactorDetails.old.identifier
+        );
         content = this.addUseStatements(content, refactorDetails.old.namespace, nonQualifiedReferences);
         content = this.removeUseStatements(content, refactorDetails.new.namespace, nonQualifiedReferences);
         return content;
     }
 
-    /**
-     * Adds `use` statements for non-qualified references.
-     * @param content The original file content.
-     * @param namespace The namespace to add `use` statements for.
-     * @param nonQualifiedReferences A list of non-qualified references to add.
-     * @returns The content with added `use` statements.
-     */
-    private addUseStatements(content: string, namespace: string, nonQualifiedReferences: string[]): string {
+    private addUseStatements(content: string, namespace: string, nonQualifiedReferences: IdentifierType[]): string {
         for (const identifier of nonQualifiedReferences) {
             content = this.addUseStatement(content, namespace, identifier);
         }
         return content;
     }
 
-    /**
-     * Removes `use` statements for non-qualified references.
-     * @param content The original file content.
-     * @param namespace The namespace to remove `use` statements for.
-     * @param nonQualifiedReferences A list of non-qualified references to remove.
-     * @returns The content with removed `use` statements.
-     */
-    private removeUseStatements(content: string, namespace: string, nonQualifiedReferences: string[]): string {
+    private removeUseStatements(content: string, namespace: string, nonQualifiedReferences: IdentifierType[]): string {
         for (const identifier of nonQualifiedReferences) {
             content = this.removeUseStatement(content, namespace, identifier);
         }
@@ -189,15 +179,39 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
      * @param content The original file content.
      * @returns A list of unique non-qualified references.
      */
-    private getNonQualifiedReferences(content: string): string[] {
-        const regex = this.namespaceRegExpProvider.getNonQualifiedOopReferenceRegExp();
-        const matches = Array.from(content.matchAll(regex));
-        const extractedNames = matches.map((match) => match.slice(1).find(Boolean)).filter(Boolean) as string[];
-        const filteredClassNames = extractedNames.filter((name) => {
-            return !ReservedKeywords.has(name.toLowerCase()) && !GlobalFunctions.has(name.toLowerCase());
-        });
+    private getNonQualifiedReferences(content: string): IdentifierType[] {
+        const referencePatterns: [RegExp, IdentifierKindEnum][] = [
+            [this.namespaceRegExpProvider.getNonQualifiedOopReferenceRegExp(), IdentifierKindEnum.Oop],
+            [this.namespaceRegExpProvider.getNonQualifiedFunctionReferenceRegExp(), IdentifierKindEnum.Function],
+            [this.namespaceRegExpProvider.getNonQualifiedConstantReferenceRegExp(), IdentifierKindEnum.Constant],
+        ];
 
-        const classNames = new Set(filteredClassNames);
-        return Array.from(classNames);
+        let excludedNames = new Set<string>();
+        const result: IdentifierType[] = [];
+
+        for (const [regExp, kind] of referencePatterns) {
+            const identifiers = this.extractNonQualifiedIdentifiers(content, regExp, excludedNames);
+            for (const identifier of identifiers) {
+                result.push({ identifier, kind });
+                excludedNames.add(identifier);
+            }
+        }
+
+        return result;
+    }
+
+    private extractNonQualifiedIdentifiers(content: string, regExp: RegExp, exclude: Set<string>): string[] {
+        const matches = Array.from(content.matchAll(regExp))
+            .map((match) => match.slice(1).find(Boolean))
+            .filter((name): name is string => !!name)
+            .filter((name) => {
+                const lowercaseName = name.toLowerCase();
+                return (
+                    !ReservedKeywords.has(lowercaseName) && !GlobalFunctions.has(lowercaseName) && !exclude.has(name)
+                );
+            });
+
+        const uniqueMatches = new Set(matches);
+        return Array.from(uniqueMatches);
     }
 }

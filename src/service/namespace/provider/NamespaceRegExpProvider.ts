@@ -145,7 +145,7 @@ export class NamespaceRegExpProvider {
      * @todo You may need to filter out matches that allready matched by other regexes, to avoid false positives!
      * @returns RegExp for finding non-qualified constant references.
      */
-    public getNonQualifiedConstReferenceRegExp(): RegExp {
+    public getNonQualifiedConstantReferenceRegExp(): RegExp {
         const identifierPattern = NamespaceRegExpProvider.identifierPattern;
         return new RegExp(`(?<![\\p{L}\\d_\\:$'"]+\\s*|->)\\b(${identifierPattern})\\b(?!\\s*[\\p{L}\\d_\\:>(:'"$\\[])`, "gu");
     }

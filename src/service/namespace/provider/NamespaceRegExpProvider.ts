@@ -1,3 +1,4 @@
+import { IdentifierKindEnum } from "./../enum/IdentifierKindEnum";
 import { throws } from "assert";
 import { escapeRegExp } from "../../../utils/regexp/escapeRegExp";
 
@@ -21,6 +22,8 @@ export class NamespaceRegExpProvider {
         interface: "[iI][nN][tT][eE][rR][fF][aA][cC][eE]",
         enum: "[eE][nN][uU][mM]",
         trait: "[tT][rR][aA][iI][tT]",
+        function: "[fF][uU][nN][cC][tT][iI][oO][nN]",
+        const: "[cC][oO][nN][sS][tT]",
         extends: "[eE][xX][tT][eE][nN][dD][sS]",
         implements: "[iI][mM][pP][lL][eE][mM][eE][nN][tT][sS]",
         new: "[nN][eE][wW]",
@@ -147,7 +150,10 @@ export class NamespaceRegExpProvider {
      */
     public getNonQualifiedConstantReferenceRegExp(): RegExp {
         const identifierPattern = NamespaceRegExpProvider.identifierPattern;
-        return new RegExp(`(?<![\\p{L}\\d_\\\\:$'"]+\\s*|->)\\b(${identifierPattern})\\b(?!\\s*[\\p{L}\\d_\\\\:>(:'"$\\[])`, "gu");
+        return new RegExp(
+            `(?<![\\p{L}\\d_\\\\:$'"]+\\s*|->)\\b(${identifierPattern})\\b(?!\\s*[\\p{L}\\d_\\\\:>(:'"$\\[])`,
+            "gu"
+        );
     }
 
     /**
@@ -205,38 +211,49 @@ export class NamespaceRegExpProvider {
 
     /**
      * Creates a regular expression for finding a PHP `use` statement.
-     * @param value Fully qualified namespace, partial namespace, or alias.
-     * @param options Options for the search:
-     *                matchType: 'fullQualified' | 'partial' | 'alias';
-     *                includeAlias: Whether to include an optional alias.
-     * @returns RegExp for finding the use statement.
+     * Supports matching fully qualified, partial, or aliased imports, and can distinguish between class, function, and constant imports.
+     * @param value Fully qualified namespace, partial namespace, or alias to match.
+     * @param options Optional settings:
+     *   - matchType: 'fullQualified' | 'partial' | 'alias' (default: 'fullQualified')
+     *   - matchKind: IdentifierKindEnum to specify class, function, or constant
+     *   - includeAlias: Whether to include an optional alias in the match
+     * @returns RegExp for finding the matching use statement.
      */
     public getUseStatementRegExp(
         value: string,
-        options?: { matchType?: "fullQualified" | "partial" | "alias"; includeAlias?: boolean }
+        options?: {
+            matchType?: "fullQualified" | "partial" | "alias";
+            matchKind?: IdentifierKindEnum;
+            includeAlias?: boolean;
+        }
     ): RegExp {
+        const pattern = NamespaceRegExpProvider.keywordPatterns;
         const escapedValue = this.escape(value);
         const identifierPattern = NamespaceRegExpProvider.identifierPattern;
-        const { use: usePattern, as: asPattern } = NamespaceRegExpProvider.keywordPatterns;
 
-        let namespacePattern: string;
-        let aliasPattern = options?.includeAlias ? `(?:\\s+${asPattern}\\s+(${identifierPattern}))?` : "";
-
-        switch (options?.matchType) {
-            case "partial":
-                namespacePattern = `[\\p{L}\\d_\\\\]+\\\\${escapedValue}`;
-                break;
-            case "alias":
-                namespacePattern = `[\\p{L}\\d_\\\\]+`;
-                aliasPattern = `\\s+${asPattern}\\s+${escapedValue}`;
-                break;
-            case "fullQualified":
-            default:
-                namespacePattern = escapedValue;
-                break;
+        let kindPattern = "";
+        if (options?.matchKind === IdentifierKindEnum.Constant) {
+            kindPattern = pattern.const + "\\s+";
+        } else if (options?.matchKind === IdentifierKindEnum.Function) {
+            kindPattern = pattern.function + "\\s+";
         }
 
-        return new RegExp(`${usePattern}\\s+(${namespacePattern})${aliasPattern}\\s*;`, "gu");
+        let namespacePattern = escapedValue;
+        if (options?.matchType === "partial") {
+            namespacePattern = `[\\p{L}\\d_\\\\]+\\\\${escapedValue}`;
+        } else if (options?.matchType === "alias") {
+            namespacePattern = `[\\p{L}\\d_\\\\]+`;
+        }
+
+        let aliasPattern = "";
+        if (options?.matchType === "alias") {
+            aliasPattern = `\\s+${pattern.as}\\s+${escapedValue}`;
+        } else if (options?.includeAlias) {
+            aliasPattern = `(?:\\s+${pattern.as}\\s+(${identifierPattern}))?`;
+        }
+
+        const regexString = `${pattern.use}\\s+${kindPattern}(${namespacePattern})${aliasPattern}\\s*;`;
+        return new RegExp(regexString, "gu");
     }
 
     /**

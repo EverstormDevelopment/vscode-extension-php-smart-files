@@ -95,7 +95,7 @@ export class NamespaceRegExpProvider {
     }
 
     /**
-     * Creates a regular expression for non-qualified references in PHP code.
+     * Creates a regular expression for non-qualified oop references in PHP code.
      * @returns RegExp for finding non-qualified references.
      */
     public getNonQualifiedOopReferenceRegExp(): RegExp {
@@ -127,6 +127,27 @@ export class NamespaceRegExpProvider {
         ];
 
         return new RegExp(orPatterns.join("|"), "gu");
+    }
+
+    /**
+     * Creates a regular expression for non-qualified function references in PHP code.
+     * @returns RegExp for finding non-qualified function references.
+     */
+    public getNonQualifiedFunctionReferenceRegExp(): RegExp {
+        const identifierPattern = NamespaceRegExpProvider.identifierPattern;
+        return new RegExp(`(?<!([\\p{L}\\d_\\\\:>$]|#\\[)\\s*)${identifierPattern}\\s*(?=\\()`, "gu");
+    }
+
+    /**
+     * Creates a regular expression for non-qualified constant references in PHP code.
+     * Matches constant usages that are not qualified by namespace, class, or object context.
+     * Excludes constants accessed via static, instance, or array/object dereferencing, and avoids matches inside strings or after PHP keywords.
+     * @todo You may need to filter out matches that allready matched by other regexes, to avoid false positives!
+     * @returns RegExp for finding non-qualified constant references.
+     */
+    public getNonQualifiedConstReferenceRegExp(): RegExp {
+        const identifierPattern = NamespaceRegExpProvider.identifierPattern;
+        return new RegExp(`(?<![\\p{L}\\d_\\:$'"]+\\s*|->)\\b(${identifierPattern})\\b(?!\\s*[\\p{L}\\d_\\:>(:'"$\\[])`, "gu");
     }
 
     /**

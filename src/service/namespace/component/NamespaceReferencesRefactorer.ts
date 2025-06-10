@@ -92,10 +92,14 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
             }
 
             let fileContentUpdated = fileContent;
-            fileContentUpdated = this.refactorFullyQualified(fileContentUpdated, fileNamespace, refactorDetails);
-            fileContentUpdated = this.refactorPartialQualified(fileContentUpdated, fileNamespace, refactorDetails);
-            fileContentUpdated = this.refactorUseStatement(fileContentUpdated, fileNamespace, refactorDetails);
-            fileContentUpdated = this.refactorIdentifier(fileContentUpdated, fileNamespace, refactorDetails);
+            if (refactorDetails.hasNamespaceChanged) {
+                fileContentUpdated = this.refactorFullyQualified(fileContentUpdated, fileNamespace, refactorDetails);
+                fileContentUpdated = this.refactorPartialQualified(fileContentUpdated, fileNamespace, refactorDetails);
+                fileContentUpdated = this.refactorUseStatement(fileContentUpdated, fileNamespace, refactorDetails);
+            }
+            if (refactorDetails.hasIdentifierChanged) {
+                fileContentUpdated = this.refactorIdentifier(fileContentUpdated, fileNamespace, refactorDetails);
+            }
             if (fileContentUpdated === fileContent) {
                 return;
             }

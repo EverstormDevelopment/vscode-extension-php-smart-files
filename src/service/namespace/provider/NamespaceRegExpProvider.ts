@@ -95,10 +95,10 @@ export class NamespaceRegExpProvider {
     }
 
     /**
-     * Creates a regular expression for non-qualified references in PHP code for updating to FQNs.
+     * Creates a regular expression for non-qualified references in PHP code.
      * @returns RegExp for finding non-qualified references.
      */
-    public getNonQualifiedReferenceRegExp(): RegExp {
+    public getNonQualifiedOopReferenceRegExp(): RegExp {
         const {
             extends: extendsPattern,
             implements: implementsPattern,

@@ -190,7 +190,7 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
      * @returns A list of unique non-qualified references.
      */
     private getNonQualifiedReferences(content: string): string[] {
-        const regex = this.namespaceRegExpProvider.getNonQualifiedReferenceRegExp();
+        const regex = this.namespaceRegExpProvider.getNonQualifiedOopReferenceRegExp();
         const matches = Array.from(content.matchAll(regex));
         const extractedNames = matches.map((match) => match.slice(1).find(Boolean)).filter(Boolean) as string[];
         const filteredClassNames = extractedNames.filter((name) => {

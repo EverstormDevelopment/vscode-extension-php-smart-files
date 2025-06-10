@@ -6,7 +6,7 @@ import type {
     ConstantStatement as PhpConstantStatement,
 } from "php-parser";
 import { Engine } from "php-parser";
-import { DeclarationType } from "./type/DeclarationType";
+import { IdentifierType } from "../type/IdentifierType";
 
 export class PhpParser {
     private ast: AST;
@@ -84,9 +84,9 @@ export class PhpParser {
         return undefined;
     }
 
-    private getConstantDeclarationsFromNode(node: PhpNode): DeclarationType[] {
+    private getConstantDeclarationsFromNode(node: PhpNode): IdentifierType[] {
         const constantNode = node as PhpConstantStatement;
-        const declarations: DeclarationType[] = [];
+        const declarations: IdentifierType[] = [];
 
         for (const child of constantNode.constants) {
             if (child.kind === "constant") {
@@ -97,7 +97,7 @@ export class PhpParser {
         return declarations;
     }
 
-    private getDeclarationFromNode(node: PhpNode): DeclarationType {
+    private getDeclarationFromNode(node: PhpNode): IdentifierType {
         const declarationNode = node as PhpDeclaration;
         const identifier = typeof declarationNode.name === "string" ? declarationNode.name : declarationNode.name.name;
         return {

@@ -1,4 +1,4 @@
-export type DeclarationType = {
+export type IdentifierType = {
     identifier: string;
     type: string;
 }

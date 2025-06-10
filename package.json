@@ -4,7 +4,7 @@
   "displayName": "PHP Smart Files",
   "description": "Smart PHP file creation, automatic namespace detection, and safe PSR-4 namespace refactoring – optimized for modern PHP and Composer.",
   "publisher": "everstorm",
-    "author": {
+  "author": {
     "name": "everstorm",
     "email": "nico@everstorm.de",
     "url": "https://github.com/EverstormDevelopment"
@@ -60,8 +60,6 @@
     "url": "https://github.com/EverstormDevelopment/vscode-extension-php-smart-files/issues"
   },
   "homepage": "https://github.com/EverstormDevelopment/vscode-extension-php-smart-files#readme",
-  
-  
   "main": "./dist/extension.js",
   "l10n": "./l10n",
   "engines": {
@@ -70,7 +68,7 @@
   "activationEvents": [
     "onLanguage:php",
     "onStartupFinished"
-  ],  
+  ],
   "contributes": {
     "configuration": {
       "title": "PHP Smart Files",
@@ -100,7 +98,11 @@
         },
         "phpSmartFiles.refactorNamespacesOnFileMoved": {
           "type": "string",
-          "enum": ["confirm", "always", "never"],
+          "enum": [
+            "confirm",
+            "always",
+            "never"
+          ],
           "default": "confirm",
           "description": "%php-smart-files.config.refactorNamespacesOnFileMoved.description%",
           "markdownDescription": "%php-smart-files.config.refactorNamespacesOnFileMoved.description%",
@@ -113,7 +115,11 @@
         },
         "phpSmartFiles.refactorNamespacesOnFileRenamed": {
           "type": "string",
-          "enum": ["confirm", "always", "never"],
+          "enum": [
+            "confirm",
+            "always",
+            "never"
+          ],
           "default": "confirm",
           "description": "%php-smart-files.config.refactorNamespacesOnFileRenamed.description%",
           "markdownDescription": "%php-smart-files.config.refactorNamespacesOnFileRenamed.description%",
@@ -126,7 +132,11 @@
         },
         "phpSmartFiles.refactorNamespacesOnDirectoryChanges": {
           "type": "string",
-          "enum": ["confirm", "always", "never"],
+          "enum": [
+            "confirm",
+            "always",
+            "never"
+          ],
           "default": "confirm",
           "description": "%php-smart-files.config.refactorNamespacesOnDirectoryChanges.description%",
           "markdownDescription": "%php-smart-files.config.refactorNamespacesOnDirectoryChanges.description%",
@@ -297,7 +307,7 @@
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
-    "@types/node": "20.x",
+    "@types/node": "^20.19.0",
     "@types/vscode": "^1.99.0",
     "@typescript-eslint/eslint-plugin": "^8.28.0",
     "@typescript-eslint/parser": "^8.28.0",
@@ -311,6 +321,7 @@
     "webpack-cli": "^6.0.1"
   },
   "dependencies": {
-    "@vscode/l10n": "^0.0.18"
+    "@vscode/l10n": "^0.0.18",
+    "php-parser": "^3.2.3"
   }
 }

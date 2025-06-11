@@ -18,7 +18,10 @@ export class NamespaceIdentifierValidator implements NamespaceValidatorInterface
      * @param identifier Namespace segment to validate
      * @returns True if valid, false otherwise
      */
-    public async validate(identifier: string): Promise<boolean> {
+    public async validate(identifier?: string): Promise<boolean> {
+        if (!identifier) {
+            return false;
+        }
         const regExp = this.namespaceRegExpProvider.getIdentifierPatternRegExp();
         return regExp.test(identifier);
     }

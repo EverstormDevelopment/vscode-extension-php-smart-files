@@ -63,17 +63,17 @@ export class PhpParser {
     }
 
     /**
-     * Returns all top-level declarations (classes, interfaces, enums, traits, functions, constants)
+     * Returns all top-level identifiers (classes, interfaces, enums, traits, functions, constants)
      * within the namespace node.
-     * @returns Array of IdentifierType for all found declarations
+     * @returns Array of IdentifierType for all found identifiers
      */
-    public getTopLevelDeclarations(): any[] {
+    public getTopLevelIdentifier(): IdentifierType[] {
         const namespaceNode = this.getNamespaceNode();
         if (!namespaceNode) {
             return [];
         }
 
-        const declarations = [];
+        const declarations: IdentifierType[] = [];
         for (const node of namespaceNode.children) {
             switch (node.kind) {
                 case IdentifierKindEnum.Class:

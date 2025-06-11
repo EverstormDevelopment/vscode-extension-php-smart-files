@@ -1,7 +1,9 @@
 import * as vscode from "vscode";
 import { getPathNormalized } from "../../../utils/filesystem/getPathNormalized";
+import { getUseTypeByKind } from "../../../utils/php/functions/getUseTypeByKind";
 import { escapeRegExp } from "../../../utils/regexp/escapeRegExp";
 import { NamespaceRefactorerAbstract } from "../abstract/NamespaceRefactorerAbstract";
+import { IdentifierType } from "../type/IdentifierType";
 import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailsType";
 
 /**
@@ -92,12 +94,8 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
             }
 
             let fileContentUpdated = fileContent;
-            fileContentUpdated = this.refactorFullyQualified(fileContentUpdated, fileNamespace, refactorDetails);
-            fileContentUpdated = this.refactorPartialQualified(fileContentUpdated, fileNamespace, refactorDetails);
-            fileContentUpdated = this.refactorUseStatement(fileContentUpdated, fileNamespace, refactorDetails);
-            if (refactorDetails.hasFileIdentifierChanged) {
-                fileContentUpdated = this.refactorIdentifier(fileContentUpdated, fileNamespace, refactorDetails);
-            }
+            fileContentUpdated = this.refactorNamespace(fileContentUpdated, fileNamespace, refactorDetails);
+            fileContentUpdated = this.refactorFileIdentifier(fileContentUpdated, fileNamespace, refactorDetails);
             if (fileContentUpdated === fileContent) {
                 return;
             }
@@ -111,45 +109,89 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
     }
 
     /**
-     * Updates fully qualified class name references in file content.
-     * Handles cases where the namespace or identifier has changed.
-     * @param content The content of the file to refactor.
-     * @param fileNamespace The current namespace of the file.
-     * @param refactorDetails Details about what needs to be refactored.
-     * @returns The updated content with refactored fully qualified references.
+     * Updates namespace references in all identified PHP files.
+     * @param refactorDetails Contains information about the old and new namespace/identifier values
+     */
+    private refactorNamespace(
+        content: string,
+        fileNamespace: string,
+        refactorDetails: NamespaceRefactorDetailsType
+    ): string {
+        const oldNamespace = refactorDetails.old.namespace;
+        const newNamespace = refactorDetails.new.namespace;
+        for (const identifier of refactorDetails.identifiers) {
+            content = this.refactorFullyQualified(content, fileNamespace, oldNamespace, newNamespace, identifier);
+            content = this.refactorPartialQualified(content, fileNamespace, oldNamespace, newNamespace, identifier);
+            content = this.refactorUseStatement(content, fileNamespace, oldNamespace, newNamespace, identifier);
+        }
+        return content;
+    }
+
+    /**
+     * Updates references to the file identifier (class/interface/trait name) if it has changed.
+     * @param content The file content to process
+     * @param fileNamespace The namespace of the file being processed
+     * @param refactorDetails Contains information about the old and new namespace/identifier values
+     * @returns Updated file content with refactored identifiers
+     */
+    private refactorFileIdentifier(
+        content: string,
+        fileNamespace: string,
+        refactorDetails: NamespaceRefactorDetailsType
+    ): string {
+        if (!refactorDetails.hasFileIdentifierChanged) {
+            return content;
+        }
+        return this.refactorIdentifier(content, fileNamespace, refactorDetails);
+    }
+
+    /**
+     * Updates fully qualified namespace references in the file content.
+     * Handles transformation from \Old\Namespace\Class to \New\Namespace\Class
+     * or to just the class name if the new namespace matches the file's namespace.
+     * @param content The file content to process
+     * @param fileNamespace The namespace of the file being processed
+     * @param oldNamespace The original namespace that was changed
+     * @param newNamespace The new namespace value
+     * @param identifier The identifier (class/interface/trait/etc) to update
+     * @returns Updated file content with refactored fully qualified references
      */
     private refactorFullyQualified(
         content: string,
         fileNamespace: string,
-        refactorDetails: NamespaceRefactorDetailsType
+        oldNamespace: string,
+        newNamespace: string,
+        identifier: IdentifierType
     ): string {
-        const oldFullyQualifiedNamespace = `\\${refactorDetails.old.namespace}\\${refactorDetails.old.fileIdentifier.name}`;
-        const newFullyQualifiedNamespace = `\\${refactorDetails.new.namespace}\\${refactorDetails.new.fileIdentifier.name}`;
+        const oldFullyQualifiedNamespace = `\\${oldNamespace}\\${identifier.name}`;
+        const newFullyQualifiedNamespace = `\\${newNamespace}\\${identifier.name}`;
         const fqnRegExp = this.namespaceRegExpProvider.getFullyQualifiedNamespaceRegExp(oldFullyQualifiedNamespace);
 
-        const isSameNamespace = fileNamespace === refactorDetails.new.namespace;
-        const replaceWith = isSameNamespace ? refactorDetails.new.fileIdentifier.name : newFullyQualifiedNamespace;
+        const isSameNamespace = fileNamespace === newNamespace;
+        const replaceWith = isSameNamespace ? identifier.name : newFullyQualifiedNamespace;
         return content.replace(fqnRegExp, replaceWith);
     }
 
     /**
-     * Updates partially qualified class name references in file content.
-     * Handles various namespace relationship scenarios:
-     * 1. When in the same namespace: Replace with just the new identifier
-     * 2. When new namespace is sub-namespace of file: Use relative path
-     * 3. When namespaces are unrelated: Use fully qualified namespace
-     * @param content The content of the file to refactor
-     * @param fileNamespace The namespace of the current file
-     * @param refactorDetails Details about old and new namespace/identifier values
-     * @returns The updated content with refactored partially qualified references
+     * Updates partially qualified namespace references in the file content.
+     * Handles complex transformation logic for references like SubNamespace\Class
+     * based on the relationship between the file's namespace and the new namespace.
+     * @param content The file content to process
+     * @param fileNamespace The namespace of the file being processed
+     * @param oldNamespace The original namespace that was changed
+     * @param newNamespace The new namespace value
+     * @param identifier The identifier (class/interface/trait/etc) to update
+     * @returns Updated file content with refactored partially qualified references
      */
     private refactorPartialQualified(
         content: string,
         fileNamespace: string,
-        refactorDetails: NamespaceRefactorDetailsType
+        oldNamespace: string,
+        newNamespace: string,
+        identifier: IdentifierType
     ): string {
-        const oldFullyQualifiedNamespace = `\\${refactorDetails.old.namespace}\\${refactorDetails.old.fileIdentifier.name}`;
-        const newFullyQualifiedNamespace = `\\${refactorDetails.new.namespace}\\${refactorDetails.new.fileIdentifier.name}`;
+        const oldFullyQualifiedNamespace = `\\${oldNamespace}\\${identifier.name}`;
+        const newFullyQualifiedNamespace = `\\${newNamespace}\\${identifier.name}`;
         const pqnRegExp = this.namespaceRegExpProvider.getPartiallyQualifiedReferenceRegExp();
 
         return content.replace(pqnRegExp, (match: string, ...groups: (string | undefined)[]) => {
@@ -164,88 +206,106 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
                 return match;
             }
 
-            const isSameNamespace = fileNamespace === refactorDetails.new.namespace;
+            const isSameNamespace = fileNamespace === newNamespace;
             if (isSameNamespace) {
-                return match.replace(partiallyQualifiedReference, refactorDetails.new.fileIdentifier.name);
+                return match.replace(partiallyQualifiedReference, identifier.name);
             }
 
             const escapedFileNamespace = escapeRegExp(`${fileNamespace}\\`);
             const subNamespaceRegExp = new RegExp(`^${escapedFileNamespace}`, "u");
-            const isSubNamespace = !!refactorDetails.new.namespace.match(subNamespaceRegExp);
+            const isSubNamespace = !!newNamespace.match(subNamespaceRegExp);
             if (!isSubNamespace) {
                 return match.replace(partiallyQualifiedReference, newFullyQualifiedNamespace);
             }
 
-            const refactoredNamespace = refactorDetails.new.namespace.replace(subNamespaceRegExp, "");
-            const refactoredReference = `${refactoredNamespace}\\${refactorDetails.new.fileIdentifier.name}`;
+            const refactoredNamespace = newNamespace.replace(subNamespaceRegExp, "");
+            const refactoredReference = `${refactoredNamespace}\\${identifier.name}`;
             return match.replace(partiallyQualifiedReference, refactoredReference);
         });
     }
 
     /**
-     * Updates use statements based on the namespace changes.
-     * Handles adding, removing, or replacing use statements.
-     * @param content The content of the file to refactor.
-     * @param fileNamespace The current namespace of the file.
-     * @param refactorDetails Details about what needs to be refactored.
-     * @returns The updated content with refactored use statements.
+     * Updates or manages use statements for the refactored namespace.
+     * Adds, removes, or replaces use statements based on the relationship
+     * between the file's namespace and the old/new namespaces.
+     * @param content The file content to process
+     * @param fileNamespace The namespace of the file being processed
+     * @param oldNamespace The original namespace that was changed
+     * @param newNamespace The new namespace value
+     * @param identifier The identifier (class/interface/trait/etc) to update
+     * @returns Updated file content with refactored use statements
      */
     private refactorUseStatement(
         content: string,
         fileNamespace: string,
-        refactorDetails: NamespaceRefactorDetailsType
+        oldNamespace: string,
+        newNamespace: string,
+        identifier: IdentifierType
     ): string {
-        if (fileNamespace === refactorDetails.old.namespace && refactorDetails.hasNamespaceChanged) {
-            content = this.addReferenceUseStatement(content, refactorDetails);
-        } else if (fileNamespace === refactorDetails.new.namespace) {
-            content = this.removeReferenceUseStatement(content, refactorDetails);
+        const hasNamespaceChange = oldNamespace !== newNamespace;
+        if (fileNamespace === oldNamespace && hasNamespaceChange) {
+            content = this.addReferenceUseStatement(content, newNamespace, identifier);
+        } else if (fileNamespace === newNamespace) {
+            content = this.removeReferenceUseStatement(content, oldNamespace, identifier);
         }
 
-        return this.replaceReferenceUseStatement(content, refactorDetails);
+        return this.replaceReferenceUseStatement(content, oldNamespace, newNamespace, identifier);
     }
 
     /**
-     * Replaces a use statement with the updated namespace and identifier.
-     * @param content The content of the file to refactor.
-     * @param refactorDetails Details about what needs to be refactored.
-     * @returns The updated content with replaced use statements.
+     * Adds a use statement for the identifier if it's referenced in the content
+     * but doesn't already have an appropriate use statement.
+     * @param content The file content to process
+     * @param newNamespace The new namespace value to add in the use statement
+     * @param identifier The identifier (class/interface/trait/etc) to add a use statement for
+     * @returns Updated file content with added use statement (if needed)
      */
-    private replaceReferenceUseStatement(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
-        const oldFullQualifiedNamespace = `${refactorDetails.old.namespace}\\${refactorDetails.old.fileIdentifier.name}`;
-        const newFullQualifiedNamespace = `${refactorDetails.new.namespace}\\${refactorDetails.new.fileIdentifier.name}`;
-        const useRegExp = this.namespaceRegExpProvider.getUseStatementRegExp(oldFullQualifiedNamespace, {
-            includeAlias: true,
-        });
-
-        return content.replace(useRegExp, (match, namespace, alias) => {
-            return `use ${newFullQualifiedNamespace}${alias ? ` as ${alias}` : ""};`;
-        });
-    }
-
-    /**
-     * Adds a new use statement for the updated namespace and identifier.
-     * @param content The content of the file to refactor.
-     * @param refactorDetails Details about what needs to be refactored.
-     * @returns The updated content with the added use statement.
-     */
-    private addReferenceUseStatement(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
-        const hasIdentifierRegExp = this.namespaceRegExpProvider.getIdentifierRegExp(
-            refactorDetails.old.fileIdentifier.name
-        );
+    private addReferenceUseStatement(content: string, newNamespace: string, identifier: IdentifierType): string {
+        const hasIdentifierRegExp = this.namespaceRegExpProvider.getIdentifierRegExp(identifier.name);
         if (!hasIdentifierRegExp.test(content)) {
             return content;
         }
-        return this.addUseStatement(content, refactorDetails.new.namespace, refactorDetails.new.fileIdentifier);
+        return this.addUseStatement(content, newNamespace, identifier);
     }
 
     /**
-     * Removes an outdated use statement for the old namespace and identifier.
-     * @param content The content of the file to refactor.
-     * @param refactorDetails Details about what needs to be refactored.
-     * @returns The updated content with the removed use statement.
+     * Removes a use statement for the identifier if it exists in the content.
+     * @param content The file content to process
+     * @param oldNamespace The namespace to remove from the use statement
+     * @param identifier The identifier (class/interface/trait/etc) to remove a use statement for
+     * @returns Updated file content with removed use statement
      */
-    private removeReferenceUseStatement(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
-        return this.removeUseStatement(content, refactorDetails.old.namespace, refactorDetails.old.fileIdentifier);
+    private removeReferenceUseStatement(content: string, oldNamespace: string, identifier: IdentifierType): string {
+        return this.removeUseStatement(content, oldNamespace, identifier);
+    }
+
+    /**
+     * Replaces existing use statements that reference the old namespace
+     * with updated statements that reference the new namespace.
+     * Preserves any aliases that might be present.
+     * @param content The file content to process
+     * @param oldNamespace The original namespace that was changed
+     * @param newNamespace The new namespace value
+     * @param identifier The identifier (class/interface/trait/etc) to update
+     * @returns Updated file content with replaced use statements
+     */
+    private replaceReferenceUseStatement(
+        content: string,
+        oldNamespace: string,
+        newNamespace: string,
+        identifier: IdentifierType
+    ): string {
+        const oldFullQualifiedNamespace = `${oldNamespace}\\${identifier.name}`;
+        const newFullQualifiedNamespace = `${newNamespace}\\${identifier.name}`;
+        const useRegExp = this.namespaceRegExpProvider.getUseStatementRegExp(oldFullQualifiedNamespace, {
+            matchKind: identifier.kind,
+            includeAlias: true,
+        });
+
+        const useType = getUseTypeByKind(identifier.kind);
+        return content.replace(useRegExp, (match, namespace, alias) => {
+            return `use ${useType}${newFullQualifiedNamespace}${alias ? ` as ${alias}` : ""};`;
+        });
     }
 
     /**

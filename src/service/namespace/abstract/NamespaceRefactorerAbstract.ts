@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
-import { detectLinebreakType } from "../../../utils/string/detectLinebreakType";
+import { getUseTypeByKind } from "../../../utils/php/functions/getUseTypeByKind";
+import { getLinebreakType } from "../../../utils/string/getLinebreakType";
 import { getFileContentByUri } from "../../../utils/vscode/getFileContentByUri";
 import { setFileContentByUri } from "../../../utils/vscode/setFileContentByUri";
-import { IdentifierKindEnum } from "../enum/IdentifierKindEnum";
 import { NamespaceRefactorerInterface } from "../interface/NamespaceRefactorerInterface";
 import { NamespaceRegExpProvider } from "../provider/NamespaceRegExpProvider";
 import { IdentifierType } from "../type/IdentifierType";
@@ -66,15 +66,9 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
             return content;
         }
 
-        let useKind = "";
-        if (identifier.kind === IdentifierKindEnum.Function) {
-            useKind = "function ";
-        } else if (identifier.kind === IdentifierKindEnum.Constant) {
-            useKind = "const ";
-        }
-
-        const useStatement = `use ${useKind}${namespace}\\${identifier.name};`;
-        const linebreakType = detectLinebreakType(content);
+        const linebreakType = getLinebreakType(content);
+        const useType = getUseTypeByKind(identifier.kind);
+        const useStatement = `${linebreakType}use ${useType}${namespace}\\${identifier.name};`;
 
         const lastUseStatementRegExp = this.namespaceRegExpProvider.getLastUseStatementRegExp();
         const lastUseStatementMatch = content.match(lastUseStatementRegExp);
@@ -82,7 +76,7 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
             ? lastUseStatementMatch[lastUseStatementMatch.length - 1]
             : namespaceDeclarationMatch[0];
 
-        return content.replace(addUseTo, `${addUseTo}${linebreakType}${useStatement}`);
+        return content.replace(addUseTo, `${addUseTo}${useStatement}`);
     }
 
     /**

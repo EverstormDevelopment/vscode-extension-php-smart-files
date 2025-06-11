@@ -3,7 +3,7 @@
  * @param text The text to check for linebreaks
  * @returns The detected linebreak type, or "\n" if none are found
  */
-export function detectLinebreakType(text: string): string {
+export function getLinebreakType(text: string): string {
     const linebreaks = ["\r\n", "\n", "\r"];
     for (const linebreak of linebreaks) {
         if (text.includes(linebreak)) {

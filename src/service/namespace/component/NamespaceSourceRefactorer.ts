@@ -103,7 +103,7 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
             throw new Error(message);
         }
 
-        const newDefinition = `${definitionMatch[1]} ${refactorDetails.new.identifier}`;
+        const newDefinition = `${definitionMatch[1]} ${refactorDetails.new.fileIdentifier.name}`;
         return content.replace(definitionRegExp, newDefinition);
     }
 
@@ -121,7 +121,7 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
         }
 
         const nonQualifiedReferences = references.filter(
-            (reference) => reference.name !== refactorDetails.old.identifier
+            (reference) => reference.name !== refactorDetails.old.fileIdentifier.name
         );
         content = this.addUseStatements(content, refactorDetails.old.namespace, nonQualifiedReferences);
         content = this.removeUseStatements(content, refactorDetails.new.namespace, nonQualifiedReferences);

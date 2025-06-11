@@ -92,11 +92,9 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
             }
 
             let fileContentUpdated = fileContent;
-            if (refactorDetails.hasNamespaceChanged) {
-                fileContentUpdated = this.refactorFullyQualified(fileContentUpdated, fileNamespace, refactorDetails);
-                fileContentUpdated = this.refactorPartialQualified(fileContentUpdated, fileNamespace, refactorDetails);
-                fileContentUpdated = this.refactorUseStatement(fileContentUpdated, fileNamespace, refactorDetails);
-            }
+            fileContentUpdated = this.refactorFullyQualified(fileContentUpdated, fileNamespace, refactorDetails);
+            fileContentUpdated = this.refactorPartialQualified(fileContentUpdated, fileNamespace, refactorDetails);
+            fileContentUpdated = this.refactorUseStatement(fileContentUpdated, fileNamespace, refactorDetails);
             if (refactorDetails.hasIdentifierChanged) {
                 fileContentUpdated = this.refactorIdentifier(fileContentUpdated, fileNamespace, refactorDetails);
             }
@@ -125,12 +123,12 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
         fileNamespace: string,
         refactorDetails: NamespaceRefactorDetailsType
     ): string {
-        const oldFullyQualifiedNamespace = `\\${refactorDetails.old.namespace}\\${refactorDetails.old.identifier}`;
-        const newFullyQualifiedNamespace = `\\${refactorDetails.new.namespace}\\${refactorDetails.new.identifier}`;
+        const oldFullyQualifiedNamespace = `\\${refactorDetails.old.namespace}\\${refactorDetails.old.fileIdentifier.name}`;
+        const newFullyQualifiedNamespace = `\\${refactorDetails.new.namespace}\\${refactorDetails.new.fileIdentifier.name}`;
         const fqnRegExp = this.namespaceRegExpProvider.getFullyQualifiedNamespaceRegExp(oldFullyQualifiedNamespace);
 
         const isSameNamespace = fileNamespace === refactorDetails.new.namespace;
-        const replaceWith = isSameNamespace ? refactorDetails.new.identifier : newFullyQualifiedNamespace;
+        const replaceWith = isSameNamespace ? refactorDetails.new.fileIdentifier.name : newFullyQualifiedNamespace;
         return content.replace(fqnRegExp, replaceWith);
     }
 
@@ -150,8 +148,8 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
         fileNamespace: string,
         refactorDetails: NamespaceRefactorDetailsType
     ): string {
-        const oldFullyQualifiedNamespace = `\\${refactorDetails.old.namespace}\\${refactorDetails.old.identifier}`;
-        const newFullyQualifiedNamespace = `\\${refactorDetails.new.namespace}\\${refactorDetails.new.identifier}`;
+        const oldFullyQualifiedNamespace = `\\${refactorDetails.old.namespace}\\${refactorDetails.old.fileIdentifier.name}`;
+        const newFullyQualifiedNamespace = `\\${refactorDetails.new.namespace}\\${refactorDetails.new.fileIdentifier.name}`;
         const pqnRegExp = this.namespaceRegExpProvider.getPartiallyQualifiedReferenceRegExp();
 
         return content.replace(pqnRegExp, (match: string, ...groups: (string | undefined)[]) => {
@@ -168,7 +166,7 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
 
             const isSameNamespace = fileNamespace === refactorDetails.new.namespace;
             if (isSameNamespace) {
-                return match.replace(partiallyQualifiedReference, refactorDetails.new.identifier);
+                return match.replace(partiallyQualifiedReference, refactorDetails.new.fileIdentifier.name);
             }
 
             const escapedFileNamespace = escapeRegExp(`${fileNamespace}\\`);
@@ -179,7 +177,7 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
             }
 
             const refactoredNamespace = refactorDetails.new.namespace.replace(subNamespaceRegExp, "");
-            const refactoredReference = `${refactoredNamespace}\\${refactorDetails.new.identifier}`;
+            const refactoredReference = `${refactoredNamespace}\\${refactorDetails.new.fileIdentifier.name}`;
             return match.replace(partiallyQualifiedReference, refactoredReference);
         });
     }
@@ -213,8 +211,8 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
      * @returns The updated content with replaced use statements.
      */
     private replaceReferenceUseStatement(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
-        const oldFullQualifiedNamespace = `${refactorDetails.old.namespace}\\${refactorDetails.old.identifier}`;
-        const newFullQualifiedNamespace = `${refactorDetails.new.namespace}\\${refactorDetails.new.identifier}`;
+        const oldFullQualifiedNamespace = `${refactorDetails.old.namespace}\\${refactorDetails.old.fileIdentifier.name}`;
+        const newFullQualifiedNamespace = `${refactorDetails.new.namespace}\\${refactorDetails.new.fileIdentifier.name}`;
         const useRegExp = this.namespaceRegExpProvider.getUseStatementRegExp(oldFullQualifiedNamespace, {
             includeAlias: true,
         });
@@ -231,11 +229,11 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
      * @returns The updated content with the added use statement.
      */
     private addReferenceUseStatement(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
-        const hasIdentifierRegExp = this.namespaceRegExpProvider.getIdentifierRegExp(refactorDetails.old.identifier);
+        const hasIdentifierRegExp = this.namespaceRegExpProvider.getIdentifierRegExp(refactorDetails.old.fileIdentifier.name);
         if (!hasIdentifierRegExp.test(content)) {
             return content;
         }
-        return this.addUseStatement(content, refactorDetails.new.namespace, refactorDetails.new.identifier);
+        return this.addUseStatement(content, refactorDetails.new.namespace, refactorDetails.new.fileIdentifier);
     }
 
     /**
@@ -245,7 +243,7 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
      * @returns The updated content with the removed use statement.
      */
     private removeReferenceUseStatement(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
-        return this.removeUseStatement(content, refactorDetails.old.namespace, refactorDetails.old.identifier);
+        return this.removeUseStatement(content, refactorDetails.old.namespace, refactorDetails.old.fileIdentifier);
     }
 
     /**

@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { IdentifierType } from "./IdentifierType";
 
 /**
  * Type definition for URI-specific details used in namespace refactoring operations.
@@ -28,19 +29,19 @@ export type NamespaceRefactorUriDetailsType = {
     isNamespaceValid: boolean;
 
     /**
-     * The PHP class/interface/trait identifier (name)
+     * The PHP class/interface/trait/enum identifier (name) of the file
      */
-    identifier: string;
+    fileIdentifier: IdentifierType;
 
     /**
      * The invalid or problematic identifier value when isIdentifierValid is false
      * Stores the original, non-sanitized identifier string
      */
-    identifierInvalid?: string;
+    fileIdentifierInvalid?: string;
 
     /**
      * Indicates whether the class/interface/trait identifier follows PHP naming conventions
      * and is valid in the current context
      */
-    isIdentifierValid: boolean;
+    isFileIdentifierValid: boolean;
 };

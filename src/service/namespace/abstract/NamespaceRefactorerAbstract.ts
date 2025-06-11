@@ -34,14 +34,14 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
         fileNamespace: string,
         refactorDetails: NamespaceRefactorDetailsType
     ): string {
-        const newFullyQualifiedNamespace = `${refactorDetails.new.namespace}\\${refactorDetails.new.identifier}`;
+        const newFullyQualifiedNamespace = `${refactorDetails.new.namespace}\\${refactorDetails.new.fileIdentifier.name}`;
         const useStatementRegExp = this.namespaceRegExpProvider.getUseStatementRegExp(newFullyQualifiedNamespace);
         if (fileNamespace !== refactorDetails.new.namespace && !useStatementRegExp.test(content)) {
             return content;
         }
 
-        const identifierRegExp = this.namespaceRegExpProvider.getIdentifierRegExp(refactorDetails.old.identifier);
-        return content.replace(identifierRegExp, refactorDetails.new.identifier);
+        const identifierRegExp = this.namespaceRegExpProvider.getIdentifierRegExp(refactorDetails.old.fileIdentifier.name);
+        return content.replace(identifierRegExp, refactorDetails.new.fileIdentifier.name);
     }
 
     /**

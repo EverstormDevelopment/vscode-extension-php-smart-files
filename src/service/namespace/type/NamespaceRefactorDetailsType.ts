@@ -1,3 +1,4 @@
+import { IdentifierType } from "./IdentifierType";
 import { NamespaceRefactorUriDetailsType } from "./NamespaceRefactorUriDetailsType";
 
 /**
@@ -15,6 +16,9 @@ export type NamespaceRefactorDetailsType = {
      * Details about the new state after refactoring
      */
     new: NamespaceRefactorUriDetailsType;
+
+    
+    identifiers: IdentifierType[];
 
     /**
      * Indicates whether both old and new locations have namespaces

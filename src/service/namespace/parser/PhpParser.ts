@@ -6,8 +6,8 @@ import type {
     Node as PhpNode,
 } from "php-parser";
 import { Engine } from "php-parser";
-import { IdentifierType } from "../type/IdentifierType";
 import { IdentifierKindEnum } from "../enum/IdentifierKindEnum";
+import { IdentifierType } from "../type/IdentifierType";
 
 /**
  * Parser for PHP code that generates the AST and extracts various information.

@@ -29,18 +29,18 @@ export type NamespaceRefactorUriDetailsType = {
     isNamespaceValid: boolean;
 
     /**
-     * The PHP class/interface/trait/enum identifier (name) of the file
+     * The PHP file identifier (used as name of the class/interface/trait/enum)
      */
     fileIdentifier: IdentifierType;
 
     /**
-     * The invalid or problematic identifier value when isIdentifierValid is false
+     * The invalid or problematic file identifier value when isIdentifierValid is false
      * Stores the original, non-sanitized identifier string
      */
     fileIdentifierInvalid?: string;
 
     /**
-     * Indicates whether the class/interface/trait identifier follows PHP naming conventions
+     * Indicates whether the file identifier follows PHP naming conventions
      * and is valid in the current context
      */
     isFileIdentifierValid: boolean;

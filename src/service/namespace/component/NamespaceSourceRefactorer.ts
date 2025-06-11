@@ -61,7 +61,7 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
             content = this.refactorUseStatements(content, refactorDetails);
             content = this.refactorPartialQualified(content, refactorDetails);
         }
-        if (refactorDetails.hasIdentifierChanged) {
+        if (refactorDetails.hasFileIdentifierChanged) {
             content = this.refactorDefinition(content, refactorDetails);
             content = this.refactorIdentifier(content, refactorDetails.new.namespace, refactorDetails);
         }

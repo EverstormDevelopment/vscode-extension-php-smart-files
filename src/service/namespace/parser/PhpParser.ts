@@ -67,7 +67,7 @@ export class PhpParser {
      * within the namespace node.
      * @returns Array of IdentifierType for all found identifiers
      */
-    public getTopLevelIdentifier(): IdentifierType[] {
+    public getTopLevelIdentifiers(): IdentifierType[] {
         const namespaceNode = this.getNamespaceNode();
         if (!namespaceNode) {
             return [];

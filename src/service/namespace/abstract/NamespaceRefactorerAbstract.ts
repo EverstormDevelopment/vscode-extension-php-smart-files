@@ -40,7 +40,9 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
             return content;
         }
 
-        const identifierRegExp = this.namespaceRegExpProvider.getIdentifierRegExp(refactorDetails.old.fileIdentifier.name);
+        const identifierRegExp = this.namespaceRegExpProvider.getIdentifierRegExp(
+            refactorDetails.old.fileIdentifier.name
+        );
         return content.replace(identifierRegExp, refactorDetails.new.fileIdentifier.name);
     }
 

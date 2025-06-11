@@ -229,7 +229,9 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
      * @returns The updated content with the added use statement.
      */
     private addReferenceUseStatement(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
-        const hasIdentifierRegExp = this.namespaceRegExpProvider.getIdentifierRegExp(refactorDetails.old.fileIdentifier.name);
+        const hasIdentifierRegExp = this.namespaceRegExpProvider.getIdentifierRegExp(
+            refactorDetails.old.fileIdentifier.name
+        );
         if (!hasIdentifierRegExp.test(content)) {
             return content;
         }

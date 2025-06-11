@@ -153,7 +153,7 @@ export class NamespaceRegExpProvider {
             // Match non-qualified constants in various contexts
             `(?<![\\p{L}\\d_\\\\$'"]+\\s*|::|->)\\b(${identifierPattern})\\b(?!\\s*:\\s*[^_$'"{])(?!\\s*[\\p{L}\\d_\\\\>(('"$}\\[]|->)`,
             // Match constants after case statements
-            `(?<=case\\s*)(?:[+-]?)\\b(${identifierPattern})\\b(?=\\s*:)`
+            `(?<=case\\s*)(?:[+-]?)\\b(${identifierPattern})\\b(?=\\s*:)`,
         ];
 
         return new RegExp(orPatterns.join("|"), "gu");

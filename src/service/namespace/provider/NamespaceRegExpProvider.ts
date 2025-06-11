@@ -203,13 +203,16 @@ export class NamespaceRegExpProvider {
     }
 
     /**
-     * Creates a regular expression for standalone identifiers with word boundary checks.
-     * @param identifier The identifier to match.
-     * @returns RegExp for finding the specific identifier.
+     * Creates a regular expression for finding a specific identifier in PHP code.
+     * Supports matching identifiers with or without namespace context.
+     * @param identifier The identifier to match (e.g., class name, function name).
+     * @param includeNamespace Whether to include the namespace in the match (default: false).
+     * @returns RegExp for finding the identifier.
      */
-    public getIdentifierRegExp(identifier: string): RegExp {
+    public getIdentifierRegExp(identifier: string, includeNamespace?: boolean): RegExp {
         const id = this.escape(identifier);
-        return new RegExp(`(?<![\\p{L}\\d_\\\\])${id}(?![\\p{L}\\d_\\\\])`, "gu");
+        const excludeNamespace = includeNamespace ? "" : this.escape("\\");
+        return new RegExp(`(?<![\\p{L}\\d_${excludeNamespace}])${id}(?![\\p{L}\\d_\\\\])`, "gu");
     }
 
     /**

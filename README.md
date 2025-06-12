@@ -157,9 +157,9 @@ I'll do my best to keep this extension reliable and useful while balancing its s
 
 ## Release Notes
 
-### Current Version: 1.0.5
+### Current Version: 1.0.6
 
-This release fixes an issue where non-namespaced entries in `extends` and `implements` lists could be missed if partially or fully qualified names were present. All relevant entries are now correctly identified and processed.
+This release fixes an issue with `use` statements from the global namespace not being properly recognized. Previously, classes from the global namespace (e.g., `use IntlTimeZone;`) were not correctly detected, which could lead to incorrect additional `use` statements being generated when moving files that reference global namespace classes.
 
 For a detailed list of changes in this and previous versions, please see the [CHANGELOG](CHANGELOG.md).
 

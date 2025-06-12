@@ -4,6 +4,15 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 <!-- Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file. -->
 
 
+## [1.0.6] - 2025-06-12
+
+### Fixed
+- Fixed issue with `use` statements from the global namespace not being properly recognized:
+  - Resolved problem where classes from the global namespace (e.g., `use IntlTimeZone;`) were not correctly detected
+  - Prevented generation of incorrect additional `use` statements when moving files that reference global namespace classes
+  - Improved pattern matching to handle both namespaced and non-namespaced `use` statements correctly
+
+
 
 ## [1.0.5] - 2025-06-10
 

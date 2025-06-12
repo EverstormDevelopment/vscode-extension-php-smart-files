@@ -203,7 +203,7 @@ export class NamespaceRegExpProvider {
 
         switch (options?.matchType) {
             case "partial":
-                namespacePattern = `[\\p{L}\\d_\\\\]+\\\\${escapedValue}`;
+                namespacePattern = `(?:[\\p{L}\\d_\\\\]+\\\\)?${escapedValue}`;
                 break;
             case "alias":
                 namespacePattern = `[\\p{L}\\d_\\\\]+`;

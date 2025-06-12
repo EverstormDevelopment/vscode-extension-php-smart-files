@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
-import { ReservedKeywords } from "../../../utils/php/ReservedKeywords";
+import { GlobalFunctions } from "../../../utils/php/constants/GlobalFunctions";
+import { ReservedKeywords } from "../../../utils/php/constants/ReservedKeywords";
 import { InputValidatorInterface } from "../interface/InputValidatorInterface";
-import { GlobalFunctions } from "../../../utils/php/GlobalFunctions";
 
 /**
  * Validator for PHP definition names (classes, interfaces, traits, enums).

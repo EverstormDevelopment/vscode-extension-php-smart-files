@@ -5,7 +5,7 @@ import { InputValidatorInterface } from "../interface/InputValidatorInterface";
  * Validates that PHP definition names are not empty.
  * Ensures basic length requirements for PHP identifier input.
  */
-export class InputDefinitionLengthValidator implements InputValidatorInterface {
+export class InputDefinitionNameLengthValidator implements InputValidatorInterface {
     /**
      * Validates that the definition name input is not empty or whitespace-only.
      * @param input The definition name to validate

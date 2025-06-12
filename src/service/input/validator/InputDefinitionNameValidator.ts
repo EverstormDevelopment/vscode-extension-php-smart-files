@@ -1,9 +1,9 @@
 import * as vscode from "vscode";
 import { InputValidatorInterface } from "../interface/InputValidatorInterface";
-import { InputDefinitionCharacterValidator } from "./InputDefinitionCharacterValidator";
-import { InputDefinitionKeywordValidator } from "./InputDefinitionKeywordValidator";
-import { InputDefinitionLengthValidator } from "./InputDefinitionLengthValidator";
-import { InputDefinitionStartValidator } from "./InputDefinitionStartValidator";
+import { InputDefinitionNameLengthValidator } from "./InputDefinitionNameLengthValidator";
+import { InputDefinitionNameStartValidator } from "./InputDefinitionNameStartValidator";
+import { InputDefinitionNameCharacterValidator } from "./InputDefinitionNameCharacterValidator";
+import { InputDefinitionNameKeywordValidator } from "./InputDefinitionNameKeywordValidator";
 
 /**
  * Validator for PHP definition names (classes, interfaces, traits, enums).
@@ -21,10 +21,10 @@ export class InputDefinitionNameValidator implements InputValidatorInterface {
      */
     public async validate(input: string): Promise<vscode.InputBoxValidationMessage | undefined> {
         const validators = [
-            new InputDefinitionLengthValidator(),
-            new InputDefinitionStartValidator(),
-            new InputDefinitionCharacterValidator(),
-            new InputDefinitionKeywordValidator(),
+            new InputDefinitionNameLengthValidator(),
+            new InputDefinitionNameStartValidator(),
+            new InputDefinitionNameCharacterValidator(),
+            new InputDefinitionNameKeywordValidator(),
         ];
 
         for (const validator of validators) {

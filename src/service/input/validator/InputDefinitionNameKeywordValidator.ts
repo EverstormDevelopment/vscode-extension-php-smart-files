@@ -7,7 +7,7 @@ import { InputValidatorInterface } from "../interface/InputValidatorInterface";
  * Validates that PHP definition names do not conflict with reserved keywords or global functions.
  * Prevents use of PHP language keywords and built-in function names as identifiers.
  */
-export class InputDefinitionKeywordValidator implements InputValidatorInterface {
+export class InputDefinitionNameKeywordValidator implements InputValidatorInterface {
     /**
      * Validates that the definition name is not a PHP reserved keyword or global function name.
      * Performs case-insensitive comparison against the reserved keywords and global functions lists.

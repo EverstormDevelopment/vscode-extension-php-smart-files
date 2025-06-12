@@ -5,7 +5,7 @@ import { InputValidatorInterface } from "../interface/InputValidatorInterface";
  * Validates that PHP definition names contain only valid characters.
  * Ensures names follow PHP identifier rules by allowing only letters, numbers, and underscores.
  */
-export class InputDefinitionCharacterValidator implements InputValidatorInterface {
+export class InputDefinitionNameCharacterValidator implements InputValidatorInterface {
     /**
      * Validates the character composition of a PHP definition name.
      * @param input The definition name to validate

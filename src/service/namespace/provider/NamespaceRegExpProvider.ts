@@ -246,7 +246,7 @@ export class NamespaceRegExpProvider {
 
         let namespacePattern = escapedValue;
         if (options?.matchType === "partial") {
-            namespacePattern = `[\\p{L}\\d_\\\\]+\\\\${escapedValue}`;
+            namespacePattern = `(?:[\\p{L}\\d_\\\\]+\\\\)?${escapedValue}`;
         } else if (options?.matchType === "alias") {
             namespacePattern = `[\\p{L}\\d_\\\\]+`;
         }

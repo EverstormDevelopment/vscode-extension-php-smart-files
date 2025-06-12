@@ -9,11 +9,13 @@ import { InputDefinitionNameKeywordValidator } from "./InputDefinitionNameKeywor
  * Validator for PHP definition names (classes, interfaces, traits, enums).
  */
 export class InputDefinitionNameValidator implements InputValidatorInterface {
+    constructor(private readonly allowLowercase: boolean = false) {}
+
     /**
      * Validates a PHP definition name according to PHP naming rules
      * Checks for:
      * - Non-empty input
-     * - Starting with a uppercase letter or underscore
+     * - Starting with a (uppercase) letter or underscore
      * - Using only letters, numbers, and underscores
      * - Not using PHP reserved keywords
      * @param input The definition name to validate
@@ -22,7 +24,7 @@ export class InputDefinitionNameValidator implements InputValidatorInterface {
     public async validate(input: string): Promise<vscode.InputBoxValidationMessage | undefined> {
         const validators = [
             new InputDefinitionNameLengthValidator(),
-            new InputDefinitionNameStartValidator(),
+            new InputDefinitionNameStartValidator(this.allowLowercase),
             new InputDefinitionNameCharacterValidator(),
             new InputDefinitionNameKeywordValidator(),
         ];

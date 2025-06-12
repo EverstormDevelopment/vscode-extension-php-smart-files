@@ -4,11 +4,13 @@
  */
 export enum FileTypeEnum {
     File = "File",
+    Function = "Function",
     Class = "Class",
     Interface = "Interface",
     Trait = "Trait",
     Enum = "Enum",
 
+    TemplateFunction = "TemplateFunction",
     TemplateClass = "TemplateClass",
     TemplateInterface = "TemplateInterface",
     TemplateTrait = "TemplateTrait",

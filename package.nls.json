@@ -1,11 +1,12 @@
 {
   "php-smart-files.submenus.main.label": "Create PHP File",
-
   "php-smart-files.commands.newEmptyPhpFile.title": "PHP File",
+  "php-smart-files.commands.newEmptyPhpFunction.title": "PHP Function",
   "php-smart-files.commands.newEmptyPhpClass.title": "PHP Class",
   "php-smart-files.commands.newEmptyPhpInterface.title": "PHP Interface",
   "php-smart-files.commands.newEmptyPhpEnum.title": "PHP Enum",
   "php-smart-files.commands.newEmptyPhpTrait.title": "PHP Trait",
+  "php-smart-files.commands.newTemplatePhpFunction.title": "PHP Function from Template",
   "php-smart-files.commands.newTemplatePhpClass.title": "PHP Class from Template",
   "php-smart-files.commands.newTemplatePhpInterface.title": "PHP Interface from Template",
   "php-smart-files.commands.newTemplatePhpEnum.title": "PHP Enum from Template",

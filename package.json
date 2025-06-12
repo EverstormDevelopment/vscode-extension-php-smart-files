@@ -183,6 +183,10 @@
         "title": "%php-smart-files.commands.newEmptyPhpFile.title%"
       },
       {
+        "command": "php-smart-files.newEmptyPhpFunction",
+        "title": "%php-smart-files.commands.newEmptyPhpFunction.title%"
+      },
+      {
         "command": "php-smart-files.newEmptyPhpClass",
         "title": "%php-smart-files.commands.newEmptyPhpClass.title%"
       },
@@ -197,6 +201,10 @@
       {
         "command": "php-smart-files.newEmptyPhpTrait",
         "title": "%php-smart-files.commands.newEmptyPhpTrait.title%"
+      },
+      {
+        "command": "php-smart-files.newTemplatePhpFunction",
+        "title": "%php-smart-files.commands.newTemplatePhpFunction.title%"
       },
       {
         "command": "php-smart-files.newTemplatePhpClass",
@@ -240,15 +248,15 @@
           "group": "1_creation_empty@1"
         },
         {
-          "command": "php-smart-files.newEmptyPhpClass",
+          "command": "php-smart-files.newEmptyPhpFunction",
           "group": "1_creation_empty@2"
         },
         {
-          "command": "php-smart-files.newEmptyPhpInterface",
+          "command": "php-smart-files.newEmptyPhpClass",
           "group": "1_creation_empty@3"
         },
         {
-          "command": "php-smart-files.newEmptyPhpEnum",
+          "command": "php-smart-files.newEmptyPhpInterface",
           "group": "1_creation_empty@4"
         },
         {
@@ -256,20 +264,28 @@
           "group": "1_creation_empty@5"
         },
         {
-          "command": "php-smart-files.newTemplatePhpClass",
+          "command": "php-smart-files.newEmptyPhpEnum",
+          "group": "1_creation_empty@6"
+        },
+        {
+          "command": "php-smart-files.newTemplatePhpFunction",
           "group": "2_creation_template@1"
         },
         {
-          "command": "php-smart-files.newTemplatePhpInterface",
+          "command": "php-smart-files.newTemplatePhpClass",
           "group": "2_creation_template@2"
         },
         {
-          "command": "php-smart-files.newTemplatePhpEnum",
+          "command": "php-smart-files.newTemplatePhpInterface",
           "group": "2_creation_template@3"
         },
         {
-          "command": "php-smart-files.newTemplatePhpTrait",
+          "command": "php-smart-files.newTemplatePhpEnum",
           "group": "2_creation_template@4"
+        },
+        {
+          "command": "php-smart-files.newTemplatePhpTrait",
+          "group": "2_creation_template@5"
         },
         {
           "command": "php-smart-files.newSymfonyController",

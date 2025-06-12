@@ -42,6 +42,7 @@
   
   "Please enter a valid filename": "Bitte geben Sie einen gültigen Dateinamen ein",
   "Filename contains characters not allowed by the file system": "Der Dateiname enthält Zeichen, die vom Dateisystem nicht erlaubt sind",
+  "Filename can only contain letters, numbers, and underscores, to be autoload compatible": "Der Dateiname darf nur Buchstaben, Zahlen und Unterstriche enthalten, um Autoload-kompatibel zu sein",
   "Filename contains characters that may cause issues with PHP includes or URLs": "Der Dateiname enthält Zeichen, die Probleme mit PHP-Includes oder URLs verursachen könnten",
   "Namespace skipped: The detected namespace was invalid due to invalid names in the directory structure.": "Namespace übersprungen: Der erkannte Namespace war aufgrund ungültiger Namen in der Verzeichnisstruktur ungültig.",
   

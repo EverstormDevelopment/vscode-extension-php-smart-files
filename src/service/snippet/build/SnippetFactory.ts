@@ -14,6 +14,8 @@ import { SnippetTemplateEnumFactory } from "./SnippetTemplateEnumFactory";
 import { SnippetTemplateInterfaceFactory } from "./SnippetTemplateInterfaceFactory";
 import { SnippetTemplateTraitFactory } from "./SnippetTemplateTraitFactory";
 import { SnippetTraitFactory } from "./SnippetTraitFactory";
+import { SnippetFunctionFactory } from "./SnippetFunctionFactory";
+import { SnippetTemplateFunctionFactory } from "./SnippetTemplateFunctionFactory";
 
 /**
  * Factory class for creating PHP snippets.
@@ -25,15 +27,17 @@ export class SnippetFactory implements SnippetFactoryInterface {
      */
     private readonly factories: Record<FileTypeEnum, () => SnippetTypeFactoryInterface> = {
         [FileTypeEnum.File]: () => new SnippetFileFactory(),
+        [FileTypeEnum.Function]: () => new SnippetFunctionFactory(),
         [FileTypeEnum.Class]: () => new SnippetClassFactory(),
         [FileTypeEnum.Interface]: () => new SnippetInterfaceFactory(),
-        [FileTypeEnum.Enum]: () => new SnippetEnumFactory(),
         [FileTypeEnum.Trait]: () => new SnippetTraitFactory(),
+        [FileTypeEnum.Enum]: () => new SnippetEnumFactory(),
 
+        [FileTypeEnum.TemplateFunction]: () => new SnippetTemplateFunctionFactory(),
         [FileTypeEnum.TemplateClass]: () => new SnippetTemplateClassFactory(),
         [FileTypeEnum.TemplateInterface]: () => new SnippetTemplateInterfaceFactory(),
-        [FileTypeEnum.TemplateEnum]: () => new SnippetTemplateEnumFactory(),
         [FileTypeEnum.TemplateTrait]: () => new SnippetTemplateTraitFactory(),
+        [FileTypeEnum.TemplateEnum]: () => new SnippetTemplateEnumFactory(),
 
         [FileTypeEnum.SymfonyController]: () => new SnippetSymfonyControllerFactory(),
         [FileTypeEnum.SymfonyCommand]: () => new SnippetSymfonyCommandFactory(),

@@ -1,11 +1,12 @@
 {
   "php-smart-files.submenus.main.label": "Создать PHP файл",
-
   "php-smart-files.commands.newEmptyPhpFile.title": "PHP файл",
+  "php-smart-files.commands.newEmptyPhpFunction.title": "PHP функция",
   "php-smart-files.commands.newEmptyPhpClass.title": "PHP класс",
   "php-smart-files.commands.newEmptyPhpInterface.title": "PHP интерфейс",
   "php-smart-files.commands.newEmptyPhpEnum.title": "PHP enum",
   "php-smart-files.commands.newEmptyPhpTrait.title": "PHP трейт",
+  "php-smart-files.commands.newTemplatePhpFunction.title": "PHP функция из шаблона",
   "php-smart-files.commands.newTemplatePhpClass.title": "PHP класс из шаблона",
   "php-smart-files.commands.newTemplatePhpInterface.title": "PHP интерфейс из шаблона",
   "php-smart-files.commands.newTemplatePhpEnum.title": "PHP enum из шаблона",

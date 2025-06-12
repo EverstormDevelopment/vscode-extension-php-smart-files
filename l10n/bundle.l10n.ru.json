@@ -42,6 +42,7 @@
   
   "Please enter a valid filename": "Пожалуйста, введите корректное имя файла",
   "Filename contains characters not allowed by the file system": "Имя файла содержит символы, не допустимые файловой системой",
+  "Filename can only contain letters, numbers, and underscores, to be autoload compatible": "Имя файла может содержать только буквы, цифры и символы подчёркивания для совместимости с автозагрузкой",
   "Filename contains characters that may cause issues with PHP includes or URLs": "Имя файла содержит символы, которые могут вызвать проблемы с PHP-включениями или URL-адресами",
   "Namespace skipped: The detected namespace was invalid due to invalid names in the directory structure.": "Пространство имён пропущено: Обнаруженное пространство имён было недействительным из-за некорректных имён в структуре каталогов.",
   

@@ -14,7 +14,7 @@ export class InputFileNameValidator implements InputValidatorInterface {
      *
      * @param autoloaderConform Whether to use strict autoloader-compatible validation or basic file system validation
      */
-    constructor(private autoloaderConform: boolean = false) {}
+    constructor(private readonly autoloaderConform: boolean = false) {}
 
     /**
      * Validates a file name against file system and optionally autoloader compatibility rules.

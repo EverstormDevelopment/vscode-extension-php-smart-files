@@ -9,11 +9,13 @@ import { FileTypeEnum } from "../../utils/php/enum/FileTypeEnum";
  */
 export const FileGenerationCommandRegistry: Record<string, FileTypeEnum> = {
     newEmptyPhpFile: FileTypeEnum.File,
+    newEmptyPhpFunction: FileTypeEnum.Function,
     newEmptyPhpClass: FileTypeEnum.Class,
     newEmptyPhpInterface: FileTypeEnum.Interface,
     newEmptyPhpEnum: FileTypeEnum.Enum,
     newEmptyPhpTrait: FileTypeEnum.Trait,
 
+    newTemplatePhpFunction: FileTypeEnum.TemplateFunction,
     newTemplatePhpClass: FileTypeEnum.TemplateClass,
     newTemplatePhpInterface: FileTypeEnum.TemplateInterface,
     newTemplatePhpEnum: FileTypeEnum.TemplateEnum,

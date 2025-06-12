@@ -25,6 +25,9 @@ export class InputBoxFactory implements InputBoxFactoryInterface {
         switch (type) {
             case FileTypeEnum.File:
                 return this.createFileInputBox();
+            case FileTypeEnum.Function:
+            case FileTypeEnum.TemplateFunction:
+                return this.createFunctionInputBox();
             case FileTypeEnum.Class:
             case FileTypeEnum.TemplateClass:
                 return this.createClassInputBox();
@@ -58,6 +61,20 @@ export class InputBoxFactory implements InputBoxFactoryInterface {
             .setPlaceholder(vscode.l10n.t("Enter filename (without .php)"))
             .setPrompt(vscode.l10n.t("Enter a name for the new PHP file"))
             .setInputValidator(new InputFileNameValidator())
+            .setInputProcessor(new InputPhpFileNameProcessor())
+            .build();
+    }
+
+    /**
+     * Creates an input box configured for PHP function creation.
+     * @returns An input box interface implementation for PHP functions
+     */
+    private createFunctionInputBox(): InputBoxInterface {
+        return new InputBoxBuilder()
+            .setTitle(vscode.l10n.t("Create PHP Function"))
+            .setPlaceholder(vscode.l10n.t("Enter function name"))
+            .setPrompt(vscode.l10n.t("Enter a name for the new PHP function"))
+            .setInputValidator(new InputDefinitionNameValidator(true))
             .setInputProcessor(new InputPhpFileNameProcessor())
             .build();
     }

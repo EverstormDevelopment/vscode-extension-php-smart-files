@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { FileTypeEnum } from "../../../utils/enum/FileTypeEnum";
+import { FileTypeEnum } from "../../../utils/php/enum/FileTypeEnum";
 import { SnippetFactoryInterface } from "../interface/SnippetFactoryInterface";
 import { SnippetTypeFactoryInterface } from "../interface/SnippetTypeFactoryInterface";
 import { SnippetClassFactory } from "./SnippetClassFactory";

@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { FileTypeEnum } from "../../../utils/enum/FileTypeEnum";
+import { FileTypeEnum } from "../../../utils/php/enum/FileTypeEnum";
 import { InputBoxFactoryInterface } from "../interface/InputBoxFactoryInterface";
 import { InputBoxInterface } from "../interface/InputInterface";
 import { InputPhpFileNameProcessor } from "../processor/InputPhpFileNameProcessor";

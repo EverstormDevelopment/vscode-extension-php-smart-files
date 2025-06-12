@@ -1,4 +1,4 @@
-import { FileTypeEnum } from "../../../utils/enum/FileTypeEnum";
+import { FileTypeEnum } from "../../../utils/php/enum/FileTypeEnum";
 import { InputBoxInterface } from "./InputInterface";
 
 /**

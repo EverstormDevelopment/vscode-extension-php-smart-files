@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { FileTypeEnum } from "../../../utils/enum/FileTypeEnum";
+import { FileTypeEnum } from "../../../utils/php/enum/FileTypeEnum";
 
 /**
  * Interface for PHP snippet factory implementations.

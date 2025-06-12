@@ -4,8 +4,8 @@ import { UriFolderResolver } from "../../service/filesystem/uri/UriFolderResolve
 import { InputBoxFactoryInterface } from "../../service/input/interface/InputBoxFactoryInterface";
 import { NamespaceResolver } from "../../service/namespace/resolver/NamespaceResolver";
 import { SnippetFactoryInterface } from "../../service/snippet/interface/SnippetFactoryInterface";
-import { FileTypeEnum } from "../../utils/enum/FileTypeEnum";
 import { getUriFileName } from "../../utils/filesystem/getUriFileName";
+import { FileTypeEnum } from "../../utils/php/enum/FileTypeEnum";
 import { findDocumentByUri } from "../../utils/vscode/findDocumentByUri";
 
 /**

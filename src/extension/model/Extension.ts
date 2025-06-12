@@ -3,7 +3,7 @@ import { ContainerFactory } from "../../container/build/ContainerFactory";
 import { ContainerInterface } from "../../container/interface/ContainerInterface";
 import { ConstructorType } from "../../container/type/ConstructorType";
 import { FilesystemObserverInterface } from "../../service/filesystem/observer/interface/FilesystemObserverInterface";
-import { FileTypeEnum } from "../../utils/enum/FileTypeEnum";
+import { FileTypeEnum } from "../../utils/php/enum/FileTypeEnum";
 import { ExtensionInterface } from "../interface/ExtensionInterface";
 import { FileGenerationCommandRegistry } from "../registry/FileGenerationCommandRegistry";
 import { ObserverRegistry } from "../registry/ObserverRegistry";

@@ -6,13 +6,13 @@ export enum FileTypeEnum {
     File = "File",
     Class = "Class",
     Interface = "Interface",
-    Enum = "Enum",
     Trait = "Trait",
+    Enum = "Enum",
 
     TemplateClass = "TemplateClass",
     TemplateInterface = "TemplateInterface",
-    TemplateEnum = "TemplateEnum",
     TemplateTrait = "TemplateTrait",
+    TemplateEnum = "TemplateEnum",
 
     SymfonyController = "SymfonyController",
     SymfonyCommand = "SymfonyCommand",

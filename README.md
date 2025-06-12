@@ -38,7 +38,7 @@ PHP Smart Files extends VS Code to enhance your PHP development workflow through
 
 Create PHP files with auto-detected namespaces based on your project's Composer configuration:
 
-- **File Types**: Classes, interfaces, traits, and enums
+- **File Types**: Functions, Classes, Interfaces, Traits, and Enums
 - **Automatic Namespaces**: Intelligently follows PSR-4 standards from composer.json with optional fallback to directory structure
 - **Template Options**:
   - Basic empty files
@@ -84,17 +84,19 @@ Right-click in the Explorer and select from the "Create PHP File" submenu:
 #### Basic Files
 
 - **Empty PHP File**: Creates a basic PHP file with namespace
-- **Empty PHP Class**: Creates a PHP class with namespace and class declaration
+- **Empty PHP Function**: Creates a basic PHP function with namespace
+- **Empty PHP Class**: Creates a PHP class with namespace
 - **Empty PHP Interface**: Creates a PHP interface with namespace
-- **Empty PHP Enum**: Creates a PHP 8.1+ enum with namespace
 - **Empty PHP Trait**: Creates a PHP trait with namespace
+- **Empty PHP Enum**: Creates a PHP 8.1+ enum with namespace
 
 #### Template Files
 
+- **PHP Function with Template**: Creates a PHP function with helpful boilerplate code
 - **PHP Class with Template**: Creates a PHP class with helpful boilerplate code
 - **PHP Interface with Template**: Creates a PHP interface with method templates
-- **PHP Enum with Template**: Creates a PHP enum with case examples
 - **PHP Trait with Template**: Creates a PHP trait with method examples
+- **PHP Enum with Template**: Creates a PHP enum with case examples
 
 #### Symfony Templates
 

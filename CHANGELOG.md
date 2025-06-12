@@ -5,6 +5,20 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 
 
 
+## [Unreleased]
+
+### Added
+- Added support for function and constant imports during namespace refactoring:
+  - Now properly recognizes and updates `use function` statements when referenced files are moved or renamed
+  - Now properly recognizes and updates `use const` statements during refactoring operations
+  - Ensures comprehensive namespace management for all PHP import types (classes, interfaces, traits, enums, functions, and constants)
+
+### Changed
+- Updated logo with new design for better visibility and brand recognition
+- Adjusted marketplace banner color to match the new logo style for consistent visual identity
+
+
+
 ## [1.0.5] - 2025-06-10
 
 ### Fixed

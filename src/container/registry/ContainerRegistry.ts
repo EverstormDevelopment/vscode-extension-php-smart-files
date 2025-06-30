@@ -18,6 +18,7 @@ import { NamespaceRegExpProvider } from "../../service/namespace/provider/Namesp
 import { NamespaceResolver } from "../../service/namespace/resolver/NamespaceResolver";
 import { NamespaceRefactorService } from "../../service/namespace/service/NamespaceRefactorService";
 import { NamespaceIdentifierValidator } from "../../service/namespace/validator/NamespaceIdentifierValidator";
+import { GlobalReservedService } from "../../service/php/GlobalReservedService";
 import { SnippetFactory } from "../../service/snippet/build/SnippetFactory";
 import { ContainerRegistrationType } from "../type/ContainerRegistrationType";
 import { NamespacePathValidator } from "./../../service/namespace/validator/NamespacePathValidator";
@@ -76,6 +77,10 @@ export const ContainerRegistry: ContainerRegistrationType[] = [
         dependencies: [UriFolderResolver, InputBoxFactory, FileCreator, NamespaceResolver, SnippetFactory],
     },
     {
+        constructor: GlobalReservedService,
+        dependencies: [ComposerJsonService],
+    },
+    {
         constructor: NamespaceRefactorDetailsProvider,
         dependencies: [
             NamespaceResolver,
@@ -86,7 +91,7 @@ export const ContainerRegistry: ContainerRegistrationType[] = [
     },
     {
         constructor: NamespaceSourceRefactorer,
-        dependencies: [NamespaceRegExpProvider],
+        dependencies: [NamespaceRegExpProvider, GlobalReservedService],
     },
     {
         constructor: NamespaceReferencesRefactorer,

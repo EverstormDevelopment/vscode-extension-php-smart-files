@@ -1,4 +1,4 @@
-export const GlobalFunctions = new Set<string>([
+export const GlobalConstants = new Set<string>([
     // A
     "af_inet",
     "af_inet6",

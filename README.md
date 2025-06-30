@@ -22,6 +22,7 @@
 
 - [Features](#features)
 - [Usage](#usage)
+- [Recommended Setup](#recommended-setup)
 - [Extension Settings](#extension-settings)
 - [Available Languages](#available-languages)
 - [About This Project](#about-this-project)
@@ -116,6 +117,21 @@ The extension automatically refactors namespaces and references during standard 
 
 > 💡 **Tip:** Use the extension settings to control whether confirmations are shown or to disable specific refactoring features
 
+## Recommended Setup (Optional for Best Experience)
+
+PHP Smart Files works immediately after installation, but to unlock the most reliable and context-aware namespace refactoring, we recommend the following:
+
+- **PHP executable is configured**  
+  Ensure PHP’s path is set in VS Code settings (`php.validate.executablePath` or `php.executablePath`), or that PHP is available in your system’s PATH.
+
+- **composer.json is present at the root of your workspace(s)**  
+  This allows the extension to understand your project’s PSR-4 autoloading configuration.
+
+- **Composer dependencies are installed**  
+  Having the `vendor` directory and installed packages enables better detection of global functions and improves namespace handling.
+
+> 💡 The extension uses a fallback mechanism to detect global functions, so the more of the above points you fulfill, the more accurate your refactoring will be.
+
 ## Extension Settings
 
 All settings can be configured through VS Code settings (Gear icon → Extensions → PHP Smart Files) or in your settings.json file.
@@ -177,18 +193,6 @@ use MyNamespace\{ClassA, ClassB as B, SubNamespace\ClassC};
 ```
 
 When using this PHP syntax feature, refactoring operations may be incomplete or require manual adjustments. Support for grouped namespace statements is planned for future releases. If this feature is important to your workflow, please see the "Feedback and Contributions" section below and let me know.
-
-### Function and Constant Imports
-
-The extension currently doesn't fully support refactoring of imported functions or constants:
-
-```php
-// Not supported yet:
-use function App\Utils\someFunction;
-use const App\Config\SOME_CONSTANT;
-```
-
-When using these import types, namespace references will not be updated during refactoring operations. Support for function and constant imports is planned for the next release and is the top priority in the development roadmap.
 
 ## Feedback and Contributions
 

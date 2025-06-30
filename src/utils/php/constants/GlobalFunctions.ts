@@ -1,5 +1,5 @@
 /**
- * A read-only Set containing common PHP global functions that can be used without namespace qualification.
+ * A Set containing common PHP global functions that can be used without namespace qualification.
  */
 export const GlobalFunctions = new Set<string>([
     // _

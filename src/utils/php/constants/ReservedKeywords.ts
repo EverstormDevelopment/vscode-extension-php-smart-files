@@ -1,5 +1,5 @@
 /**
- * A read-only Set containing all PHP reserved keywords and predefined types.
+ * A Set containing all PHP reserved keywords and predefined types.
  * This includes both language syntax keywords and built-in types used in type hints.
  * Using a Set provides faster lookups (O(1)) than arrays and guarantees uniqueness.
  */

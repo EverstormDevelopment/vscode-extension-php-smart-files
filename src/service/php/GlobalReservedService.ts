@@ -110,7 +110,7 @@ export class GlobalReservedService {
         const executablePath = phpConfig.get<string>("executablePath");
         const validateExecutablePath = phpConfig.get<string>("validate.executablePath");
 
-        const configuredPath = (executablePath || validateExecutablePath)?.trim();
+        const configuredPath = (validateExecutablePath || executablePath)?.trim();
         const isValid = await this.validatePhpPath(configuredPath);
         return isValid ? configuredPath : undefined;
     }

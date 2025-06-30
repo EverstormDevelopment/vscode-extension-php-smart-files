@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { getUseTypeByKind } from "../../../utils/php/functions/getUseTypeByKind";
+import { getUseTypeByKind } from "../../../utils/php/function/getUseTypeByKind";
 import { getLinebreakType } from "../../../utils/string/getLinebreakType";
 import { getFileContentByUri } from "../../../utils/vscode/getFileContentByUri";
 import { setFileContentByUri } from "../../../utils/vscode/setFileContentByUri";

@@ -117,20 +117,22 @@ The extension automatically refactors namespaces and references during standard 
 
 > 💡 **Tip:** Use the extension settings to control whether confirmations are shown or to disable specific refactoring features
 
-## Recommended Setup (Optional for Best Experience)
+## Recommended Setup
 
-PHP Smart Files works immediately after installation, but to unlock the most reliable and context-aware namespace refactoring, we recommend the following:
+**PHP Smart Files works immediately after installation — no setup required!**
+
+For the best experience and most reliable namespace refactoring, it is recommended to:
 
 - **PHP executable is configured**  
-  Ensure PHP’s path is set in VS Code settings (`php.validate.executablePath` or `php.executablePath`), or that PHP is available in your system’s PATH.
+  Set the PHP path in VS Code settings (`php.validate.executablePath` or `php.executablePath`), or ensure PHP is available in your system’s PATH.
 
-- **composer.json is present at the root of your workspace(s)**  
-  This allows the extension to understand your project’s PSR-4 autoloading configuration.
+- **composer.json at the root of your workspace(s)**  
+  This enables the extension to detect your project’s PSR-4 autoloading configuration. Especially important for larger projects or when using frameworks like Symfony or Laravel.
 
 - **Composer dependencies are installed**  
-  Having the `vendor` directory and installed packages enables better detection of global functions and improves namespace handling.
+  Having the `vendor` directory and installed packages improves detection of global functions and enhances namespace handling.
 
-> 💡 The extension uses a fallback mechanism to detect global functions, so the more of the above points you fulfill, the more accurate your refactoring will be.
+> 💡 **Tip:** The extension works out of the box, but following these recommendations will further improve the accuracy and effectiveness of namespace and reference refactoring.
 
 ## Extension Settings
 

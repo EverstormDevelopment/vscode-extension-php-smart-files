@@ -84,10 +84,7 @@ export class GlobalReservedService {
      * Sets the default global reserved names, including PHP keywords and built-in functions.
      */
     private setDefaultGlobalReserved(): void {
-        this.globalReserved = new Set([
-            ...ReservedKeywords,
-            ...GlobalFunctions,
-        ]);
+        this.globalReserved = new Set([...ReservedKeywords, ...GlobalFunctions]);
     }
 
     /**

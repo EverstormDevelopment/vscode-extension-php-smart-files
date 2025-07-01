@@ -3,6 +3,7 @@ import { ContainerFactory } from "../../container/build/ContainerFactory";
 import { ContainerInterface } from "../../container/interface/ContainerInterface";
 import { ConstructorType } from "../../container/type/ConstructorType";
 import { FilesystemObserverInterface } from "../../service/filesystem/observer/interface/FilesystemObserverInterface";
+import { GlobalReservedService } from "../../service/php/GlobalReservedService";
 import { FileTypeEnum } from "../../utils/php/enum/FileTypeEnum";
 import { ExtensionInterface } from "../interface/ExtensionInterface";
 import { FileGenerationCommandRegistry } from "../registry/FileGenerationCommandRegistry";
@@ -42,8 +43,9 @@ export class Extension implements ExtensionInterface {
      */
     public activate(context: vscode.ExtensionContext): this {
         this.initialize(context);
+        this.addGlobalReservedObserver(context);
         this.addFileCreationCommands(context);
-        this.addLazyObserverRegistration(context);
+        this.addLazyFileObserver(context);
         return this;
     }
 
@@ -55,6 +57,49 @@ export class Extension implements ExtensionInterface {
         // this.id = context.extension.id;
         // this.version = context.extension.packageJSON.version;
         this.name = context.extension.packageJSON.name;
+    }
+
+    /**
+     * Registers all observers that keep the global reserved names in sync with workspace changes.
+     * @param context The VS Code extension context
+     */
+    private addGlobalReservedObserver(context: vscode.ExtensionContext): void {
+        this.addGlobalReservedComposerObserver(context);
+        this.addGlobalReservedConfigObserver(context);
+    }
+
+    /**
+     * Registers a file system watcher for composer.json and composer.lock files and
+     * triggers a reload of global reserved names whenever these files are changed,
+     * created, or deleted, ensuring that changes in dependencies are reflected.
+     * @param context The VS Code extension context
+     */
+    private addGlobalReservedComposerObserver(context: vscode.ExtensionContext): void {
+        const globalReservedService = this.container.get(GlobalReservedService);
+        const composerWatcher = vscode.workspace.createFileSystemWatcher("**/composer.{json,lock}");
+        composerWatcher.onDidChange(() => globalReservedService.reload());
+        composerWatcher.onDidCreate(() => globalReservedService.reload());
+        composerWatcher.onDidDelete(() => globalReservedService.reload());
+        context.subscriptions.push(composerWatcher);
+    }
+
+    /**
+     * Registers a configuration change listener for PHP executable settings and
+     * triggers a reload of global reserved names whenever 'php.executablePath' or
+     * 'php.validate.executablePath' is changed, so the service always uses the correct PHP binary.
+     * @param context The VS Code extension context
+     */
+    private addGlobalReservedConfigObserver(context: vscode.ExtensionContext): void {
+        const globalReservedService = this.container.get(GlobalReservedService);
+        const configWatcher = vscode.workspace.onDidChangeConfiguration((event) => {
+            const affectsPhpExecutablePath = event.affectsConfiguration("php.executablePath");
+            const affectsPhpValidateExecutablePath = event.affectsConfiguration("php.validate.executablePath");
+            if (!affectsPhpExecutablePath && !affectsPhpValidateExecutablePath) {
+                return;
+            }
+            globalReservedService.reload();
+        });
+        context.subscriptions.push(configWatcher);
     }
 
     /**
@@ -87,13 +132,7 @@ export class Extension implements ExtensionInterface {
         context.subscriptions.push(vscodeCommand);
     }
 
-    /**
-     * Sets up a lazy registration mechanism for file system observers
-     * Observers are only registered if PHP files are present in the workspace
-     * If no PHP files exist initially, a watcher is set up to detect when PHP files are created
-     * @param context The VS Code extension context
-     */
-    private async addLazyObserverRegistration(context: vscode.ExtensionContext): Promise<void> {
+    private async addLazyFileObserver(context: vscode.ExtensionContext): Promise<void> {
         const observersRegistered = await this.addObservers(context);
         if (observersRegistered) {
             return;

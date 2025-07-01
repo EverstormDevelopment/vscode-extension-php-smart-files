@@ -22,7 +22,7 @@
 
 - [Features](#features)
 - [Usage](#usage)
-- [Recommended Setup](#recommended-setup)
+- [Recommendations](#recommendations)
 - [Extension Settings](#extension-settings)
 - [Available Languages](#available-languages)
 - [About This Project](#about-this-project)
@@ -117,17 +117,17 @@ The extension automatically refactors namespaces and references during standard 
 
 > 💡 **Tip:** Use the extension settings to control whether confirmations are shown or to disable specific refactoring features
 
-## Recommended Setup
+## Recommendations
 
-**PHP Smart Files works immediately after installation — no setup required!**
+**No setup required — the extension works right after installation!**
 
-For the best experience and most reliable namespace refactoring, it is recommended to:
+For even better results and the most reliable namespace refactoring, consider these recommendations:
 
 - **PHP executable is configured**  
   Set the PHP path in VS Code settings (`php.validate.executablePath` or `php.executablePath`), or ensure PHP is available in your system’s PATH.
 
 - **composer.json at the root of your workspace(s)**  
-  This enables the extension to detect your project’s PSR-4 autoloading configuration. Especially important for larger projects or when using frameworks like Symfony or Laravel.
+  This helps the extension detect your project’s PSR-4 autoloading configuration, which is particularly useful for larger projects or when using frameworks like Symfony or Laravel.
 
 - **Composer dependencies are installed**  
   Having the `vendor` directory and installed packages improves detection of global functions and enhances namespace handling.

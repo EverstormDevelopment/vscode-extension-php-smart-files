@@ -31,59 +31,63 @@ export class GlobalReservedService {
     private phpPath: string | undefined;
 
     /**
-     * Set of all globally reserved names (functions, keywords, constants)
+     * Set of all globally reserved names (global functions and keywords)
      */
     private globalReserved: Set<string>;
 
     /**
-     * Flag indicating whether the service has been fully initialized
+     * Promise that resolves when the service is fully initialized.
+     * Used to ensure that initialization is only done once and can be awaited.
      */
-    private isInitialized: boolean;
+    private initializationPromise: Promise<void> | undefined;
 
     /**
      * Creates a new GlobalReservedService instance.
-     *
-     * Initializes the service with basic PHP reserved keywords and global functions.
-     * The service must be explicitly initialized via the initialize() method to load
-     * dynamic and framework-specific reserved names.
-     *
      * @param composerService Service for parsing and handling composer.json files
      */
     constructor(private readonly composerService: ComposerJsonService) {
-        this.phpPath = undefined;
-        // Start with basic PHP reserved keywords and global functions
-        this.globalReserved = new Set(...ReservedKeywords, ...GlobalFunctions);
-        this.isInitialized = false;
+        this.globalReserved = new Set<string>();
     }
 
     /**
-     * Temporary method for testing initialization.
-     * TODO: Replace with proper public API method
+     * Checks if a given name is reserved in the current PHP environment.
+     * This includes built-in functions, keywords, and user-defined functions from composer packages.
+     * @param name The name to check for reservation
+     * @returns True if the name is reserved, false otherwise
      */
-    public async foo(): Promise<void> {
+    public async isReserved(name: string): Promise<boolean> {
         await this.initialize();
+        const lowerName = name.toLowerCase();
+        return this.globalReserved.has(lowerName);
     }
 
     /**
-     * Initialize the service by detecting PHP globals from multiple sources.
-     *
-     * This method performs the following steps:
-     * 1. Detects the PHP executable path on the system
-     * 2. Loads reserved names from all workspace folders
-     *
-     * The method is idempotent - calling it multiple times has no additional effect.
-     * Falls back gracefully if PHP is not available or if dynamic detection fails.
+     * Initializes the service by detecting the PHP path and loading global reserved names.
+     * If already initialized, this method will return the existing promise to avoid duplicate work.
+     * Use `reload` parameter to force re-initialization.
+     * @param reload If true, forces re-initialization even if already done
      */
-    private async initialize(): Promise<void> {
-        // Prevent multiple initializations
-        if (this.isInitialized) {
-            return;
+    private async initialize(reload?: boolean): Promise<void> {
+        if (!reload && this.initializationPromise) {
+            return this.initializationPromise;
         }
+        this.initializationPromise = (async () => {
+            this.setDefaultGlobalReserved();
+            await this.detectPhpPath();
+            await this.loadGlobalReserved();
+        })();
 
-        await this.detectPhpPath();
-        await this.loadGlobalReserved();
-        // TODO: Uncomment when initialization is complete
-        // this.isInitialized = true;
+        await this.initializationPromise;
+    }
+
+    /**
+     * Sets the default global reserved names, including PHP keywords and built-in functions.
+     */
+    private setDefaultGlobalReserved(): void {
+        this.globalReserved = new Set([
+            ...ReservedKeywords,
+            ...GlobalFunctions,
+        ]);
     }
 
     /**

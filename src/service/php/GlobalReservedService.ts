@@ -50,6 +50,14 @@ export class GlobalReservedService {
     }
 
     /**
+     * Forces a full reload of all reserved names and PHP environment state.
+     * Use this method when configuration, composer.json, or the PHP runtime changes.
+     */
+    public async reload(): Promise<void> {
+        await this.initialize(true);
+    }
+
+    /**
      * Checks if a given name is reserved in the current PHP environment.
      * This includes built-in functions, keywords, and user-defined functions from composer packages.
      * @param name The name to check for reservation

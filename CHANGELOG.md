@@ -3,6 +3,26 @@
 All notable changes to the "PHP Smart Files" extension will be documented in this file.
 <!-- Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file. -->
 
+## [Unreleased]
+
+### Added
+- Added support for function and constant imports during namespace refactoring:
+  - Now properly recognizes and updates `use function` statements when referenced files are moved or renamed
+  - Now properly recognizes and updates `use const` statements during refactoring operations
+  - Ensures comprehensive namespace management for all PHP import types (classes, interfaces, traits, enums, functions, and constants)
+- Introduced GlobalReservedService:
+  - Centralizes detection and management of all globally reserved PHP names (functions, constants, keywords)
+  - Dynamically collects reserved names from the PHP runtime, composer dependencies, and framework packages
+  - Prevents naming conflicts and ensures generated code does not use reserved or conflicting names
+  - Also prevents incorrect `use` statements for global functions: without this, the extension might incorrectly add a `use` statement for a global function
+  - Used throughout the extension for validation, refactoring, and code generation
+- Added ability to create PHP functions via the file creation dialog, just like classes, interfaces, traits, and enums
+
+### Changed
+- Updated logo with new design for better visibility and brand recognition
+- Adjusted marketplace banner color to match the new logo style for consistent visual identity
+
+
 
 ## [1.0.6] - 2025-06-12
 
@@ -11,20 +31,6 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
   - Resolved problem where classes from the global namespace (e.g., `use IntlTimeZone;`) were not correctly detected
   - Prevented generation of incorrect additional `use` statements when moving files that reference global namespace classes
   - Improved pattern matching to handle both namespaced and non-namespaced `use` statements correctly
-
-
-
-## [Unreleased]
-
-### Added
-- Added support for function and constant imports during namespace refactoring:
-  - Now properly recognizes and updates `use function` statements when referenced files are moved or renamed
-  - Now properly recognizes and updates `use const` statements during refactoring operations
-  - Ensures comprehensive namespace management for all PHP import types (classes, interfaces, traits, enums, functions, and constants)
-
-### Changed
-- Updated logo with new design for better visibility and brand recognition
-- Adjusted marketplace banner color to match the new logo style for consistent visual identity
 
 
 

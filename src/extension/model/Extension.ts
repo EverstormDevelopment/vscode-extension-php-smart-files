@@ -132,6 +132,10 @@ export class Extension implements ExtensionInterface {
         context.subscriptions.push(vscodeCommand);
     }
 
+    /**
+     * Lazily registers file observers only when a PHP file is detected in the workspace.
+     * Improves startup performance for non-PHP projects.
+     */
     private async addLazyFileObserver(context: vscode.ExtensionContext): Promise<void> {
         const observersRegistered = await this.addObservers(context);
         if (observersRegistered) {

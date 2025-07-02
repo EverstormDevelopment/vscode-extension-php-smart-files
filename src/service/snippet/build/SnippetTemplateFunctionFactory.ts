@@ -1,6 +1,5 @@
 import { SnippetFunctionFactory } from "./SnippetFunctionFactory";
 
-
 export class SnippetTemplateFunctionFactory extends SnippetFunctionFactory {
     protected addFunctionSignature(identifier: string): this {
         this.snippet.appendText(`function `);

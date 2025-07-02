@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
-import { GlobalFunctions } from "../../php/constants/GlobalFunctions";
-import { ReservedKeywords } from "../../php/constants/ReservedKeywords";
+import { ContainerFactory } from "../../../container/build/ContainerFactory";
+import { GlobalReservedService } from "../../php/GlobalReservedService";
 import { InputValidatorInterface } from "../interface/InputValidatorInterface";
 
 /**
@@ -15,7 +15,10 @@ export class InputDefinitionNameKeywordValidator implements InputValidatorInterf
      * @returns Validation message if input conflicts with reserved words, undefined if valid
      */
     public async validate(input: string): Promise<vscode.InputBoxValidationMessage | undefined> {
-        if (ReservedKeywords.has(input.toLowerCase()) || GlobalFunctions.has(input.toLowerCase())) {
+        const container = ContainerFactory.getDefaultContainer();
+        const globalReservedService = container.get(GlobalReservedService);
+
+        if (await globalReservedService.isReserved(input)) {
             return {
                 message: vscode.l10n.t("Cannot use PHP reserved keyword as definition name"),
                 severity: vscode.InputBoxValidationSeverity.Error,

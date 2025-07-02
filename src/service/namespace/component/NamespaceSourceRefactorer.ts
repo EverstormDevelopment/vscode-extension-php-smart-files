@@ -1,7 +1,5 @@
 import * as vscode from "vscode";
 import { escapeRegExp } from "../../../utils/regexp/escapeRegExp";
-import { GlobalFunctions } from "../../php/constants/GlobalFunctions";
-import { ReservedKeywords } from "../../php/constants/ReservedKeywords";
 import { NamespaceRefactorerAbstract } from "../abstract/NamespaceRefactorerAbstract";
 import { IdentifierKindEnum } from "../enum/IdentifierKindEnum";
 import { NamespaceRegExpProvider } from "../provider/NamespaceRegExpProvider";
@@ -209,8 +207,6 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
      * @returns A list of unique non-qualified references.
      */
     private async getNonQualifiedReferences(content: string): Promise<IdentifierType[]> {
-        // await this.globalReservedService.foo();
-
         const referencePatterns: [RegExp, IdentifierKindEnum][] = [
             [this.namespaceRegExpProvider.getNonQualifiedOopReferenceRegExp(), IdentifierKindEnum.Oop],
             [this.namespaceRegExpProvider.getNonQualifiedFunctionReferenceRegExp(), IdentifierKindEnum.Function],
@@ -221,7 +217,7 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
         const result: IdentifierType[] = [];
 
         for (const [regExp, kind] of referencePatterns) {
-            const identifiers = this.extractNonQualifiedIdentifiers(content, regExp, excludedIdentifiers);
+            const identifiers = await this.extractNonQualifiedIdentifiers(content, regExp, excludedIdentifiers);
             for (const identifier of identifiers) {
                 result.push({ name: identifier, kind });
                 excludedIdentifiers.add(identifier);
@@ -239,18 +235,24 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
      * @param exclude Set of names to exclude (already used).
      * @returns Array of unique identifier names.
      */
-    private extractNonQualifiedIdentifiers(content: string, regExp: RegExp, exclude: Set<string>): string[] {
-        const matches = Array.from(content.matchAll(regExp))
-            .map((match) => match.slice(1).find(Boolean))
-            .filter((name): name is string => !!name)
-            .filter((name) => {
-                const lowercaseName = name.toLowerCase();
-                return (
-                    !ReservedKeywords.has(lowercaseName) && !GlobalFunctions.has(lowercaseName) && !exclude.has(name)
-                );
-            });
-
-        const uniqueMatches = new Set(matches);
+    private async extractNonQualifiedIdentifiers(
+        content: string,
+        regExp: RegExp,
+        exclude: Set<string>
+    ): Promise<string[]> {
+        const matches = await Promise.all(
+            Array.from(content.matchAll(regExp))
+                .map((match) => match.slice(1).find(Boolean))
+                .filter((name): name is string => !!name)
+                .map(async (name) => {
+                    const lowercaseName = name.toLowerCase();
+                    const isReserved = await this.globalReservedService.isReserved(lowercaseName);
+                    const isExcluded = exclude.has(name);
+                    return !isReserved && !isExcluded ? name : undefined;
+                })
+        );
+        const filteredMatches = matches.filter((match): match is string => !!match);
+        const uniqueMatches = new Set(filteredMatches);
         return Array.from(uniqueMatches);
     }
 }

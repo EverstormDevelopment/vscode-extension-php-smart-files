@@ -177,9 +177,21 @@ I'll do my best to keep this extension reliable and useful while balancing its s
 
 ## Release Notes
 
-### Current Version: 1.0.6
+### Current Version: 1.1.0
 
-This release fixes an issue with `use` statements from the global namespace not being properly recognized. Previously, classes from the global namespace (e.g., `use IntlTimeZone;`) were not correctly detected, which could lead to incorrect additional `use` statements being generated when moving files that reference global namespace classes.
+This release brings major improvements and new features to make working with namespaces and global functions even more reliable and convenient:
+
+- **Function and Constant Import Refactoring**  
+  The extension now fully supports `use function` and `use const` statements during namespace refactoring. When you move or rename files, all relevant function and constant imports are updated automatically — for complete, robust namespace management.
+
+- **PHP Function File Creation**  
+  You can now create PHP function files directly from the file creation dialog — just like classes, interfaces, traits, and enums.
+
+- **Global Reserved Service**  
+  A new service detects and manages all globally reserved PHP names (functions, constants, keywords). This prevents naming conflicts and ensures that generated code won’t use reserved names or create incorrect `use` statements for built-in PHP functions.
+
+- **Visual Updates**  
+  Updated logo and Marketplace banner for better visibility and consistent branding.
 
 For a detailed list of changes in this and previous versions, please see the [CHANGELOG](CHANGELOG.md).
 
@@ -195,6 +207,18 @@ use MyNamespace\{ClassA, ClassB as B, SubNamespace\ClassC};
 ```
 
 When using this PHP syntax feature, refactoring operations may be incomplete or require manual adjustments. Support for grouped namespace statements is planned for future releases. If this feature is important to your workflow, please see the "Feedback and Contributions" section below and let me know.
+
+### Function and Constant Imports
+
+The extension currently doesn't fully support refactoring of imported functions or constants:
+
+```php
+// Not supported yet:
+use function App\Utils\someFunction;
+use const App\Config\SOME_CONSTANT;
+```
+
+When using these import types, namespace references will not be updated during refactoring operations. Support for function and constant imports is planned for the next release and is the top priority in the development roadmap.
 
 ## Feedback and Contributions
 

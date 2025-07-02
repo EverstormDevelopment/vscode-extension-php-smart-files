@@ -3,6 +3,10 @@
   "Enter filename (without .php)": "Dateiname eingeben (ohne .php)",
   "Enter a name for the new PHP file": "Geben Sie einen Namen für die neue PHP-Datei ein",
   
+  "Create PHP Function": "PHP-Funktion erstellen",
+  "Enter function filename (without .php)": "Funktionsdateiname eingeben (ohne .php)",
+  "Enter a name for the new PHP function file": "Geben Sie einen Namen für die neue PHP-Funktionsdatei ein",
+  
   "Create PHP Class": "PHP-Klasse erstellen",
   "Enter class name": "Klassenname eingeben",
   "Enter a name for the new PHP class": "Geben Sie einen Namen für die neue PHP-Klasse ein",

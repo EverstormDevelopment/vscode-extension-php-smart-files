@@ -2,7 +2,11 @@
   "Create PHP File": "Create PHP File",
   "Enter filename (without .php)": "Enter filename (without .php)",
   "Enter a name for the new PHP file": "Enter a name for the new PHP file",
-  
+
+  "Create PHP Function": "Create PHP Function",
+  "Enter function filename (without .php)": "Enter function filename (without .php)",
+  "Enter a name for the new PHP function file": "Enter a name for the new PHP function file",
+
   "Create PHP Class": "Create PHP Class",
   "Enter class name": "Enter class name",
   "Enter a name for the new PHP class": "Enter a name for the new PHP class",

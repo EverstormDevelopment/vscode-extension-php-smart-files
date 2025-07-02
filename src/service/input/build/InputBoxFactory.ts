@@ -72,7 +72,7 @@ export class InputBoxFactory implements InputBoxFactoryInterface {
     private createFunctionInputBox(): InputBoxInterface {
         return new InputBoxBuilder()
             .setTitle(vscode.l10n.t("Create PHP Function"))
-            .setPlaceholder(vscode.l10n.t("Enter function name"))
+            .setPlaceholder(vscode.l10n.t("Enter function filename (without .php)"))
             .setPrompt(vscode.l10n.t("Enter a name for the new PHP function"))
             .setInputValidator(new InputDefinitionNameValidator(true))
             .setInputProcessor(new InputPhpFileNameProcessor())

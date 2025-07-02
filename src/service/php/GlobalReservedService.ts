@@ -241,7 +241,7 @@ export class GlobalReservedService {
             "}",
             "$definedFunctions = get_defined_functions();",
             "$result = array_merge($definedFunctions['internal'], $definedFunctions['user']);",
-            "echo json_encode($definedFunctions['user']);",
+            "echo json_encode($result);",
         ];
 
         try {

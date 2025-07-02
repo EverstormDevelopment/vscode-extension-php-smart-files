@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { getPathNormalized } from "../../../utils/filesystem/getPathNormalized";
-import { getUseTypeByKind } from "../../../utils/php/function/getUseTypeByKind";
 import { escapeRegExp } from "../../../utils/regexp/escapeRegExp";
+import { getUseTypeByKind } from "../../php/function/getUseTypeByKind";
 import { NamespaceRefactorerAbstract } from "../abstract/NamespaceRefactorerAbstract";
 import { IdentifierType } from "../type/IdentifierType";
 import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailsType";

@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
-import { GlobalFunctions } from "../../../utils/php/constants/GlobalFunctions";
-import { ReservedKeywords } from "../../../utils/php/constants/ReservedKeywords";
+import { GlobalFunctions } from "../../php/constants/GlobalFunctions";
+import { ReservedKeywords } from "../../php/constants/ReservedKeywords";
 import { InputValidatorInterface } from "../interface/InputValidatorInterface";
 
 /**

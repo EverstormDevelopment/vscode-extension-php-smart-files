@@ -3,9 +3,9 @@ import { FileCreator } from "../../service/filesystem/file/model/FileCreator";
 import { UriFolderResolver } from "../../service/filesystem/uri/UriFolderResolver";
 import { InputBoxFactoryInterface } from "../../service/input/interface/InputBoxFactoryInterface";
 import { NamespaceResolver } from "../../service/namespace/resolver/NamespaceResolver";
+import { FileTypeEnum } from "../../service/php/enum/FileTypeEnum";
 import { SnippetFactoryInterface } from "../../service/snippet/interface/SnippetFactoryInterface";
 import { getUriFileName } from "../../utils/filesystem/getUriFileName";
-import { FileTypeEnum } from "../../utils/php/enum/FileTypeEnum";
 import { findDocumentByUri } from "../../utils/vscode/findDocumentByUri";
 
 /**

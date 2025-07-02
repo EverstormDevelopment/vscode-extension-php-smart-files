@@ -1,21 +1,21 @@
 import * as vscode from "vscode";
-import { FileTypeEnum } from "../../../utils/php/enum/FileTypeEnum";
+import { FileTypeEnum } from "../../php/enum/FileTypeEnum";
 import { SnippetFactoryInterface } from "../interface/SnippetFactoryInterface";
 import { SnippetTypeFactoryInterface } from "../interface/SnippetTypeFactoryInterface";
 import { SnippetClassFactory } from "./SnippetClassFactory";
 import { SnippetEnumFactory } from "./SnippetEnumFactory";
 import { SnippetFileFactory } from "./SnippetFileFactory";
+import { SnippetFunctionFactory } from "./SnippetFunctionFactory";
 import { SnippetInterfaceFactory } from "./SnippetInterfaceFactory";
 import { SnippetSymfonyCommandFactory } from "./SnippetSymfonyCommandFactory";
 import { SnippetSymfonyControllerFactory } from "./SnippetSymfonyControllerFactory";
 import { SnippetSymfonyFormFactory } from "./SnippetSymfonyFormFactory";
 import { SnippetTemplateClassFactory } from "./SnippetTemplateClassFactory";
 import { SnippetTemplateEnumFactory } from "./SnippetTemplateEnumFactory";
+import { SnippetTemplateFunctionFactory } from "./SnippetTemplateFunctionFactory";
 import { SnippetTemplateInterfaceFactory } from "./SnippetTemplateInterfaceFactory";
 import { SnippetTemplateTraitFactory } from "./SnippetTemplateTraitFactory";
 import { SnippetTraitFactory } from "./SnippetTraitFactory";
-import { SnippetFunctionFactory } from "./SnippetFunctionFactory";
-import { SnippetTemplateFunctionFactory } from "./SnippetTemplateFunctionFactory";
 
 /**
  * Factory class for creating PHP snippets.

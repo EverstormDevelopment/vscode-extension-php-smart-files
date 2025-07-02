@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
-import { GlobalFunctions } from "../../../utils/php/constants/GlobalFunctions";
-import { ReservedKeywords } from "../../../utils/php/constants/ReservedKeywords";
 import { escapeRegExp } from "../../../utils/regexp/escapeRegExp";
+import { GlobalFunctions } from "../../php/constants/GlobalFunctions";
+import { ReservedKeywords } from "../../php/constants/ReservedKeywords";
 import { NamespaceRefactorerAbstract } from "../abstract/NamespaceRefactorerAbstract";
 import { IdentifierKindEnum } from "../enum/IdentifierKindEnum";
 import { NamespaceRegExpProvider } from "../provider/NamespaceRegExpProvider";

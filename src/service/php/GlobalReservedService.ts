@@ -75,7 +75,6 @@ export class GlobalReservedService {
         await this.initialize(true);
     }
 
-
     /**
      * Checks if a name is reserved in the current PHP environment (keyword, function, or constant).
      * @param name The name to check
@@ -83,9 +82,10 @@ export class GlobalReservedService {
      */
     public async isReserved(name: string): Promise<boolean> {
         await this.initialize();
-        return (await this.isKeyword(name)) || (await this.isFunction(name)) || (await this.isConstant(name));
+        return (
+            (await this.isKeyword(name)) || (await this.isGlobalFunction(name)) || (await this.isGlobalConstant(name))
+        );
     }
-
 
     /**
      * Checks if a name is a reserved PHP keyword.
@@ -97,24 +97,22 @@ export class GlobalReservedService {
         return this.keywords.has(name.toLowerCase());
     }
 
-
     /**
      * Checks if a name is a reserved global PHP function.
      * @param name The name to check
      * @returns True if the name is a global PHP function, otherwise false
      */
-    public async isFunction(name: string): Promise<boolean> {
+    public async isGlobalFunction(name: string): Promise<boolean> {
         await this.initialize();
         return this.globalFunctions.has(name.toLowerCase());
     }
-
 
     /**
      * Checks if a name is a reserved global PHP constant.
      * @param name The name to check
      * @returns True if the name is a global PHP constant, otherwise false
      */
-    public async isConstant(name: string): Promise<boolean> {
+    public async isGlobalConstant(name: string): Promise<boolean> {
         await this.initialize();
         return this.globalConstants.has(name);
     }

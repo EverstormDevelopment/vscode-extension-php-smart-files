@@ -18,7 +18,7 @@ export class InputDefinitionNameKeywordValidator implements InputValidatorInterf
         const container = ContainerFactory.getDefaultContainer();
         const globalReservedService = container.get(GlobalReservedService);
 
-        if (await globalReservedService.isReserved(input)) {
+        if (await globalReservedService.isKeyword(input)) {
             return {
                 message: vscode.l10n.t("Cannot use PHP reserved keyword as definition name"),
                 severity: vscode.InputBoxValidationSeverity.Error,

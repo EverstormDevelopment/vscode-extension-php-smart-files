@@ -55,6 +55,8 @@
   "Definition name must start with an uppercase letter or underscore": "Le nom de définition doit commencer par une lettre majuscule ou un underscore",
   "Definition name can only contain letters, numbers, and underscores": "Le nom de définition ne peut contenir que des lettres, des chiffres et des underscores",
   "Cannot use PHP reserved keyword as definition name": "Impossible d'utiliser un mot-clé réservé PHP comme nom de définition",
+  "Cannot use PHP global function name as definition name": "Impossible d'utiliser le nom d'une fonction globale PHP comme nom de définition.",
+  "Cannot use PHP global constant name as definition name": "Impossible d'utiliser le nom d'une constante globale PHP comme nom de définition.",
   
   "Would you like to update the namespace for \"{0}\" and all its references?": "Souhaitez-vous mettre à jour l'espace de noms pour \"{0}\" et toutes ses références ?",
   "Yes": "Oui",

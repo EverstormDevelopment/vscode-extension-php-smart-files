@@ -119,7 +119,7 @@ export const ContainerRegistry: ContainerRegistrationType[] = [
     },
     {
         constructor: FileRenamedObserver,
-        dependencies: [FilesystemObserver, NamespaceRefactorService],
+        dependencies: [FilesystemObserver, NamespaceRefactorService, GlobalReservedService],
     },
     {
         constructor: DirectoryChangeObserver,

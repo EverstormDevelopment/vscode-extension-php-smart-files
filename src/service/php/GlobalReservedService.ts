@@ -1,16 +1,22 @@
 import { execSync } from "child_process";
+import path from "path";
 import * as vscode from "vscode";
 import { isUriFile } from "../../utils/filesystem/isUriFile";
 import { ComposerJsonService } from "../composer/model/ComposerJsonService";
-import { CodeIgniterFunctions } from "./constants/CodeIgniterFunctions";
-import { GlobalFunctions } from "./constants/GlobalFunctions";
-import { LaminasFunctions } from "./constants/LaminasFunctions";
-import { LaravelFunctions } from "./constants/LaravelFunctions";
-import { PhalconFunctions } from "./constants/PhalconFunctions";
-import { ReservedKeywords } from "./constants/ReservedKeywords";
-import { SymfonyFunctions } from "./constants/SymfonyFunctions";
-import { WordpressFunctions } from "./constants/WordpressFunctions";
-import { YiiFunctions } from "./constants/YiiFunctions";
+import { CodeIgniterConstants } from "./reserved/constants/CodeIgniterConstants";
+import { GlobalConstants } from "./reserved/constants/GlobalConstants";
+import { LaravelConstants } from "./reserved/constants/LaravelConstants";
+import { PhalconConstants } from "./reserved/constants/PhalconConstants";
+import { WordpressConstants } from "./reserved/constants/WordpressConstants";
+import { CodeIgniterFunctions } from "./reserved/functions/CodeIgniterFunctions";
+import { GlobalFunctions } from "./reserved/functions/GlobalFunctions";
+import { LaminasFunctions } from "./reserved/functions/LaminasFunctions";
+import { LaravelFunctions } from "./reserved/functions/LaravelFunctions";
+import { PhalconFunctions } from "./reserved/functions/PhalconFunctions";
+import { SymfonyFunctions } from "./reserved/functions/SymfonyFunctions";
+import { WordpressFunctions } from "./reserved/functions/WordpressFunctions";
+import { YiiFunctions } from "./reserved/functions/YiiFunctions";
+import { ReservedKeywords } from "./reserved/keywords/ReservedKeywords";
 
 /**
  * Service responsible for managing and collecting globally reserved names in PHP projects.
@@ -26,14 +32,24 @@ import { YiiFunctions } from "./constants/YiiFunctions";
  */
 export class GlobalReservedService {
     /**
-     * Path to the PHP executable, if available on the system
+     * Path to the PHP executable, if available on the system.
      */
     private phpPath: string | undefined;
 
     /**
-     * Set of all globally reserved names (global functions and keywords)
+     * Set of all reserved PHP keywords (lowercase).
      */
-    private globalReserved: Set<string>;
+    private keywords: Set<string>;
+
+    /**
+     * Set of all reserved global PHP function names (lowercase).
+     */
+    private globalFunctions: Set<string>;
+
+    /**
+     * Set of all reserved global PHP constant names (case-sensitive).
+     */
+    private globalConstants: Set<string>;
 
     /**
      * Promise that resolves when the service is fully initialized.
@@ -46,7 +62,9 @@ export class GlobalReservedService {
      * @param composerService Service for parsing and handling composer.json files
      */
     constructor(private readonly composerService: ComposerJsonService) {
-        this.globalReserved = new Set<string>();
+        this.keywords = new Set<string>();
+        this.globalFunctions = new Set<string>();
+        this.globalConstants = new Set<string>();
     }
 
     /**
@@ -57,16 +75,48 @@ export class GlobalReservedService {
         await this.initialize(true);
     }
 
+
     /**
-     * Checks if a given name is reserved in the current PHP environment.
-     * This includes built-in functions, keywords, and user-defined functions from composer packages.
-     * @param name The name to check for reservation
-     * @returns True if the name is reserved, false otherwise
+     * Checks if a name is reserved in the current PHP environment (keyword, function, or constant).
+     * @param name The name to check
+     * @returns True if the name is reserved, otherwise false
      */
     public async isReserved(name: string): Promise<boolean> {
         await this.initialize();
-        const lowerName = name.toLowerCase();
-        return this.globalReserved.has(lowerName);
+        return (await this.isKeyword(name)) || (await this.isFunction(name)) || (await this.isConstant(name));
+    }
+
+
+    /**
+     * Checks if a name is a reserved PHP keyword.
+     * @param name The name to check
+     * @returns True if the name is a PHP keyword, otherwise false
+     */
+    public async isKeyword(name: string): Promise<boolean> {
+        await this.initialize();
+        return this.keywords.has(name.toLowerCase());
+    }
+
+
+    /**
+     * Checks if a name is a reserved global PHP function.
+     * @param name The name to check
+     * @returns True if the name is a global PHP function, otherwise false
+     */
+    public async isFunction(name: string): Promise<boolean> {
+        await this.initialize();
+        return this.globalFunctions.has(name.toLowerCase());
+    }
+
+
+    /**
+     * Checks if a name is a reserved global PHP constant.
+     * @param name The name to check
+     * @returns True if the name is a global PHP constant, otherwise false
+     */
+    public async isConstant(name: string): Promise<boolean> {
+        await this.initialize();
+        return this.globalConstants.has(name);
     }
 
     /**
@@ -92,7 +142,9 @@ export class GlobalReservedService {
      * Sets the default global reserved names, including PHP keywords and built-in functions.
      */
     private setDefaultGlobalReserved(): void {
-        this.globalReserved = new Set([...ReservedKeywords, ...GlobalFunctions]);
+        this.keywords = ReservedKeywords;
+        this.globalFunctions = GlobalFunctions;
+        this.globalConstants = GlobalConstants;
     }
 
     /**
@@ -205,16 +257,54 @@ export class GlobalReservedService {
             return;
         }
 
-        if (this.phpPath) {
-            const reserved = await this.extractReservedWithPhp(workspaceUri);
-            this.globalReserved = new Set([...this.globalReserved, ...reserved]);
+        await this.loadReservedWithPhp(workspaceUri);
+        await this.loadReservedFromComposer(composerUri);
+    }
+
+    /**
+     * Loads reserved names (functions and constants) dynamically using PHP from the given workspace folder.
+     *
+     * Executes a PHP script in the context of the workspace folder to extract all global functions and constants
+     * (including user-defined and Composer-loaded) and merges them into the internal sets.
+     *
+     * @param workspaceUri URI of the workspace folder
+     */
+    private async loadReservedWithPhp(workspaceUri: vscode.Uri): Promise<void> {
+        if (!this.phpPath) {
+            return;
         }
 
-        const hasAutoloader = await this.hasComposerAutoloader(workspaceUri);
-        if (!hasAutoloader) {
-            const reserved = await this.extractReservedFromComposer(workspaceUri);
-            this.globalReserved = new Set([...this.globalReserved, ...reserved]);
+        const reserved = await this.extractReservedWithPhp(workspaceUri);
+        if (!reserved) {
+            return;
         }
+
+        this.globalFunctions = new Set([...this.globalFunctions, ...reserved.functions]);
+        this.globalConstants = new Set([...this.globalConstants, ...reserved.constants]);
+    }
+
+    /**
+     * Loads reserved names (functions and constants) statically based on composer.json dependencies.
+     *
+     * Detects frameworks based on dependencies in composer.json and merges their known global functions
+     * and constants into the internal sets. Only used if no Composer autoloader is present.
+     *
+     * @param composerUri URI of the composer.json file
+     */
+    private async loadReservedFromComposer(composerUri: vscode.Uri): Promise<void> {
+        const composerPathUri = vscode.Uri.file(path.dirname(composerUri.fsPath));
+        const hasAutoloader = await this.hasComposerAutoloader(composerPathUri);
+        if (hasAutoloader) {
+            return;
+        }
+
+        const reserved = await this.extractReservedFromComposer(composerUri);
+        if (!reserved) {
+            return;
+        }
+
+        this.globalFunctions = new Set([...this.globalFunctions, ...reserved.functions]);
+        this.globalConstants = new Set([...this.globalConstants, ...reserved.constants]);
     }
 
     /**
@@ -228,19 +318,24 @@ export class GlobalReservedService {
      * @param folderUri URI of the folder to execute PHP in
      * @returns Set of function names that are globally available
      */
-    private async extractReservedWithPhp(folderUri: vscode.Uri): Promise<Set<string>> {
+    private async extractReservedWithPhp(
+        folderUri: vscode.Uri
+    ): Promise<{ functions: Set<string>; constants: Set<string> } | undefined> {
         if (!this.phpPath) {
-            return new Set();
+            return undefined;
         }
 
-        // PHP code to extract globally defined functions
+        // PHP code to extract globally defined functions and constants
         const commands = [
             "$autoloaderPath = getcwd() . '/vendor/autoload.php';",
             "if (file_exists($autoloaderPath)) {",
             "    require_once $autoloaderPath;",
             "}",
             "$definedFunctions = get_defined_functions();",
-            "$result = array_merge($definedFunctions['internal'], $definedFunctions['user']);",
+            "$allFunctions = array_merge($definedFunctions['internal'], $definedFunctions['user']);",
+            "$definedConstants = get_defined_constants();",
+            "$allConstants = array_keys($definedConstants);",
+            "$result = ['functions' => $allFunctions, 'constants' => $allConstants];",
             "echo json_encode($result);",
         ];
 
@@ -250,15 +345,27 @@ export class GlobalReservedService {
                 cwd: folderUri.fsPath,
             });
 
-            const result = JSON.parse(phpOutput);
-            if (!Array.isArray(result)) {
-                return new Set();
+            // Parse the output to extract functions and constants
+            // and use only the last line which contains the JSON result.
+            // Lines before the last line may contain warnings or notices.
+            const lines = phpOutput.trim().split("\n");
+            const jsonLine = lines[lines.length - 1];
+            const result = JSON.parse(jsonLine);
+            if (!result?.functions || !result?.constants) {
+                return undefined;
             }
 
-            const filtered = result.filter((func: string) => !func.includes("\\"));
-            return new Set(filtered);
+            const functions = new Set<string>(
+                result.functions
+                    .filter((func: string) => !func.includes("\\"))
+                    .map((func: string) => func.toLowerCase())
+            );
+
+            const constants = new Set<string>(result.constants);
+
+            return { functions, constants };
         } catch (error) {
-            return new Set();
+            return undefined;
         }
     }
 
@@ -272,7 +379,9 @@ export class GlobalReservedService {
      * @param composerUri URI pointing to the composer.json file
      * @returns Set of framework-specific global function names
      */
-    private async extractReservedFromComposer(composerUri: vscode.Uri): Promise<Set<string>> {
+    private async extractReservedFromComposer(
+        composerUri: vscode.Uri
+    ): Promise<{ functions: Set<string>; constants: Set<string> } | undefined> {
         try {
             const composerJson = await this.composerService.parse(composerUri);
             const dependencies = {
@@ -280,33 +389,35 @@ export class GlobalReservedService {
                 ...composerJson["require-dev"],
             };
             if (!dependencies) {
-                return new Set();
+                return undefined;
             }
 
-            let reservedFunctions = new Set<string>();
-            const frameworkGlobals: Record<string, Set<string>> = {
-                "laravel/framework": LaravelFunctions,
-                "symfony/symfony": SymfonyFunctions,
-                "codeigniter/framework": CodeIgniterFunctions,
-                "laminas/laminas-stdlib": LaminasFunctions,
-                "phalcon/phalcon": PhalconFunctions,
-                "yiisoft/yii2": YiiFunctions,
-                "wordpress/wordpress": WordpressFunctions,
+            const reserved = { functions: new Set<string>(), constants: new Set<string>() };
+            const frameworkGlobals: Record<string, Set<string>[]> = {
+                "laravel/framework": [LaravelFunctions, LaravelConstants],
+                "symfony/symfony": [SymfonyFunctions, new Set()],
+                "codeigniter/framework": [CodeIgniterFunctions, CodeIgniterConstants],
+                "laminas/laminas-stdlib": [LaminasFunctions, new Set()],
+                "phalcon/phalcon": [PhalconFunctions, PhalconConstants],
+                "yiisoft/yii2": [YiiFunctions, new Set()],
+                "wordpress/wordpress": [WordpressFunctions, WordpressConstants],
             };
 
-            for (const [framework, functions] of Object.entries(frameworkGlobals)) {
+            for (const [dependency, dependencyReserved] of Object.entries(frameworkGlobals)) {
                 const isFrameworkUsed = Object.keys(dependencies).some(
-                    (dep) => dep === framework || dep.includes(framework.split("/")[0])
+                    (dep) => dep === dependency || dep.includes(dependency.split("/")[0])
                 );
                 if (!isFrameworkUsed) {
                     continue;
                 }
-                reservedFunctions = new Set([...reservedFunctions, ...functions]);
-            }
 
-            return reservedFunctions;
+                const [functions, constants] = dependencyReserved;
+                reserved.functions = new Set([...reserved.functions, ...functions]);
+                reserved.constants = new Set([...reserved.constants, ...constants]);
+            }
+            return reserved;
         } catch (err) {
-            return new Set();
+            return undefined;
         }
     }
 

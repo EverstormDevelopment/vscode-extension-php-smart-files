@@ -59,6 +59,7 @@
   "Cannot use PHP global constant name as definition name": "Impossible d'utiliser le nom d'une constante globale PHP comme nom de définition.",
   
   "Would you like to update the namespace for \"{0}\" and all its references?": "Souhaitez-vous mettre à jour l'espace de noms pour \"{0}\" et toutes ses références ?",
+  "Warning: The new file name \"{0}\" is globally reserved or a PHP keyword. This may cause errors or unpredictable behavior in your project. Do you want to proceed and update the declaration identifier and all its references?": "Avertissement : Le nouveau nom de fichier \"{0}\" est réservé globalement ou est un mot-clé PHP. Cela peut entraîner des erreurs ou un comportement imprévisible dans votre projet. Voulez-vous continuer et mettre à jour l'identifiant de déclaration ainsi que toutes ses références ?",
   "Yes": "Oui",
   "No": "Non",
   "Error during namespace refactoring: {0}": "Erreur lors de la refactorisation de l'espace de noms : {0}",

@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { ContainerFactory } from "../../../container/build/ContainerFactory";
-import { GlobalReservedService } from "../../php/GlobalReservedService";
+import { GlobalReservedService } from "../../php/service/GlobalReservedService";
 import { InputValidatorInterface } from "../interface/InputValidatorInterface";
 
 /**

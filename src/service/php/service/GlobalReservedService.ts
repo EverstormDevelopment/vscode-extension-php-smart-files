@@ -1,22 +1,22 @@
 import { execSync } from "child_process";
 import path from "path";
 import * as vscode from "vscode";
-import { isUriFile } from "../../utils/filesystem/isUriFile";
-import { ComposerJsonService } from "../composer/model/ComposerJsonService";
-import { CodeIgniterConstants } from "./reserved/constants/CodeIgniterConstants";
-import { GlobalConstants } from "./reserved/constants/GlobalConstants";
-import { LaravelConstants } from "./reserved/constants/LaravelConstants";
-import { PhalconConstants } from "./reserved/constants/PhalconConstants";
-import { WordpressConstants } from "./reserved/constants/WordpressConstants";
-import { CodeIgniterFunctions } from "./reserved/functions/CodeIgniterFunctions";
-import { GlobalFunctions } from "./reserved/functions/GlobalFunctions";
-import { LaminasFunctions } from "./reserved/functions/LaminasFunctions";
-import { LaravelFunctions } from "./reserved/functions/LaravelFunctions";
-import { PhalconFunctions } from "./reserved/functions/PhalconFunctions";
-import { SymfonyFunctions } from "./reserved/functions/SymfonyFunctions";
-import { WordpressFunctions } from "./reserved/functions/WordpressFunctions";
-import { YiiFunctions } from "./reserved/functions/YiiFunctions";
-import { ReservedKeywords } from "./reserved/keywords/ReservedKeywords";
+import { isUriFile } from "../../../utils/filesystem/isUriFile";
+import { ComposerJsonService } from "../../composer/model/ComposerJsonService";
+import { CodeIgniterConstants } from "../reserved/constants/CodeIgniterConstants";
+import { GlobalConstants } from "../reserved/constants/GlobalConstants";
+import { LaravelConstants } from "../reserved/constants/LaravelConstants";
+import { PhalconConstants } from "../reserved/constants/PhalconConstants";
+import { WordpressConstants } from "../reserved/constants/WordpressConstants";
+import { CodeIgniterFunctions } from "../reserved/functions/CodeIgniterFunctions";
+import { GlobalFunctions } from "../reserved/functions/GlobalFunctions";
+import { LaminasFunctions } from "../reserved/functions/LaminasFunctions";
+import { LaravelFunctions } from "../reserved/functions/LaravelFunctions";
+import { PhalconFunctions } from "../reserved/functions/PhalconFunctions";
+import { SymfonyFunctions } from "../reserved/functions/SymfonyFunctions";
+import { WordpressFunctions } from "../reserved/functions/WordpressFunctions";
+import { YiiFunctions } from "../reserved/functions/YiiFunctions";
+import { ReservedKeywords } from "../reserved/keywords/ReservedKeywords";
 
 /**
  * Service responsible for managing and collecting globally reserved names in PHP projects.

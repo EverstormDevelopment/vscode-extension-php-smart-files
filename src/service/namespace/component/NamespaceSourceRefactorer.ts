@@ -1,11 +1,11 @@
 import * as vscode from "vscode";
 import { escapeRegExp } from "../../../utils/regexp/escapeRegExp";
+import { GlobalReservedService } from "../../php/service/GlobalReservedService";
 import { NamespaceRefactorerAbstract } from "../abstract/NamespaceRefactorerAbstract";
 import { IdentifierKindEnum } from "../enum/IdentifierKindEnum";
 import { NamespaceRegExpProvider } from "../provider/NamespaceRegExpProvider";
 import { IdentifierType } from "../type/IdentifierType";
 import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailsType";
-import { GlobalReservedService } from "./../../php/GlobalReservedService";
 
 /**
  * Handles the refactoring of namespace declarations and class identifiers in PHP files

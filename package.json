@@ -147,6 +147,20 @@
           ],
           "order": 6
         },
+        "phpSmartFiles.includeFunctionRefactoring": {
+          "type": "boolean",
+          "default": true,
+          "description": "%php-smart-files.config.includeFunctionRefactoring.description%",
+          "markdownDescription": "%php-smart-files.config.includeFunctionRefactoring.description%",
+          "order": 7
+        },
+        "phpSmartFiles.includeConstantRefactoring": {
+          "type": "boolean",
+          "default": true,
+          "description": "%php-smart-files.config.includeConstantRefactoring.description%",
+          "markdownDescription": "%php-smart-files.config.includeConstantRefactoring.description%",
+          "order": 8
+        },
         "phpSmartFiles.refactorNamespacesExcludeDirectories": {
           "type": "array",
           "default": [
@@ -173,7 +187,7 @@
           "items": {
             "type": "string"
           },
-          "order": 7
+          "order": 9
         }
       }
     },

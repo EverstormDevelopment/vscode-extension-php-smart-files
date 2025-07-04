@@ -19,6 +19,8 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 - Added ability to create PHP functions via the file creation dialog, just like classes, interfaces, traits, and enums
 
 ### Changed
+- When renaming a file to a globally reserved name, a clear warning is now shown before refactoring. Refactoring and renaming will only proceed after explicit confirmation, helping to prevent accidental conflicts with PHP keywords or reserved names.
+- The confirmation dialog before refactoring after moving or renaming a file or directory is now shown as an information message instead of a warning.
 - Updated logo with new design for better visibility and brand recognition
 - Adjusted marketplace banner color to match the new logo style for consistent visual identity
 

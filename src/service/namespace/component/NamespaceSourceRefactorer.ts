@@ -135,7 +135,7 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
         );
         content = this.addUseStatements(content, refactorDetails.old.namespace, nonQualifiedReferences);
         content = this.removeUseStatements(content, refactorDetails.new.namespace, nonQualifiedReferences);
-        content = this.orderUseStatement(content);
+        content = this.orderUseStatements(content);
         return content;
     }
 

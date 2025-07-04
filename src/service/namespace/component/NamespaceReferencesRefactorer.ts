@@ -99,7 +99,8 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
             if (fileContentUpdated === fileContent) {
                 return;
             }
-
+            
+            fileContentUpdated = this.orderUseStatements(fileContentUpdated);
             await this.setFileContent(uri, fileContentUpdated);
         } catch (error) {
             const errorDetails = error instanceof Error ? error.message : String(error);
@@ -250,7 +251,6 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
         }
 
         content = this.replaceReferenceUseStatement(content, oldNamespace, newNamespace, identifier);
-        content = this.orderUseStatement(content);
         return content;
     }
 

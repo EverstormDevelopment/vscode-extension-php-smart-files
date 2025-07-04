@@ -83,9 +83,20 @@ export class NamespaceRefactorDetailsProvider {
 
         const content = await getFileContentByUri(uri);
         const parser = new PhpParser(content, getUriFileName(uri, true));
+        const namespace = parser.getNamespace();
+        let identifiers = parser.getTopLevelIdentifiers();
+
+        const config = vscode.workspace.getConfiguration("phpSmartFiles");
+        if (!config.get<boolean>("refactorNamespacesIncludeFunctions", true)) {
+            identifiers = identifiers.filter((identifier) => identifier.kind !== IdentifierKindEnum.Function);
+        }
+        if (!config.get<boolean>("refactorNamespacesIncludeConstants", true)) {
+            identifiers = identifiers.filter((identifier) => identifier.kind !== IdentifierKindEnum.Constant);
+        }
+
         return {
-            namespace: parser.getNamespace(),
-            identifiers: parser.getTopLevelIdentifiers(),
+            namespace: namespace,
+            identifiers: identifiers,
             isFile: true,
         };
     }

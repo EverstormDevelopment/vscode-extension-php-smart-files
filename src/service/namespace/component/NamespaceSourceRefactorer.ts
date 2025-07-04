@@ -209,13 +209,24 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
     private async getNonQualifiedReferences(content: string): Promise<IdentifierType[]> {
         const referencePatterns: [RegExp, IdentifierKindEnum][] = [
             [this.namespaceRegExpProvider.getNonQualifiedOopReferenceRegExp(), IdentifierKindEnum.Oop],
-            [this.namespaceRegExpProvider.getNonQualifiedFunctionReferenceRegExp(), IdentifierKindEnum.Function],
-            [this.namespaceRegExpProvider.getNonQualifiedConstantReferenceRegExp(), IdentifierKindEnum.Constant],
         ];
 
-        let excludedIdentifiers = new Set<string>();
-        const result: IdentifierType[] = [];
+        const config = vscode.workspace.getConfiguration("phpSmartFiles");
+        if (config.get<boolean>("refactorNamespacesIncludeFunctions", true)) {
+            referencePatterns.push([
+                this.namespaceRegExpProvider.getNonQualifiedFunctionReferenceRegExp(),
+                IdentifierKindEnum.Function,
+            ]);
+        }
+        if (config.get<boolean>("refactorNamespacesIncludeConstants", true)) {
+            referencePatterns.push([
+                this.namespaceRegExpProvider.getNonQualifiedConstantReferenceRegExp(),
+                IdentifierKindEnum.Constant,
+            ]);
+        }
 
+        const result: IdentifierType[] = [];
+        let excludedIdentifiers = new Set<string>();
         for (const [regExp, kind] of referencePatterns) {
             const identifiers = await this.extractNonQualifiedIdentifiers(content, regExp, excludedIdentifiers);
             for (const identifier of identifiers) {

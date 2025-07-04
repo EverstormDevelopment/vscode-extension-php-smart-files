@@ -123,6 +123,12 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
         return content.replace(useStatementWithLineBreakRegExp, "");
     }
 
+    /**
+     * Orders the use statements in a PHP file content. Sorts use statements by type (normal, function, const)
+     * and alphabetically within each type. Preserves the original line breaks and structure of the use block.
+     * @param content The file content to modify.
+     * @returns The updated content with ordered use statements.
+     */
     protected orderUseStatement(content: string): string {
         const regex = this.namespaceRegExpProvider.getUseStatementBlockRegExp();
         const match = regex.exec(content);

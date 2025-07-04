@@ -37,8 +37,8 @@
   "php-smart-files.config.refactorNamespacesOnDirectoryChanges.always": "Siempre sin confirmación",
   "php-smart-files.config.refactorNamespacesOnDirectoryChanges.never": "Nunca",
 
-  "php-smart-files.config.includeFunctionRefactoring.description": "Incluir referencias a funciones en la refactorización. Actualiza llamadas internas, importaciones relacionadas con `use function` y referencias externas.",
-  "php-smart-files.config.includeConstantRefactoring.description": "Incluir referencias a constantes en la refactorización. Actualiza usos internos, importaciones relacionadas con `use const` y referencias externas.",
+  "php-smart-files.config.refactorNamespacesIncludeFunctions.description": "Incluir referencias a funciones en la refactorización. Actualiza llamadas internas, importaciones relacionadas con `use function` y referencias externas.",
+  "php-smart-files.config.refactorNamespacesIncludeConstants.description": "Incluir referencias a constantes en la refactorización. Actualiza usos internos, importaciones relacionadas con `use const` y referencias externas.",
 
   "php-smart-files.config.refactorNamespacesExcludeDirectories.description": "Los directorios especificados se excluirán durante la refactorización de espacios de nombres. (Nota: Las entradas deben estar en el formato de patrón Glob, por ejemplo, `/vendor/**`, `var/cache/**` o `**/temp/**`.)"
 }

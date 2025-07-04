@@ -147,18 +147,18 @@
           ],
           "order": 6
         },
-        "phpSmartFiles.includeFunctionRefactoring": {
+        "phpSmartFiles.refactorNamespacesIncludeFunctions": {
           "type": "boolean",
           "default": true,
-          "description": "%php-smart-files.config.includeFunctionRefactoring.description%",
-          "markdownDescription": "%php-smart-files.config.includeFunctionRefactoring.description%",
+          "description": "%php-smart-files.config.refactorNamespacesIncludeFunctions.description%",
+          "markdownDescription": "%php-smart-files.config.refactorNamespacesIncludeFunctions.description%",
           "order": 7
         },
-        "phpSmartFiles.includeConstantRefactoring": {
+        "phpSmartFiles.refactorNamespacesIncludeConstants": {
           "type": "boolean",
           "default": true,
-          "description": "%php-smart-files.config.includeConstantRefactoring.description%",
-          "markdownDescription": "%php-smart-files.config.includeConstantRefactoring.description%",
+          "description": "%php-smart-files.config.refactorNamespacesIncludeConstants.description%",
+          "markdownDescription": "%php-smart-files.config.refactorNamespacesIncludeConstants.description%",
           "order": 8
         },
         "phpSmartFiles.refactorNamespacesExcludeDirectories": {

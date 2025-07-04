@@ -148,26 +148,21 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
             .map((line) => line.trim())
             .filter((line) => line.toLowerCase().startsWith("use "));
 
-        const normalUses = extractedUseStatements
-            .filter((line) => !/^use\s+(function|const)\b/i.test(line.toLowerCase()))
-            .sort((a, b) => a.localeCompare(b))
-            .join(lineBreak);
+        const useBlocks: { [key: string]: string } = {};            
+        const filters = {
+            normal: /^use\s+(?!function\b|const\b)/,
+            function: /^use\s+function\b/i,
+            const: /^use\s+const\b/i,
+        };
+        for (const [key, filter] of Object.entries(filters)) {
+            const useBlock = extractedUseStatements
+                .filter((line) => filter.test(line.toLowerCase()))
+                .sort((a, b) => a.localeCompare(b))
+                .join(lineBreak);
+            useBlocks[key] = useBlock.length > 0 ? useBlock + useBlockEnd : "";
+        }
 
-        const functionUses = extractedUseStatements
-            .filter((line) => /^use\s+function\b/i.test(line.toLowerCase()))
-            .sort((a, b) => a.localeCompare(b))
-            .join(lineBreak);
-
-        const constUses = extractedUseStatements
-            .filter((line) => /^use\s+const\b/i.test(line.toLowerCase()))
-            .sort((a, b) => a.localeCompare(b))
-            .join(lineBreak);
-
-        const normalUseBlock = normalUses.length > 0 ? normalUses + useBlockEnd : "";
-        const functionUseBlock = functionUses.length > 0 ? functionUses + useBlockEnd : "";
-        const constUseBlock = constUses.length > 0 ? constUses + useBlockEnd : "";
-        const sortedUseStatements = normalUseBlock + functionUseBlock + constUseBlock;
-
+        const sortedUseStatements = useBlocks.normal + useBlocks.function + useBlocks.const;
         const contentBeforeUseBlock = content.substring(0, blockStart);
         const contentAfterUseBlock = content.substring(blockEnd);
         content = contentBeforeUseBlock + sortedUseStatements + contentAfterUseBlock;

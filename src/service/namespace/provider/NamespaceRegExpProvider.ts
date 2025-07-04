@@ -29,6 +29,9 @@ export class NamespaceRegExpProvider {
         return: "[rR][eE][tT][uU][rR][nN]",
         param: "[pP][aA][rR][aA][mM]",
         throws: "[tT][hH][rR][oO][wW][sS]",
+        case: "[cC][aA][sS][eE]",
+        echo: "[eE][cC][hH][oO]",
+        print: "[pP][rR][iI][nN][tT]",
     };
 
     /**
@@ -149,11 +152,12 @@ export class NamespaceRegExpProvider {
      */
     public getNonQualifiedConstantReferenceRegExp(): RegExp {
         const identifierPattern = NamespaceRegExpProvider.identifierPattern;
+        const { case: casePattern, echo: echoPattern, print: printPattern } = NamespaceRegExpProvider.keywordPatterns;
         const orPatterns = [
             // Match non-qualified constants in various contexts
-            `(?<![\\p{L}\\d_\\\\$'"]+\\s*|::|->)\\b(${identifierPattern})\\b(?!\\s*:\\s*[^_$'"{])(?!\\s*[\\p{L}\\d_\\\\>(('"$=}\\[]|->)`,
-            // Match constants after case statements
-            `(?<=case\\s*)(?:[+-]?)\\b(${identifierPattern})\\b(?=\\s*:)`,
+            `(?<![\\p{L}\\d_\\\\$'"]+\\s*|::|->)\\b(${identifierPattern})\\b(?!\\s*:\\s*[^_$'"{])(?!\\s*[\\p{L}\\d_\\\\>(('"$}\\[]|->)(?!\\s*=[^>])`,
+            // Match constants after case, echo and print statements
+            `(?<=${casePattern}\\s*|${echoPattern}\\s*|${printPattern}\\s*)(?:[+-]?)\\b(${identifierPattern})\\b(?=\\s*[:;])`,
         ];
 
         return new RegExp(orPatterns.join("|"), "gu");

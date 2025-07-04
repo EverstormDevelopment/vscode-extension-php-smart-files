@@ -245,8 +245,7 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
                 .map((match) => match.slice(1).find(Boolean))
                 .filter((name): name is string => !!name)
                 .map(async (name) => {
-                    const lowercaseName = name.toLowerCase();
-                    const isReserved = await this.globalReservedService.isReserved(lowercaseName);
+                    const isReserved = await this.globalReservedService.isReserved(name);
                     const isExcluded = exclude.has(name);
                     return !isReserved && !isExcluded ? name : undefined;
                 })

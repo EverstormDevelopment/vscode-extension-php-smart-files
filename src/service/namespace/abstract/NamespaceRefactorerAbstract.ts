@@ -123,6 +123,47 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
         return content.replace(useStatementWithLineBreakRegExp, "");
     }
 
+    protected orderUseStatement(content: string): string {
+        const regex = this.namespaceRegExpProvider.getUseStatementBlockRegExp();
+        const match = regex.exec(content);
+        if (!match) {
+            return content;
+        }
+
+        const lineBreak = getLinebreakType(content);
+        const useBlockEnd = lineBreak + lineBreak;
+
+        const blockStart = match.index + match[1].length;
+        const blockEnd = match.index + match[0].length;
+        const blockContent = match[2];
+        const useStatements = blockContent
+            .split(/\r?\n/)
+            .map((line) => line.trim())
+            .filter((line) => line.toLowerCase().startsWith("use "));
+
+        const normalUses =
+            useStatements
+                .filter((line) => !/^use\s+(function|const)\b/i.test(line.toLowerCase()))
+                .sort((a, b) => a.localeCompare(b))
+                .join(lineBreak) + useBlockEnd;
+        const functionUses =
+            useStatements
+                .filter((line) => /^use\s+function\b/i.test(line.toLowerCase()))
+                .sort((a, b) => a.localeCompare(b))
+                .join(lineBreak) + useBlockEnd;
+        const constUses =
+            useStatements
+                .filter((line) => /^use\s+const\b/i.test(line.toLowerCase()))
+                .sort((a, b) => a.localeCompare(b))
+                .join(lineBreak) + useBlockEnd;
+        const sortedBlock = normalUses + functionUses + constUses;
+
+        const before = content.substring(0, blockStart);
+        const after = content.substring(blockStart + blockContent.length, blockEnd);
+        content = before + sortedBlock + after + content.substring(blockEnd);
+        return content;
+    }
+
     /**
      * Retrieves the content of a file, either from an open editor or by reading from disk.
      * @param uri The URI of the file to read.

@@ -292,4 +292,20 @@ export class NamespaceRegExpProvider {
         const { use: usePattern } = NamespaceRegExpProvider.keywordPatterns;
         return new RegExp(`^${usePattern}\\s+[\\p{L}\\d_\\\\]+\\s*;`, "gmu");
     }
+
+    public getUseStatementBlockRegExp(): RegExp {
+        const identifierPattern = NamespaceRegExpProvider.identifierPattern;
+        const {
+            namespace: namespacePattern,
+            use: usePattern,
+            as: asPattern,
+            function: functionPattern,
+            const: constPattern,
+        } = NamespaceRegExpProvider.keywordPatterns;
+
+        return new RegExp(
+            `(${namespacePattern}\\s+[\\p{L}_][\\p{L}\\d_\\\\]*\\s*;\\s*)((?:(?:\\s*//.*|\\s*#.*|\\s*)*\\s*${usePattern}\\s+(?:${functionPattern}\\s+|${constPattern}\\s+)?${identifierPattern}(?:\\s+${asPattern}\\s*${identifierPattern})?\\s*;\\s*)+)`,
+            "u"
+        );
+    }
 }

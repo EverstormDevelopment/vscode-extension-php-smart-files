@@ -249,7 +249,9 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
             content = this.removeReferenceUseStatement(content, oldNamespace, identifier);
         }
 
-        return this.replaceReferenceUseStatement(content, oldNamespace, newNamespace, identifier);
+        content = this.replaceReferenceUseStatement(content, oldNamespace, newNamespace, identifier);
+        content = this.orderUseStatement(content);
+        return content;
     }
 
     /**

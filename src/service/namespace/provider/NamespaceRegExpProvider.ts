@@ -142,7 +142,13 @@ export class NamespaceRegExpProvider {
      */
     public getNonQualifiedFunctionReferenceRegExp(): RegExp {
         const identifierPattern = NamespaceRegExpProvider.identifierPattern;
-        return new RegExp(`(?<!([\\p{L}\\d_\\\\:>$]|#\\[)\\s*)(${identifierPattern})\\s*(?=\\()`, "gu");
+        const {
+            echo: echoPattern,
+            print: printPattern,
+            die: diePattern,
+            exit: exitPattern,
+        } = NamespaceRegExpProvider.keywordPatterns;
+        return new RegExp(`((?<!([\\p{L}\\d_\\\\:>$]|#\\[)\\s*)|(?<=${echoPattern}\\s*|${printPattern}\\s*|${diePattern}\\s*|${exitPattern}\\s*))(${identifierPattern})\\s*(?=\\()`, "gu");
     }
 
     /**

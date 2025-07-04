@@ -148,7 +148,10 @@ export class NamespaceRegExpProvider {
             die: diePattern,
             exit: exitPattern,
         } = NamespaceRegExpProvider.keywordPatterns;
-        return new RegExp(`((?<!([\\p{L}\\d_\\\\:>$]|#\\[)\\s*)|(?<=${echoPattern}\\s*|${printPattern}\\s*|${diePattern}\\s*|${exitPattern}\\s*))(${identifierPattern})\\s*(?=\\()`, "gu");
+        return new RegExp(
+            `((?<!([\\p{L}\\d_\\\\:>$]|#\\[)\\s*)|(?<=${echoPattern}\\s*|${printPattern}\\s*|${diePattern}\\s*|${exitPattern}\\s*))(${identifierPattern})\\s*(?=\\()`,
+            "gu"
+        );
     }
 
     /**

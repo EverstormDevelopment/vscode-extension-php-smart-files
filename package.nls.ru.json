@@ -37,5 +37,8 @@
   "php-smart-files.config.refactorNamespacesOnDirectoryChanges.always": "Всегда без подтверждения",
   "php-smart-files.config.refactorNamespacesOnDirectoryChanges.never": "Никогда",
 
+  "php-smart-files.config.includeFunctionRefactoring.description": "Включить ссылки на функции при рефакторинге. Обновляет внутренние вызовы, связанные импорты `use function` и внешние ссылки.",
+  "php-smart-files.config.includeConstantRefactoring.description": "Включить ссылки на константы при рефакторинге. Обновляет внутренние использования, связанные импорты `use const` и внешние ссылки.",
+
   "php-smart-files.config.refactorNamespacesExcludeDirectories.description": "Указанные каталоги будут исключены при рефакторинге пространств имен. (Примечание: Ввод должен быть в формате шаблона Glob, например, `/vendor/**`, `var/cache/**` или `**/temp/**`.)"
 }

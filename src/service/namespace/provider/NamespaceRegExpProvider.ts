@@ -293,6 +293,11 @@ export class NamespaceRegExpProvider {
         return new RegExp(`^${usePattern}\\s+[\\p{L}\\d_\\\\]+\\s*;`, "gmu");
     }
 
+    /**
+     * Creates a regular expression that matches a block of use statements, including the namespace
+     * declaration. This is useed for extracting a block of use statements in a PHP file.
+     * @returns RegExp for matching a block of use statements.
+     */
     public getUseStatementBlockRegExp(): RegExp {
         const identifierPattern = NamespaceRegExpProvider.identifierPattern;
         const {

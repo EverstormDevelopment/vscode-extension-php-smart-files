@@ -147,19 +147,26 @@
           ],
           "order": 6
         },
+        "phpSmartFiles.refactorNamespacesSortUseStatements": {
+          "type": "boolean",
+          "default": true,
+          "description": "%php-smart-files.config.refactorNamespacesSortUseStatements.description%",
+          "markdownDescription": "%php-smart-files.config.refactorNamespacesSortUseStatements.description%",
+          "order": 7
+        },
         "phpSmartFiles.refactorNamespacesIncludeFunctions": {
           "type": "boolean",
           "default": true,
           "description": "%php-smart-files.config.refactorNamespacesIncludeFunctions.description%",
           "markdownDescription": "%php-smart-files.config.refactorNamespacesIncludeFunctions.description%",
-          "order": 7
+          "order": 8
         },
         "phpSmartFiles.refactorNamespacesIncludeConstants": {
           "type": "boolean",
           "default": true,
           "description": "%php-smart-files.config.refactorNamespacesIncludeConstants.description%",
           "markdownDescription": "%php-smart-files.config.refactorNamespacesIncludeConstants.description%",
-          "order": 8
+          "order": 9
         },
         "phpSmartFiles.refactorNamespacesExcludeDirectories": {
           "type": "array",
@@ -187,7 +194,7 @@
           "items": {
             "type": "string"
           },
-          "order": 9
+          "order": 10
         }
       }
     },

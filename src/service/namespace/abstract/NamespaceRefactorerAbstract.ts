@@ -130,6 +130,11 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
      * @returns The updated content with ordered use statements.
      */
     protected orderUseStatements(content: string): string {
+        const config = vscode.workspace.getConfiguration("phpSmartFiles");
+        if (!config.get<boolean>("refactorNamespacesSortUseStatements", true)) {
+            return content;
+        }
+
         const regex = this.namespaceRegExpProvider.getUseStatementBlockRegExp();
         const match = regex.exec(content);
         if (!match) {

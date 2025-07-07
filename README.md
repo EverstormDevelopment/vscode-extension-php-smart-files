@@ -188,6 +188,9 @@ This release brings major improvements and new features to make working with nam
 - **Function and Constant Import Refactoring**  
   The extension now fully supports `use function` and `use const` statements during namespace refactoring. When you move or rename files, all relevant function and constant imports are updated automatically — for complete, robust namespace management.
 
+- **Automatic Sorting of `use` Statements**  
+  During namespace refactoring, all `use` statements are now automatically grouped by type (`use`, `use function`, `use const`) and sorted alphabetically within each group. This keeps your imports clean and consistent.  
+
 - **PHP Function File Creation**  
   You can now create PHP function files directly from the file creation dialog — just like classes, interfaces, traits, and enums.
 

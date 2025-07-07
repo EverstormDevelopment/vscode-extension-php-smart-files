@@ -309,7 +309,7 @@ export class NamespaceRegExpProvider {
         } = NamespaceRegExpProvider.keywordPatterns;
 
         return new RegExp(
-            `(${namespacePattern}\\s+[\\p{L}_][\\p{L}\\d_\\\\]*\\s*;\\s*)((?:(?:\\s*//.*|\\s*#.*|\\s*)*\\s*${usePattern}\\s+(?:${functionPattern}\\s+|${constPattern}\\s+)?${identifierPattern}(?:\\s+${asPattern}\\s*${identifierPattern})?\\s*;\\s*)+)`,
+            `(${namespacePattern}\\s+[\\p{L}_][\\p{L}\\d_\\\\]*\\s*;\\s*)((?:(?:\\s*\\/\\/.*|\\s*#.*|\\s*)*\\s*${usePattern}\\s+(?:${functionPattern}\\s+|${constPattern}\\s+)?[\\p{L}_][\\p{L}\\d_\\\\]*(?:\\s+${asPattern}\\s*${usePattern})?\\s*;\\s*)+)`,
             "u"
         );
     }

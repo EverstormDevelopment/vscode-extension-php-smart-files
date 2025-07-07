@@ -17,7 +17,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
   - Centralizes detection and management of all globally reserved PHP names (functions, constants, keywords) from the PHP runtime, composer dependencies, and framework packages.  
   - Prevents naming conflicts by ensuring generated code avoids reserved names and blocks incorrect `use` statements for global functions.  
   - Used throughout the extension for validation, refactoring, and code generation.
-  - **Please see the _Recommendation_ section in the README for usage notes and configuration tips regarding this service.**
+  - **Please see the _Recommendations_ section in the README for usage notes and configuration tips regarding this service.**
 - Added ability to create PHP functions via the file creation dialog — just like classes, interfaces, traits, and enums.
 - Added a notification message to inform users about the successful installation or update of the extension.
 

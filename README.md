@@ -183,24 +183,14 @@ I'll do my best to keep this extension reliable and useful while balancing its s
 
 ### Current Version: 1.1.0
 
-This release brings major improvements and new features to make working with namespaces and global functions even more reliable and convenient:
+- Improved support for `use function` and `use const` statements during namespace refactoring.  
+- Automatic grouping and alphabetical sorting of `use` statements by type.  
+- New ability to create PHP function files directly from the file creation dialog.  
+- Added a global reserved service to prevent naming conflicts with PHP built-in functions, constants, and keywords.  
+- Visual updates including a refreshed logo and Marketplace banner.
 
-- **Function and Constant Import Refactoring**  
-  The extension now fully supports `use function` and `use const` statements during namespace refactoring. When you move or rename files, all relevant function and constant imports are updated automatically — for complete, robust namespace management.
+For the full list of changes and detailed release notes, please see the [CHANGELOG](CHANGELOG.md).
 
-- **Automatic Sorting of `use` Statements**  
-  During namespace refactoring, all `use` statements are now automatically grouped by type (`use`, `use function`, `use const`) and sorted alphabetically within each group. This keeps your imports clean and consistent.  
-
-- **PHP Function File Creation**  
-  You can now create PHP function files directly from the file creation dialog — just like classes, interfaces, traits, and enums.
-
-- **Global Reserved Service**  
-  A new service detects and manages all globally reserved PHP names (functions, constants, keywords). This prevents naming conflicts and ensures that generated code won’t use reserved names or create incorrect `use` statements for built-in PHP functions.
-
-- **Visual Updates**  
-  Updated logo and Marketplace banner for better visibility and consistent branding.
-
-For a detailed list of changes in this and previous versions, please see the [CHANGELOG](CHANGELOG.md).
 
 ## Current Limitations
 

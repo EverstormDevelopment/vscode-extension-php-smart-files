@@ -65,6 +65,7 @@ Save time and prevent bugs with comprehensive namespace management:
   - Removes redundant use statements when files share namespace
   - Updates fully qualified and partially qualified namespace references
   - Supports use statements with aliases
+  - Automatically sorts use statements (normal `use`, `use function`, `use const`) alphabetically — optional and configurable in the settings.
 - **Efficient Processing**: Handles reference updates in parallel for better performance
 - **Flexible Configuration**: Control refactoring behavior for each operation type
 - **Format Integrity**: Preserves your preferred line break style (CR, LF, CRLF) during all file operations
@@ -146,6 +147,7 @@ All settings can be configured through VS Code settings (Gear icon → Extension
 | `phpSmartFiles.refactorNamespacesOnFileMoved` | Control behavior when files are moved<br>- `confirm`: Prompt for confirmation<br>- `always`: Automatically refactor<br>- `never`: Disable feature | `confirm` |
 | `phpSmartFiles.refactorNamespacesOnFileRenamed` | Control behavior when files are renamed (same options as `refactorNamespacesOnFileMoved`) | `confirm` |
 | `phpSmartFiles.refactorNamespacesOnDirectoryChanges` | Control behavior when directories are moved or renamed (same options as `refactorNamespacesOnFileMoved`) | `confirm` |
+| `phpSmartFiles.sortUseStatementsOnRefactor` | Automatically sort all `use` statements alphabetically during refactoring. Sorts normal `use` first, then `use function`, then `use const`. | `true` |
 | `phpSmartFiles.refactorNamespacesIncludeFunctions` | Include function references in namespace refactoring. Updates internal calls, related `use function` imports, and external references. | `true` |
 | `phpSmartFiles.refactorNamespacesIncludeConstants` | Include constant references in namespace refactoring. Updates internal usages, related `use const` imports, and external references. | `true` |
 | `phpSmartFiles.refactorNamespacesExcludeDirectories` | Directories to exclude when searching for references | Common directories like `vendor`, `node_modules`, etc. |

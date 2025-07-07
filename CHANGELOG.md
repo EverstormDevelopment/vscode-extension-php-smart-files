@@ -6,18 +6,22 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 ## [1.1.0] - 2025-07-02
 
 ### Added
- - Added support for function and constant imports during namespace refactoring:
-   - Now properly recognizes and updates `use function` statements when referenced files are moved or renamed
-   - Now properly recognizes and updates `use const` statements during refactoring operations
-   - These new features can be enabled or disabled via the settings `phpSmartFiles.refactorNamespacesIncludeFunctions` and `phpSmartFiles.refactorNamespacesIncludeConstants` for maximum flexibility and to avoid potential side effects.
-   - Ensures comprehensive namespace management for all PHP import types (classes, interfaces, traits, enums, functions, and constants)
-- Introduced GlobalReservedService:
-  - Centralizes detection and management of all globally reserved PHP names (functions, constants, keywords)
-  - Dynamically collects reserved names from the PHP runtime, composer dependencies, and framework packages
-  - Prevents naming conflicts and ensures generated code does not use reserved or conflicting names
-  - Also prevents incorrect `use` statements for global functions: without this, the extension might incorrectly add a `use` statement for a global function
-  - Used throughout the extension for validation, refactoring, and code generation
-- Added ability to create PHP functions via the file creation dialog, just like classes, interfaces, traits, and enums
+- Added support for function and constant imports during namespace refactoring:  
+  - `use function` and `use const` statements are now properly recognized and updated when referenced files are moved or renamed.  
+  - These features can be enabled or disabled via the settings `phpSmartFiles.refactorNamespacesIncludeFunctions` and `phpSmartFiles.refactorNamespacesIncludeConstants` for maximum flexibility and to avoid unwanted side effects.  
+  - Ensures comprehensive namespace management for all PHP import types (classes, interfaces, traits, enums, functions, and constants).
+- Added automatic sorting of `use` statements during refactoring:  
+  - When enabled, all `use` statements in affected PHP files are grouped by type — normal `use`, `use function` and `use const` — and sorted alphabetically within each group.  
+  - Toggle this behavior via the `phpSmartFiles.sortUseStatementsOnRefactor` setting (default: enabled).  
+  - Ensures a clean and consistent import order after every refactoring operation.
+- Introduced `GlobalReservedService`:  
+  - Centralizes detection and management of all globally reserved PHP names (functions, constants, keywords).  
+  - Dynamically collects reserved names from the PHP runtime, composer dependencies, and framework packages.  
+  - Prevents naming conflicts and ensures generated code does not use reserved or conflicting names.  
+  - Also avoids incorrect `use` statements for global functions.  
+  - Used throughout the extension for validation, refactoring, and code generation.
+- Added ability to create PHP functions via the file creation dialog — just like classes, interfaces, traits, and enums.
+
 
 ### Changed
 - When renaming a file to a globally reserved name, a clear warning is now shown before refactoring. Refactoring and renaming will only proceed after explicit confirmation, helping to prevent accidental conflicts with PHP keywords or reserved names.

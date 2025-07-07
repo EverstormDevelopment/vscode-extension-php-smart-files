@@ -37,6 +37,7 @@
   "php-smart-files.config.refactorNamespacesOnDirectoryChanges.always": "Immer ohne Nachfrage",
   "php-smart-files.config.refactorNamespacesOnDirectoryChanges.never": "Niemals",
 
+  "php-smart-files.config.refactorNamespacesSortUseStatements.description": "`use`-Anweisungen beim Refactoring von Namespaces automatisch alphabetisch sortieren.",
   "php-smart-files.config.refactorNamespacesIncludeFunctions.description": "Funktionsreferenzen beim Refactoring einbeziehen. Aktualisiert interne Aufrufe, zugehörige `use function`-Importe und externe Referenzen.",
   "php-smart-files.config.refactorNamespacesIncludeConstants.description": "Konstantenreferenzen beim Refactoring einbeziehen. Aktualisiert interne Verwendungen, zugehörige `use const`-Importe und externe Referenzen.",
   

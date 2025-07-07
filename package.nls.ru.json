@@ -37,6 +37,7 @@
   "php-smart-files.config.refactorNamespacesOnDirectoryChanges.always": "Всегда без подтверждения",
   "php-smart-files.config.refactorNamespacesOnDirectoryChanges.never": "Никогда",
 
+  "php-smart-files.config.refactorNamespacesSortUseStatements.description": "Автоматически сортировать инструкции `use` в алфавитном порядке при рефакторинге пространств имён.",
   "php-smart-files.config.refactorNamespacesIncludeFunctions.description": "Включить ссылки на функции при рефакторинге. Обновляет внутренние вызовы, связанные импорты `use function` и внешние ссылки.",
   "php-smart-files.config.refactorNamespacesIncludeConstants.description": "Включить ссылки на константы при рефакторинге. Обновляет внутренние использования, связанные импорты `use const` и внешние ссылки.",
 

@@ -15,9 +15,14 @@ import { FileGenerationCommand } from "./../command/FileGenerationCommand";
  */
 export class Extension implements ExtensionInterface {
     /**
-     * The extension name from the manifest
+     * The extension name from the package.json manifest
      */
-    private name: string | undefined;
+    private name: string;
+
+    /**
+     * The extension version from the package.json manifest
+     */
+    private version: string;
 
     /**
      * The dependency injection container
@@ -33,6 +38,8 @@ export class Extension implements ExtensionInterface {
      * Creates a new Extension instance with default container
      */
     constructor() {
+        this.name = "php-smart-files";
+        this.version = "0.0.0";
         this.container = ContainerFactory.createDefaultContainer();
     }
 
@@ -43,6 +50,7 @@ export class Extension implements ExtensionInterface {
      */
     public activate(context: vscode.ExtensionContext): this {
         this.initialize(context);
+        this.showActivationMessage(context);
         this.addGlobalReservedObserver(context);
         this.addFileCreationCommands(context);
         this.addLazyFileObserver(context);
@@ -55,8 +63,43 @@ export class Extension implements ExtensionInterface {
      */
     private initialize(context: vscode.ExtensionContext): void {
         // this.id = context.extension.id;
-        // this.version = context.extension.packageJSON.version;
         this.name = context.extension.packageJSON.name;
+        this.version = context.extension.packageJSON.version;
+    }
+
+    /**
+     * Displays an activation message to the user if the extension version has changed.
+     * It informs the user about the new version and provides links to the changelog and settings.
+     * @param context The VS Code extension context
+     */
+    private showActivationMessage(context: vscode.ExtensionContext): void {
+        const previousVersion = context.globalState.get<string>("extensionVersion") || "1.0.0";
+        const previousMajorMinor = previousVersion.split(".").slice(0, 2).join(".");
+        const currentMajorMinor = this.version?.split(".").slice(0, 2).join(".");
+        if (currentMajorMinor === previousMajorMinor) {
+            return;
+        }
+
+        const message = vscode.l10n.t(
+            "PHP Smart Files {0} is ready! See what’s new and customize it in your settings.",
+            this.version
+        );
+        const changelogButton = vscode.l10n.t("Changelog");
+        const settingsButton = vscode.l10n.t("Settings");
+
+        vscode.window.showInformationMessage(`🎉 ` + message, changelogButton, settingsButton).then((selection) => {
+            if (selection === changelogButton) {
+                const uri = vscode.Uri.parse(
+                    "https://github.com/EverstormDevelopment/vscode-extension-php-smart-files/blob/main/CHANGELOG.md"
+                );
+                vscode.env.openExternal(uri);
+            }
+            if (selection === settingsButton) {
+                vscode.commands.executeCommand("workbench.action.openSettings", "phpSmartFiles");
+            }
+        });
+
+        context.globalState.update("extensionVersion", this.version);
     }
 
     /**

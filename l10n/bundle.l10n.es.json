@@ -1,4 +1,8 @@
 {
+  "PHP Smart Files {0} is ready! See what’s new and customize it in your settings.": "¡PHP Smart Files {0} está listo! Descubre las novedades y personalízalo en la configuración.",
+  "Changelog": "Changelog",
+  "Settings": "Configuración",
+  
   "Create PHP File": "Crear archivo PHP",
   "Enter filename (without .php)": "Ingrese nombre de archivo (sin .php)",
   "Enter a name for the new PHP file": "Ingrese un nombre para el nuevo archivo PHP",

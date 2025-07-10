@@ -3,7 +3,7 @@
 All notable changes to the "PHP Smart Files" extension will be documented in this file.
 <!-- Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file. -->
 
-## [1.1.0] - 2025-07-08
+## [1.1.0] - 2025-07-10
 
 ### Added
 

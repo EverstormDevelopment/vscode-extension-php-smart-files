@@ -18,7 +18,10 @@ export class NamespacePathValidator implements NamespaceValidatorInterface {
      * @param namespace The full namespace string to validate
      * @returns True if valid, false otherwise
      */
-    public async validate(namespace: string): Promise<boolean> {
+    public async validate(namespace?: string): Promise<boolean> {
+        if (!namespace) {
+            return false;
+        }
         const regExp = this.namespaceRegExpProvider.getNamespacePatternRegExp();
         return regExp.test(namespace);
     }

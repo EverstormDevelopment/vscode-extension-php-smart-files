@@ -22,6 +22,7 @@
 
 - [Features](#features)
 - [Usage](#usage)
+- [Recommendations](#recommendations)
 - [Extension Settings](#extension-settings)
 - [Available Languages](#available-languages)
 - [About This Project](#about-this-project)
@@ -38,7 +39,7 @@ PHP Smart Files extends VS Code to enhance your PHP development workflow through
 
 Create PHP files with auto-detected namespaces based on your project's Composer configuration:
 
-- **File Types**: Classes, interfaces, traits, and enums
+- **File Types**: Functions, Classes, Interfaces, Traits, and Enums
 - **Automatic Namespaces**: Intelligently follows PSR-4 standards from composer.json with optional fallback to directory structure
 - **Template Options**:
   - Basic empty files
@@ -64,6 +65,7 @@ Save time and prevent bugs with comprehensive namespace management:
   - Removes redundant use statements when files share namespace
   - Updates fully qualified and partially qualified namespace references
   - Supports use statements with aliases
+  - Automatically sorts use statements (normal `use`, `use function`, `use const`) alphabetically — optional and configurable in the settings.
 - **Efficient Processing**: Handles reference updates in parallel for better performance
 - **Flexible Configuration**: Control refactoring behavior for each operation type
 - **Format Integrity**: Preserves your preferred line break style (CR, LF, CRLF) during all file operations
@@ -84,17 +86,19 @@ Right-click in the Explorer and select from the "Create PHP File" submenu:
 #### Basic Files
 
 - **Empty PHP File**: Creates a basic PHP file with namespace
-- **Empty PHP Class**: Creates a PHP class with namespace and class declaration
+- **Empty PHP Function**: Creates a basic PHP function with namespace
+- **Empty PHP Class**: Creates a PHP class with namespace
 - **Empty PHP Interface**: Creates a PHP interface with namespace
-- **Empty PHP Enum**: Creates a PHP 8.1+ enum with namespace
 - **Empty PHP Trait**: Creates a PHP trait with namespace
+- **Empty PHP Enum**: Creates a PHP 8.1+ enum with namespace
 
 #### Template Files
 
+- **PHP Function with Template**: Creates a PHP function with helpful boilerplate code
 - **PHP Class with Template**: Creates a PHP class with helpful boilerplate code
 - **PHP Interface with Template**: Creates a PHP interface with method templates
-- **PHP Enum with Template**: Creates a PHP enum with case examples
 - **PHP Trait with Template**: Creates a PHP trait with method examples
+- **PHP Enum with Template**: Creates a PHP enum with case examples
 
 #### Symfony Templates
 
@@ -114,6 +118,23 @@ The extension automatically refactors namespaces and references during standard 
 
 > 💡 **Tip:** Use the extension settings to control whether confirmations are shown or to disable specific refactoring features
 
+## Recommendations
+
+**No setup required — the extension works right after installation!**
+
+For even better results and the most reliable namespace refactoring, consider these recommendations:
+
+- **PHP executable is configured**  
+  Set the PHP path in VS Code settings (`php.validate.executablePath` or `php.executablePath`), or ensure PHP is available in your system’s PATH.
+
+- **composer.json at the root of your workspace(s)**  
+  This helps the extension detect your project’s PSR-4 autoloading configuration, which is particularly useful for larger projects or when using frameworks like Symfony or Laravel.
+
+- **Composer dependencies are installed**  
+  Having the `vendor` directory and installed packages improves detection of global functions and enhances namespace handling.
+
+> 💡 **Tip:** The extension works out of the box, but following these recommendations will further improve the accuracy and effectiveness of namespace and reference refactoring.
+
 ## Extension Settings
 
 All settings can be configured through VS Code settings (Gear icon → Extensions → PHP Smart Files) or in your settings.json file.
@@ -126,6 +147,9 @@ All settings can be configured through VS Code settings (Gear icon → Extension
 | `phpSmartFiles.refactorNamespacesOnFileMoved` | Control behavior when files are moved<br>- `confirm`: Prompt for confirmation<br>- `always`: Automatically refactor<br>- `never`: Disable feature | `confirm` |
 | `phpSmartFiles.refactorNamespacesOnFileRenamed` | Control behavior when files are renamed (same options as `refactorNamespacesOnFileMoved`) | `confirm` |
 | `phpSmartFiles.refactorNamespacesOnDirectoryChanges` | Control behavior when directories are moved or renamed (same options as `refactorNamespacesOnFileMoved`) | `confirm` |
+| `phpSmartFiles.sortUseStatementsOnRefactor` | Automatically sort all `use` statements alphabetically during refactoring. Sorts normal `use` first, then `use function`, then `use const`. | `true` |
+| `phpSmartFiles.refactorNamespacesIncludeFunctions` | Include function references in namespace refactoring. Updates internal calls, related `use function` imports, and external references. | `true` |
+| `phpSmartFiles.refactorNamespacesIncludeConstants` | Include constant references in namespace refactoring. Updates internal usages, related `use const` imports, and external references. | `true` |
 | `phpSmartFiles.refactorNamespacesExcludeDirectories` | Directories to exclude when searching for references | Common directories like `vendor`, `node_modules`, etc. |
 
 ## Available Languages
@@ -157,11 +181,16 @@ I'll do my best to keep this extension reliable and useful while balancing its s
 
 ## Release Notes
 
-### Current Version: 1.0.6
+### Current Version: 1.1.0
 
-This release fixes an issue with `use` statements from the global namespace not being properly recognized. Previously, classes from the global namespace (e.g., `use IntlTimeZone;`) were not correctly detected, which could lead to incorrect additional `use` statements being generated when moving files that reference global namespace classes.
+- Improved support for `use function` and `use const` statements during namespace refactoring.  
+- Automatic grouping and alphabetical sorting of `use` statements by type.  
+- New ability to create PHP function files directly from the file creation dialog.  
+- Added a global reserved service to prevent naming conflicts with PHP built-in functions, constants, and keywords.  
+- Visual updates including a refreshed logo and Marketplace banner.
 
-For a detailed list of changes in this and previous versions, please see the [CHANGELOG](CHANGELOG.md).
+For the full list of changes and detailed release notes, please see the [CHANGELOG](CHANGELOG.md).
+
 
 ## Current Limitations
 
@@ -175,18 +204,6 @@ use MyNamespace\{ClassA, ClassB as B, SubNamespace\ClassC};
 ```
 
 When using this PHP syntax feature, refactoring operations may be incomplete or require manual adjustments. Support for grouped namespace statements is planned for future releases. If this feature is important to your workflow, please see the "Feedback and Contributions" section below and let me know.
-
-### Function and Constant Imports
-
-The extension currently doesn't fully support refactoring of imported functions or constants:
-
-```php
-// Not supported yet:
-use function App\Utils\someFunction;
-use const App\Config\SOME_CONSTANT;
-```
-
-When using these import types, namespace references will not be updated during refactoring operations. Support for function and constant imports is planned for the next release and is the top priority in the development roadmap.
 
 ## Feedback and Contributions
 

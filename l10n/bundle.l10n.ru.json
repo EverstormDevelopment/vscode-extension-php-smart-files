@@ -1,8 +1,16 @@
 {
+  "PHP Smart Files {0} is ready! See what’s new and customize it in your settings.": "PHP Smart Files {0} готов! Ознакомьтесь с новыми возможностями и настройте расширение в параметрах.",
+  "Changelog": "журнал изменений",
+  "Settings": "Настройки",
+  
   "Create PHP File": "Создать PHP файл",
   "Enter filename (without .php)": "Введите имя файла (без .php)",
   "Enter a name for the new PHP file": "Введите имя для нового PHP файла",
-  
+
+  "Create PHP Function": "Создать PHP функцию",
+  "Enter function filename (without .php)": "Введите имя файла функции (без .php)",
+  "Enter a name for the new PHP function file": "Введите имя для нового файла PHP функции",
+
   "Create PHP Class": "Создать PHP класс",
   "Enter class name": "Введите имя класса",
   "Enter a name for the new PHP class": "Введите имя для нового PHP класса",
@@ -42,6 +50,7 @@
   
   "Please enter a valid filename": "Пожалуйста, введите корректное имя файла",
   "Filename contains characters not allowed by the file system": "Имя файла содержит символы, не допустимые файловой системой",
+  "Filename can only contain letters, numbers, and underscores, to be autoload compatible": "Имя файла может содержать только буквы, цифры и символы подчёркивания для совместимости с автозагрузкой",
   "Filename contains characters that may cause issues with PHP includes or URLs": "Имя файла содержит символы, которые могут вызвать проблемы с PHP-включениями или URL-адресами",
   "Namespace skipped: The detected namespace was invalid due to invalid names in the directory structure.": "Пространство имён пропущено: Обнаруженное пространство имён было недействительным из-за некорректных имён в структуре каталогов.",
   
@@ -50,8 +59,11 @@
   "Definition name must start with an uppercase letter or underscore": "Имя определения должно начинаться с заглавной буквы или подчеркивания",
   "Definition name can only contain letters, numbers, and underscores": "Имя определения может содержать только буквы, цифры и подчеркивания",
   "Cannot use PHP reserved keyword as definition name": "Невозможно использовать зарезервированное слово PHP в качестве имени определения",
+  "Cannot use PHP global function name as definition name": "Нельзя использовать имя глобальной функции PHP в качестве имени определения.",
+  "Cannot use PHP global constant name as definition name": "Нельзя использовать имя глобальной константы PHP в качестве имени определения.",
   
   "Would you like to update the namespace for \"{0}\" and all its references?": "Хотите обновить пространство имен для \"{0}\" и всех его ссылок?",
+  "Warning: The new file name \"{0}\" is globally reserved or a PHP keyword. This may cause errors or unpredictable behavior in your project. Do you want to proceed and update the declaration identifier and all its references?": "Внимание: новое имя файла \"{0}\" является глобально зарезервированным или ключевым словом PHP. Это может привести к ошибкам или непредсказуемому поведению в вашем проекте. Хотите продолжить и обновить идентификатор объявления и все его ссылки?",
   "Yes": "Да",
   "No": "Нет",
   "Error during namespace refactoring: {0}": "Ошибка при рефакторинге пространства имен: {0}",

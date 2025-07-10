@@ -1,3 +1,4 @@
+import { IdentifierType } from "./IdentifierType";
 import { NamespaceRefactorUriDetailsType } from "./NamespaceRefactorUriDetailsType";
 
 /**
@@ -17,6 +18,12 @@ export type NamespaceRefactorDetailsType = {
     new: NamespaceRefactorUriDetailsType;
 
     /**
+     * All identifiers found in the file being refactored
+     * This includes top-level class names, function names, constants, etc.
+     */
+    identifiers: IdentifierType[];
+
+    /**
      * Indicates whether both old and new locations have namespaces
      */
     hasNamespaces: boolean;
@@ -29,7 +36,7 @@ export type NamespaceRefactorDetailsType = {
     /**
      * Indicates whether the class/interface/trait name has changed
      */
-    hasIdentifierChanged: boolean;
+    hasFileIdentifierChanged: boolean;
 
     /**
      * General flag indicating if any relevant change has occurred

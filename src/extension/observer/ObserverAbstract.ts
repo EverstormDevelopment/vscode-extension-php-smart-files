@@ -102,7 +102,7 @@ export abstract class ObserverAbstract implements FilesystemObserverInterface {
         const confirmMessage = await this.getConfirmationMessage(oldUri, newUri);
         const yesButton = vscode.l10n.t("Yes");
         const noButton = vscode.l10n.t("No");
-        const pressedButton = await vscode.window.showWarningMessage(
+        const pressedButton = await vscode.window.showInformationMessage(
             confirmMessage,
             { modal: true },
             yesButton,

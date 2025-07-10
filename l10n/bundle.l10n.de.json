@@ -1,7 +1,15 @@
 {
+  "PHP Smart Files {0} is ready! See what’s new and customize it in your settings.": "PHP Smart Files {0} ist startklar! Sieh dir die Neuerungen an und passe alles in den Einstellungen an.",
+  "Changelog": "Changelog",
+  "Settings": "Einstellungen",
+  
   "Create PHP File": "PHP-Datei erstellen",
   "Enter filename (without .php)": "Dateiname eingeben (ohne .php)",
   "Enter a name for the new PHP file": "Geben Sie einen Namen für die neue PHP-Datei ein",
+  
+  "Create PHP Function": "PHP-Funktion erstellen",
+  "Enter function filename (without .php)": "Funktionsdateiname eingeben (ohne .php)",
+  "Enter a name for the new PHP function file": "Geben Sie einen Namen für die neue PHP-Funktionsdatei ein",
   
   "Create PHP Class": "PHP-Klasse erstellen",
   "Enter class name": "Klassenname eingeben",
@@ -42,6 +50,7 @@
   
   "Please enter a valid filename": "Bitte geben Sie einen gültigen Dateinamen ein",
   "Filename contains characters not allowed by the file system": "Der Dateiname enthält Zeichen, die vom Dateisystem nicht erlaubt sind",
+  "Filename can only contain letters, numbers, and underscores, to be autoload compatible": "Der Dateiname darf nur Buchstaben, Zahlen und Unterstriche enthalten, um Autoload-kompatibel zu sein",
   "Filename contains characters that may cause issues with PHP includes or URLs": "Der Dateiname enthält Zeichen, die Probleme mit PHP-Includes oder URLs verursachen könnten",
   "Namespace skipped: The detected namespace was invalid due to invalid names in the directory structure.": "Namespace übersprungen: Der erkannte Namespace war aufgrund ungültiger Namen in der Verzeichnisstruktur ungültig.",
   
@@ -50,8 +59,11 @@
   "Definition name must start with an uppercase letter or underscore": "Der Definitionsname muss mit einem Großbuchstaben oder einem Unterstrich beginnen",
   "Definition name can only contain letters, numbers, and underscores": "Der Definitionsname darf nur Buchstaben, Zahlen und Unterstriche enthalten",
   "Cannot use PHP reserved keyword as definition name": "PHP-reservierte Schlüsselwörter können nicht als Definitionsnamen verwendet werden",
+  "Cannot use PHP global function name as definition name": "Der Name darf nicht mit einer globalen PHP-Funktion übereinstimmen.",
+  "Cannot use PHP global constant name as definition name": "Der Name darf nicht mit einer globalen PHP-Konstanten übereinstimmen.",
   
   "Would you like to update the namespace for \"{0}\" and all its references?": "Möchten Sie den Namespace für \"{0}\" und alle Referenzen aktualisieren?",
+  "Warning: The new file name \"{0}\" is globally reserved or a PHP keyword. This may cause errors or unpredictable behavior in your project. Do you want to proceed and update the declaration identifier and all its references?": "Warnung: Der neue Dateiname \"{0}\" ist global reserviert oder ein PHP-Schlüsselwort. Dies kann zu Fehlern oder unvorhersehbarem Verhalten in deinem Projekt führen. Möchtest du fortfahren und den Deklarationsbezeichner sowie alle Referenzen aktualisieren?",
   "Yes": "Ja",
   "No": "Nein",
   "Error during namespace refactoring: {0}": "Fehler während der Namespace-Umstrukturierung: {0}",

@@ -1,11 +1,12 @@
 {
   "php-smart-files.submenus.main.label": "Crear archivo PHP",
-
   "php-smart-files.commands.newEmptyPhpFile.title": "Archivo PHP",
+  "php-smart-files.commands.newEmptyPhpFunction.title": "Función PHP",
   "php-smart-files.commands.newEmptyPhpClass.title": "Clase PHP",
   "php-smart-files.commands.newEmptyPhpInterface.title": "Interfaz PHP",
   "php-smart-files.commands.newEmptyPhpEnum.title": "Enum PHP",
   "php-smart-files.commands.newEmptyPhpTrait.title": "Trait PHP",
+  "php-smart-files.commands.newTemplatePhpFunction.title": "Función PHP desde plantilla",
   "php-smart-files.commands.newTemplatePhpClass.title": "Clase PHP desde plantilla",
   "php-smart-files.commands.newTemplatePhpInterface.title": "Interfaz PHP desde plantilla",
   "php-smart-files.commands.newTemplatePhpEnum.title": "Enum PHP desde plantilla",
@@ -35,6 +36,10 @@
   "php-smart-files.config.refactorNamespacesOnDirectoryChanges.confirm": "Con confirmación",
   "php-smart-files.config.refactorNamespacesOnDirectoryChanges.always": "Siempre sin confirmación",
   "php-smart-files.config.refactorNamespacesOnDirectoryChanges.never": "Nunca",
+
+  "php-smart-files.config.refactorNamespacesSortUseStatements.description": "Ordenar automáticamente las declaraciones `use` alfabéticamente al refactorizar los espacios de nombres.",
+  "php-smart-files.config.refactorNamespacesIncludeFunctions.description": "Incluir referencias a funciones en la refactorización. Actualiza llamadas internas, importaciones relacionadas con `use function` y referencias externas.",
+  "php-smart-files.config.refactorNamespacesIncludeConstants.description": "Incluir referencias a constantes en la refactorización. Actualiza usos internos, importaciones relacionadas con `use const` y referencias externas.",
 
   "php-smart-files.config.refactorNamespacesExcludeDirectories.description": "Los directorios especificados se excluirán durante la refactorización de espacios de nombres. (Nota: Las entradas deben estar en el formato de patrón Glob, por ejemplo, `/vendor/**`, `var/cache/**` o `**/temp/**`.)"
 }

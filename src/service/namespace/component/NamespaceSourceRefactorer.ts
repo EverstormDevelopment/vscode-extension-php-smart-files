@@ -1,15 +1,24 @@
 import * as vscode from "vscode";
-import { ReservedKeywords } from "../../../utils/php/ReservedKeywords";
 import { escapeRegExp } from "../../../utils/regexp/escapeRegExp";
+import { GlobalReservedService } from "../../php/service/GlobalReservedService";
 import { NamespaceRefactorerAbstract } from "../abstract/NamespaceRefactorerAbstract";
+import { IdentifierKindEnum } from "../enum/IdentifierKindEnum";
+import { NamespaceRegExpProvider } from "../provider/NamespaceRegExpProvider";
+import { IdentifierType } from "../type/IdentifierType";
 import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailsType";
-import { GlobalFunctions } from "../../../utils/php/GlobalFunctions";
 
 /**
  * Handles the refactoring of namespace declarations and class identifiers in PHP files
  * when a file is moved or renamed.
  */
 export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
+    constructor(
+        protected readonly namespaceRegExpProvider: NamespaceRegExpProvider,
+        protected readonly globalReservedService: GlobalReservedService
+    ) {
+        super(namespaceRegExpProvider);
+    }
+
     /**
      * Performs the refactoring based on the provided details.
      * @param refactorDetails The details for the refactoring operation.
@@ -37,7 +46,7 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
      */
     private async refactorFile(refactorDetails: NamespaceRefactorDetailsType): Promise<boolean> {
         const fileContent = await this.getFileContent(refactorDetails.new.uri);
-        const updatedContent = this.refactorContent(fileContent, refactorDetails);
+        const updatedContent = await this.refactorContent(fileContent, refactorDetails);
         if (updatedContent === fileContent) {
             return false;
         }
@@ -53,13 +62,13 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
      * @param refactorDetails Details about what needs to be refactored.
      * @returns The refactored content.
      */
-    private refactorContent(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
+    private async refactorContent(content: string, refactorDetails: NamespaceRefactorDetailsType): Promise<string> {
         if (refactorDetails.hasNamespaceChanged) {
-            content = this.refactorNamespace(content, refactorDetails);
-            content = this.refactorUseStatements(content, refactorDetails);
-            content = this.refactorPartialQualified(content, refactorDetails);
+            content = await this.refactorNamespace(content, refactorDetails);
+            content = await this.refactorUseStatements(content, refactorDetails);
+            content = await this.refactorPartialQualified(content, refactorDetails);
         }
-        if (refactorDetails.hasIdentifierChanged) {
+        if (refactorDetails.hasFileIdentifierChanged) {
             content = this.refactorDefinition(content, refactorDetails);
             content = this.refactorIdentifier(content, refactorDetails.new.namespace, refactorDetails);
         }
@@ -73,7 +82,7 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
      * @param refactorDetails Details about what needs to be refactored.
      * @returns The content with the updated namespace declaration.
      */
-    private refactorNamespace(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
+    private async refactorNamespace(content: string, refactorDetails: NamespaceRefactorDetailsType): Promise<string> {
         const namespaceRegExp = this.namespaceRegExpProvider.getNamespaceDeclarationRegExp();
         const hasMatch = namespaceRegExp.test(content);
         if (!hasMatch) {
@@ -101,7 +110,7 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
             throw new Error(message);
         }
 
-        const newDefinition = `${definitionMatch[1]} ${refactorDetails.new.identifier}`;
+        const newDefinition = `${definitionMatch[1]} ${refactorDetails.new.fileIdentifier.name}`;
         return content.replace(definitionRegExp, newDefinition);
     }
 
@@ -112,26 +121,32 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
      * @param refactorDetails Details about what needs to be refactored.
      * @returns The content with updated `use` statements.
      */
-    private refactorUseStatements(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
-        const references = this.getNonQualifiedReferences(content);
+    private async refactorUseStatements(
+        content: string,
+        refactorDetails: NamespaceRefactorDetailsType
+    ): Promise<string> {
+        const references = await this.getNonQualifiedReferences(content);
         if (references.length === 0) {
             return content;
         }
 
-        const nonQualifiedReferences = references.filter((reference) => reference !== refactorDetails.old.identifier);
+        const nonQualifiedReferences = references.filter(
+            (reference) => reference.name !== refactorDetails.old.fileIdentifier.name
+        );
         content = this.addUseStatements(content, refactorDetails.old.namespace, nonQualifiedReferences);
         content = this.removeUseStatements(content, refactorDetails.new.namespace, nonQualifiedReferences);
+        content = this.orderUseStatements(content);
         return content;
     }
 
     /**
-     * Adds `use` statements for non-qualified references.
+     * Adds use statements for the given non-qualified references to the file content.
      * @param content The original file content.
-     * @param namespace The namespace to add `use` statements for.
-     * @param nonQualifiedReferences A list of non-qualified references to add.
-     * @returns The content with added `use` statements.
+     * @param namespace The namespace to use for the use statements.
+     * @param nonQualifiedReferences List of non-qualified references to add as use statements.
+     * @returns The content with added use statements.
      */
-    private addUseStatements(content: string, namespace: string, nonQualifiedReferences: string[]): string {
+    private addUseStatements(content: string, namespace: string, nonQualifiedReferences: IdentifierType[]): string {
         for (const identifier of nonQualifiedReferences) {
             content = this.addUseStatement(content, namespace, identifier);
         }
@@ -139,13 +154,13 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
     }
 
     /**
-     * Removes `use` statements for non-qualified references.
+     * Removes use statements for the given non-qualified references from the file content.
      * @param content The original file content.
-     * @param namespace The namespace to remove `use` statements for.
-     * @param nonQualifiedReferences A list of non-qualified references to remove.
-     * @returns The content with removed `use` statements.
+     * @param namespace The namespace to remove from the use statements.
+     * @param nonQualifiedReferences List of non-qualified references to remove from use statements.
+     * @returns The content with removed use statements.
      */
-    private removeUseStatements(content: string, namespace: string, nonQualifiedReferences: string[]): string {
+    private removeUseStatements(content: string, namespace: string, nonQualifiedReferences: IdentifierType[]): string {
         for (const identifier of nonQualifiedReferences) {
             content = this.removeUseStatement(content, namespace, identifier);
         }
@@ -160,7 +175,10 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
      * @param refactorDetails Details about what needs to be refactored.
      * @returns The content with updated partially qualified namespace references.
      */
-    private refactorPartialQualified(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
+    private async refactorPartialQualified(
+        content: string,
+        refactorDetails: NamespaceRefactorDetailsType
+    ): Promise<string> {
         const pqnRegExp = this.namespaceRegExpProvider.getPartiallyQualifiedReferenceRegExp();
         const escapedNewNamespace = escapeRegExp(`${refactorDetails.new.namespace}\\`);
         const newNamespaceMatchRegExp = new RegExp(`^${escapedNewNamespace}`, "u");
@@ -189,15 +207,63 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
      * @param content The original file content.
      * @returns A list of unique non-qualified references.
      */
-    private getNonQualifiedReferences(content: string): string[] {
-        const regex = this.namespaceRegExpProvider.getNonQualifiedReferenceRegExp();
-        const matches = Array.from(content.matchAll(regex));
-        const extractedNames = matches.map((match) => match.slice(1).find(Boolean)).filter(Boolean) as string[];
-        const filteredClassNames = extractedNames.filter((name) => {
-            return !ReservedKeywords.has(name.toLowerCase()) && !GlobalFunctions.has(name.toLowerCase());
-        });
+    private async getNonQualifiedReferences(content: string): Promise<IdentifierType[]> {
+        const referencePatterns: [RegExp, IdentifierKindEnum][] = [
+            [this.namespaceRegExpProvider.getNonQualifiedOopReferenceRegExp(), IdentifierKindEnum.Oop],
+        ];
 
-        const classNames = new Set(filteredClassNames);
-        return Array.from(classNames);
+        const config = vscode.workspace.getConfiguration("phpSmartFiles");
+        if (config.get<boolean>("refactorNamespacesIncludeFunctions", true)) {
+            referencePatterns.push([
+                this.namespaceRegExpProvider.getNonQualifiedFunctionReferenceRegExp(),
+                IdentifierKindEnum.Function,
+            ]);
+        }
+        if (config.get<boolean>("refactorNamespacesIncludeConstants", true)) {
+            referencePatterns.push([
+                this.namespaceRegExpProvider.getNonQualifiedConstantReferenceRegExp(),
+                IdentifierKindEnum.Constant,
+            ]);
+        }
+
+        const result: IdentifierType[] = [];
+        let excludedIdentifiers = new Set<string>();
+        for (const [regExp, kind] of referencePatterns) {
+            const identifiers = await this.extractNonQualifiedIdentifiers(content, regExp, excludedIdentifiers);
+            for (const identifier of identifiers) {
+                result.push({ name: identifier, kind });
+                excludedIdentifiers.add(identifier);
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Extracts unique non-qualified identifiers from the file content using the provided RegExp.
+     * Filters out reserved keywords, global functions, and excluded names.
+     * @param content The original file content.
+     * @param regExp The RegExp to match identifiers.
+     * @param exclude Set of names to exclude (already used).
+     * @returns Array of unique identifier names.
+     */
+    private async extractNonQualifiedIdentifiers(
+        content: string,
+        regExp: RegExp,
+        exclude: Set<string>
+    ): Promise<string[]> {
+        const matches = await Promise.all(
+            Array.from(content.matchAll(regExp))
+                .map((match) => match.slice(1).find(Boolean))
+                .filter((name): name is string => !!name)
+                .map(async (name) => {
+                    const isReserved = await this.globalReservedService.isReserved(name);
+                    const isExcluded = exclude.has(name);
+                    return !isReserved && !isExcluded ? name : undefined;
+                })
+        );
+        const filteredMatches = matches.filter((match): match is string => !!match);
+        const uniqueMatches = new Set(filteredMatches);
+        return Array.from(uniqueMatches);
     }
 }

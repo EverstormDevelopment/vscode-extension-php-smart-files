@@ -2,18 +2,40 @@ import * as vscode from "vscode";
 import { getUriFileName } from "../../../utils/filesystem/getUriFileName";
 import { isUriFile } from "../../../utils/filesystem/isUriFile";
 import { getFileContentByUri } from "../../../utils/vscode/getFileContentByUri";
+import { PhpParser } from "../parser/PhpParser";
 import { NamespaceResolver } from "../resolver/NamespaceResolver";
+import { IdentifierType } from "../type/IdentifierType";
 import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailsType";
 import { NamespaceRefactorUriDetailsType } from "../type/NamespaceRefactorUriDetailsType";
 import { NamespaceIdentifierValidator } from "../validator/NamespaceIdentifierValidator";
 import { NamespacePathValidator } from "../validator/NamespacePathValidator";
+import { IdentifierKindEnum } from "./../enum/IdentifierKindEnum";
 import { NamespaceRegExpProvider } from "./NamespaceRegExpProvider";
+
+/**
+ * Structure containing the most important information from the PHP file content for refactoring operations.
+ * @property namespace The namespace found in the file content (or undefined if none exists)
+ * @property identifiers List of top-level identifiers found in the file content (e.g. classes, interfaces, traits, enums)
+ * @property isFile Indicates whether the URI points to a file
+ */
+type ContentDetailsType = {
+    namespace: string | undefined;
+    identifiers: IdentifierType[];
+    isFile: boolean;
+};
 
 /**
  * Provides details about namespace refactoring operations for PHP files.
  * Gathers information about old and new URIs, identifiers, and namespaces.
  */
 export class NamespaceRefactorDetailsProvider {
+    /**
+     * Initializes the provider with all required dependencies.
+     * @param namespaceResolver Provides the namespace for a URI
+     * @param namespaceRegExpProvider Provides RegExp for PHP namespace detection
+     * @param namespacePathValidator Checks if a namespace matches the file path structure
+     * @param namespaceIdentifierValidator Checks if an identifier is valid
+     */
     constructor(
         protected readonly namespaceResolver: NamespaceResolver,
         protected readonly namespaceRegExpProvider: NamespaceRegExpProvider,
@@ -28,105 +50,107 @@ export class NamespaceRefactorDetailsProvider {
      * @returns An object containing details about the refactor operation.
      */
     public async get(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<NamespaceRefactorDetailsType> {
-        const oldUriDetails = await this.getUriDetails(oldUri, newUri);
-        const newUriDetails = await this.getUriDetails(newUri);
+        const contentDetails = await this.getContentDetails(newUri);
+        const oldUriDetails = await this.getUriDetails(oldUri, contentDetails);
+        const newUriDetails = await this.getUriDetails(newUri, contentDetails);
 
         const hasNamespaces = !!oldUriDetails.namespace && !!newUriDetails.namespace;
         const hasNamespaceChanged = oldUriDetails.namespace !== newUriDetails.namespace;
-        const hasIdentifierChanged = oldUriDetails.identifier !== newUriDetails.identifier;
+        const hasIdentifierChanged = oldUriDetails.fileIdentifier.name !== newUriDetails.fileIdentifier.name;
         const hasChanged = hasNamespaceChanged || hasIdentifierChanged;
 
         return {
             old: oldUriDetails,
             new: newUriDetails,
+            identifiers: contentDetails.identifiers,
             hasNamespaces: hasNamespaces,
             hasNamespaceChanged: hasNamespaceChanged,
-            hasIdentifierChanged: hasIdentifierChanged,
+            hasFileIdentifierChanged: hasIdentifierChanged,
             hasChanged: hasChanged,
         };
     }
 
     /**
-     * Retrieves and validates namespace and identifier information for a PHP file.
-     *
-     * This method first attempts to resolve namespace and identifier using path-based resolution.
-     * If either is invalid according to PHP naming conventions, it falls back to analyzing the
-     * file content to extract this information directly using regex patterns.
-     *
-     * @param uri The URI of the PHP file to analyze
-     * @param sourceContentUri Optional URI to use for content extraction (used when a file is being moved)
-     * @returns Details containing the URI, namespace, identifier and validation status
+     * Extracts namespace and identifiers from the content of a file.
+     * @param uri URI of the file
+     * @returns Object with namespace, identifiers, and isFile flag
      */
-    private async getUriDetails(
-        uri: vscode.Uri,
-        sourceContentUri?: vscode.Uri
-    ): Promise<NamespaceRefactorUriDetailsType> {
-        const contentUri = sourceContentUri || uri;
-        const isContentFile = await isUriFile(contentUri);
-
-        const namespace = await this.getNamespaceUnsafe(uri);
-        const identifier = await this.getIdentifierUnsafe(uri);
-        const isNamespaceValid = await this.namespacePathValidator.validate(namespace);
-        const isIdentifierValid = await this.namespaceIdentifierValidator.validate(identifier);
-
-        if (!isContentFile || (isNamespaceValid && isIdentifierValid)) {
-            return { uri, namespace, identifier, isNamespaceValid, isIdentifierValid };
+    private async getContentDetails(uri: vscode.Uri): Promise<ContentDetailsType> {
+        const isContentFile = await isUriFile(uri);
+        if (!isContentFile) {
+            return { namespace: undefined, identifiers: [], isFile: false };
         }
 
-        const contentInfo = await this.parseInformationFromContent(contentUri);
-        return {
-            uri,
-
-            namespace: isNamespaceValid ? namespace : contentInfo.namespace,
-            namespaceInvalid: isNamespaceValid ? undefined : namespace,
-            isNamespaceValid: isNamespaceValid,
-
-            identifier: isNamespaceValid && isIdentifierValid ? identifier : contentInfo.identifier,
-            identifierInvalid: isIdentifierValid ? undefined : identifier,
-            isIdentifierValid: isIdentifierValid,
-        };
-    }
-
-    /**
-     * Attempts to resolve a PHP namespace from the given URI path.
-     * @param uri The URI to resolve the namespace from
-     * @returns The resolved PHP namespace or empty string
-     */
-    private async getNamespaceUnsafe(uri: vscode.Uri): Promise<string> {
-        return (await this.namespaceResolver.resolveUnsafe(uri)) || "";
-    }
-
-    /**
-     * Extracts the filename from a URI to use as PHP class identifier.
-     * @param uri The URI to get the filename from
-     * @returns The filename without extension to use as PHP identifier
-     */
-    private async getIdentifierUnsafe(uri: vscode.Uri): Promise<string> {
-        return getUriFileName(uri);
-    }
-
-    /**
-     * Parses PHP file content to extract namespace declaration and class/interface/trait definition.
-     * @param uri The URI of the PHP file to analyze
-     * @returns Object containing the extracted namespace and identifier
-     */
-    private async parseInformationFromContent(uri: vscode.Uri): Promise<{
-        namespace: string;
-        identifier: string;
-    }> {
         const content = await getFileContentByUri(uri);
+        const parser = new PhpParser(content, getUriFileName(uri, true));
+        const namespace = parser.getNamespace();
+        let identifiers = parser.getTopLevelIdentifiers();
 
-        const definitionRegExp = this.namespaceRegExpProvider.getDefinitionRegExp();
-        const definitionMatch = definitionRegExp.exec(content);
-        const identifier = definitionMatch?.[2] || "";
-
-        const namespaceRegExp = this.namespaceRegExpProvider.getNamespaceDeclarationRegExp();
-        const namespaceMatch = namespaceRegExp.exec(content);
-        const namespace = namespaceMatch?.[1] || "";
+        const config = vscode.workspace.getConfiguration("phpSmartFiles");
+        if (!config.get<boolean>("refactorNamespacesIncludeFunctions", true)) {
+            identifiers = identifiers.filter((identifier) => identifier.kind !== IdentifierKindEnum.Function);
+        }
+        if (!config.get<boolean>("refactorNamespacesIncludeConstants", true)) {
+            identifiers = identifiers.filter((identifier) => identifier.kind !== IdentifierKindEnum.Constant);
+        }
 
         return {
             namespace: namespace,
-            identifier: identifier,
+            identifiers: identifiers,
+            isFile: true,
         };
+    }
+
+    /**
+     * Analyzes a URI and extracts namespace and identifier information for refactoring purposes.
+     * @param uri URI of the file
+     * @param contentDetails Previously extracted information from the file content (namespace, identifiers, isFile)
+     * @returns Object with namespace, identifier, and validation information for the file
+     */
+    private async getUriDetails(
+        uri: vscode.Uri,
+        contentDetails: ContentDetailsType
+    ): Promise<NamespaceRefactorUriDetailsType> {
+        const namespaceUnsafe = await this.namespaceResolver.resolveUnsafe(uri);
+        const isNamespaceValid = await this.namespacePathValidator.validate(namespaceUnsafe);
+        const namespaceInvalid = isNamespaceValid ? undefined : namespaceUnsafe;
+        const namespace = (isNamespaceValid ? namespaceUnsafe : contentDetails.namespace) || "";
+
+        const fileIdentifierUnsafe = getUriFileName(uri);
+        const isFileIdentifierValid = await this.namespaceIdentifierValidator.validate(fileIdentifierUnsafe);
+        const fileIdentifierInvalid = isFileIdentifierValid ? undefined : fileIdentifierUnsafe;
+        const fileIdentifier: IdentifierType = isFileIdentifierValid
+            ? { name: fileIdentifierUnsafe, kind: IdentifierKindEnum.Oop }
+            : this.getOopIdentifier(contentDetails.identifiers) || { name: "", kind: IdentifierKindEnum.Oop };
+
+        return {
+            uri,
+            namespace,
+            namespaceInvalid,
+            isNamespaceValid,
+            fileIdentifier,
+            fileIdentifierInvalid,
+            isFileIdentifierValid,
+        };
+    }
+
+    /**
+     * Searches for the first OOP identifier (class, interface, trait, enum) in the identifiers array.
+     * @param identifiers List of identifiers found in the file content
+     * @returns First OOP identifier or undefined if none was found
+     */
+    private getOopIdentifier(identifiers: IdentifierType[]): IdentifierType | undefined {
+        return identifiers.find((identifier) => {
+            switch (identifier.kind) {
+                case IdentifierKindEnum.Oop:
+                case IdentifierKindEnum.Class:
+                case IdentifierKindEnum.Interface:
+                case IdentifierKindEnum.Trait:
+                case IdentifierKindEnum.Enum:
+                    return true;
+                default:
+                    return false;
+            }
+        });
     }
 }

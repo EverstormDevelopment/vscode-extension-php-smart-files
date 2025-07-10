@@ -1,11 +1,12 @@
 {
   "php-smart-files.submenus.main.label": "Créer un fichier PHP",
-
   "php-smart-files.commands.newEmptyPhpFile.title": "Fichier PHP",
+  "php-smart-files.commands.newEmptyPhpFunction.title": "Fonction PHP",
   "php-smart-files.commands.newEmptyPhpClass.title": "Classe PHP",
   "php-smart-files.commands.newEmptyPhpInterface.title": "Interface PHP",
   "php-smart-files.commands.newEmptyPhpEnum.title": "Enum PHP",
   "php-smart-files.commands.newEmptyPhpTrait.title": "Trait PHP",
+  "php-smart-files.commands.newTemplatePhpFunction.title": "Fonction PHP depuis modèle",
   "php-smart-files.commands.newTemplatePhpClass.title": "Classe PHP depuis modèle",
   "php-smart-files.commands.newTemplatePhpInterface.title": "Interface PHP depuis modèle",
   "php-smart-files.commands.newTemplatePhpEnum.title": "Enum PHP depuis modèle",
@@ -35,6 +36,10 @@
   "php-smart-files.config.refactorNamespacesOnDirectoryChanges.confirm": "Avec confirmation",
   "php-smart-files.config.refactorNamespacesOnDirectoryChanges.always": "Toujours sans confirmation",
   "php-smart-files.config.refactorNamespacesOnDirectoryChanges.never": "Jamais",
+
+  "php-smart-files.config.refactorNamespacesSortUseStatements.description": "Trier automatiquement les instructions `use` par ordre alphabétique lors du refactoring des espaces de noms.",
+  "php-smart-files.config.refactorNamespacesIncludeFunctions.description": "Inclure les références de fonction dans le refactoring. Met à jour les appels internes, les imports `use function` associés et les références externes.",
+  "php-smart-files.config.refactorNamespacesIncludeConstants.description": "Inclure les références de constante dans le refactoring. Met à jour les utilisations internes, les imports `use const` associés et les références externes.",
 
   "php-smart-files.config.refactorNamespacesExcludeDirectories.description": "Les répertoires spécifiés seront exclus lors du refactoring des espaces de noms. (Remarque : Les entrées doivent être au format de motif Glob, par exemple, `/vendor/**`, `var/cache/**` ou `**/temp/**`.)"
 }

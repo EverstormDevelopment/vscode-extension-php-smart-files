@@ -32,8 +32,8 @@ export class NamespaceDirectoryRefactorer {
             location: vscode.ProgressLocation.Notification,
             title: vscode.l10n.t(
                 'Updating directory from "{0}" to "{1}"',
-                refactorDetails.old.identifier,
-                refactorDetails.new.identifier
+                refactorDetails.old.fileIdentifier.name,
+                refactorDetails.new.fileIdentifier.name
             ),
         };
 

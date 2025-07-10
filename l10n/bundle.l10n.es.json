@@ -1,7 +1,15 @@
 {
+  "PHP Smart Files {0} is ready! See what’s new and customize it in your settings.": "¡PHP Smart Files {0} está listo! Descubre las novedades y personalízalo en la configuración.",
+  "Changelog": "Changelog",
+  "Settings": "Configuración",
+  
   "Create PHP File": "Crear archivo PHP",
   "Enter filename (without .php)": "Ingrese nombre de archivo (sin .php)",
   "Enter a name for the new PHP file": "Ingrese un nombre para el nuevo archivo PHP",
+
+  "Create PHP Function": "Crear función PHP",
+  "Enter function filename (without .php)": "Ingrese nombre de la función (sin .php)",
+  "Enter a name for the new PHP function file": "Ingrese un nombre para el nuevo archivo de función PHP",
   
   "Create PHP Class": "Crear clase PHP",
   "Enter class name": "Ingrese nombre de la clase",
@@ -39,9 +47,10 @@
   "Cancel": "Cancelar",
   "Error creating file: {0}": "Error al crear el archivo: {0}",
   "Error reading composer.json": "Error al leer composer.json",
-  
+
   "Please enter a valid filename": "Por favor ingrese un nombre de archivo válido",
   "Filename contains characters not allowed by the file system": "El nombre del archivo contiene caracteres no permitidos por el sistema de archivos",
+  "Filename can only contain letters, numbers, and underscores, to be autoload compatible": "El nombre del archivo solo puede contener letras, números y guiones bajos, para ser compatible con autoload",
   "Filename contains characters that may cause issues with PHP includes or URLs": "El nombre del archivo contiene caracteres que pueden causar problemas con includes de PHP o URLs",
   "Namespace skipped: The detected namespace was invalid due to invalid names in the directory structure.": "Espacio de nombres omitido: El espacio de nombres detectado no era válido debido a nombres no válidos en la estructura de directorios.",
   
@@ -50,8 +59,11 @@
   "Definition name must start with an uppercase letter or underscore": "El nombre de definición debe comenzar con una letra mayúscula o guion bajo",
   "Definition name can only contain letters, numbers, and underscores": "El nombre de definición solo puede contener letras, números y guiones bajos",
   "Cannot use PHP reserved keyword as definition name": "No se puede usar una palabra reservada de PHP como nombre de definición",
+  "Cannot use PHP global function name as definition name": "No se puede usar el nombre de una función global de PHP como nombre de definición.",
+  "Cannot use PHP global constant name as definition name": "No se puede usar el nombre de una constante global de PHP como nombre de definición.",
   
   "Would you like to update the namespace for \"{0}\" and all its references?": "¿Le gustaría actualizar el espacio de nombres para \"{0}\" y todas sus referencias?",
+  "Warning: The new file name \"{0}\" is globally reserved or a PHP keyword. This may cause errors or unpredictable behavior in your project. Do you want to proceed and update the declaration identifier and all its references?": "Advertencia: El nuevo nombre de archivo \"{0}\" está reservado globalmente o es una palabra clave de PHP. Esto puede causar errores o un comportamiento impredecible en tu proyecto. ¿Quieres continuar y actualizar el identificador de declaración y todas sus referencias?",
   "Yes": "Sí",
   "No": "No",
   "Error during namespace refactoring: {0}": "Error durante la refactorización del espacio de nombres: {0}",

@@ -1,8 +1,16 @@
 {
+  "PHP Smart Files {0} is ready! See what’s new and customize it in your settings.": "PHP Smart Files {0} is ready! See what’s new and customize it in your settings.",
+  "Changelog": "Changelog",
+  "Settings": "Settings",
+
   "Create PHP File": "Create PHP File",
   "Enter filename (without .php)": "Enter filename (without .php)",
   "Enter a name for the new PHP file": "Enter a name for the new PHP file",
-  
+
+  "Create PHP Function": "Create PHP Function",
+  "Enter function filename (without .php)": "Enter function filename (without .php)",
+  "Enter a name for the new PHP function file": "Enter a name for the new PHP function file",
+
   "Create PHP Class": "Create PHP Class",
   "Enter class name": "Enter class name",
   "Enter a name for the new PHP class": "Enter a name for the new PHP class",
@@ -42,6 +50,7 @@
 
   "Please enter a valid filename": "Please enter a valid filename",
   "Filename contains characters not allowed by the file system": "Filename contains characters not allowed by the file system",
+  "Filename can only contain letters, numbers, and underscores, to be autoload compatible": "Filename can only contain letters, numbers, and underscores, to be autoload compatible",
   "Filename contains characters that may cause issues with PHP includes or URLs": "Filename contains characters that may cause issues with PHP includes or URLs",
   "Namespace skipped: The detected namespace was invalid due to invalid names in the directory structure.": "Namespace skipped: The detected namespace was invalid due to invalid names in the directory structure.",
 
@@ -50,8 +59,11 @@
   "Definition name must start with an uppercase letter or underscore": "Definition name must start with an uppercase letter or underscore",
   "Definition name can only contain letters, numbers, and underscores": "Definition name can only contain letters, numbers, and underscores",
   "Cannot use PHP reserved keyword as definition name": "Cannot use PHP reserved keyword as definition name",
+  "Cannot use PHP global function name as definition name": "Cannot use PHP global function name as definition name",
+  "Cannot use PHP global constant name as definition name": "Cannot use PHP global constant name as definition name",
   
   "Would you like to update the namespace for \"{0}\" and all its references?": "Would you like to update the namespace for \"{0}\" and all its references?",
+  "Warning: The new file name \"{0}\" is globally reserved or a PHP keyword. This may cause errors or unpredictable behavior in your project. Do you want to proceed and update the declaration identifier and all its references?": "Warning: The new file name \"{0}\" is globally reserved or a PHP keyword. This may cause errors or unpredictable behavior in your project. Do you want to proceed and update the declaration identifier and all its references?",
   "Yes": "Yes",
   "No": "No",
   "Error during namespace refactoring: {0}": "Error during namespace refactoring: {0}",

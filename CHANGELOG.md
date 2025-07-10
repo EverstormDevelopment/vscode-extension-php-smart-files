@@ -1,12 +1,39 @@
-# Change Log
+# Changelog
 
 All notable changes to the "PHP Smart Files" extension will be documented in this file.
 <!-- Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file. -->
+
+## [1.1.0] - 2025-07-10
+
+### Added
+
+- Added support for function and constant imports during namespace refactoring:  
+  - `use function` and `use const` statements are now properly recognized and updated when referenced files are moved or renamed.  
+  - These features can be enabled or disabled via the settings `phpSmartFiles.refactorNamespacesIncludeFunctions` and `phpSmartFiles.refactorNamespacesIncludeConstants`.  
+- Added automatic sorting of `use` statements during refactoring:  
+  - When enabled, all `use` statements in affected PHP files are grouped by type — normal `use`, `use function`, and `use const` — and sorted alphabetically within each group.  
+  - Toggle this behavior via the `phpSmartFiles.sortUseStatementsOnRefactor` setting (default: enabled).  
+- Introduced `GlobalReservedService`:  
+  - Centralizes detection and management of all globally reserved PHP names (functions, constants, keywords) from the PHP runtime, composer dependencies, and framework packages.  
+  - Prevents naming conflicts by ensuring generated code avoids reserved names and blocks incorrect `use` statements for global functions.  
+  - Used throughout the extension for validation, refactoring, and code generation.
+  - **Please see the _Recommendations_ section in the README for usage notes and configuration tips regarding this service.**
+- Added ability to create PHP functions via the file creation dialog — just like classes, interfaces, traits, and enums.
+- Added a notification message to inform users about the successful installation or update of the extension.
+
+### Changed
+
+- When renaming a file to a globally reserved name, a clear warning is now shown before refactoring. Refactoring and renaming will only proceed after explicit confirmation, helping to prevent accidental conflicts with PHP keywords or reserved names.
+- The confirmation dialog before refactoring after moving or renaming a file or directory is now shown as an information message instead of a warning.
+- Updated logo with new design for better visibility and brand recognition
+- Adjusted marketplace banner color to match the new logo style for consistent visual identity
+
 
 
 ## [1.0.6] - 2025-06-12
 
 ### Fixed
+
 - Fixed issue with `use` statements from the global namespace not being properly recognized:
   - Resolved problem where classes from the global namespace (e.g., `use IntlTimeZone;`) were not correctly detected
   - Prevented generation of incorrect additional `use` statements when moving files that reference global namespace classes
@@ -17,6 +44,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 ## [1.0.5] - 2025-06-10
 
 ### Fixed
+
 - Fixed an issue where non-namespaced entries in `extends` and `implements` lists were missed if partially or fully qualified names were present. All relevant entries are now correctly identified and processed.
 
 
@@ -24,6 +52,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 ## [1.0.4] - 2025-06-06
 
 ### Changed
+
 - Updated README.md:
   - Improved formatting for better rendering in the Visual Studio Marketplace
   - Ensured list rendering and section spacing is consistent
@@ -33,6 +62,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 ## [1.0.3] - 2025-06-06
 
 ### Changed
+
 - Updated README to ensure that all lists and sections are displayed correctly and consistently
 
 
@@ -40,6 +70,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 ## [1.0.2] - 2025-06-04
 
 ### Changed
+
 - Updated package.json:
   - Improved and clarified the extension description for better marketplace visibility
   - Refined and expanded the keywords list for improved discoverability
@@ -56,6 +87,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 ## [1.0.1] - 2025-06-03
 
 ### Changed
+
 - Updated README documentation:
   - Improved formatting for better readability
   - Removed badges that were not functioning correctly
@@ -66,6 +98,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 ## [1.0.0] - 2025-06-03
 
 ### Added
+
 - Official release of the "PHP Smart Files" extension, version 1.0.0:
   - Comprehensive support for PHP file creation, namespace refactoring, and directory operations
   - Multi-language support (English, German, French, Spanish, Russian)
@@ -76,10 +109,12 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
   - Improved user feedback with localized messages and progress indicators
 
 ### Changed
+
 - Updated all dependencies to their latest versions for improved compatibility and security
 - Finalized testing to ensure stability and reliability for the first release
 
 ### Fixed
+
 - Resolved all known issues from previous versions to deliver a polished and stable extension
 
 
@@ -87,6 +122,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 ## [0.9.2] - 2025-06-03
 
 ### Fixed
+
 - Fixed namespace refactoring by excluding PHP built-in functions:
   - Now properly skips global PHP functions during namespace refactoring operations
   - Added centralized list of PHP built-in functions to prevent false positive replacements
@@ -109,12 +145,14 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 ## [0.9.1] - 2025-05-29
 
 ### Changed
+
 - Improved README documentation:
   - Removed redundant "Community Involvement" section
   - Made documentation more compact and focused on key information
   - Streamlined content for better readability
 
 ### Added
+
 - Added missing translation for directory update notifications:
   - Added "Updating directory from X to Y" message in all supported languages (English, German, French, Spanish, Russian)
   - Ensures consistent user feedback during directory refactoring operations
@@ -124,6 +162,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 ## [0.9.0] - 2025-05-29
 
 ### Added
+
 - Added comprehensive support for partially qualified namespaces during refactoring:
   - Intelligent handling of partially qualified references when files are moved or renamed
   - Automatically simplifies references when files move into the same namespace
@@ -136,6 +175,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
   - Provides clearer feedback during large directory refactoring operations
 
 ### Changed
+
 - Improved README:
   - Made documentation more compact and scannable
   - Added detailed project information and background
@@ -144,6 +184,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
   - Enhanced formatting for better visual clarity
 
 ### Fixed
+
 - Fixed handling of multiple interfaces in class declarations:
   - Properly recognizes and refactors all interfaces in comma-separated lists when implementing multiple interfaces
   - Ensures consistent refactoring of all interfaces in `implements` clauses
@@ -159,6 +200,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 ## [0.8.2] - 2025-05-22
 
 ### Improved
+
 - Enhanced file creation workflow by automatically saving files after template insertion, eliminating the need for manual saves
 - Improved PHP reserved keywords handling:
   - Expanded and optimized the centralized list of PHP reserved keywords and types
@@ -167,6 +209,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
   - Enhanced filename validation to properly reject all reserved PHP keywords
 
 ### Fixed
+
 - Fixed incomplete refactoring of type references:
   - Now properly detects and updates type hints in function parameters when classes are moved or renamed
   - Now properly detects and updates return type declarations when referenced classes are moved or renamed
@@ -184,11 +227,13 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 ## [0.8.1] - 2025-05-21
 
 ### Changed
+
 - Added extension icon/logo
 - Added demonstration GIFs showing key features in action
 - Significantly improved README documentation
 
 ### Fixed
+
 - Fixed case-insensitive recognition of PHP keywords:
   - Now properly recognizes PHP keywords like `namespace`, `use`, `class`, `interface`, `enum`, `trait`, etc. in any case variant (e.g., `NameSpace`, `USE`, `Class`)
   - This resolves issues where statements like `Namespace App\Foo` or `use App\Foo AS Bar` were not correctly recognized
@@ -199,6 +244,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 ## [0.8.0] - 2025-05-19
 
 ### Changed
+
 - Improved file and directory observers to work in a truly lazy manner:
   - Observers register only when PHP files exist in the workspace
   - Observers now dynamically register when the first PHP file is added to a previously non-PHP project
@@ -224,6 +270,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
   - Enhanced visual distinction between critical errors and important warnings
 
 ### Fixed
+
 - Fixed refactoring issue with files that were previously in invalid directories:
   - Corrected handling of files that are moved from invalid to valid directories
   - Fixed namespace updates when an invalid directory is renamed to a valid one
@@ -235,6 +282,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 ## [0.7.0] - 2025-05-16
 
 ### Added
+
 - Added support for directory operations (renaming/moving):
   - All files within a changed directory are now refactored as if they were individually moved
   - Namespace declarations in all affected files are automatically adjusted
@@ -245,6 +293,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
   - `never`: Disables the feature
 
 ### Changed
+
 - Significantly improved performance by processing reference updates in parallel
 - Now preserving line break styles (CR, LF, CRLF) in all refactored files
 
@@ -253,6 +302,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 ## [0.6.0] - 2025-05-14
 
 ### Added
+
 - Added specialized templates for Symfony components:
   - Controller with proper route attributes and render method
   - Command with complete structure following Symfony console conventions
@@ -261,6 +311,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 - Added support for detecting and refactoring use statements with aliases when moving or renaming PHP files
 
 ### Changed
+
 - Optimized extension performance by only activating file observers when PHP files exist in workspace
 - Renamed extension from "PHP File Creator" to "PHP Smart Files" to better reflect its expanded capabilities
 - Improved wording of placeholders in code templates for better clarity and usability
@@ -270,6 +321,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 ## [0.5.1] - 2025-05-12
 
 ### Fixed
+
 - Cancel refactor on renaming files from or to invalid PHP identifier
 
 
@@ -277,6 +329,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 ## [0.5.0] - 2025-05-12
 
 ### Changed
+
 - Enhanced namespace refactoring to adjust `use` statements when moving files:
   - If the moved file references classes, interfaces, enums, or traits in the same namespace before the move, the necessary `use` statements are added to maintain valid references.
   - If the moved file is in the same namespace as classes, interfaces, enums, or traits it previously referenced via `use` statements, the now redundant `use` statements are removed.
@@ -286,6 +339,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 ## [0.4.0] - 2025-05-08
 
 ### Added
+
 - Enhanced namespace refactoring to support file renaming operations
   - When a PHP file is renamed, the name of the definition (class, interface, enum, or trait) in the file is adjusted accordingly
   - All references to the definition in other files are automatically updated
@@ -297,6 +351,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 - Improved confirmation dialog for namespace refactoring showing the new identifier name
 
 ### Changed
+
 - Improved error handling during namespace refactoring
 - Optimized performance for file operation processing
 
@@ -305,6 +360,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 ## [0.3.0] - 2025-05-07
 
 ### Added
+
 - Introduced a feature to detect when a file is moved and automatically adjust the namespace within the file and all its references.
   - If the namespace changes, the `use` statement in the reference is updated accordingly.
   - If the files previously shared the same namespace, a `use` statement is added to the reference.
@@ -321,11 +377,13 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 ## [0.2.0] - 2025-05-04
 
 ### Added
+
 - Added setting to control inclusion of `declare(strict_types=1);` in generated files (default: `false`)
 - Added setting `useFallbackNamespace` to use a fallback namespace when no namespace could be resolved (default: `false`)
 - Added setting `fallbackNamespace` to define the namespace when `useFallbackNamespace` is enabled (default: `App`)
 
 ### Fixed
+
 - Misleading and wrong translations
 
 
@@ -333,6 +391,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 ## [0.1.1] - 2025-05-04
 
 ### Fixed
+
 - Missing package translations (nls) for es, fr and ru
 
 
@@ -340,6 +399,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 ## [0.1.0] - 2025-05-04
 
 ### Added
+
 - First development version of the extension
 - Support for creating PHP files, classes, interfaces, enums, and traits
 - Support for automatic namespace detection based on Composer configuration

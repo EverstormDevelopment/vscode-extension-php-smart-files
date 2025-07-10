@@ -1,5 +1,5 @@
-import { throws } from "assert";
 import { escapeRegExp } from "../../../utils/regexp/escapeRegExp";
+import { IdentifierKindEnum } from "./../enum/IdentifierKindEnum";
 
 /**
  * Provides regular expressions for PHP namespace and identifier operations.
@@ -21,12 +21,19 @@ export class NamespaceRegExpProvider {
         interface: "[iI][nN][tT][eE][rR][fF][aA][cC][eE]",
         enum: "[eE][nN][uU][mM]",
         trait: "[tT][rR][aA][iI][tT]",
+        function: "[fF][uU][nN][cC][tT][iI][oO][nN]",
+        const: "[cC][oO][nN][sS][tT]",
         extends: "[eE][xX][tT][eE][nN][dD][sS]",
         implements: "[iI][mM][pP][lL][eE][mM][eE][nN][tT][sS]",
         new: "[nN][eE][wW]",
         return: "[rR][eE][tT][uU][rR][nN]",
         param: "[pP][aA][rR][aA][mM]",
         throws: "[tT][hH][rR][oO][wW][sS]",
+        case: "[cC][aA][sS][eE]",
+        echo: "[eE][cC][hH][oO]",
+        print: "[pP][rR][iI][nN][tT]",
+        die: "[dD][iI][eE]",
+        exit: "[eE][xX][iI][tT]",
     };
 
     /**
@@ -95,10 +102,10 @@ export class NamespaceRegExpProvider {
     }
 
     /**
-     * Creates a regular expression for non-qualified references in PHP code for updating to FQNs.
+     * Creates a regular expression for non-qualified oop references in PHP code.
      * @returns RegExp for finding non-qualified references.
      */
-    public getNonQualifiedReferenceRegExp(): RegExp {
+    public getNonQualifiedOopReferenceRegExp(): RegExp {
         const {
             extends: extendsPattern,
             implements: implementsPattern,
@@ -124,6 +131,50 @@ export class NamespaceRegExpProvider {
             `[,\\(]\\s*(${identifierPattern})(?!\\s*\\\\)\\s+\\$${identifierPattern}\\b`,
             // Return type declarations (matches only non-qualified types)
             `\\)\\s*:(?:\\s*\\?)?\\s*(${identifierPattern})(?!\\s*\\\\)\\b`,
+        ];
+
+        return new RegExp(orPatterns.join("|"), "gu");
+    }
+
+    /**
+     * Creates a regular expression for non-qualified function references in PHP code.
+     * @returns RegExp for finding non-qualified function references.
+     */
+    public getNonQualifiedFunctionReferenceRegExp(): RegExp {
+        const identifierPattern = NamespaceRegExpProvider.identifierPattern;
+        const {
+            echo: echoPattern,
+            print: printPattern,
+            die: diePattern,
+            exit: exitPattern,
+        } = NamespaceRegExpProvider.keywordPatterns;
+        return new RegExp(
+            `((?<!([\\p{L}\\d_\\\\:>$]|#\\[)\\s*)|(?<=${echoPattern}\\s*|${printPattern}\\s*|${diePattern}\\s*|${exitPattern}\\s*))(${identifierPattern})\\s*(?=\\()`,
+            "gu"
+        );
+    }
+
+    /**
+     * Creates a regular expression for non-qualified constant references in PHP code.
+     * Matches constant usages that are not qualified by namespace, class, or object context.
+     * Excludes constants accessed via static, instance, or array/object dereferencing, and avoids matches inside strings or after PHP keywords.
+     * @todo You may need to filter out matches that allready matched by other regexes, to avoid false positives!
+     * @returns RegExp for finding non-qualified constant references.
+     */
+    public getNonQualifiedConstantReferenceRegExp(): RegExp {
+        const identifierPattern = NamespaceRegExpProvider.identifierPattern;
+        const {
+            case: casePattern,
+            echo: echoPattern,
+            print: printPattern,
+            die: diePattern,
+            exit: exitPattern,
+        } = NamespaceRegExpProvider.keywordPatterns;
+        const orPatterns = [
+            // Match non-qualified constants in various contexts
+            `(?<![\\p{L}\\d_\\\\$'"]+\\s*|::|->)\\b(${identifierPattern})\\b(?!\\s*:\\s*[^_$'"{])(?!\\s*[\\p{L}\\d_\\\\>(('"$}\\[]|->)(?!\\s*=[^>])`,
+            // Match constants after case, echo and print statements
+            `(?<=${casePattern}\\s*|${echoPattern}\\s*|${printPattern}\\s*|${diePattern}\\s*|${exitPattern}\\s*)(?:[+-]?)\\b(${identifierPattern})\\b(?=\\s*[:;])`,
         ];
 
         return new RegExp(orPatterns.join("|"), "gu");
@@ -173,49 +224,63 @@ export class NamespaceRegExpProvider {
     }
 
     /**
-     * Creates a regular expression for standalone identifiers with word boundary checks.
-     * @param identifier The identifier to match.
-     * @returns RegExp for finding the specific identifier.
+     * Creates a regular expression for finding a specific identifier in PHP code.
+     * Supports matching identifiers with or without namespace context.
+     * @param identifier The identifier to match (e.g., class name, function name).
+     * @param includeNamespace Whether to include the namespace in the match (default: false).
+     * @returns RegExp for finding the identifier.
      */
-    public getIdentifierRegExp(identifier: string): RegExp {
+    public getIdentifierRegExp(identifier: string, includeNamespace?: boolean): RegExp {
         const id = this.escape(identifier);
-        return new RegExp(`(?<![\\p{L}\\d_\\\\])${id}(?![\\p{L}\\d_\\\\])`, "gu");
+        const excludeNamespace = includeNamespace ? "" : this.escape("\\");
+        return new RegExp(`(?<![\\p{L}\\d_${excludeNamespace}])${id}(?![\\p{L}\\d_\\\\])`, "gu");
     }
 
     /**
      * Creates a regular expression for finding a PHP `use` statement.
-     * @param value Fully qualified namespace, partial namespace, or alias.
-     * @param options Options for the search:
-     *                matchType: 'fullQualified' | 'partial' | 'alias';
-     *                includeAlias: Whether to include an optional alias.
-     * @returns RegExp for finding the use statement.
+     * Supports matching fully qualified, partial, or aliased imports, and can distinguish between class, function, and constant imports.
+     * @param value Fully qualified namespace, partial namespace, or alias to match.
+     * @param options Optional settings:
+     *   - matchType: 'fullQualified' | 'partial' | 'alias' (default: 'fullQualified')
+     *   - matchKind: IdentifierKindEnum to specify class, function, or constant
+     *   - includeAlias: Whether to include an optional alias in the match
+     * @returns RegExp for finding the matching use statement.
      */
     public getUseStatementRegExp(
         value: string,
-        options?: { matchType?: "fullQualified" | "partial" | "alias"; includeAlias?: boolean }
+        options?: {
+            matchType?: "fullQualified" | "partial" | "alias";
+            matchKind?: IdentifierKindEnum;
+            includeAlias?: boolean;
+        }
     ): RegExp {
+        const pattern = NamespaceRegExpProvider.keywordPatterns;
         const escapedValue = this.escape(value);
         const identifierPattern = NamespaceRegExpProvider.identifierPattern;
-        const { use: usePattern, as: asPattern } = NamespaceRegExpProvider.keywordPatterns;
 
-        let namespacePattern: string;
-        let aliasPattern = options?.includeAlias ? `(?:\\s+${asPattern}\\s+(${identifierPattern}))?` : "";
-
-        switch (options?.matchType) {
-            case "partial":
-                namespacePattern = `(?:[\\p{L}\\d_\\\\]+\\\\)?${escapedValue}`;
-                break;
-            case "alias":
-                namespacePattern = `[\\p{L}\\d_\\\\]+`;
-                aliasPattern = `\\s+${asPattern}\\s+${escapedValue}`;
-                break;
-            case "fullQualified":
-            default:
-                namespacePattern = escapedValue;
-                break;
+        let kindPattern = "";
+        if (options?.matchKind === IdentifierKindEnum.Constant) {
+            kindPattern = pattern.const + "\\s+";
+        } else if (options?.matchKind === IdentifierKindEnum.Function) {
+            kindPattern = pattern.function + "\\s+";
         }
 
-        return new RegExp(`${usePattern}\\s+(${namespacePattern})${aliasPattern}\\s*;`, "gu");
+        let namespacePattern = escapedValue;
+        if (options?.matchType === "partial") {
+            namespacePattern = `(?:[\\p{L}\\d_\\\\]+\\\\)?${escapedValue}`;
+        } else if (options?.matchType === "alias") {
+            namespacePattern = `[\\p{L}\\d_\\\\]+`;
+        }
+
+        let aliasPattern = "";
+        if (options?.matchType === "alias") {
+            aliasPattern = `\\s+${pattern.as}\\s+${escapedValue}`;
+        } else if (options?.includeAlias) {
+            aliasPattern = `(?:\\s+${pattern.as}\\s+(${identifierPattern}))?`;
+        }
+
+        const regexString = `${pattern.use}\\s+${kindPattern}(${namespacePattern})${aliasPattern}\\s*;`;
+        return new RegExp(regexString, "gu");
     }
 
     /**
@@ -226,5 +291,26 @@ export class NamespaceRegExpProvider {
     public getLastUseStatementRegExp(): RegExp {
         const { use: usePattern } = NamespaceRegExpProvider.keywordPatterns;
         return new RegExp(`^${usePattern}\\s+[\\p{L}\\d_\\\\]+\\s*;`, "gmu");
+    }
+
+    /**
+     * Creates a regular expression that matches a block of use statements, including the namespace
+     * declaration. This is useed for extracting a block of use statements in a PHP file.
+     * @returns RegExp for matching a block of use statements.
+     */
+    public getUseStatementBlockRegExp(): RegExp {
+        const identifierPattern = NamespaceRegExpProvider.identifierPattern;
+        const {
+            namespace: namespacePattern,
+            use: usePattern,
+            as: asPattern,
+            function: functionPattern,
+            const: constPattern,
+        } = NamespaceRegExpProvider.keywordPatterns;
+
+        return new RegExp(
+            `(${namespacePattern}\\s+[\\p{L}_][\\p{L}\\d_\\\\]*\\s*;\\s*)((?:(?:\\s*\\/\\/.*|\\s*#.*|\\s*\\/\\*[\\s\\S]*?\\*\\/|\\s*)*\\s*${usePattern}\\s+(?:${functionPattern}\\s+|${constPattern}\\s+)?[\\p{L}_][\\p{L}\\d_\\\\]*(?:\\s+${asPattern}\\s*${identifierPattern})?\\s*;\\s*)+)`,
+            "u"
+        );
     }
 }

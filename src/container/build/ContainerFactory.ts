@@ -12,6 +12,15 @@ export class ContainerFactory {
     private static defaultContainer: ContainerInterface | null = null;
 
     /**
+     * Returns the singleton instance of the default container.
+     * If it does not exist, it will be created first.
+     * @returns The default container instance
+     */
+    public static getDefaultContainer(): ContainerInterface {
+        return ContainerFactory.createDefaultContainer();
+    }
+
+    /**
      * Creates or returns the default container (singleton pattern).
      * Ensures that only one instance exists throughout the application.
      * @returns The default container instance with all standard services registered

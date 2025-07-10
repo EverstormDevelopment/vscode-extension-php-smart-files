@@ -67,10 +67,10 @@ export class NamespaceRefactorService {
             return false;
         }
 
-        if (!refactorDetails.new.isIdentifierValid) {
+        if (!refactorDetails.new.isFileIdentifierValid) {
             const message = vscode.l10n.t(
                 "The provided name '{0}' is not a valid PHP identifier. The refactoring process has been canceled.",
-                refactorDetails.new.identifierInvalid || refactorDetails.new.identifier || "undefined"
+                refactorDetails.new.fileIdentifierInvalid || refactorDetails.new.fileIdentifier.name || "undefined"
             );
             vscode.window.showWarningMessage(message);
             return false;

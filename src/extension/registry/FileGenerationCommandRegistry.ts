@@ -1,4 +1,4 @@
-import { FileTypeEnum } from "../../utils/enum/FileTypeEnum";
+import { FileTypeEnum } from "../../service/php/enum/FileTypeEnum";
 
 /**
  * Registry mapping command names to their corresponding PHP file types.
@@ -9,11 +9,13 @@ import { FileTypeEnum } from "../../utils/enum/FileTypeEnum";
  */
 export const FileGenerationCommandRegistry: Record<string, FileTypeEnum> = {
     newEmptyPhpFile: FileTypeEnum.File,
+    newEmptyPhpFunction: FileTypeEnum.Function,
     newEmptyPhpClass: FileTypeEnum.Class,
     newEmptyPhpInterface: FileTypeEnum.Interface,
     newEmptyPhpEnum: FileTypeEnum.Enum,
     newEmptyPhpTrait: FileTypeEnum.Trait,
 
+    newTemplatePhpFunction: FileTypeEnum.TemplateFunction,
     newTemplatePhpClass: FileTypeEnum.TemplateClass,
     newTemplatePhpInterface: FileTypeEnum.TemplateInterface,
     newTemplatePhpEnum: FileTypeEnum.TemplateEnum,

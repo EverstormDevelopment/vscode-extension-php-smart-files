@@ -139,3 +139,6 @@ dist
 
 # extension files
 *.vsix
+
+# Claude Code worktrees
+.claude/worktrees/

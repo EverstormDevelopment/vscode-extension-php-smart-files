@@ -45,7 +45,7 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
      */
     private async refactorFile(refactorDetails: NamespaceRefactorDetailsType): Promise<boolean> {
         const fileContent = await this.getFileContent(refactorDetails.new.uri);
-        const updatedContent = this.refactorContent(fileContent, refactorDetails);
+        const updatedContent = await this.refactorContent(fileContent, refactorDetails);
         if (updatedContent === fileContent) {
             return false;
         }
@@ -60,10 +60,13 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
      * @param refactorDetails Details about what needs to be refactored.
      * @returns The fully refactored content.
      */
-    private refactorContent(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
+    private async refactorContent(
+        content: string,
+        refactorDetails: NamespaceRefactorDetailsType
+    ): Promise<string> {
         if (refactorDetails.hasNamespaceChanged) {
             content = this.refactorNamespace(content, refactorDetails);
-            content = this.refactorUseStatements(content, refactorDetails);
+            content = await this.refactorUseStatements(content, refactorDetails);
             content = this.refactorPartialQualified(content, refactorDetails);
         }
         if (refactorDetails.hasFileIdentifierChanged) {
@@ -125,8 +128,11 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
      * @param refactorDetails Details about what needs to be refactored.
      * @returns The content with updated use statements.
      */
-    private refactorUseStatements(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
-        const references = this.getNonQualifiedReferences(content);
+    private async refactorUseStatements(
+        content: string,
+        refactorDetails: NamespaceRefactorDetailsType
+    ): Promise<string> {
+        const references = await this.getNonQualifiedReferences(content, refactorDetails);
         const nonQualifiedReferences = references.filter(
             (reference) => reference.name !== refactorDetails.old.fileIdentifier.name
         );
@@ -190,25 +196,145 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
      * @param content The file content to analyse.
      * @returns Deduplicated list of unqualified references.
      */
-    private getNonQualifiedReferences(content: string): IdentifierType[] {
+    private async getNonQualifiedReferences(
+        content: string,
+        refactorDetails: NamespaceRefactorDetailsType
+    ): Promise<IdentifierType[]> {
         const parser = new PhpParser(content);
         const allRefs = new PhpAstTraverser(parser.getAST()).getNameReferences(true);
 
         const config = vscode.workspace.getConfiguration("phpSmartFiles");
         const includeFunctions = config.get<boolean>("refactorNamespacesIncludeFunctions", true);
         const includeConstants = config.get<boolean>("refactorNamespacesIncludeConstants", true);
+        const needsDefinitionLookup = allRefs.some(
+            (ref) =>
+                ref.resolution === NameResolutionEnum.Uqn &&
+                (ref.kind === IdentifierKindEnum.Function || ref.kind === IdentifierKindEnum.Constant)
+        );
+        const importableDefinitions = needsDefinitionLookup
+            ? await this.getImportableDefinitionsFromOldNamespace(refactorDetails)
+            : new Set<string>();
 
         return allRefs
             .filter((ref) => ref.resolution === NameResolutionEnum.Uqn)
             .filter((ref) => {
                 if (ref.kind === IdentifierKindEnum.Function) {
-                    return includeFunctions;
+                    return (
+                        includeFunctions &&
+                        this.hasImportableDefinition(ref.name, ref.kind, importableDefinitions, refactorDetails)
+                    );
                 }
                 if (ref.kind === IdentifierKindEnum.Constant) {
-                    return includeConstants;
+                    return (
+                        includeConstants &&
+                        this.hasImportableDefinition(ref.name, ref.kind, importableDefinitions, refactorDetails)
+                    );
                 }
                 return true;
             })
             .map((ref) => ({ name: ref.name, kind: ref.kind }));
+    }
+
+    /**
+     * Collects function and constant definitions that actually exist in the file's old namespace.
+     * Only these symbols are eligible for newly added `use function` / `use const` statements.
+     * @param refactorDetails Details about the refactoring operation.
+     * @returns A set of importable symbol keys in the old namespace.
+     */
+    private async getImportableDefinitionsFromOldNamespace(
+        refactorDetails: NamespaceRefactorDetailsType
+    ): Promise<Set<string>> {
+        const currentFileDefinitions = new Set(
+            refactorDetails.identifiers
+                .filter(
+                    (identifier) =>
+                        identifier.kind === IdentifierKindEnum.Function ||
+                        identifier.kind === IdentifierKindEnum.Constant
+                )
+                .map((identifier) => this.getImportableDefinitionKey(identifier.name, identifier.kind))
+        );
+
+        const availableDefinitions = new Set<string>();
+        const phpFiles = await this.findPhpFiles(refactorDetails.new.uri);
+
+        for (const file of phpFiles) {
+            const fileContent = await this.getFileContent(file);
+            const parser = new PhpParser(fileContent);
+            if (parser.getNamespace() !== refactorDetails.old.namespace) {
+                continue;
+            }
+
+            const identifiers = parser.getTopLevelIdentifiers();
+            for (const identifier of identifiers) {
+                if (
+                    identifier.kind !== IdentifierKindEnum.Function &&
+                    identifier.kind !== IdentifierKindEnum.Constant
+                ) {
+                    continue;
+                }
+
+                const key = this.getImportableDefinitionKey(identifier.name, identifier.kind);
+                if (currentFileDefinitions.has(key)) {
+                    continue;
+                }
+
+                availableDefinitions.add(key);
+            }
+        }
+
+        return availableDefinitions;
+    }
+
+    /**
+     * Checks whether the referenced function or constant can actually be imported from the old namespace.
+     * Symbols defined in the moved file itself are excluded because they move along with the file.
+     * @param name The referenced symbol name.
+     * @param kind The symbol kind.
+     * @param availableDefinitions All matching definitions found in the old namespace.
+     * @param refactorDetails Details about the refactoring operation.
+     * @returns True if the symbol should receive a use statement, otherwise false.
+     */
+    private hasImportableDefinition(
+        name: string,
+        kind: IdentifierKindEnum,
+        availableDefinitions: Set<string>,
+        refactorDetails: NamespaceRefactorDetailsType
+    ): boolean {
+        const key = this.getImportableDefinitionKey(name, kind);
+        if (
+            refactorDetails.identifiers.some(
+                (identifier) => identifier.name === name && identifier.kind === kind
+            )
+        ) {
+            return false;
+        }
+
+        return availableDefinitions.has(key);
+    }
+
+    /**
+     * Builds a stable lookup key for a function or constant definition.
+     * @param name The symbol name.
+     * @param kind The symbol kind.
+     * @returns A unique lookup key.
+     */
+    private getImportableDefinitionKey(name: string, kind: IdentifierKindEnum): string {
+        return `${kind}:${name}`;
+    }
+
+    /**
+     * Finds PHP files in the workspace that may contain definitions in the old namespace.
+     * Honors the configured excluded directories and skips the moved file itself.
+     * @param currentFileUri The moved file URI.
+     * @returns Candidate PHP files to inspect.
+     */
+    protected async findPhpFiles(currentFileUri: vscode.Uri): Promise<vscode.Uri[]> {
+        const config = vscode.workspace.getConfiguration("phpSmartFiles");
+        const excludedFolders = config.get<string[]>("refactorNamespacesExcludeDirectories", []);
+
+        const relativeFilePath = vscode.workspace.asRelativePath(currentFileUri.fsPath);
+        const excludePattern = `{${[...excludedFolders, relativeFilePath].join(",")}}`;
+
+        return vscode.workspace.findFiles("**/*.php", excludePattern);
     }
 }

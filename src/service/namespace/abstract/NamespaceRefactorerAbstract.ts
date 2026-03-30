@@ -149,7 +149,13 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
                     return false;
                 }
 
-                return statement.name.startsWith(`${namespace}\\`);
+                const importedSegments = statement.name.split("\\");
+                if (importedSegments.length < 2) {
+                    return false;
+                }
+
+                const importedNamespace = importedSegments.slice(0, -1).join("\\");
+                return importedNamespace === namespace;
             })
             .sort((a, b) => b.loc.start - a.loc.start);
 

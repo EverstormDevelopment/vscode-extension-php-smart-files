@@ -84,14 +84,13 @@ export const ContainerRegistry: ContainerRegistrationType[] = [
         constructor: NamespaceRefactorDetailsProvider,
         dependencies: [
             NamespaceResolver,
-            NamespaceRegExpProvider,
             NamespacePathValidator,
             NamespaceIdentifierValidator,
         ],
     },
     {
         constructor: NamespaceSourceRefactorer,
-        dependencies: [NamespaceRegExpProvider, GlobalReservedService],
+        dependencies: [NamespaceRegExpProvider],
     },
     {
         constructor: NamespaceReferencesRefactorer,

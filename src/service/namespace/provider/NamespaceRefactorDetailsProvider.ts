@@ -10,7 +10,6 @@ import { NamespaceRefactorUriDetailsType } from "../type/NamespaceRefactorUriDet
 import { NamespaceIdentifierValidator } from "../validator/NamespaceIdentifierValidator";
 import { NamespacePathValidator } from "../validator/NamespacePathValidator";
 import { IdentifierKindEnum } from "./../enum/IdentifierKindEnum";
-import { NamespaceRegExpProvider } from "./NamespaceRegExpProvider";
 
 /**
  * Structure containing the most important information from the PHP file content for refactoring operations.
@@ -32,13 +31,11 @@ export class NamespaceRefactorDetailsProvider {
     /**
      * Initializes the provider with all required dependencies.
      * @param namespaceResolver Provides the namespace for a URI
-     * @param namespaceRegExpProvider Provides RegExp for PHP namespace detection
      * @param namespacePathValidator Checks if a namespace matches the file path structure
      * @param namespaceIdentifierValidator Checks if an identifier is valid
      */
     constructor(
         protected readonly namespaceResolver: NamespaceResolver,
-        protected readonly namespaceRegExpProvider: NamespaceRegExpProvider,
         protected readonly namespacePathValidator: NamespacePathValidator,
         protected readonly namespaceIdentifierValidator: NamespaceIdentifierValidator
     ) {}

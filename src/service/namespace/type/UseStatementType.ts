@@ -13,4 +13,6 @@ export type UseStatementType = {
     alias: string | null;
     /** Character offset range of the entire use statement in the source */
     loc: OffsetLocType;
+    /** True when this item belongs to a grouped statement, e.g. `use App\{Foo, Bar}` */
+    grouped: boolean;
 };

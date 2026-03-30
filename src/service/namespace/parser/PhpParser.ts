@@ -188,7 +188,8 @@ export class PhpParser {
                 // Grouped: item.name is relative (e.g. "Foo"), groupPrefix is the common part
                 const name: string = groupPrefix ? `${groupPrefix}\\${item.name}` : item.name;
                 const alias: string | null = item.alias?.name ?? null;
-                result.push({ name, kind, alias, loc });
+                const grouped = groupPrefix !== null;
+                result.push({ name, kind, alias, loc, grouped });
             }
         }
 

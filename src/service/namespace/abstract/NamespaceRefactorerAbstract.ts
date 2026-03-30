@@ -4,9 +4,12 @@ import { getFileContentByUri } from "../../../utils/vscode/getFileContentByUri";
 import { setFileContentByUri } from "../../../utils/vscode/setFileContentByUri";
 import { getUseTypeByKind } from "../../php/function/getUseTypeByKind";
 import { NamespaceRefactorerInterface } from "../interface/NamespaceRefactorerInterface";
+import { PhpParser } from "../parser/PhpParser";
 import { NamespaceRegExpProvider } from "../provider/NamespaceRegExpProvider";
+import { IdentifierKindEnum } from "../enum/IdentifierKindEnum";
 import { IdentifierType } from "../type/IdentifierType";
 import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailsType";
+import { UseStatementType } from "../type/UseStatementType";
 
 /**
  * Abstract base class that implements common functionality for PHP namespace refactoring.
@@ -24,6 +27,8 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
 
     /**
      * Updates class identifier references within file content.
+     * Skips replacement when the file is in the new namespace and no use statement exists.
+     * The name replacement itself uses a word-boundary regex (intentionally kept simple).
      * @param content The file content to refactor.
      * @param fileNamespace The current namespace of the file.
      * @param refactorDetails Details about the namespace and identifier changes.
@@ -34,9 +39,11 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
         fileNamespace: string,
         refactorDetails: NamespaceRefactorDetailsType
     ): string {
-        const oldFullyQualifiedNamespace = `${refactorDetails.old.namespace}\\${refactorDetails.old.fileIdentifier.name}`;
-        const useStatementRegExp = this.namespaceRegExpProvider.getUseStatementRegExp(oldFullyQualifiedNamespace);
-        if (fileNamespace !== refactorDetails.new.namespace && !useStatementRegExp.test(content)) {
+        const oldFQN = `${refactorDetails.old.namespace}\\${refactorDetails.old.fileIdentifier.name}`;
+        const useStatements = new PhpParser(content).getUseStatements();
+        const hasUseStatement = useStatements.some((s) => s.name === oldFQN);
+
+        if (fileNamespace !== refactorDetails.new.namespace && !hasUseStatement) {
             return content;
         }
 
@@ -49,83 +56,87 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
 
     /**
      * Adds a PHP use statement for the given identifier and namespace to the file content, if not already present.
-     * The use statement is inserted after the last existing use statement, or after the namespace declaration if no use statements exist.
-     * Handles function and constant imports according to the identifier kind.
+     * Inserts after the last existing use statement, or after the namespace declaration if none exist.
      * @param content The file content to modify.
      * @param namespace The fully qualified namespace to import from (without trailing backslash).
      * @param identifier The identifier (name and kind) to import.
-     * @returns The updated file content with the new use statement inserted, or the original content if already present or no namespace declaration found.
+     * @returns The updated file content with the new use statement inserted, or unchanged if already present.
      */
     protected addUseStatement(content: string, namespace: string, identifier: IdentifierType): string {
         if (this.hasUseStatementForIdentifier(content, identifier)) {
             return content;
         }
 
-        const namespaceDeclarationRegExp = this.namespaceRegExpProvider.getNamespaceDeclarationRegExp();
-        const namespaceDeclarationMatch = content.match(namespaceDeclarationRegExp);
-        if (!namespaceDeclarationMatch) {
+        const parser = new PhpParser(content);
+        const namespaceLoc = parser.getNamespaceLoc();
+        if (!namespaceLoc) {
             return content;
         }
 
         const linebreakType = getLinebreakType(content);
         const useType = getUseTypeByKind(identifier.kind);
-        const useStatement = `${linebreakType}use ${useType}${namespace}\\${identifier.name};`;
+        const newUseStatement = `${linebreakType}use ${useType}${namespace}\\${identifier.name};`;
 
-        const lastUseStatementRegExp = this.namespaceRegExpProvider.getLastUseStatementRegExp();
-        const lastUseStatementMatch = content.match(lastUseStatementRegExp);
-        const addUseTo = lastUseStatementMatch
-            ? lastUseStatementMatch[lastUseStatementMatch.length - 1]
-            : namespaceDeclarationMatch[0];
+        const useStatements = parser.getUseStatements();
+        const insertAfterOffset =
+            useStatements.length > 0
+                ? useStatements[useStatements.length - 1].loc.end
+                : namespaceLoc.end;
 
-        return content.replace(addUseTo, `${addUseTo}${useStatement}`);
+        return content.slice(0, insertAfterOffset) + newUseStatement + content.slice(insertAfterOffset);
     }
 
     /**
      * Checks if a use statement for the given identifier already exists in the file content.
-     * Considers both direct and aliased imports.
+     * Considers both direct (last segment match) and aliased imports.
      * @param content The file content to check.
      * @param identifier The identifier (name and kind) to look for.
      * @returns True if a matching use statement exists, otherwise false.
      */
     protected hasUseStatementForIdentifier(content: string, identifier: IdentifierType): boolean {
-        const useStatementRegExp = this.namespaceRegExpProvider.getUseStatementRegExp(identifier.name, {
-            matchType: "partial",
-            matchKind: identifier.kind,
-            includeAlias: true,
+        const useStatements = new PhpParser(content).getUseStatements();
+        return useStatements.some((stmt) => {
+            if (!this.useStatementKindMatches(stmt.kind, identifier.kind)) {
+                return false;
+            }
+            const lastSegment = stmt.name.split("\\").pop() ?? "";
+            return lastSegment === identifier.name || stmt.alias === identifier.name;
         });
-
-        const aliasRegExp = this.namespaceRegExpProvider.getUseStatementRegExp(identifier.name, {
-            matchType: "alias",
-            matchKind: identifier.kind,
-        });
-
-        return useStatementRegExp.test(content) || aliasRegExp.test(content);
     }
 
     /**
      * Removes a PHP use statement for the given identifier and namespace from the file content.
-     * Matches the use statement including an optional trailing line break.
+     * Grouped use statements are skipped (cannot be individually removed).
+     * Also removes the immediately following newline(s).
      * @param content The file content to modify.
      * @param namespace The fully qualified namespace to remove (without trailing backslash).
      * @param identifier The identifier (name and kind) whose use statement should be removed.
      * @returns The updated file content with the use statement removed.
      */
     protected removeUseStatement(content: string, namespace: string, identifier: IdentifierType): string {
-        const fullQualifiedNamespace = `${namespace}\\${identifier.name}`;
-        const useStatementRegExp = this.namespaceRegExpProvider.getUseStatementRegExp(fullQualifiedNamespace, {
-            matchKind: identifier.kind,
-        });
-        const useStatementWithLineBreakRegExp = new RegExp(
-            `${useStatementRegExp.source}\\s*?\\r?\\n?`,
-            useStatementRegExp.flags
+        const fullName = `${namespace}\\${identifier.name}`;
+        const useStatements = new PhpParser(content).getUseStatements();
+        const stmt = useStatements.find(
+            (s) => !s.grouped && s.name === fullName && this.useStatementKindMatches(s.kind, identifier.kind)
         );
 
-        return content.replace(useStatementWithLineBreakRegExp, "");
+        if (!stmt) {
+            return content;
+        }
+
+        // Remove statement and any immediately following newline(s)
+        let end = stmt.loc.end;
+        while (end < content.length && (content[end] === "\r" || content[end] === "\n")) {
+            end++;
+        }
+
+        return content.slice(0, stmt.loc.start) + content.slice(end);
     }
 
     /**
-     * Orders the use statements in a PHP file content. Sorts use statements by type (normal, function, const)
-     * and alphabetically within each type. Preserves the original line breaks and structure of the use block.
+     * Orders the use statements in a PHP file content. Sorts by type (normal, function, const)
+     * and alphabetically within each group. Uses AST to locate the use block boundaries,
+     * then re-sorts the raw source lines (preserving grouped statements as-is).
      * @param content The file content to modify.
      * @returns The updated content with ordered use statements.
      */
@@ -135,43 +146,48 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
             return content;
         }
 
-        const regex = this.namespaceRegExpProvider.getUseStatementBlockRegExp();
-        const match = regex.exec(content);
-        if (!match) {
+        const useStatements = new PhpParser(content).getUseStatements();
+        if (useStatements.length === 0) {
             return content;
         }
 
         const lineBreak = getLinebreakType(content);
-        const useBlockEnd = lineBreak + lineBreak;
+        const blockStart = useStatements[0].loc.start;
+        const lastStmt = useStatements[useStatements.length - 1];
 
-        const blockStart = match.index + match[1].length;
-        const blockEnd = match.index + match[0].length;
-        const blockContent = match[2];
+        // Advance past trailing whitespace after the use block (same as prior regex \\s* behavior)
+        let blockEnd = lastStmt.loc.end;
+        while (blockEnd < content.length && /\s/.test(content[blockEnd])) {
+            blockEnd++;
+        }
 
-        const extractedUseStatements = blockContent
+        // Extract raw use statement lines and sort them (grouped statements handled as opaque lines)
+        const rawBlock = content.slice(blockStart, lastStmt.loc.end);
+        const allLines = rawBlock
             .split(/\r?\n/)
             .map((line) => line.trim())
             .filter((line) => line.toLowerCase().startsWith("use "));
 
-        const useBlocks: { [key: string]: string } = {};            
-        const filters = {
-            normal: /^use\s+(?!function\b|const\b)/,
-            function: /^use\s+function\b/i,
-            const: /^use\s+const\b/i,
-        };
-        for (const [key, filter] of Object.entries(filters)) {
-            const useBlock = extractedUseStatements
-                .filter((line) => filter.test(line.toLowerCase()))
-                .sort((a, b) => a.localeCompare(b))
-                .join(lineBreak);
-            useBlocks[key] = useBlock.length > 0 ? useBlock + useBlockEnd : "";
+        const filterAndSort = (pattern: RegExp): string[] =>
+            allLines.filter((line) => pattern.test(line)).sort((a, b) => a.localeCompare(b));
+
+        const normalLines = filterAndSort(/^use\s+(?!function\b|const\b)/i);
+        const functionLines = filterAndSort(/^use\s+function\b/i);
+        const constantLines = filterAndSort(/^use\s+const\b/i);
+
+        const sections: string[] = [];
+        if (normalLines.length > 0) {
+            sections.push(normalLines.join(lineBreak));
+        }
+        if (functionLines.length > 0) {
+            sections.push(functionLines.join(lineBreak));
+        }
+        if (constantLines.length > 0) {
+            sections.push(constantLines.join(lineBreak));
         }
 
-        const sortedUseStatements = useBlocks.normal + useBlocks.function + useBlocks.const;
-        const contentBeforeUseBlock = content.substring(0, blockStart);
-        const contentAfterUseBlock = content.substring(blockEnd);
-        content = contentBeforeUseBlock + sortedUseStatements + contentAfterUseBlock;
-        return content;
+        const sortedBlock = sections.join(lineBreak + lineBreak);
+        return content.slice(0, blockStart) + sortedBlock + lineBreak + lineBreak + content.slice(blockEnd);
     }
 
     /**
@@ -185,11 +201,44 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
 
     /**
      * Sets the content of a file, either in an open editor or directly on disk.
-     * Preserves the editor's dirty state if the file is already open.
      * @param uri The URI of the file to update.
      * @param content The new content to write to the file.
      */
     protected async setFileContent(uri: vscode.Uri, content: string): Promise<void> {
         return setFileContentByUri(uri, content);
+    }
+
+    /**
+     * Checks if a use statement kind matches an identifier kind.
+     * Function and Constant require exact kind match; everything else matches Oop use statements.
+     * @param stmtKind The kind of the use statement.
+     * @param identifierKind The kind of the identifier to match against.
+     * @returns True if the kinds are compatible.
+     */
+    protected useStatementKindMatches(stmtKind: IdentifierKindEnum, identifierKind: IdentifierKindEnum): boolean {
+        if (identifierKind === IdentifierKindEnum.Function) {
+            return stmtKind === IdentifierKindEnum.Function;
+        }
+        if (identifierKind === IdentifierKindEnum.Constant) {
+            return stmtKind === IdentifierKindEnum.Constant;
+        }
+        return stmtKind === IdentifierKindEnum.Oop;
+    }
+
+    /**
+     * Returns a UseStatementType from a parsed list by exact FQN and kind match.
+     * @param useStatements The list of parsed use statements.
+     * @param fullName The fully qualified name to find (without leading backslash).
+     * @param identifier The identifier providing the kind to match.
+     * @returns The matching UseStatementType, or undefined if not found.
+     */
+    protected findUseStatement(
+        useStatements: UseStatementType[],
+        fullName: string,
+        identifier: IdentifierType
+    ): UseStatementType | undefined {
+        return useStatements.find(
+            (s) => s.name === fullName && this.useStatementKindMatches(s.kind, identifier.kind)
+        );
     }
 }

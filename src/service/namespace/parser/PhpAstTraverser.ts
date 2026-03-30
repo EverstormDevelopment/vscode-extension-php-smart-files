@@ -265,9 +265,9 @@ export class PhpAstTraverser {
         const kind =
             context === "function"
                 ? IdentifierKindEnum.Function
-                : context === "constant"
-                  ? IdentifierKindEnum.Constant
-                  : IdentifierKindEnum.Oop;
+                : context === "oop"
+                  ? IdentifierKindEnum.Oop
+                  : IdentifierKindEnum.Constant;
 
         refs.push({
             name,

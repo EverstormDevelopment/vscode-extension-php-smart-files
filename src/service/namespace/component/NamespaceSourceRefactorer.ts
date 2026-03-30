@@ -127,10 +127,6 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
      */
     private refactorUseStatements(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
         const references = this.getNonQualifiedReferences(content);
-        if (references.length === 0) {
-            return content;
-        }
-
         const nonQualifiedReferences = references.filter(
             (reference) => reference.name !== refactorDetails.old.fileIdentifier.name
         );
@@ -141,6 +137,8 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
         for (const identifier of nonQualifiedReferences) {
             content = this.removeUseStatement(content, refactorDetails.new.namespace, identifier);
         }
+
+        content = this.removeOwnNamespaceUseStatements(content, refactorDetails.new.namespace);
 
         return this.orderUseStatements(content);
     }

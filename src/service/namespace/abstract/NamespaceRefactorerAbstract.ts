@@ -134,6 +134,38 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
     }
 
     /**
+     * Removes non-aliased use statements that point to the file's own namespace.
+     * These imports are redundant after a move because names from the current namespace
+     * can be referenced directly without an import.
+     * @param content The file content to modify.
+     * @param namespace The current namespace of the file.
+     * @returns The updated file content without redundant same-namespace imports.
+     */
+    protected removeOwnNamespaceUseStatements(content: string, namespace: string): string {
+        const useStatements = new PhpParser(content)
+            .getUseStatements()
+            .filter((statement) => {
+                if (statement.grouped || statement.alias !== null) {
+                    return false;
+                }
+
+                return statement.name.startsWith(`${namespace}\\`);
+            })
+            .sort((a, b) => b.loc.start - a.loc.start);
+
+        for (const statement of useStatements) {
+            let end = statement.loc.end;
+            while (end < content.length && (content[end] === "\r" || content[end] === "\n")) {
+                end++;
+            }
+
+            content = content.slice(0, statement.loc.start) + content.slice(end);
+        }
+
+        return content;
+    }
+
+    /**
      * Orders the use statements in a PHP file content. Sorts by type (normal, function, const)
      * and alphabetically within each group. Uses AST to locate the use block boundaries,
      * then re-sorts the raw source lines (preserving grouped statements as-is).

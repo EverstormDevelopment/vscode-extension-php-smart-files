@@ -273,7 +273,8 @@ export class PhpAstTraverser {
             name,
             kind,
             resolution,
-            // For FQN: loc.start.offset already points to the leading \ (php-parser quirk)
+            // For FQN: both loc.start.offset and nameNode.name include the leading \
+            // e.g. nameNode.name = "\\App\\Foo" for \App\Foo
             loc: {
                 start: nameNode.loc.start.offset,
                 end: nameNode.loc.end.offset,

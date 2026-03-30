@@ -196,7 +196,7 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
         identifier: IdentifierType,
         replacements: Array<{ loc: OffsetLocType; newText: string }>
     ): void {
-        const oldFQNName = `${oldNamespace}\\${identifier.name}`;
+        const oldFQNName = `\\${oldNamespace}\\${identifier.name}`;
         const isSameNamespace = fileNamespace === newNamespace;
         const newText = isSameNamespace ? identifier.name : `\\${newNamespace}\\${identifier.name}`;
 

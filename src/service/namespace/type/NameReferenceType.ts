@@ -6,7 +6,7 @@ import { OffsetLocType } from "./OffsetLocType";
  * Represents a single name reference found in PHP source code during AST traversal.
  */
 export type NameReferenceType = {
-    /** Identifier name without leading backslash, e.g. "App\\Foo" for FQN or "Foo" for UQN */
+    /** Identifier name. For FQN includes leading backslash, e.g. "\\App\\Foo" for FQN or "Foo" for UQN */
     name: string;
     /** Semantic kind of the reference: Oop for class names, Function for calls, Constant for bare names */
     kind: IdentifierKindEnum;

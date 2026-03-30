@@ -4,6 +4,8 @@ import { getFileContentByUri } from "../../../utils/vscode/getFileContentByUri";
 import { setFileContentByUri } from "../../../utils/vscode/setFileContentByUri";
 import { getUseTypeByKind } from "../../php/function/getUseTypeByKind";
 import { NamespaceRefactorerInterface } from "../interface/NamespaceRefactorerInterface";
+import { NameResolutionEnum } from "../enum/NameResolutionEnum";
+import { PhpAstTraverser } from "../parser/PhpAstTraverser";
 import { PhpParser } from "../parser/PhpParser";
 import { NamespaceRegExpProvider } from "../provider/NamespaceRegExpProvider";
 import { IdentifierKindEnum } from "../enum/IdentifierKindEnum";
@@ -39,19 +41,51 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
         fileNamespace: string,
         refactorDetails: NamespaceRefactorDetailsType
     ): string {
-        const oldFQN = `${refactorDetails.old.namespace}\\${refactorDetails.old.fileIdentifier.name}`;
-        const useStatements = new PhpParser(content).getUseStatements();
-        const hasUseStatement = useStatements.some((s) => s.name === oldFQN);
+        const oldIdentifier = refactorDetails.old.fileIdentifier;
+        const oldFQN = `\\${refactorDetails.old.namespace}\\${oldIdentifier.name}`;
+        const newFQN = `\\${refactorDetails.new.namespace}\\${refactorDetails.new.fileIdentifier.name}`;
+        const hasUseStatement =
+            this.hasUseStatementForIdentifier(content, oldIdentifier) ||
+            this.hasUseStatementForIdentifier(content, refactorDetails.new.fileIdentifier);
+        const parser = new PhpParser(content);
+        const references = new PhpAstTraverser(parser.getAST())
+            .getNameReferences(false)
+            .filter((reference) => reference.kind === IdentifierKindEnum.Oop)
+            .sort((a, b) => b.loc.start - a.loc.start);
 
-        if (fileNamespace !== refactorDetails.new.namespace && !hasUseStatement) {
-            return content;
+        for (const reference of references) {
+            let newText: string | undefined;
+
+            if (reference.resolution === NameResolutionEnum.Fqn && reference.name === oldFQN) {
+                newText = newFQN;
+            }
+
+            if (
+                reference.resolution === NameResolutionEnum.Qn &&
+                `\\${fileNamespace}\\${reference.name}` === oldFQN
+            ) {
+                newText = reference.name.replace(
+                    this.namespaceRegExpProvider.getIdentifierRegExp(oldIdentifier.name, true),
+                    refactorDetails.new.fileIdentifier.name
+                );
+            }
+
+            if (
+                reference.resolution === NameResolutionEnum.Uqn &&
+                reference.name === oldIdentifier.name &&
+                (fileNamespace === refactorDetails.new.namespace || hasUseStatement)
+            ) {
+                newText = refactorDetails.new.fileIdentifier.name;
+            }
+
+            if (!newText) {
+                continue;
+            }
+
+            content = content.slice(0, reference.loc.start) + newText + content.slice(reference.loc.end);
         }
 
-        const identifierRegExp = this.namespaceRegExpProvider.getIdentifierRegExp(
-            refactorDetails.old.fileIdentifier.name,
-            true
-        );
-        return content.replace(identifierRegExp, refactorDetails.new.fileIdentifier.name);
+        return content;
     }
 
     /**

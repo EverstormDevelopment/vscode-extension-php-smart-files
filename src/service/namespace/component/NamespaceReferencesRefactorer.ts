@@ -154,7 +154,14 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
 
         // Step 3: Use statement changes — sequential, each call re-parses the updated content
         for (const identifier of identifiers) {
-            content = this.refactorUseStatement(content, fileNamespace, oldNamespace, newNamespace, identifier);
+            content = this.refactorUseStatement(
+                content,
+                fileNamespace,
+                oldNamespace,
+                newNamespace,
+                identifier,
+                refactorDetails
+            );
         }
 
         return content;
@@ -272,7 +279,8 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
         fileNamespace: string,
         oldNamespace: string,
         newNamespace: string,
-        identifier: IdentifierType
+        identifier: IdentifierType,
+        refactorDetails: NamespaceRefactorDetailsType
     ): string {
         const hasNamespaceChange = oldNamespace !== newNamespace;
         if (fileNamespace === oldNamespace && hasNamespaceChange) {
@@ -281,7 +289,13 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
             content = this.removeReferenceUseStatement(content, oldNamespace, identifier);
         }
 
-        return this.replaceReferenceUseStatement(content, oldNamespace, newNamespace, identifier);
+        return this.replaceReferenceUseStatement(
+            content,
+            oldNamespace,
+            newNamespace,
+            identifier,
+            refactorDetails
+        );
     }
 
     /**
@@ -324,10 +338,16 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
         content: string,
         oldNamespace: string,
         newNamespace: string,
-        identifier: IdentifierType
+        identifier: IdentifierType,
+        refactorDetails: NamespaceRefactorDetailsType
     ): string {
         const oldFQN = `${oldNamespace}\\${identifier.name}`;
-        const newFQN = `${newNamespace}\\${identifier.name}`;
+        const nextIdentifierName =
+            refactorDetails.hasFileIdentifierChanged &&
+            identifier.name === refactorDetails.old.fileIdentifier.name
+                ? refactorDetails.new.fileIdentifier.name
+                : identifier.name;
+        const newFQN = `${newNamespace}\\${nextIdentifierName}`;
 
         const useStatements = new PhpParser(content).getUseStatements();
         const stmt = this.findUseStatement(useStatements, oldFQN, identifier);

@@ -15,4 +15,8 @@ export type UseStatementType = {
     loc: OffsetLocType;
     /** True when this item belongs to a grouped statement, e.g. `use App\{Foo, Bar}` */
     grouped: boolean;
+    /** Shared prefix for grouped use statements, e.g. "App" in `use App\{Foo, Bar}` */
+    groupPrefix: string | null;
+    /** Stable location of the original import statement block for grouped and non-grouped imports */
+    groupLoc: OffsetLocType;
 };

@@ -192,7 +192,15 @@ export class PhpParser {
                 const name: string = groupPrefix ? `${groupPrefix}\\${item.name}` : item.name;
                 const alias: string | null = item.alias?.name ?? null;
                 const grouped = groupPrefix !== null;
-                result.push({ name, kind, alias, loc, grouped });
+                result.push({
+                    name,
+                    kind,
+                    alias,
+                    loc,
+                    grouped,
+                    groupPrefix,
+                    groupLoc: loc,
+                });
             }
         }
 

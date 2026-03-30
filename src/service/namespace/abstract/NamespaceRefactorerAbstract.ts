@@ -140,8 +140,7 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
 
     /**
      * Removes a PHP use statement for the given identifier and namespace from the file content.
-     * Grouped use statements are skipped (cannot be individually removed).
-     * Also removes the immediately following newline(s).
+     * Grouped imports are rewritten in place, collapsed to a single `use`, or removed entirely.
      * @param content The file content to modify.
      * @param namespace The fully qualified namespace to remove (without trailing backslash).
      * @param identifier The identifier (name and kind) whose use statement should be removed.
@@ -150,21 +149,25 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
     protected removeUseStatement(content: string, namespace: string, identifier: IdentifierType): string {
         const fullName = `${namespace}\\${identifier.name}`;
         const useStatements = new PhpParser(content).getUseStatements();
-        const stmt = useStatements.find(
-            (s) => !s.grouped && s.name === fullName && this.useStatementKindMatches(s.kind, identifier.kind)
-        );
+        const stmt = this.findUseStatement(useStatements, fullName, identifier);
 
         if (!stmt) {
             return content;
         }
 
-        // Remove statement and any immediately following newline(s)
-        let end = stmt.loc.end;
-        while (end < content.length && (content[end] === "\r" || content[end] === "\n")) {
-            end++;
+        if (!stmt.grouped) {
+            return this.removeUseStatementBlock(content, stmt.groupLoc);
         }
 
-        return content.slice(0, stmt.loc.start) + content.slice(end);
+        const remainingStatements = this.getGroupedUseStatements(useStatements, stmt).filter(
+            (groupedStatement) =>
+                !(
+                    groupedStatement.name === fullName &&
+                    this.useStatementKindMatches(groupedStatement.kind, identifier.kind)
+                )
+        );
+
+        return this.replaceUseStatementGroup(content, stmt, remainingStatements);
     }
 
     /**
@@ -176,30 +179,26 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
      * @returns The updated file content without redundant same-namespace imports.
      */
     protected removeOwnNamespaceUseStatements(content: string, namespace: string): string {
-        const useStatements = new PhpParser(content)
-            .getUseStatements()
-            .filter((statement) => {
-                if (statement.grouped || statement.alias !== null) {
-                    return false;
+        const useStatements = new PhpParser(content).getUseStatements();
+        const groups = this.getUniqueUseStatementGroups(useStatements).sort(
+            (a, b) => b.groupLoc.start - a.groupLoc.start
+        );
+
+        for (const group of groups) {
+            const remainingStatements = group.statements.filter((statement) => {
+                if (statement.alias !== null) {
+                    return true;
                 }
 
-                const importedSegments = statement.name.split("\\");
-                if (importedSegments.length < 2) {
-                    return false;
-                }
+                const importedNamespace = this.getImportedNamespace(statement.name);
+                return importedNamespace !== namespace;
+            });
 
-                const importedNamespace = importedSegments.slice(0, -1).join("\\");
-                return importedNamespace === namespace;
-            })
-            .sort((a, b) => b.loc.start - a.loc.start);
-
-        for (const statement of useStatements) {
-            let end = statement.loc.end;
-            while (end < content.length && (content[end] === "\r" || content[end] === "\n")) {
-                end++;
+            if (remainingStatements.length === group.statements.length) {
+                continue;
             }
 
-            content = content.slice(0, statement.loc.start) + content.slice(end);
+            content = this.replaceUseStatementGroup(content, group.statements[0], remainingStatements);
         }
 
         return content;
@@ -218,45 +217,21 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
             return content;
         }
 
-        const useStatements = new PhpParser(content).getUseStatements();
-        if (useStatements.length === 0) {
+        const useStatementGroups = this.getUniqueUseStatementGroups(new PhpParser(content).getUseStatements());
+        if (useStatementGroups.length === 0) {
             return content;
         }
 
         const lineBreak = getLinebreakType(content);
-        const blockStart = useStatements[0].loc.start;
-        const lastStmt = useStatements[useStatements.length - 1];
+        const blockStart = useStatementGroups[0].groupLoc.start;
+        const lastGroup = useStatementGroups[useStatementGroups.length - 1];
 
-        // Advance past trailing whitespace after the use block (same as prior regex \\s* behavior)
-        let blockEnd = lastStmt.loc.end;
+        let blockEnd = lastGroup.groupLoc.end;
         while (blockEnd < content.length && /\s/.test(content[blockEnd])) {
             blockEnd++;
         }
 
-        // Extract raw use statement lines and sort them (grouped statements handled as opaque lines)
-        const rawBlock = content.slice(blockStart, lastStmt.loc.end);
-        const allLines = rawBlock
-            .split(/\r?\n/)
-            .map((line) => line.trim())
-            .filter((line) => line.toLowerCase().startsWith("use "));
-
-        const filterAndSort = (pattern: RegExp): string[] =>
-            allLines.filter((line) => pattern.test(line)).sort((a, b) => a.localeCompare(b));
-
-        const normalLines = filterAndSort(/^use\s+(?!function\b|const\b)/i);
-        const functionLines = filterAndSort(/^use\s+function\b/i);
-        const constantLines = filterAndSort(/^use\s+const\b/i);
-
-        const sections: string[] = [];
-        if (normalLines.length > 0) {
-            sections.push(normalLines.join(lineBreak));
-        }
-        if (functionLines.length > 0) {
-            sections.push(functionLines.join(lineBreak));
-        }
-        if (constantLines.length > 0) {
-            sections.push(constantLines.join(lineBreak));
-        }
+        const sections = this.getSortedUseStatementSections(useStatementGroups, content, lineBreak);
 
         const sortedBlock = sections.join(lineBreak + lineBreak);
         return content.slice(0, blockStart) + sortedBlock + lineBreak + lineBreak + content.slice(blockEnd);
@@ -312,5 +287,172 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
         return useStatements.find(
             (s) => s.name === fullName && this.useStatementKindMatches(s.kind, identifier.kind)
         );
+    }
+
+    private getUniqueUseStatementGroups(
+        useStatements: UseStatementType[]
+    ): Array<{ groupKey: string; groupLoc: UseStatementType["groupLoc"]; kind: IdentifierKindEnum; statements: UseStatementType[] }> {
+        const groups = new Map<
+            string,
+            { groupKey: string; groupLoc: UseStatementType["groupLoc"]; kind: IdentifierKindEnum; statements: UseStatementType[] }
+        >();
+
+        for (const statement of useStatements) {
+            const groupKey = this.getUseStatementGroupKey(statement);
+            const existingGroup = groups.get(groupKey);
+            if (existingGroup) {
+                existingGroup.statements.push(statement);
+                continue;
+            }
+
+            groups.set(groupKey, {
+                groupKey,
+                groupLoc: statement.groupLoc,
+                kind: statement.kind,
+                statements: [statement],
+            });
+        }
+
+        return Array.from(groups.values()).sort((a, b) => a.groupLoc.start - b.groupLoc.start);
+    }
+
+    protected getGroupedUseStatements(useStatements: UseStatementType[], statement: UseStatementType): UseStatementType[] {
+        const groupKey = this.getUseStatementGroupKey(statement);
+        return useStatements.filter((useStatement) => this.getUseStatementGroupKey(useStatement) === groupKey);
+    }
+
+    protected getUseStatementGroupKey(statement: UseStatementType): string {
+        return [
+            statement.groupLoc.start,
+            statement.groupLoc.end,
+            statement.kind,
+            statement.groupPrefix ?? "",
+        ].join(":");
+    }
+
+    protected renderUseStatement(statement: UseStatementType): string {
+        return this.renderSingleUseStatement(statement.name, statement.kind, statement.alias);
+    }
+
+    protected renderSingleUseStatement(name: string, kind: IdentifierKindEnum, alias: string | null): string {
+        const useType = getUseTypeByKind(kind);
+        const aliasText = alias ? ` as ${alias}` : "";
+        return `use ${useType}${name}${aliasText};`;
+    }
+
+    protected renderUseStatementGroup(statements: UseStatementType[]): string {
+        if (statements.length === 0) {
+            return "";
+        }
+        if (statements.length === 1) {
+            return this.renderUseStatement(statements[0]);
+        }
+
+        const [firstStatement] = statements;
+        const groupPrefix = firstStatement.groupPrefix;
+        if (!firstStatement.grouped || !groupPrefix) {
+            return statements.map((statement) => this.renderUseStatement(statement)).join("\n");
+        }
+
+        const useType = getUseTypeByKind(firstStatement.kind);
+        const items = statements
+            .map((statement) => {
+                const relativeName = statement.name.startsWith(`${groupPrefix}\\`)
+                    ? statement.name.slice(groupPrefix.length + 1)
+                    : statement.name;
+                const aliasText = statement.alias ? ` as ${statement.alias}` : "";
+                return `${relativeName}${aliasText}`;
+            })
+            .join(", ");
+
+        return `use ${useType}${groupPrefix}\\{${items}};`;
+    }
+
+    protected replaceUseStatementGroup(
+        content: string,
+        statement: UseStatementType,
+        replacementStatements: UseStatementType[]
+    ): string {
+        const replacement = this.renderUseStatementGroup(replacementStatements);
+        if (replacement === "") {
+            return this.removeUseStatementBlock(content, statement.groupLoc);
+        }
+
+        return (
+            content.slice(0, statement.groupLoc.start) +
+            replacement +
+            content.slice(statement.groupLoc.end)
+        );
+    }
+
+    private removeUseStatementBlock(content: string, loc: UseStatementType["groupLoc"]): string {
+        let end = loc.end;
+        while (end < content.length && (content[end] === "\r" || content[end] === "\n")) {
+            end++;
+        }
+
+        return content.slice(0, loc.start) + content.slice(end);
+    }
+
+    private getImportedNamespace(fullName: string): string {
+        const importedSegments = fullName.split("\\");
+        if (importedSegments.length < 2) {
+            return "";
+        }
+
+        return importedSegments.slice(0, -1).join("\\");
+    }
+
+    private getSortedUseStatementSections(
+        useStatementGroups: Array<{
+            groupKey: string;
+            groupLoc: UseStatementType["groupLoc"];
+            kind: IdentifierKindEnum;
+            statements: UseStatementType[];
+        }>,
+        content: string,
+        lineBreak: string
+    ): string[] {
+        const orderedGroups = [...useStatementGroups].sort((a, b) => {
+            const kindOrder = this.getUseStatementSortOrder(a.kind) - this.getUseStatementSortOrder(b.kind);
+            if (kindOrder !== 0) {
+                return kindOrder;
+            }
+
+            const aText = content.slice(a.groupLoc.start, a.groupLoc.end).trim();
+            const bText = content.slice(b.groupLoc.start, b.groupLoc.end).trim();
+            return aText.localeCompare(bText);
+        });
+
+        const byKind = new Map<IdentifierKindEnum, string[]>();
+        for (const group of orderedGroups) {
+            const text = content.slice(group.groupLoc.start, group.groupLoc.end).trim();
+            const existing = byKind.get(group.kind) ?? [];
+            existing.push(text);
+            byKind.set(group.kind, existing);
+        }
+
+        const sections: string[] = [];
+        for (const kind of [IdentifierKindEnum.Oop, IdentifierKindEnum.Function, IdentifierKindEnum.Constant]) {
+            const lines = byKind.get(kind);
+            if (!lines || lines.length === 0) {
+                continue;
+            }
+
+            sections.push(lines.join(lineBreak));
+        }
+
+        return sections;
+    }
+
+    private getUseStatementSortOrder(kind: IdentifierKindEnum): number {
+        switch (kind) {
+            case IdentifierKindEnum.Function:
+                return 1;
+            case IdentifierKindEnum.Constant:
+                return 2;
+            default:
+                return 0;
+        }
     }
 }

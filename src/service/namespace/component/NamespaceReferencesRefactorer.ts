@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { getPathNormalized } from "../../../utils/filesystem/getPathNormalized";
 import { escapeRegExp } from "../../../utils/regexp/escapeRegExp";
-import { getUseTypeByKind } from "../../php/function/getUseTypeByKind";
+import { getLinebreakType } from "../../../utils/string/getLinebreakType";
 import { NamespaceRefactorerAbstract } from "../abstract/NamespaceRefactorerAbstract";
 import { NameResolutionEnum } from "../enum/NameResolutionEnum";
 import { PhpAstTraverser } from "../parser/PhpAstTraverser";
@@ -355,11 +355,40 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
             return content;
         }
 
-        const useType = getUseTypeByKind(identifier.kind);
-        const alias = stmt.alias ? ` as ${stmt.alias}` : "";
-        const newUseStatement = `use ${useType}${newFQN}${alias};`;
+        if (!stmt.grouped) {
+            return (
+                content.slice(0, stmt.groupLoc.start) +
+                this.renderSingleUseStatement(newFQN, stmt.kind, stmt.alias) +
+                content.slice(stmt.groupLoc.end)
+            );
+        }
 
-        return content.slice(0, stmt.loc.start) + newUseStatement + content.slice(stmt.loc.end);
+        const linebreakType = getLinebreakType(content);
+        const expandedStatements = this.getGroupedUseStatements(useStatements, stmt).map((groupStatement) => {
+            if (
+                groupStatement.name === oldFQN &&
+                this.useStatementKindMatches(groupStatement.kind, identifier.kind)
+            ) {
+                return {
+                    ...groupStatement,
+                    name: newFQN,
+                    grouped: false,
+                    groupPrefix: null,
+                };
+            }
+
+            return {
+                ...groupStatement,
+                grouped: false,
+                groupPrefix: null,
+            };
+        });
+
+        const expandedBlock = expandedStatements
+            .map((groupStatement) => this.renderUseStatement(groupStatement))
+            .join(linebreakType);
+
+        return content.slice(0, stmt.groupLoc.start) + expandedBlock + content.slice(stmt.groupLoc.end);
     }
 
     /**

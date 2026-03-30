@@ -178,9 +178,12 @@ export class PhpParser {
             const items: any[] = useGroup.items ?? [];
             const groupPrefix: string | null = useGroup.name ?? null;
             const kind = this.resolveUseStatementKind(useGroup.type);
+            const locStart = useGroup.loc.start.offset;
+            const locEnd = useGroup.loc.end.offset;
+            const semicolonIndex = this.phpCode.indexOf(";", locEnd);
             const loc: OffsetLocType = {
-                start: useGroup.loc.start.offset,
-                end: useGroup.loc.end.offset,
+                start: locStart,
+                end: semicolonIndex !== -1 ? semicolonIndex + 1 : locEnd,
             };
 
             for (const item of items) {

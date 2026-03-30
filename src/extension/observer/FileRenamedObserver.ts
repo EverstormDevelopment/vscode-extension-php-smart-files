@@ -4,7 +4,7 @@ import { FilesystemObserverResourceEnum } from "../../service/filesystem/observe
 import { FilesystemObserverEvent } from "../../service/filesystem/observer/event/FilesystemObserverEvent";
 import { FilesystemObserver } from "../../service/filesystem/observer/model/FilesystemObserver";
 import { NamespaceRefactorService } from "../../service/namespace/service/NamespaceRefactorService";
-import { GlobalReservedService } from "../../service/php/service/GlobalReservedService";
+import { ReservedKeywords } from "../../service/php/reserved/keywords/ReservedKeywords";
 import { getUriFileName } from "../../utils/filesystem/getUriFileName";
 import { ObserverAbstract } from "./ObserverAbstract";
 
@@ -20,8 +20,7 @@ export class FileRenamedObserver extends ObserverAbstract {
      */
     constructor(
         protected readonly filesystemObserver: FilesystemObserver,
-        protected readonly namespaceRefactorService: NamespaceRefactorService,
-        protected readonly globalReservedService: GlobalReservedService
+        protected readonly namespaceRefactorService: NamespaceRefactorService
     ) {
         super(filesystemObserver, namespaceRefactorService);
     }
@@ -77,14 +76,14 @@ export class FileRenamedObserver extends ObserverAbstract {
     }
 
     /**
-     * Validates if the new file name is not reserved globally or a PHP keyword.
+     * Validates if the new file name is not a PHP reserved keyword.
      * If it is reserved, prompts the user for confirmation before proceeding with the refactoring.
      * @param newUri The new URI of the file after it was renamed.
      * @returns A Promise that resolves to true if the name is valid or user confirms, false otherwise.
      */
     private async validateRenaming(newUri: vscode.Uri): Promise<boolean> {
         const name = getUriFileName(newUri);
-        const isReserved = await this.globalReservedService.isReserved(name);
+        const isReserved = ReservedKeywords.has(name.toLowerCase());
         if (!isReserved) {
             return true;
         }
@@ -93,14 +92,14 @@ export class FileRenamedObserver extends ObserverAbstract {
     }
 
     /**
-     * Prompts the user to confirm renaming a file to a reserved name.
+     * Prompts the user to confirm renaming a file to a reserved keyword.
      * If the user confirms, it proceeds with the refactoring.
-     * @param name The reserved name that the user is trying to use.
+     * @param name The reserved keyword that the user is trying to use.
      * @returns A Promise that resolves to true if the user confirmed, false otherwise.
      */
     private async confirmGlobalReservedName(name: string): Promise<boolean> {
         const confirmMessage = vscode.l10n.t(
-            'Warning: The new file name "{0}" is globally reserved or a PHP keyword. This may cause errors or unpredictable behavior in your project. Do you want to proceed and update the declaration identifier and all its references?',
+            'Warning: The new file name "{0}" is a PHP reserved keyword. This may cause errors or unpredictable behavior in your project. Do you want to proceed and update the declaration identifier and all its references?',
             name
         );
 

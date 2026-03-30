@@ -191,8 +191,8 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
 
     /**
      * Extracts unqualified name references from the file via AST traversal, classified by kind.
-     * Replaces the prior regex + GlobalReservedService approach. Built-in types are already
-     * filtered inside PhpAstTraverser. Config flags control function and constant inclusion.
+     * Built-in types are already filtered inside PhpAstTraverser. Config flags control
+     * function and constant inclusion.
      * @param content The file content to analyse.
      * @returns Deduplicated list of unqualified references.
      */

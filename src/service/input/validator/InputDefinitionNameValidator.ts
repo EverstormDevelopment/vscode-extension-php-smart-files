@@ -1,8 +1,6 @@
 import * as vscode from "vscode";
 import { InputValidatorInterface } from "../interface/InputValidatorInterface";
 import { InputDefinitionNameCharacterValidator } from "./InputDefinitionNameCharacterValidator";
-import { InputDefinitionNameGlobalConstantValidator } from "./InputDefinitionNameGlobalConstantValidator";
-import { InputDefinitionNameGlobalFunctionValidator } from './InputDefinitionNameGlobalFunctionValidator';
 import { InputDefinitionNameKeywordValidator } from "./InputDefinitionNameKeywordValidator";
 import { InputDefinitionNameLengthValidator } from "./InputDefinitionNameLengthValidator";
 import { InputDefinitionNameStartValidator } from "./InputDefinitionNameStartValidator";
@@ -29,8 +27,6 @@ export class InputDefinitionNameValidator implements InputValidatorInterface {
             new InputDefinitionNameStartValidator(this.allowLowercase),
             new InputDefinitionNameCharacterValidator(),
             new InputDefinitionNameKeywordValidator(),
-            new InputDefinitionNameGlobalFunctionValidator(),
-            new InputDefinitionNameGlobalConstantValidator(),
         ];
 
         for (const validator of validators) {

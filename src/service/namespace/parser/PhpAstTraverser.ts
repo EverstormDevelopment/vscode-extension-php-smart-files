@@ -275,9 +275,11 @@ export class PhpAstTraverser {
             resolution,
             // For FQN: both loc.start.offset and nameNode.name include the leading \
             // e.g. nameNode.name = "\\App\\Foo" for \App\Foo
+            // Use name.length for end instead of loc.end.offset — standalone expression
+            // statements include the trailing ";" in loc.end (php-parser quirk)
             loc: {
                 start: nameNode.loc.start.offset,
-                end: nameNode.loc.end.offset,
+                end: nameNode.loc.start.offset + name.length,
             },
         });
     }

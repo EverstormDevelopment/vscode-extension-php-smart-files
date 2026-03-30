@@ -30,7 +30,6 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
     /**
      * Updates class identifier references within file content.
      * Skips replacement when the file is in the new namespace and no use statement exists.
-     * The name replacement itself uses a word-boundary regex (intentionally kept simple).
      * @param content The file content to refactor.
      * @param fileNamespace The current namespace of the file.
      * @param refactorDetails Details about the namespace and identifier changes.
@@ -64,10 +63,9 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
                 reference.resolution === NameResolutionEnum.Qn &&
                 `\\${fileNamespace}\\${reference.name}` === oldFQN
             ) {
-                newText = reference.name.replace(
-                    this.namespaceRegExpProvider.getIdentifierRegExp(oldIdentifier.name, true),
-                    refactorDetails.new.fileIdentifier.name
-                );
+                const segments = reference.name.split("\\");
+                segments[segments.length - 1] = refactorDetails.new.fileIdentifier.name;
+                newText = segments.join("\\");
             }
 
             if (

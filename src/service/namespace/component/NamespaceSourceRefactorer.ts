@@ -1,5 +1,4 @@
 import * as vscode from "vscode";
-import { escapeRegExp } from "../../../utils/regexp/escapeRegExp";
 import { NamespaceRefactorerAbstract } from "../abstract/NamespaceRefactorerAbstract";
 import { IdentifierKindEnum } from "../enum/IdentifierKindEnum";
 import { NameResolutionEnum } from "../enum/NameResolutionEnum";
@@ -169,15 +168,14 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
             return content;
         }
 
-        const escapedNewNamespace = escapeRegExp(`${refactorDetails.new.namespace}\\`);
-        const newNamespaceMatchRegExp = new RegExp(`^${escapedNewNamespace}`, "u");
+        const newNamespacePrefix = `${refactorDetails.new.namespace}\\`;
 
         const replacements: Array<{ loc: OffsetLocType; newText: string }> = [];
         for (const ref of qnRefs) {
             const qualifiedReference = `${refactorDetails.old.namespace}\\${ref.name}`;
-            const isSubNamespace = newNamespaceMatchRegExp.test(qualifiedReference);
+            const isSubNamespace = qualifiedReference.startsWith(newNamespacePrefix);
             const newText = isSubNamespace
-                ? qualifiedReference.replace(newNamespaceMatchRegExp, "")
+                ? qualifiedReference.slice(newNamespacePrefix.length)
                 : `\\${qualifiedReference}`;
             replacements.push({ loc: ref.loc, newText });
         }

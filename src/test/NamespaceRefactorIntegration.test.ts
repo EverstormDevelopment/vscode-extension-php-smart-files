@@ -491,4 +491,72 @@ suite("Namespace Refactor Integration", () => {
         );
     });
 
+    test("does not add imports when the moved identifier appears only in comments or strings", async () => {
+        await testWorkspace.writeWorkspaceFiles({
+            "composer.json": JSON.stringify(
+                {
+                    autoload: {
+                        "psr-4": {
+                            "App\\": "src/",
+                        },
+                    },
+                },
+                null,
+                4
+            ),
+            "src/Support/LegacyNote.php": php`
+                <?php
+
+                namespace App\Support;
+
+                class LegacyNote
+                {
+                }
+            `,
+            "src/Support/NotesOnly.php": php`
+                <?php
+
+                namespace App\Support;
+
+                class NotesOnly
+                {
+                    public function describe(): string
+                    {
+                        $label = 'LegacyNote';
+
+                        // LegacyNote is documented here, but not referenced in code.
+                        return $label;
+                    }
+                }
+            `,
+        });
+
+        const namespaceRefactorService = testWorkspace.getService();
+        const oldUri = testWorkspace.uri("src/Support/LegacyNote.php");
+        const newUri = testWorkspace.uri("src/Domain/LegacyNote.php");
+
+        await vscode.workspace.fs.createDirectory(testWorkspace.uri("src/Domain"));
+        await vscode.workspace.fs.rename(oldUri, newUri, { overwrite: true });
+        await namespaceRefactorService.refactorFile(oldUri, newUri);
+
+        assertNormalizedFileEquals(
+            await testWorkspace.readFile(testWorkspace.uri("src/Support/NotesOnly.php")),
+            php`
+                <?php
+
+                namespace App\Support;
+
+                class NotesOnly
+                {
+                    public function describe(): string
+                    {
+                        $label = 'LegacyNote';
+
+                        // LegacyNote is documented here, but not referenced in code.
+                        return $label;
+                    }
+                }
+            `
+        );
+    });
 });

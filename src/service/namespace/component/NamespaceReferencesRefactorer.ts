@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
 import { getPathNormalized } from "../../../utils/filesystem/getPathNormalized";
-import { escapeRegExp } from "../../../utils/regexp/escapeRegExp";
 import { getLinebreakType } from "../../../utils/string/getLinebreakType";
 import { NamespaceRefactorerAbstract } from "../abstract/NamespaceRefactorerAbstract";
+import { IdentifierKindEnum } from "../enum/IdentifierKindEnum";
 import { NameResolutionEnum } from "../enum/NameResolutionEnum";
 import { PhpAstTraverser } from "../parser/PhpAstTraverser";
 import { PhpParser } from "../parser/PhpParser";
@@ -237,8 +237,7 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
         const oldFQNFull = `\\${oldNamespace}\\${identifier.name}`;
         const newFQNFull = `\\${newNamespace}\\${identifier.name}`;
         const isSameNamespace = fileNamespace === newNamespace;
-        const escapedFileNamespace = escapeRegExp(`${fileNamespace}\\`);
-        const subNamespaceRegExp = new RegExp(`^${escapedFileNamespace}`, "u");
+        const fileNamespacePrefix = `${fileNamespace}\\`;
 
         for (const ref of allRefs) {
             if (ref.resolution !== NameResolutionEnum.Qn) {
@@ -252,8 +251,8 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
             let newText: string;
             if (isSameNamespace) {
                 newText = identifier.name;
-            } else if (subNamespaceRegExp.test(newNamespace)) {
-                const relNs = newNamespace.replace(subNamespaceRegExp, "");
+            } else if (newNamespace.startsWith(fileNamespacePrefix)) {
+                const relNs = newNamespace.slice(fileNamespacePrefix.length);
                 newText = `${relNs}\\${identifier.name}`;
             } else {
                 newText = newFQNFull;
@@ -299,19 +298,45 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
     }
 
     /**
-     * Adds a use statement for the identifier if it appears in the content.
-     * Uses a word-boundary regex to verify the identifier is actually referenced.
+     * Adds a use statement for the identifier if an actual AST name reference still exists.
      * @param content The file content to process
      * @param newNamespace The new namespace value to add in the use statement
      * @param identifier The identifier to add a use statement for
      * @returns Updated file content with added use statement (if needed)
      */
     private addReferenceUseStatement(content: string, newNamespace: string, identifier: IdentifierType): string {
-        const hasIdentifierRegExp = this.namespaceRegExpProvider.getIdentifierRegExp(identifier.name);
-        if (!hasIdentifierRegExp.test(content)) {
+        if (!this.hasAstReferenceForIdentifier(content, identifier)) {
             return content;
         }
         return this.addUseStatement(content, newNamespace, identifier);
+    }
+
+    /**
+     * Checks whether the file still contains an actual AST-tracked reference for the identifier.
+     * This avoids adding imports because of plain text in comments or strings.
+     * @param content The file content to inspect
+     * @param identifier The identifier to search for
+     * @returns True when a matching name reference exists in code, otherwise false
+     */
+    private hasAstReferenceForIdentifier(content: string, identifier: IdentifierType): boolean {
+        const references = new PhpAstTraverser(new PhpParser(content).getAST()).getNameReferences(false);
+
+        return references.some(
+            (reference) =>
+                reference.name === identifier.name &&
+                (
+                    (identifier.kind === IdentifierKindEnum.Function &&
+                        reference.kind === IdentifierKindEnum.Function &&
+                        reference.resolution === NameResolutionEnum.Uqn) ||
+                    (identifier.kind === IdentifierKindEnum.Constant &&
+                        reference.kind === IdentifierKindEnum.Constant &&
+                        reference.resolution === NameResolutionEnum.Uqn) ||
+                    (identifier.kind !== IdentifierKindEnum.Function &&
+                        identifier.kind !== IdentifierKindEnum.Constant &&
+                        reference.kind === IdentifierKindEnum.Oop &&
+                        reference.resolution === NameResolutionEnum.Uqn)
+                )
+        );
     }
 
     /**

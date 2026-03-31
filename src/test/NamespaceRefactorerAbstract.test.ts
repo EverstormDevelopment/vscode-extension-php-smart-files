@@ -5,7 +5,6 @@ import { IdentifierType } from "../service/namespace/type/IdentifierType";
 import { NamespaceRefactorDetailsType } from "../service/namespace/type/NamespaceRefactorDetailsType";
 
 class NamespaceRefactorerTestDouble extends NamespaceRefactorerAbstract {
-
     public async refactor(_refactorDetails: NamespaceRefactorDetailsType): Promise<boolean> {
         return false;
     }

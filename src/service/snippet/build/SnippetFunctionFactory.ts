@@ -1,5 +1,9 @@
 import { SnippetFactoryAbstract } from "./SnippetFactoryAbstract";
 
+/**
+ * Factory for generating PHP function code snippets.
+ * Creates function declarations with configurable identifiers and placeholder content.
+ */
 export class SnippetFunctionFactory extends SnippetFactoryAbstract {
     /**
      * Opens a function declaration block with the given identifier
@@ -25,8 +29,10 @@ export class SnippetFunctionFactory extends SnippetFactoryAbstract {
     }
 
     /**
-     * Adds a function identifier to the snippet
+     * Adds a function identifier to the snippet.
+     * Offers a choice between the original and case-switched variant of the first letter.
      * @param identifier - The name of the PHP function
+     * @param usePlaceholder - Whether to use a placeholder instead of a choice for the identifier
      * @returns This instance for method chaining
      */
     protected addFunctionIdentifier(identifier: string, usePlaceholder?: boolean): this {

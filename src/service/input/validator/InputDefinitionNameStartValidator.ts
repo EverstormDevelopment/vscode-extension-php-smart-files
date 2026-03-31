@@ -6,6 +6,10 @@ import { InputValidatorInterface } from "../interface/InputValidatorInterface";
  * Ensures names follow PHP naming conventions by starting with (uppercase) letters or underscores.
  */
 export class InputDefinitionNameStartValidator implements InputValidatorInterface {
+    /**
+     * Creates a new InputDefinitionNameStartValidator instance.
+     * @param allowLowercase Whether lowercase starting letters are allowed (for functions)
+     */
     constructor(private readonly allowLowercase: boolean = false) {}
 
     /**

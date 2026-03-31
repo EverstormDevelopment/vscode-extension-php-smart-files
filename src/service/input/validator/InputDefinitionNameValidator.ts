@@ -9,6 +9,10 @@ import { InputDefinitionNameStartValidator } from "./InputDefinitionNameStartVal
  * Validator for PHP definition names (classes, interfaces, traits, enums).
  */
 export class InputDefinitionNameValidator implements InputValidatorInterface {
+    /**
+     * Creates a new InputDefinitionNameValidator instance.
+     * @param allowLowercase Whether lowercase starting letters are allowed (for functions)
+     */
     constructor(private readonly allowLowercase: boolean = false) {}
 
     /**

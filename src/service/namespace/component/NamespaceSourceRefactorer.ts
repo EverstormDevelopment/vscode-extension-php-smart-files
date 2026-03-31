@@ -15,6 +15,10 @@ import { OffsetLocType } from "../type/OffsetLocType";
  * when a file is moved or renamed.
  */
 export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
+    /**
+     * Creates a new NamespaceSourceRefactorer instance.
+     * @param namespaceRegExpProvider Provider for namespace-related regular expressions
+     */
     constructor(protected readonly namespaceRegExpProvider: NamespaceRegExpProvider) {
         super(namespaceRegExpProvider);
     }

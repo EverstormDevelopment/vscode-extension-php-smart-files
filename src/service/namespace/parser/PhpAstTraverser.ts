@@ -41,6 +41,11 @@ export class PhpAstTraverser {
         "resource",
     ]);
 
+    /**
+     * Creates a new PhpAstTraverser instance.
+     * @param ast The parsed PHP AST to traverse
+     * @param sourceCode The original PHP source code, used for offset-based location lookups
+     */
     constructor(
         private readonly ast: AST,
         private readonly sourceCode: string = "",

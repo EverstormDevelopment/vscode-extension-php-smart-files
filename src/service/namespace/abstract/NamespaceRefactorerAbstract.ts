@@ -18,6 +18,10 @@ import { UseStatementType } from "../type/UseStatementType";
  * Provides methods for manipulating namespace declarations, use statements, and class references.
  */
 export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorerInterface {
+    /**
+     * Creates a new NamespaceRefactorerAbstract instance.
+     * @param namespaceRegExpProvider Provider for namespace-related regular expressions
+     */
     constructor(protected readonly namespaceRegExpProvider: NamespaceRegExpProvider) {}
 
     /**
@@ -264,6 +268,11 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
         return useStatements.find((s) => s.name === fullName && this.useStatementKindMatches(s.kind, identifier.kind));
     }
 
+    /**
+     * Groups use statements by their shared source location and kind, returning unique groups sorted by position.
+     * @param useStatements All use statements parsed from the file
+     * @returns Array of unique groups, each containing the shared location and the statements belonging to it
+     */
     private getUniqueUseStatementGroups(
         useStatements: UseStatementType[],
     ): Array<{ groupKey: string; groupLoc: UseStatementType["groupLoc"]; kind: IdentifierKindEnum; statements: UseStatementType[] }> {
@@ -291,25 +300,54 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
         return Array.from(groups.values()).sort((a, b) => a.groupLoc.start - b.groupLoc.start);
     }
 
+    /**
+     * Returns all use statements that belong to the same group as the given statement.
+     * @param useStatements All use statements parsed from the file
+     * @param statement The reference statement whose group members should be returned
+     * @returns Array of use statements sharing the same group key
+     */
     protected getGroupedUseStatements(useStatements: UseStatementType[], statement: UseStatementType): UseStatementType[] {
         const groupKey = this.getUseStatementGroupKey(statement);
         return useStatements.filter((useStatement) => this.getUseStatementGroupKey(useStatement) === groupKey);
     }
 
+    /**
+     * Generates a stable lookup key for grouping use statements by their source location, kind, and prefix.
+     * @param statement The use statement to generate a key for
+     * @returns A composite string key identifying the group
+     */
     protected getUseStatementGroupKey(statement: UseStatementType): string {
         return [statement.groupLoc.start, statement.groupLoc.end, statement.kind, statement.groupPrefix ?? ""].join(":");
     }
 
+    /**
+     * Renders a single use statement back to its PHP source text.
+     * @param statement The use statement to render
+     * @returns The rendered `use ...;` string
+     */
     protected renderUseStatement(statement: UseStatementType): string {
         return this.renderSingleUseStatement(statement.name, statement.kind, statement.alias);
     }
 
+    /**
+     * Renders a use statement from individual components.
+     * @param name The fully qualified name to import
+     * @param kind The identifier kind (Oop, Function, or Constant)
+     * @param alias Optional alias declared with `as`
+     * @returns The rendered `use ...;` string
+     */
     protected renderSingleUseStatement(name: string, kind: IdentifierKindEnum, alias: string | null): string {
         const useType = getUseTypeByKind(kind);
         const aliasText = alias ? ` as ${alias}` : "";
         return `use ${useType}${name}${aliasText};`;
     }
 
+    /**
+     * Renders a group of use statements, preserving grouped syntax when applicable.
+     * Falls back to individual `use` lines when statements are ungrouped or only one remains.
+     * @param statements The use statements to render as a group
+     * @returns The rendered use statement block
+     */
     protected renderUseStatementGroup(statements: UseStatementType[]): string {
         if (statements.length === 0) {
             return "";
@@ -336,6 +374,14 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
         return `use ${useType}${groupPrefix}\\{${items}};`;
     }
 
+    /**
+     * Replaces a grouped use statement in the file content with the rendered replacement statements.
+     * Removes the entire block (including trailing linebreaks) if no replacement statements remain.
+     * @param content The file content to modify
+     * @param statement A use statement from the group, providing the group location
+     * @param replacementStatements The statements to render in place of the original group
+     * @returns The updated file content
+     */
     protected replaceUseStatementGroup(content: string, statement: UseStatementType, replacementStatements: UseStatementType[]): string {
         const replacement = this.renderUseStatementGroup(replacementStatements);
         if (replacement === "") {
@@ -345,6 +391,12 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
         return content.slice(0, statement.groupLoc.start) + replacement + content.slice(statement.groupLoc.end);
     }
 
+    /**
+     * Removes a use statement block from the content, including trailing linebreak characters.
+     * @param content The file content to modify
+     * @param loc The character offset range of the use statement block
+     * @returns The updated file content
+     */
     private removeUseStatementBlock(content: string, loc: UseStatementType["groupLoc"]): string {
         let end = loc.end;
         while (end < content.length && (content[end] === "\r" || content[end] === "\n")) {
@@ -354,6 +406,11 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
         return content.slice(0, loc.start) + content.slice(end);
     }
 
+    /**
+     * Extracts the namespace portion from a fully qualified import name (everything before the last segment).
+     * @param fullName The fully qualified name (e.g. `App\Models\User`)
+     * @returns The namespace part (e.g. `App\Models`), or an empty string if no namespace exists
+     */
     private getImportedNamespace(fullName: string): string {
         const importedSegments = fullName.split("\\");
         if (importedSegments.length < 2) {
@@ -363,6 +420,14 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
         return importedSegments.slice(0, -1).join("\\");
     }
 
+    /**
+     * Sorts use statement groups by kind (Oop → Function → Constant) and alphabetically within each kind.
+     * Returns one joined text section per kind, separated by double linebreaks.
+     * @param useStatementGroups The grouped use statements to sort
+     * @param content The file content (used to extract the original text of each group)
+     * @param lineBreak The linebreak style used in the file
+     * @returns Array of sorted text sections, one per use statement kind
+     */
     private getSortedUseStatementSections(
         useStatementGroups: Array<{
             groupKey: string;
@@ -405,6 +470,12 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
         return sections;
     }
 
+    /**
+     * Returns the numeric sort order for a use statement kind.
+     * Oop = 0, Function = 1, Constant = 2.
+     * @param kind The identifier kind to get the sort order for
+     * @returns Numeric sort priority
+     */
     private getUseStatementSortOrder(kind: IdentifierKindEnum): number {
         switch (kind) {
             case IdentifierKindEnum.Function:

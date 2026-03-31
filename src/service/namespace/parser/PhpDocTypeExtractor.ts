@@ -7,10 +7,17 @@ import { ReservedKeywords } from "../../php/reserved/ReservedKeywords";
  * The extractor is intentionally conservative and only emits unqualified names.
  */
 export class PhpDocTypeExtractor {
+    /** Regular expression for matching PHPDoc block comments */
     private static readonly docBlockRegExp = /\/\*\*[\s\S]*?\*\//gu;
+    /** Tag names that carry a single type expression (e.g. `@param Type $var`) */
     private static readonly simpleTypeTags = new Set(["@param", "@return", "@var", "@throws", "@property", "@property-read", "@property-write"]);
+    /** Regular expression for validating a PHP identifier name */
     private static readonly identifierRegExp = /^[\p{L}_\x80-\xff][\p{L}\p{N}_\x80-\xff]*$/u;
 
+    /**
+     * Creates a new PhpDocTypeExtractor instance.
+     * @param phpCode The PHP source code to extract PHPDoc types from
+     */
     constructor(private readonly phpCode: string) {}
 
     /**
@@ -34,10 +41,19 @@ export class PhpDocTypeExtractor {
         }));
     }
 
+    /**
+     * Extracts all PHPDoc block comments from the PHP source code.
+     * @returns Array of raw PHPDoc block strings
+     */
     private getDocBlocks(): string[] {
         return this.phpCode.match(PhpDocTypeExtractor.docBlockRegExp) ?? [];
     }
 
+    /**
+     * Parses a single PHPDoc block and extracts all type expressions from supported tags.
+     * @param docBlock The raw PHPDoc block string to parse
+     * @returns Array of type expression strings found in the doc block
+     */
     private getTypeExpressionsFromDocBlock(docBlock: string): string[] {
         const lines = docBlock
             .split(/\r?\n/gu)
@@ -67,6 +83,11 @@ export class PhpDocTypeExtractor {
         return typeExpressions;
     }
 
+    /**
+     * Splits PHPDoc lines into tag entries, grouping multi-line tag descriptions.
+     * @param lines Cleaned PHPDoc lines (without leading `*` and whitespace)
+     * @returns Array of tag/text pairs
+     */
     private getTagEntries(lines: string[]): Array<{ tag: string; text: string }> {
         const entries: Array<{ tag: string; text: string }> = [];
         let currentEntry: { tag: string; text: string } | null = null;
@@ -99,6 +120,12 @@ export class PhpDocTypeExtractor {
         return entries;
     }
 
+    /**
+     * Extracts the type expression from a simple PHPDoc tag (e.g. `@param`, `@return`).
+     * @param tag The PHPDoc tag name
+     * @param text The text following the tag
+     * @returns The extracted type expression, or an empty string if none found
+     */
     private getSimpleTagTypeExpression(tag: string, text: string): string {
         switch (tag) {
             case "@param":
@@ -112,6 +139,12 @@ export class PhpDocTypeExtractor {
         }
     }
 
+    /**
+     * Extracts the leading type expression from a tag's text, respecting nested brackets.
+     * @param text The text to extract the type expression from
+     * @param stopAtVariable Whether to stop extraction when a `$variable` is encountered
+     * @returns The leading type expression string
+     */
     private getLeadingTypeExpression(text: string, stopAtVariable: boolean): string {
         let angleDepth = 0;
         let braceDepth = 0;
@@ -169,6 +202,11 @@ export class PhpDocTypeExtractor {
         return current.trim();
     }
 
+    /**
+     * Extracts type expressions from a `@method` tag signature (return type and parameter types).
+     * @param methodSignature The raw method signature string after `@method`
+     * @returns Array of type expressions found in the method signature
+     */
     private getMethodTypeExpressions(methodSignature: string): string[] {
         let signature = methodSignature.trim();
         if (signature.startsWith("static ")) {
@@ -197,6 +235,11 @@ export class PhpDocTypeExtractor {
         return returnType ? [returnType, ...parameterTypes] : parameterTypes;
     }
 
+    /**
+     * Extracts the type annotation from a single `@method` parameter.
+     * @param parameter The raw parameter string (e.g. `Type $name = default`)
+     * @returns The extracted type string, or an empty string if none found
+     */
     private getMethodParameterType(parameter: string): string {
         let parameterSignature = parameter.trim();
         if (parameterSignature === "") {
@@ -225,6 +268,12 @@ export class PhpDocTypeExtractor {
             .replace(/^\.{3}/u, "");
     }
 
+    /**
+     * Recursively extracts unqualified PHP identifiers from a type expression.
+     * Handles union/intersection types, generics, array shapes, callable types, and array suffixes.
+     * @param typeExpression The type expression to extract identifiers from
+     * @returns Array of unqualified identifier name strings
+     */
     private extractIdentifiersFromTypeExpression(typeExpression: string): string[] {
         const expression = this.normalizeTypeExpression(typeExpression);
         if (expression === "") {
@@ -296,6 +345,11 @@ export class PhpDocTypeExtractor {
         return [normalized];
     }
 
+    /**
+     * Attempts to extract identifiers from a callable-style type expression (e.g. `callable(Type): Return`).
+     * @param typeExpression The type expression to inspect
+     * @returns Array of identifiers if the expression is callable-like, or null if not
+     */
     private extractCallableIdentifiers(typeExpression: string): string[] | null {
         const openParenIndex = this.findTopLevelCharacter(typeExpression, "(");
         if (openParenIndex === -1) {
@@ -330,6 +384,11 @@ export class PhpDocTypeExtractor {
         return identifiers;
     }
 
+    /**
+     * Normalizes a type expression by stripping outer parentheses/brackets, leading `?`, trailing `=`, and string literals.
+     * @param typeExpression The raw type expression to normalize
+     * @returns The cleaned type expression, or an empty string if it was a string literal
+     */
     private normalizeTypeExpression(typeExpression: string): string {
         let expression = typeExpression.trim();
         while (
@@ -354,6 +413,12 @@ export class PhpDocTypeExtractor {
         return expression;
     }
 
+    /**
+     * Splits a type expression at top-level operators (e.g. `|`, `&`), respecting nested brackets.
+     * @param expression The expression to split
+     * @param operators The operator characters to split on
+     * @returns Array of subexpressions
+     */
     private splitByTopLevelOperators(expression: string, operators: string[]): string[] {
         const segments: string[] = [];
         let current = "";
@@ -412,6 +477,12 @@ export class PhpDocTypeExtractor {
         return segments;
     }
 
+    /**
+     * Splits a type expression at top-level occurrences of a single delimiter, respecting nested brackets.
+     * @param expression The expression to split
+     * @param delimiter The single-character delimiter to split on
+     * @returns Array of subexpressions
+     */
     private splitTopLevel(expression: string, delimiter: string): string[] {
         const segments: string[] = [];
         let current = "";
@@ -468,6 +539,12 @@ export class PhpDocTypeExtractor {
         return segments;
     }
 
+    /**
+     * Finds the index of the first top-level occurrence of a character, respecting nested brackets.
+     * @param expression The expression to search
+     * @param target The character to find
+     * @returns The index of the character, or -1 if not found at top level
+     */
     private findTopLevelCharacter(expression: string, target: string): number {
         let angleDepth = 0;
         let braceDepth = 0;
@@ -515,6 +592,12 @@ export class PhpDocTypeExtractor {
         return -1;
     }
 
+    /**
+     * Finds the index of the last top-level occurrence of a character, respecting nested brackets.
+     * @param expression The expression to search
+     * @param target The character to find
+     * @returns The index of the last top-level occurrence, or -1 if not found
+     */
     private findLastTopLevelCharacter(expression: string, target: string): number {
         let angleDepth = 0;
         let braceDepth = 0;
@@ -563,6 +646,14 @@ export class PhpDocTypeExtractor {
         return foundIndex;
     }
 
+    /**
+     * Finds the index of the matching closing bracket for an opening bracket.
+     * @param expression The expression to search
+     * @param openIndex The index of the opening bracket
+     * @param openBracket The opening bracket character
+     * @param closeBracket The closing bracket character
+     * @returns The index of the matching closing bracket, or -1 if not found
+     */
     private findMatchingBracket(expression: string, openIndex: number, openBracket: string, closeBracket: string): number {
         let depth = 0;
 

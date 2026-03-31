@@ -1,6 +1,6 @@
+import { ReservedKeywords } from "../../php/reserved/ReservedKeywords";
 import { IdentifierKindEnum } from "../enum/IdentifierKindEnum";
 import { IdentifierType } from "../type/IdentifierType";
-import { ReservedKeywords } from "../../php/reserved/ReservedKeywords";
 
 /**
  * Extracts importable OOP type references from PHPDoc blocks.

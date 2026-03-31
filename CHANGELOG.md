@@ -3,6 +3,35 @@
 All notable changes to the "PHP Smart Files" extension will be documented in this file.
 <!-- Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file. -->
 
+## [1.2.0] - DEV
+
+### Added
+
+- Added support for grouped `use` statements during namespace refactoring:
+  - Grouped imports are now correctly recognized and updated when affected PHP files are moved or renamed
+  - Existing grouped imports are preserved where possible during refactoring operations
+
+### Changed
+
+- Switched namespace refactoring from pattern-based parsing to AST-based analysis:
+  - Namespace declarations, imports, and references are now resolved with more structural accuracy
+  - This improves reliability across more PHP language constructs and reduces incorrect replacements during refactoring
+- Simplified runtime requirements for namespace refactoring:
+  - The extension no longer depends on a configured PHP executable for this functionality
+  - Users no longer need to set a PHP path in VS Code specifically to improve namespace refactoring behavior
+- Expanded automated test coverage for namespace refactoring:
+  - Added dedicated parser, refactoring, and integration tests for the new AST-based behavior
+  - This improves reliability when handling complex namespace and import update scenarios
+
+### Fixed
+
+- Fixed multiple namespace refactoring edge cases to improve correctness and stability:
+  - Correctly handles fully qualified names with leading backslashes during reference updates
+  - Improved location handling for fully qualified names and grouped `use` statements to avoid incorrect replacements
+  - Fixed redundant `use` statements not being removed when references stay within the same namespace
+  - Improved import lookup and identifier context handling for more accurate reference updates
+
+
 ## [1.1.0] - 2025-07-10
 
 ### Added

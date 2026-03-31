@@ -838,6 +838,79 @@ suite("Namespace Refactor Integration", () => {
         );
     });
 
+    test("adds imports in dependent files when a moved class is referenced only in PHPDoc", async () => {
+        await testWorkspace.writeWorkspaceFiles({
+            "composer.json": JSON.stringify(
+                {
+                    autoload: {
+                        "psr-4": {
+                            "App\\": "src/",
+                        },
+                    },
+                },
+                null,
+                4
+            ),
+            "src/Remote/Button/SubClassStatic.php": php`
+                <?php
+
+                namespace App\Remote\Button;
+
+                class SubClassStatic
+                {
+                    public static string $STATIC_PROPERTY = 'Some DEV static property';
+                }
+            `,
+            "src/Remote/Button/DiagnosticsButton.php": php`
+                <?php
+
+                namespace App\Remote\Button;
+
+                final class DiagnosticsButton
+                {
+                    public function someMethod(): void
+                    {
+                        /**
+                         * @var SubClassStatic
+                         */
+
+                        dump('DiagnosticsButton::someMethod() called');
+                    }
+                }
+            `,
+        });
+
+        const namespaceRefactorService = testWorkspace.getService();
+        const oldUri = testWorkspace.uri("src/Remote/Button/SubClassStatic.php");
+        const newUri = testWorkspace.uri("src/Remote/Button/SubClasses/SubClassStatic.php");
+
+        await vscode.workspace.fs.createDirectory(testWorkspace.uri("src/Remote/Button/SubClasses"));
+        await vscode.workspace.fs.rename(oldUri, newUri, { overwrite: true });
+        await namespaceRefactorService.refactorFile(oldUri, newUri);
+
+        assertNormalizedFileEquals(
+            await testWorkspace.readFile(testWorkspace.uri("src/Remote/Button/DiagnosticsButton.php")),
+            php`
+                <?php
+
+                namespace App\Remote\Button;
+                use App\Remote\Button\SubClasses\SubClassStatic;
+
+                final class DiagnosticsButton
+                {
+                    public function someMethod(): void
+                    {
+                        /**
+                         * @var SubClassStatic
+                         */
+
+                        dump('DiagnosticsButton::someMethod() called');
+                    }
+                }
+            `
+        );
+    });
+
     test("renames classes referenced inside attributes in dependent files", async () => {
         await testWorkspace.writeWorkspaceFiles({
             "composer.json": JSON.stringify(

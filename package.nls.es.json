@@ -40,6 +40,7 @@
   "php-smart-files.config.refactorNamespacesSortUseStatements.description": "Ordenar automáticamente las declaraciones `use` alfabéticamente al refactorizar los espacios de nombres.",
   "php-smart-files.config.refactorNamespacesIncludeFunctions.description": "Incluir referencias a funciones en la refactorización. Actualiza llamadas internas, importaciones relacionadas con `use function` y referencias externas.",
   "php-smart-files.config.refactorNamespacesIncludeConstants.description": "Incluir referencias a constantes en la refactorización. Actualiza usos internos, importaciones relacionadas con `use const` y referencias externas.",
+  "php-smart-files.config.refactorNamespacesIncludeDocblockTypes.description": "Incluir referencias de tipo PHPDoc en la refactorización. Añade importaciones `use` relacionadas para tipos encontrados en etiquetas como `@param`, `@return`, `@var` y `@method`.",
 
   "php-smart-files.config.refactorNamespacesExcludeDirectories.description": "Los directorios especificados se excluirán durante la refactorización de espacios de nombres. (Nota: Las entradas deben estar en el formato de patrón Glob, por ejemplo, `/vendor/**`, `var/cache/**` o `**/temp/**`.)"
 }

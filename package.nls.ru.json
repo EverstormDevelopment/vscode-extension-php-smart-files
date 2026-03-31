@@ -40,6 +40,7 @@
   "php-smart-files.config.refactorNamespacesSortUseStatements.description": "Автоматически сортировать инструкции `use` в алфавитном порядке при рефакторинге пространств имён.",
   "php-smart-files.config.refactorNamespacesIncludeFunctions.description": "Включить ссылки на функции при рефакторинге. Обновляет внутренние вызовы, связанные импорты `use function` и внешние ссылки.",
   "php-smart-files.config.refactorNamespacesIncludeConstants.description": "Включить ссылки на константы при рефакторинге. Обновляет внутренние использования, связанные импорты `use const` и внешние ссылки.",
+  "php-smart-files.config.refactorNamespacesIncludeDocblockTypes.description": "Включить ссылки на типы PHPDoc при рефакторинге. Добавляет связанные импорты `use` для типов, найденных в тегах вроде `@param`, `@return`, `@var` и `@method`.",
 
   "php-smart-files.config.refactorNamespacesExcludeDirectories.description": "Указанные каталоги будут исключены при рефакторинге пространств имен. (Примечание: Ввод должен быть в формате шаблона Glob, например, `/vendor/**`, `var/cache/**` или `**/temp/**`.)"
 }

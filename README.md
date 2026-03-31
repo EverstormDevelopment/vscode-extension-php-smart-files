@@ -131,6 +131,7 @@ All settings can be configured through VS Code settings (Gear icon → Extension
 | `phpSmartFiles.refactorNamespacesSortUseStatements` | Automatically sort all `use` statements alphabetically during refactoring. Sorts normal `use` first, then `use function`, then `use const`. | `true` |
 | `phpSmartFiles.refactorNamespacesIncludeFunctions` | Include function references in namespace refactoring. Updates internal calls, related `use function` imports, and external references. | `true` |
 | `phpSmartFiles.refactorNamespacesIncludeConstants` | Include constant references in namespace refactoring. Updates internal usages, related `use const` imports, and external references. | `true` |
+| `phpSmartFiles.refactorNamespacesIncludeDocblockTypes` | Include unqualified PHPDoc type references in namespace refactoring. Updates importable docblock class-like types when files are moved or renamed. | `true` |
 | `phpSmartFiles.refactorNamespacesExcludeDirectories` | Directories to exclude when searching for references | Common directories like `vendor`, `node_modules`, etc. |
 
 ## Available Languages

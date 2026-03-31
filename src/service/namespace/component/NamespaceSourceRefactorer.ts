@@ -3,6 +3,7 @@ import { NamespaceRefactorerAbstract } from "../abstract/NamespaceRefactorerAbst
 import { IdentifierKindEnum } from "../enum/IdentifierKindEnum";
 import { NameResolutionEnum } from "../enum/NameResolutionEnum";
 import { PhpAstTraverser } from "../parser/PhpAstTraverser";
+import { PhpDocTypeExtractor } from "../parser/PhpDocTypeExtractor";
 import { PhpParser } from "../parser/PhpParser";
 import { NamespaceRegExpProvider } from "../provider/NamespaceRegExpProvider";
 import { IdentifierType } from "../type/IdentifierType";
@@ -204,6 +205,7 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
         const config = vscode.workspace.getConfiguration("phpSmartFiles");
         const includeFunctions = config.get<boolean>("refactorNamespacesIncludeFunctions", true);
         const includeConstants = config.get<boolean>("refactorNamespacesIncludeConstants", true);
+        const includeDocblockTypes = config.get<boolean>("refactorNamespacesIncludeDocblockTypes", true);
         const needsDefinitionLookup = allRefs.some(
             (ref) =>
                 ref.resolution === NameResolutionEnum.Uqn &&
@@ -212,8 +214,11 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
         const importableDefinitions = needsDefinitionLookup
             ? await this.getImportableDefinitionsFromOldNamespace(refactorDetails)
             : new Set<string>();
+        const docblockReferences = includeDocblockTypes
+            ? new PhpDocTypeExtractor(content).getUnqualifiedOopReferences()
+            : [];
 
-        return allRefs
+        const codeReferences = allRefs
             .filter((ref) => ref.resolution === NameResolutionEnum.Uqn)
             .filter((ref) => {
                 if (ref.kind === IdentifierKindEnum.Function) {
@@ -231,6 +236,8 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
                 return true;
             })
             .map((ref) => ({ name: ref.name, kind: ref.kind }));
+
+        return this.getDeduplicatedIdentifiers([...codeReferences, ...docblockReferences]);
     }
 
     /**
@@ -334,5 +341,24 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
         const excludePattern = `{${[...excludedFolders, relativeFilePath].join(",")}}`;
 
         return vscode.workspace.findFiles("**/*.php", excludePattern);
+    }
+
+    /**
+     * Deduplicates identifiers by kind and name while preserving the first occurrence order.
+     * @param identifiers All collected identifiers.
+     * @returns Unique identifiers.
+     */
+    private getDeduplicatedIdentifiers(identifiers: IdentifierType[]): IdentifierType[] {
+        const seen = new Set<string>();
+
+        return identifiers.filter((identifier) => {
+            const key = `${identifier.kind}:${identifier.name}`;
+            if (seen.has(key)) {
+                return false;
+            }
+
+            seen.add(key);
+            return true;
+        });
     }
 }

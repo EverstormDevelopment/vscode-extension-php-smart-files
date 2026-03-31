@@ -3,12 +3,11 @@ import { getLinebreakType } from "../../../utils/string/getLinebreakType";
 import { getFileContentByUri } from "../../../utils/vscode/getFileContentByUri";
 import { setFileContentByUri } from "../../../utils/vscode/setFileContentByUri";
 import { getUseTypeByKind } from "../../php/function/getUseTypeByKind";
-import { NamespaceRefactorerInterface } from "../interface/NamespaceRefactorerInterface";
+import { IdentifierKindEnum } from "../enum/IdentifierKindEnum";
 import { NameResolutionEnum } from "../enum/NameResolutionEnum";
+import { NamespaceRefactorerInterface } from "../interface/NamespaceRefactorerInterface";
 import { PhpAstTraverser } from "../parser/PhpAstTraverser";
 import { PhpParser } from "../parser/PhpParser";
-import { NamespaceRegExpProvider } from "../provider/NamespaceRegExpProvider";
-import { IdentifierKindEnum } from "../enum/IdentifierKindEnum";
 import { IdentifierType } from "../type/IdentifierType";
 import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailsType";
 import { UseStatementType } from "../type/UseStatementType";
@@ -18,12 +17,6 @@ import { UseStatementType } from "../type/UseStatementType";
  * Provides methods for manipulating namespace declarations, use statements, and class references.
  */
 export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorerInterface {
-    /**
-     * Creates a new NamespaceRefactorerAbstract instance.
-     * @param namespaceRegExpProvider Provider for namespace-related regular expressions
-     */
-    constructor(protected readonly namespaceRegExpProvider: NamespaceRegExpProvider) {}
-
     /**
      * Performs namespace refactoring according to the provided details.
      * @param refactorDetails Details about the namespace and identifier changes.

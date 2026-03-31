@@ -1,14 +1,10 @@
 import * as assert from "assert";
 import { NamespaceRefactorerAbstract } from "../service/namespace/abstract/NamespaceRefactorerAbstract";
 import { IdentifierKindEnum } from "../service/namespace/enum/IdentifierKindEnum";
-import { NamespaceRegExpProvider } from "../service/namespace/provider/NamespaceRegExpProvider";
 import { IdentifierType } from "../service/namespace/type/IdentifierType";
 import { NamespaceRefactorDetailsType } from "../service/namespace/type/NamespaceRefactorDetailsType";
 
 class NamespaceRefactorerTestDouble extends NamespaceRefactorerAbstract {
-    constructor() {
-        super(new NamespaceRegExpProvider());
-    }
 
     public async refactor(_refactorDetails: NamespaceRefactorDetailsType): Promise<boolean> {
         return false;

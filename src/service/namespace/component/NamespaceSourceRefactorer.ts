@@ -5,7 +5,6 @@ import { NameResolutionEnum } from "../enum/NameResolutionEnum";
 import { PhpAstTraverser } from "../parser/PhpAstTraverser";
 import { PhpDocTypeExtractor } from "../parser/PhpDocTypeExtractor";
 import { PhpParser } from "../parser/PhpParser";
-import { NamespaceRegExpProvider } from "../provider/NamespaceRegExpProvider";
 import { IdentifierType } from "../type/IdentifierType";
 import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailsType";
 import { OffsetLocType } from "../type/OffsetLocType";
@@ -15,14 +14,6 @@ import { OffsetLocType } from "../type/OffsetLocType";
  * when a file is moved or renamed.
  */
 export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
-    /**
-     * Creates a new NamespaceSourceRefactorer instance.
-     * @param namespaceRegExpProvider Provider for namespace-related regular expressions
-     */
-    constructor(protected readonly namespaceRegExpProvider: NamespaceRegExpProvider) {
-        super(namespaceRegExpProvider);
-    }
-
     /**
      * Performs the refactoring based on the provided details.
      * @param refactorDetails The details for the refactoring operation.

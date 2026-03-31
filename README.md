@@ -22,12 +22,10 @@
 
 - [Features](#features)
 - [Usage](#usage)
-- [Recommendations](#recommendations)
 - [Extension Settings](#extension-settings)
 - [Available Languages](#available-languages)
 - [About This Project](#about-this-project)
 - [Release Notes](#release-notes)
-- [Current Limitations](#current-limitations)
 - [Feedback and Contributions](#feedback-and-contributions)
 - [License](#license)
 
@@ -118,23 +116,6 @@ The extension automatically refactors namespaces and references during standard 
 
 > 💡 **Tip:** Use the extension settings to control whether confirmations are shown or to disable specific refactoring features
 
-## Recommendations
-
-**No setup required — the extension works right after installation!**
-
-For even better results and the most reliable namespace refactoring, consider these recommendations:
-
-- **PHP executable is configured**  
-  Set the PHP path in VS Code settings (`php.validate.executablePath` or `php.executablePath`), or ensure PHP is available in your system’s PATH.
-
-- **composer.json at the root of your workspace(s)**  
-  This helps the extension detect your project’s PSR-4 autoloading configuration, which is particularly useful for larger projects or when using frameworks like Symfony or Laravel.
-
-- **Composer dependencies are installed**  
-  Having the `vendor` directory and installed packages improves detection of global functions and enhances namespace handling.
-
-> 💡 **Tip:** The extension works out of the box, but following these recommendations will further improve the accuracy and effectiveness of namespace and reference refactoring.
-
 ## Extension Settings
 
 All settings can be configured through VS Code settings (Gear icon → Extensions → PHP Smart Files) or in your settings.json file.
@@ -147,7 +128,7 @@ All settings can be configured through VS Code settings (Gear icon → Extension
 | `phpSmartFiles.refactorNamespacesOnFileMoved` | Control behavior when files are moved<br>- `confirm`: Prompt for confirmation<br>- `always`: Automatically refactor<br>- `never`: Disable feature | `confirm` |
 | `phpSmartFiles.refactorNamespacesOnFileRenamed` | Control behavior when files are renamed (same options as `refactorNamespacesOnFileMoved`) | `confirm` |
 | `phpSmartFiles.refactorNamespacesOnDirectoryChanges` | Control behavior when directories are moved or renamed (same options as `refactorNamespacesOnFileMoved`) | `confirm` |
-| `phpSmartFiles.sortUseStatementsOnRefactor` | Automatically sort all `use` statements alphabetically during refactoring. Sorts normal `use` first, then `use function`, then `use const`. | `true` |
+| `phpSmartFiles.refactorNamespacesSortUseStatements` | Automatically sort all `use` statements alphabetically during refactoring. Sorts normal `use` first, then `use function`, then `use const`. | `true` |
 | `phpSmartFiles.refactorNamespacesIncludeFunctions` | Include function references in namespace refactoring. Updates internal calls, related `use function` imports, and external references. | `true` |
 | `phpSmartFiles.refactorNamespacesIncludeConstants` | Include constant references in namespace refactoring. Updates internal usages, related `use const` imports, and external references. | `true` |
 | `phpSmartFiles.refactorNamespacesExcludeDirectories` | Directories to exclude when searching for references | Common directories like `vendor`, `node_modules`, etc. |
@@ -191,19 +172,6 @@ I'll do my best to keep this extension reliable and useful while balancing its s
 
 For the full list of changes and detailed release notes, please see the [CHANGELOG](CHANGELOG.md).
 
-
-## Current Limitations
-
-### Grouped Namespace Statements
-
-The current version doesn't support grouped use statements in namespace refactoring:
-
-```php
-// Not fully supported yet:
-use MyNamespace\{ClassA, ClassB as B, SubNamespace\ClassC};
-```
-
-When using this PHP syntax feature, refactoring operations may be incomplete or require manual adjustments. Support for grouped namespace statements is planned for future releases. If this feature is important to your workflow, please see the "Feedback and Contributions" section below and let me know.
 
 ## Feedback and Contributions
 

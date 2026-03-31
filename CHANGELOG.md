@@ -10,6 +10,9 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 - Added support for grouped `use` statements during namespace refactoring:
   - Grouped imports are now correctly recognized and updated when affected PHP files are moved or renamed
   - Existing grouped imports are preserved where possible during refactoring operations
+- Added support for PHPDoc type references during namespace refactoring:
+  - Types found in tags like `@param`, `@return`, `@var`, and `@method` are now considered when updating related `use` statements
+  - This behavior is enabled by default and can be disabled via the `phpSmartFiles.refactorNamespacesIncludeDocblockTypes` setting
 
 ### Changed
 

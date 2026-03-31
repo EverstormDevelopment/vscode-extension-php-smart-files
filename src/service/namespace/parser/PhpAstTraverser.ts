@@ -23,7 +23,10 @@ export class PhpAstTraverser {
         "false", "never", "mixed", "self", "static", "parent", "resource",
     ]);
 
-    constructor(private readonly ast: AST) {}
+    constructor(
+        private readonly ast: AST,
+        private readonly sourceCode: string = ""
+    ) {}
 
     /**
      * Returns all name references found in the AST.
@@ -125,6 +128,7 @@ export class PhpAstTraverser {
                 return;
 
             case "parameter":
+                this.collectAttributeGroups(node.attrGroups, refs);
                 this.collectFromType(node.type, refs);
                 this.collect(node.value, "generic", refs);
                 return;
@@ -133,6 +137,7 @@ export class PhpAstTraverser {
             case "method":
             case "closure":
             case "arrowfunc":
+                this.collectAttributeGroups(node.attrGroups, refs);
                 this.collectFromType(node.type, refs);
                 this.collect(node.arguments, "generic", refs);
                 this.collect(node.body, "generic", refs);
@@ -140,6 +145,7 @@ export class PhpAstTraverser {
 
             case "property":
             case "classconstant":
+                this.collectAttributeGroups(node.attrGroups, refs);
                 this.collectFromType(node.type, refs);
                 this.collect(node.value, "generic", refs);
                 return;
@@ -160,6 +166,8 @@ export class PhpAstTraverser {
      * @param refs Accumulator for collected references.
      */
     private collectFromClassLike(node: any, refs: NameReferenceType[]): void {
+        this.collectAttributeGroups(node.attrGroups, refs);
+
         // class extends single name; interface extends array of names
         if (node.extends) {
             this.collect(node.extends, "oop", refs);
@@ -194,6 +202,21 @@ export class PhpAstTraverser {
     }
 
     /**
+     * Collects OOP references from all attribute groups attached to a node.
+     * @param attrGroups The attrgroup array from a PHP AST node.
+     * @param refs Accumulator for collected references.
+     */
+    private collectAttributeGroups(attrGroups: any, refs: NameReferenceType[]): void {
+        if (!Array.isArray(attrGroups)) {
+            return;
+        }
+
+        for (const attrGroup of attrGroups) {
+            this.collectFromAttrGroup(attrGroup, refs);
+        }
+    }
+
+    /**
      * Collects OOP references from PHP 8+ attribute groups.
      * Attribute names are plain strings (not name AST nodes), so loc is reconstructed from
      * the attribute node's start offset and the name string length.
@@ -204,19 +227,26 @@ export class PhpAstTraverser {
         if (!Array.isArray(node.attrs)) {
             return;
         }
+
+        const groupStart = typeof node.loc?.start?.offset === "number" ? node.loc.start.offset : 0;
+        let searchOffset = groupStart;
+
         for (const attr of node.attrs) {
-            if (typeof attr.name !== "string" || !attr.name || !attr.loc) {
+            if (typeof attr.name !== "string" || !attr.name) {
                 continue;
             }
+
+            const loc = this.getAttributeNameLoc(attr.name, searchOffset);
+            searchOffset = loc?.end ?? searchOffset;
+
             refs.push({
                 name: attr.name,
                 kind: IdentifierKindEnum.Oop,
-                resolution: NameResolutionEnum.Uqn,
-                loc: {
-                    start: attr.loc.start.offset,
-                    end: attr.loc.start.offset + attr.name.length,
-                },
+                resolution: this.resolveAttributeNameResolution(attr.name),
+                loc: loc ?? { start: 0, end: 0 },
             });
+
+            this.collect(attr.args, "generic", refs);
         }
     }
 
@@ -282,5 +312,87 @@ export class PhpAstTraverser {
                 end: nameNode.loc.start.offset + name.length,
             },
         });
+    }
+
+    /**
+     * Resolves the parser-independent name resolution for an attribute name string.
+     * @param name The raw attribute name from php-parser.
+     * @returns The matching name resolution enum.
+     */
+    private resolveAttributeNameResolution(name: string): NameResolutionEnum {
+        if (name.startsWith("\\")) {
+            return NameResolutionEnum.Fqn;
+        }
+
+        if (name.includes("\\")) {
+            return NameResolutionEnum.Qn;
+        }
+
+        return NameResolutionEnum.Uqn;
+    }
+
+    /**
+     * Reconstructs the source offsets of an attribute name inside a `#[...]` group.
+     * php-parser reports unusable `attribute.loc` offsets at runtime, so the name token
+     * is located directly in the original source code.
+     * @param attrName The raw attribute name.
+     * @param searchOffset The earliest source offset to search from.
+     * @returns The reconstructed offset range or null if not found.
+     */
+    private getAttributeNameLoc(attrName: string, searchOffset: number): NameReferenceType["loc"] | null {
+        if (!this.sourceCode || !attrName) {
+            return null;
+        }
+
+        let candidate = this.sourceCode.indexOf(attrName, searchOffset);
+        while (candidate !== -1) {
+            const start = candidate;
+            const end = start + attrName.length;
+            const previous = this.getPreviousNonWhitespaceChar(start);
+            const next = this.getNextNonWhitespaceChar(end);
+
+            const hasValidPrefix = previous === "[" || previous === ",";
+            const hasValidSuffix = next === "(" || next === "]" || next === ",";
+
+            if (hasValidPrefix && hasValidSuffix) {
+                return { start, end };
+            }
+
+            candidate = this.sourceCode.indexOf(attrName, candidate + 1);
+        }
+
+        return null;
+    }
+
+    /**
+     * Finds the previous non-whitespace character before a source offset.
+     * @param offset The source offset to inspect.
+     * @returns The previous non-whitespace character, or null if none exists.
+     */
+    private getPreviousNonWhitespaceChar(offset: number): string | null {
+        for (let index = offset - 1; index >= 0; index--) {
+            const character = this.sourceCode[index];
+            if (!/\s/u.test(character)) {
+                return character;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Finds the next non-whitespace character after a source offset.
+     * @param offset The source offset to inspect.
+     * @returns The next non-whitespace character, or null if none exists.
+     */
+    private getNextNonWhitespaceChar(offset: number): string | null {
+        for (let index = offset; index < this.sourceCode.length; index++) {
+            const character = this.sourceCode[index];
+            if (!/\s/u.test(character)) {
+                return character;
+            }
+        }
+
+        return null;
     }
 }

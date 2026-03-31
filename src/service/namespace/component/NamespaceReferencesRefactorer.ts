@@ -133,7 +133,7 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
         const identifiers = refactorDetails.identifiers;
 
         // Step 1: Parse once and collect all body replacements for all identifiers
-        const allRefs = new PhpAstTraverser(new PhpParser(content).getAST()).getNameReferences(false);
+        const allRefs = new PhpAstTraverser(new PhpParser(content).getAST(), content).getNameReferences(false);
         const replacements: Array<{ loc: OffsetLocType; newText: string }> = [];
 
         for (const identifier of identifiers) {
@@ -319,7 +319,7 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
      * @returns True when a matching name reference exists in code, otherwise false
      */
     private hasAstReferenceForIdentifier(content: string, identifier: IdentifierType): boolean {
-        const references = new PhpAstTraverser(new PhpParser(content).getAST()).getNameReferences(false);
+        const references = new PhpAstTraverser(new PhpParser(content).getAST(), content).getNameReferences(false);
 
         return references.some(
             (reference) =>

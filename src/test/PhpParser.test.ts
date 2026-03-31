@@ -1,5 +1,7 @@
 import * as assert from "assert";
 import { IdentifierKindEnum } from "../service/namespace/enum/IdentifierKindEnum";
+import { NameResolutionEnum } from "../service/namespace/enum/NameResolutionEnum";
+import { PhpAstTraverser } from "../service/namespace/parser/PhpAstTraverser";
 import { PhpParser } from "../service/namespace/parser/PhpParser";
 
 suite("PhpParser", () => {
@@ -51,6 +53,80 @@ class Demo {}
             assert.strictEqual(functionStatements[0].groupPrefix, "App\\Support");
             assert.strictEqual(constantStatements[0].kind, IdentifierKindEnum.Constant);
             assert.strictEqual(constantStatements[0].groupPrefix, "App\\Support");
+        });
+    });
+
+    suite("PhpAstTraverser attributes", () => {
+        test("collects attribute references with the correct resolution and source offsets", () => {
+            const code = `<?php
+
+namespace App\\Test;
+
+use App\\Meta\\NamedAttribute;
+
+#[NamedAttribute]
+#[Nested\\QualifiedAttribute]
+#[\\Vendor\\Package\\FullyQualifiedAttribute]
+class Demo
+{
+    #[MethodAttribute]
+    public function handle(
+        #[ParameterAttribute]
+        string $value,
+    ): void {
+    }
+}
+`;
+
+            const references = new PhpAstTraverser(new PhpParser(code).getAST(), code).getNameReferences(false);
+
+            const attributeNames = [
+                "NamedAttribute",
+                "Nested\\QualifiedAttribute",
+                "\\Vendor\\Package\\FullyQualifiedAttribute",
+                "MethodAttribute",
+                "ParameterAttribute",
+            ];
+            const attributeReferences = references.filter((reference) => attributeNames.includes(reference.name));
+
+            assert.deepStrictEqual(
+                attributeReferences.map((reference) => ({
+                    name: reference.name,
+                    resolution: reference.resolution,
+                    snippet: code.slice(reference.loc.start, reference.loc.end),
+                })),
+                [
+                    {
+                        name: "NamedAttribute",
+                        resolution: NameResolutionEnum.Uqn,
+                        snippet: "NamedAttribute",
+                    },
+                    {
+                        name: "Nested\\QualifiedAttribute",
+                        resolution: NameResolutionEnum.Qn,
+                        snippet: "Nested\\QualifiedAttribute",
+                    },
+                    {
+                        name: "\\Vendor\\Package\\FullyQualifiedAttribute",
+                        resolution: NameResolutionEnum.Fqn,
+                        snippet: "\\Vendor\\Package\\FullyQualifiedAttribute",
+                    },
+                    {
+                        name: "MethodAttribute",
+                        resolution: NameResolutionEnum.Uqn,
+                        snippet: "MethodAttribute",
+                    },
+                    {
+                        name: "ParameterAttribute",
+                        resolution: NameResolutionEnum.Uqn,
+                        snippet: "ParameterAttribute",
+                    },
+                ]
+            );
+
+            assert.ok(
+                attributeReferences.every((reference) => reference.kind === IdentifierKindEnum.Oop)
+            );
         });
     });
 });

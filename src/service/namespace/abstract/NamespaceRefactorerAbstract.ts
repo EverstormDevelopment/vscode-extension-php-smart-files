@@ -47,7 +47,7 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
             this.hasUseStatementForIdentifier(content, oldIdentifier) ||
             this.hasUseStatementForIdentifier(content, refactorDetails.new.fileIdentifier);
         const parser = new PhpParser(content);
-        const references = new PhpAstTraverser(parser.getAST())
+        const references = new PhpAstTraverser(parser.getAST(), content)
             .getNameReferences(false)
             .filter((reference) => reference.kind === IdentifierKindEnum.Oop)
             .sort((a, b) => b.loc.start - a.loc.start);

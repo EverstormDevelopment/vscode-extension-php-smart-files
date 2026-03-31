@@ -159,7 +159,7 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
      */
     private refactorPartialQualified(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
         const parser = new PhpParser(content);
-        const qnRefs = new PhpAstTraverser(parser.getAST())
+        const qnRefs = new PhpAstTraverser(parser.getAST(), content)
             .getNameReferences(false)
             .filter((ref) => ref.resolution === NameResolutionEnum.Qn)
             .sort((a, b) => b.loc.start - a.loc.start);
@@ -199,7 +199,7 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
         refactorDetails: NamespaceRefactorDetailsType
     ): Promise<IdentifierType[]> {
         const parser = new PhpParser(content);
-        const allRefs = new PhpAstTraverser(parser.getAST()).getNameReferences(true);
+        const allRefs = new PhpAstTraverser(parser.getAST(), content).getNameReferences(true);
 
         const config = vscode.workspace.getConfiguration("phpSmartFiles");
         const includeFunctions = config.get<boolean>("refactorNamespacesIncludeFunctions", true);

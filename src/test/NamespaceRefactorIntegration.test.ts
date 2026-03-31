@@ -559,4 +559,159 @@ suite("Namespace Refactor Integration", () => {
             `
         );
     });
+
+    test("updates attribute references and imports when a class moves across namespaces", async () => {
+        await testWorkspace.writeWorkspaceFiles({
+            "composer.json": JSON.stringify(
+                {
+                    autoload: {
+                        "psr-4": {
+                            "App\\": "src/",
+                        },
+                    },
+                },
+                null,
+                4
+            ),
+            "src/Support/Attributes/AsTaggedItem.php": php`
+                <?php
+
+                namespace App\Support\Attributes;
+
+                class AsTaggedItem
+                {
+                }
+            `,
+            "src/Support/Attributes/When.php": php`
+                <?php
+
+                namespace App\Support\Attributes;
+
+                class When
+                {
+                }
+            `,
+            "src/Legacy/Task.php": php`
+                <?php
+
+                namespace App\Legacy;
+
+                use App\Support\Attributes\AsTaggedItem;
+
+                #[AsTaggedItem('diagnostics')]
+                #[Attributes\When('dev')]
+                class Task
+                {
+                }
+            `,
+        });
+
+        const namespaceRefactorService = testWorkspace.getService();
+        const oldUri = testWorkspace.uri("src/Legacy/Task.php");
+        const newUri = testWorkspace.uri("src/NewDomain/Task.php");
+
+        await vscode.workspace.fs.createDirectory(testWorkspace.uri("src/NewDomain"));
+        await vscode.workspace.fs.rename(oldUri, newUri, { overwrite: true });
+        await namespaceRefactorService.refactorFile(oldUri, newUri);
+
+        assertNormalizedFileEquals(
+            await testWorkspace.readFile(newUri),
+            php`
+                <?php
+
+                namespace App\NewDomain;
+
+                use App\Support\Attributes\AsTaggedItem;
+
+                #[AsTaggedItem('diagnostics')]
+                #[\App\Legacy\Attributes\When('dev')]
+                class Task
+                {
+                }
+            `
+        );
+    });
+
+    test("renames classes referenced inside attributes in dependent files", async () => {
+        await testWorkspace.writeWorkspaceFiles({
+            "composer.json": JSON.stringify(
+                {
+                    autoload: {
+                        "psr-4": {
+                            "App\\": "src/",
+                        },
+                    },
+                },
+                null,
+                4
+            ),
+            "src/Attributes/Handles.php": php`
+                <?php
+
+                namespace App\Attributes;
+
+                class Handles
+                {
+                }
+            `,
+            "src/Domain/LegacyService.php": php`
+                <?php
+
+                namespace App\Domain;
+
+                class LegacyService
+                {
+                }
+            `,
+            "src/Controller/AttributeConsumer.php": php`
+                <?php
+
+                namespace App\Controller;
+
+                use App\Attributes\Handles;
+                use App\Domain\LegacyService;
+
+                #[Handles]
+                #[LegacyService]
+                class AttributeConsumer
+                {
+                    public function make(
+                        #[LegacyService]
+                        string $value,
+                    ): void {
+                    }
+                }
+            `,
+        });
+
+        const namespaceRefactorService = testWorkspace.getService();
+        const oldUri = testWorkspace.uri("src/Domain/LegacyService.php");
+        const newUri = testWorkspace.uri("src/Domain/BetterService.php");
+
+        await vscode.workspace.fs.rename(oldUri, newUri, { overwrite: true });
+        await namespaceRefactorService.refactorFile(oldUri, newUri);
+
+        assertNormalizedFileEquals(
+            await testWorkspace.readFile(testWorkspace.uri("src/Controller/AttributeConsumer.php")),
+            php`
+                <?php
+
+                namespace App\Controller;
+
+                use App\Attributes\Handles;
+                use App\Domain\BetterService;
+
+                #[Handles]
+                #[BetterService]
+                class AttributeConsumer
+                {
+                    public function make(
+                        #[BetterService]
+                        string $value,
+                    ): void {
+                    }
+                }
+            `
+        );
+    });
 });

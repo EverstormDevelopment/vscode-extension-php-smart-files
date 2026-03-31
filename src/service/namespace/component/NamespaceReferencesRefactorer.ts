@@ -297,25 +297,24 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
     private hasAstReferenceForIdentifier(content: string, identifier: IdentifierType): boolean {
         const references = new PhpAstTraverser(new PhpParser(content).getAST(), content).getNameReferences(false);
 
+        // Map identifier kind to the expected reference kind (functions and constants keep theirs, everything else is OOP)
+        const expectedReferenceKind = identifier.kind === IdentifierKindEnum.Function || identifier.kind === IdentifierKindEnum.Constant
+            ? identifier.kind
+            : IdentifierKindEnum.Oop;
+
+        // Check for an unqualified name reference matching both name and kind
         const hasCodeReference = references.some(
             (reference) =>
                 reference.name === identifier.name &&
-                ((identifier.kind === IdentifierKindEnum.Function &&
-                    reference.kind === IdentifierKindEnum.Function &&
-                    reference.resolution === NameResolutionEnum.Uqn) ||
-                    (identifier.kind === IdentifierKindEnum.Constant &&
-                        reference.kind === IdentifierKindEnum.Constant &&
-                        reference.resolution === NameResolutionEnum.Uqn) ||
-                    (identifier.kind !== IdentifierKindEnum.Function &&
-                        identifier.kind !== IdentifierKindEnum.Constant &&
-                        reference.kind === IdentifierKindEnum.Oop &&
-                        reference.resolution === NameResolutionEnum.Uqn)),
+                reference.resolution === NameResolutionEnum.Uqn &&
+                reference.kind === expectedReferenceKind,
         );
 
         if (hasCodeReference) {
             return true;
         }
 
+        // Functions and constants have no PHPDoc type representation — skip docblock check
         if (identifier.kind === IdentifierKindEnum.Function || identifier.kind === IdentifierKindEnum.Constant) {
             return false;
         }

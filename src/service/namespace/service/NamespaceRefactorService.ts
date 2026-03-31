@@ -18,7 +18,7 @@ export class NamespaceRefactorService {
     constructor(
         private readonly namespaceRefactorDetailsProvider: NamespaceRefactorDetailsProvider,
         private readonly namespaceFileRefactorer: NamespaceFileRefactorer,
-        private readonly namespaceDirectoryRefactorer: NamespaceDirectoryRefactorer
+        private readonly namespaceDirectoryRefactorer: NamespaceDirectoryRefactorer,
     ) {}
 
     /**
@@ -61,7 +61,7 @@ export class NamespaceRefactorService {
         if (!refactorDetails.new.isNamespaceValid) {
             const message = vscode.l10n.t(
                 "The detected namespace '{0}' is not a valid PHP namespace. The refactoring process has been canceled.",
-                refactorDetails.new.namespaceInvalid || refactorDetails.new.namespace || "undefined"
+                refactorDetails.new.namespaceInvalid || refactorDetails.new.namespace || "undefined",
             );
             vscode.window.showWarningMessage(message);
             return false;
@@ -70,7 +70,7 @@ export class NamespaceRefactorService {
         if (!refactorDetails.new.isFileIdentifierValid) {
             const message = vscode.l10n.t(
                 "The provided name '{0}' is not a valid PHP identifier. The refactoring process has been canceled.",
-                refactorDetails.new.fileIdentifierInvalid || refactorDetails.new.fileIdentifier.name || "undefined"
+                refactorDetails.new.fileIdentifierInvalid || refactorDetails.new.fileIdentifier.name || "undefined",
             );
             vscode.window.showWarningMessage(message);
             return false;

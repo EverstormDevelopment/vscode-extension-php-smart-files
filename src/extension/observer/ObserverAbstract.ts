@@ -14,7 +14,7 @@ export abstract class ObserverAbstract implements FilesystemObserverInterface {
      */
     constructor(
         protected readonly filesystemObserver: FilesystemObserver,
-        protected readonly namespaceRefactorService: NamespaceRefactorService
+        protected readonly namespaceRefactorService: NamespaceRefactorService,
     ) {}
 
     /**
@@ -102,12 +102,7 @@ export abstract class ObserverAbstract implements FilesystemObserverInterface {
         const confirmMessage = await this.getConfirmationMessage(oldUri, newUri);
         const yesButton = vscode.l10n.t("Yes");
         const noButton = vscode.l10n.t("No");
-        const pressedButton = await vscode.window.showInformationMessage(
-            confirmMessage,
-            { modal: true },
-            yesButton,
-            noButton
-        );
+        const pressedButton = await vscode.window.showInformationMessage(confirmMessage, { modal: true }, yesButton, noButton);
         return pressedButton === yesButton;
     }
 }

@@ -15,7 +15,7 @@ export class NamespaceFileRefactorer {
      */
     constructor(
         private readonly namespaceSourceRefactorer: NamespaceSourceRefactorer,
-        private readonly namespaceReferencesRefactorer: NamespaceReferencesRefactorer
+        private readonly namespaceReferencesRefactorer: NamespaceReferencesRefactorer,
     ) {}
 
     /**

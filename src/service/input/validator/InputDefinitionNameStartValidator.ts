@@ -34,14 +34,8 @@ export class InputDefinitionNameStartValidator implements InputValidatorInterfac
      * @param input The definition name to validate
      * @returns Validation message if input doesn't start with an uppercase letter or underscore, undefined if valid
      */
-    private async validateCharactersWithUppercase(
-        input: string
-    ): Promise<vscode.InputBoxValidationMessage | undefined> {
-        return this.validateRegExp(
-            input,
-            /^[\p{Lu}_]/u,
-            "Definition name must start with an uppercase letter or underscore"
-        );
+    private async validateCharactersWithUppercase(input: string): Promise<vscode.InputBoxValidationMessage | undefined> {
+        return this.validateRegExp(input, /^[\p{Lu}_]/u, "Definition name must start with an uppercase letter or underscore");
     }
 
     /**
@@ -51,11 +45,7 @@ export class InputDefinitionNameStartValidator implements InputValidatorInterfac
      * @param errorMessage The error message to display if validation fails
      * @returns Validation message if input doesn't match the regex, undefined if valid
      */
-    private async validateRegExp(
-        input: string,
-        regExp: RegExp,
-        errorMessage: string
-    ): Promise<vscode.InputBoxValidationMessage | undefined> {
+    private async validateRegExp(input: string, regExp: RegExp, errorMessage: string): Promise<vscode.InputBoxValidationMessage | undefined> {
         if (!regExp.test(input)) {
             return {
                 message: vscode.l10n.t(errorMessage),

@@ -27,7 +27,7 @@ export class FileGenerationCommand {
         private readonly inputBoxFactory: InputBoxFactoryInterface,
         private readonly fileCreator: FileCreator,
         private readonly namespaceResolver: NamespaceResolver,
-        private readonly snippedFactory: SnippetFactoryInterface
+        private readonly snippedFactory: SnippetFactoryInterface,
     ) {}
 
     /**
@@ -109,9 +109,7 @@ export class FileGenerationCommand {
         try {
             return await this.namespaceResolver.resolve(uri);
         } catch (error) {
-            const message = vscode.l10n.t(
-                "Namespace skipped: The detected namespace was invalid due to invalid names in the directory structure."
-            );
+            const message = vscode.l10n.t("Namespace skipped: The detected namespace was invalid due to invalid names in the directory structure.");
             vscode.window.showWarningMessage(message);
             return undefined;
         }

@@ -60,10 +60,7 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
      * @param refactorDetails Details about what needs to be refactored.
      * @returns The fully refactored content.
      */
-    private async refactorContent(
-        content: string,
-        refactorDetails: NamespaceRefactorDetailsType
-    ): Promise<string> {
+    private async refactorContent(content: string, refactorDetails: NamespaceRefactorDetailsType): Promise<string> {
         if (refactorDetails.hasNamespaceChanged) {
             content = this.refactorNamespace(content, refactorDetails);
             content = await this.refactorUseStatements(content, refactorDetails);
@@ -88,11 +85,7 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
             return content;
         }
 
-        return (
-            content.slice(0, namespaceLoc.start) +
-            `namespace ${refactorDetails.new.namespace};` +
-            content.slice(namespaceLoc.end)
-        );
+        return content.slice(0, namespaceLoc.start) + `namespace ${refactorDetails.new.namespace};` + content.slice(namespaceLoc.end);
     }
 
     /**
@@ -104,22 +97,14 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
      */
     private refactorDefinition(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
         const identifierLocs = new PhpParser(content).getTopLevelIdentifierLocs();
-        const identifierLoc = identifierLocs.find(
-            (id) => id.name === refactorDetails.old.fileIdentifier.name
-        );
+        const identifierLoc = identifierLocs.find((id) => id.name === refactorDetails.old.fileIdentifier.name);
 
         if (!identifierLoc) {
-            const message = vscode.l10n.t(
-                "Unable to locate a valid definition. The refactoring process has been canceled."
-            );
+            const message = vscode.l10n.t("Unable to locate a valid definition. The refactoring process has been canceled.");
             throw new Error(message);
         }
 
-        return (
-            content.slice(0, identifierLoc.nameLoc.start) +
-            refactorDetails.new.fileIdentifier.name +
-            content.slice(identifierLoc.nameLoc.end)
-        );
+        return content.slice(0, identifierLoc.nameLoc.start) + refactorDetails.new.fileIdentifier.name + content.slice(identifierLoc.nameLoc.end);
     }
 
     /**
@@ -128,14 +113,9 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
      * @param refactorDetails Details about what needs to be refactored.
      * @returns The content with updated use statements.
      */
-    private async refactorUseStatements(
-        content: string,
-        refactorDetails: NamespaceRefactorDetailsType
-    ): Promise<string> {
+    private async refactorUseStatements(content: string, refactorDetails: NamespaceRefactorDetailsType): Promise<string> {
         const references = await this.getNonQualifiedReferences(content, refactorDetails);
-        const nonQualifiedReferences = references.filter(
-            (reference) => reference.name !== refactorDetails.old.fileIdentifier.name
-        );
+        const nonQualifiedReferences = references.filter((reference) => reference.name !== refactorDetails.old.fileIdentifier.name);
 
         for (const identifier of nonQualifiedReferences) {
             content = this.addUseStatement(content, refactorDetails.old.namespace, identifier);
@@ -175,9 +155,7 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
         for (const ref of qnRefs) {
             const qualifiedReference = `${refactorDetails.old.namespace}\\${ref.name}`;
             const isSubNamespace = qualifiedReference.startsWith(newNamespacePrefix);
-            const newText = isSubNamespace
-                ? qualifiedReference.slice(newNamespacePrefix.length)
-                : `\\${qualifiedReference}`;
+            const newText = isSubNamespace ? qualifiedReference.slice(newNamespacePrefix.length) : `\\${qualifiedReference}`;
             replacements.push({ loc: ref.loc, newText });
         }
 
@@ -195,10 +173,7 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
      * @param content The file content to analyse.
      * @returns Deduplicated list of unqualified references.
      */
-    private async getNonQualifiedReferences(
-        content: string,
-        refactorDetails: NamespaceRefactorDetailsType
-    ): Promise<IdentifierType[]> {
+    private async getNonQualifiedReferences(content: string, refactorDetails: NamespaceRefactorDetailsType): Promise<IdentifierType[]> {
         const parser = new PhpParser(content);
         const allRefs = new PhpAstTraverser(parser.getAST(), content).getNameReferences(true);
 
@@ -207,31 +182,19 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
         const includeConstants = config.get<boolean>("refactorNamespacesIncludeConstants", true);
         const includeDocblockTypes = config.get<boolean>("refactorNamespacesIncludeDocblockTypes", true);
         const needsDefinitionLookup = allRefs.some(
-            (ref) =>
-                ref.resolution === NameResolutionEnum.Uqn &&
-                (ref.kind === IdentifierKindEnum.Function || ref.kind === IdentifierKindEnum.Constant)
+            (ref) => ref.resolution === NameResolutionEnum.Uqn && (ref.kind === IdentifierKindEnum.Function || ref.kind === IdentifierKindEnum.Constant),
         );
-        const importableDefinitions = needsDefinitionLookup
-            ? await this.getImportableDefinitionsFromOldNamespace(refactorDetails)
-            : new Set<string>();
-        const docblockReferences = includeDocblockTypes
-            ? new PhpDocTypeExtractor(content).getUnqualifiedOopReferences()
-            : [];
+        const importableDefinitions = needsDefinitionLookup ? await this.getImportableDefinitionsFromOldNamespace(refactorDetails) : new Set<string>();
+        const docblockReferences = includeDocblockTypes ? new PhpDocTypeExtractor(content).getUnqualifiedOopReferences() : [];
 
         const codeReferences = allRefs
             .filter((ref) => ref.resolution === NameResolutionEnum.Uqn)
             .filter((ref) => {
                 if (ref.kind === IdentifierKindEnum.Function) {
-                    return (
-                        includeFunctions &&
-                        this.hasImportableDefinition(ref.name, ref.kind, importableDefinitions, refactorDetails)
-                    );
+                    return includeFunctions && this.hasImportableDefinition(ref.name, ref.kind, importableDefinitions, refactorDetails);
                 }
                 if (ref.kind === IdentifierKindEnum.Constant) {
-                    return (
-                        includeConstants &&
-                        this.hasImportableDefinition(ref.name, ref.kind, importableDefinitions, refactorDetails)
-                    );
+                    return includeConstants && this.hasImportableDefinition(ref.name, ref.kind, importableDefinitions, refactorDetails);
                 }
                 return true;
             })
@@ -246,17 +209,11 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
      * @param refactorDetails Details about the refactoring operation.
      * @returns A set of importable symbol keys in the old namespace.
      */
-    private async getImportableDefinitionsFromOldNamespace(
-        refactorDetails: NamespaceRefactorDetailsType
-    ): Promise<Set<string>> {
+    private async getImportableDefinitionsFromOldNamespace(refactorDetails: NamespaceRefactorDetailsType): Promise<Set<string>> {
         const currentFileDefinitions = new Set(
             refactorDetails.identifiers
-                .filter(
-                    (identifier) =>
-                        identifier.kind === IdentifierKindEnum.Function ||
-                        identifier.kind === IdentifierKindEnum.Constant
-                )
-                .map((identifier) => this.getImportableDefinitionKey(identifier.name, identifier.kind))
+                .filter((identifier) => identifier.kind === IdentifierKindEnum.Function || identifier.kind === IdentifierKindEnum.Constant)
+                .map((identifier) => this.getImportableDefinitionKey(identifier.name, identifier.kind)),
         );
 
         const availableDefinitions = new Set<string>();
@@ -271,10 +228,7 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
 
             const identifiers = parser.getTopLevelIdentifiers();
             for (const identifier of identifiers) {
-                if (
-                    identifier.kind !== IdentifierKindEnum.Function &&
-                    identifier.kind !== IdentifierKindEnum.Constant
-                ) {
+                if (identifier.kind !== IdentifierKindEnum.Function && identifier.kind !== IdentifierKindEnum.Constant) {
                     continue;
                 }
 
@@ -303,14 +257,10 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
         name: string,
         kind: IdentifierKindEnum,
         availableDefinitions: Set<string>,
-        refactorDetails: NamespaceRefactorDetailsType
+        refactorDetails: NamespaceRefactorDetailsType,
     ): boolean {
         const key = this.getImportableDefinitionKey(name, kind);
-        if (
-            refactorDetails.identifiers.some(
-                (identifier) => identifier.name === name && identifier.kind === kind
-            )
-        ) {
+        if (refactorDetails.identifiers.some((identifier) => identifier.name === name && identifier.kind === kind)) {
             return false;
         }
 

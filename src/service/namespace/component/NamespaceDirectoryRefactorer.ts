@@ -17,7 +17,7 @@ export class NamespaceDirectoryRefactorer {
      */
     constructor(
         private readonly namespaceRefactorDetailsProvider: NamespaceRefactorDetailsProvider,
-        private readonly namespaceFileRefactorer: NamespaceFileRefactorer
+        private readonly namespaceFileRefactorer: NamespaceFileRefactorer,
     ) {}
 
     /**
@@ -30,11 +30,7 @@ export class NamespaceDirectoryRefactorer {
         const options: vscode.ProgressOptions = {
             cancellable: false,
             location: vscode.ProgressLocation.Notification,
-            title: vscode.l10n.t(
-                'Updating directory from "{0}" to "{1}"',
-                refactorDetails.old.fileIdentifier.name,
-                refactorDetails.new.fileIdentifier.name
-            ),
+            title: vscode.l10n.t('Updating directory from "{0}" to "{1}"', refactorDetails.old.fileIdentifier.name, refactorDetails.new.fileIdentifier.name),
         };
 
         await vscode.window.withProgress(options, async (progress) => {
@@ -53,7 +49,7 @@ export class NamespaceDirectoryRefactorer {
         progress: vscode.Progress<{
             message?: string;
             increment?: number;
-        }>
+        }>,
     ): Promise<void> {
         await this.refactorDirectoryWithProgress(refactorDetails, progress);
         // Intentional delay to ensure the notification is visible to the user
@@ -78,7 +74,7 @@ export class NamespaceDirectoryRefactorer {
         progress: vscode.Progress<{
             message?: string;
             increment?: number;
-        }>
+        }>,
     ): Promise<void> {
         const files = await getFilesInUriDirectory(refactorDetails.new.uri, "**/*.php");
         const progressIncrement = 99.9 / files.length;

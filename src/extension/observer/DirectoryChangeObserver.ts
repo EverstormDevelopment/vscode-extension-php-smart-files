@@ -29,7 +29,7 @@ export class DirectoryChangeObserver extends ObserverAbstract {
         const directory = this.getLastPathSegment(newUri);
         return vscode.l10n.t(
             'Would you like to update all files and their references for directory "{0}"? This operation may take some time depending on the directory content and project size.',
-            directory
+            directory,
         );
     }
 

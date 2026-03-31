@@ -27,10 +27,7 @@ export class InputFileNameValidator implements InputValidatorInterface {
      * @returns Validation message object if validation fails, or undefined if valid
      */
     public async validate(input: string): Promise<vscode.InputBoxValidationMessage | undefined> {
-        const validators = [
-            new InputFileNameLengthValidator(),
-            new InputFileNameCharacterValidator(this.autoloaderConform),
-        ];
+        const validators = [new InputFileNameLengthValidator(), new InputFileNameCharacterValidator(this.autoloaderConform)];
         if (!this.autoloaderConform) {
             validators.push(new InputFileNameProblematicValidator());
         }

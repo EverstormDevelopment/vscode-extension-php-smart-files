@@ -51,11 +51,7 @@ final class Example
 
         const identifiers = extractor.getUnqualifiedOopReferences().map((identifier) => identifier.name);
 
-        assert.deepStrictEqual(identifiers, [
-            "User",
-            "Input",
-            "Filter",
-        ]);
+        assert.deepStrictEqual(identifiers, ["User", "Input", "Filter"]);
     });
 
     test("extracts identifiers from nullable intersections, array shapes, and nested generics", () => {
@@ -76,13 +72,7 @@ final class Example
 
         const identifiers = extractor.getUnqualifiedOopReferences().map((identifier) => identifier.name);
 
-        assert.deepStrictEqual(identifiers, [
-            "User",
-            "Authenticatable",
-            "Group",
-            "Pager",
-            "Result",
-        ]);
+        assert.deepStrictEqual(identifiers, ["User", "Authenticatable", "Group", "Pager", "Result"]);
     });
 
     test("extracts identifiers from callable signatures and @method parameters with references", () => {
@@ -99,13 +89,6 @@ final class Example
 
         const identifiers = extractor.getUnqualifiedOopReferences().map((identifier) => identifier.name);
 
-        assert.deepStrictEqual(identifiers, [
-            "Context",
-            "Payload",
-            "HandlerResult",
-            "Collection",
-            "Filter",
-            "Input",
-        ]);
+        assert.deepStrictEqual(identifiers, ["Context", "Payload", "HandlerResult", "Collection", "Filter", "Input"]);
     });
 });

@@ -20,7 +20,7 @@ export class FileRenamedObserver extends ObserverAbstract {
      */
     constructor(
         protected readonly filesystemObserver: FilesystemObserver,
-        protected readonly namespaceRefactorService: NamespaceRefactorService
+        protected readonly namespaceRefactorService: NamespaceRefactorService,
     ) {
         super(filesystemObserver, namespaceRefactorService);
     }
@@ -41,10 +41,7 @@ export class FileRenamedObserver extends ObserverAbstract {
      */
     protected async getConfirmationMessage(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<string> {
         const name = getUriFileName(newUri);
-        return vscode.l10n.t(
-            'Would you like to update the declaration identifer to "{0}" and update its references?',
-            name
-        );
+        return vscode.l10n.t('Would you like to update the declaration identifer to "{0}" and update its references?', name);
     }
 
     /**
@@ -54,10 +51,7 @@ export class FileRenamedObserver extends ObserverAbstract {
      * @returns True if the event is a file rename operation, false otherwise.
      */
     protected async isValidEvent(event: FilesystemObserverEvent): Promise<boolean> {
-        return (
-            event.resource === FilesystemObserverResourceEnum.File &&
-            event.operation === FilesystemObserverOperationEnum.Renamed
-        );
+        return event.resource === FilesystemObserverResourceEnum.File && event.operation === FilesystemObserverOperationEnum.Renamed;
     }
 
     /**
@@ -100,17 +94,12 @@ export class FileRenamedObserver extends ObserverAbstract {
     private async confirmGlobalReservedName(name: string): Promise<boolean> {
         const confirmMessage = vscode.l10n.t(
             'Warning: The new file name "{0}" is a PHP reserved keyword. This may cause errors or unpredictable behavior in your project. Do you want to proceed and update the declaration identifier and all its references?',
-            name
+            name,
         );
 
         const yesButton = vscode.l10n.t("Yes");
         const noButton = vscode.l10n.t("No");
-        const pressedButton = await vscode.window.showWarningMessage(
-            confirmMessage,
-            { modal: true },
-            yesButton,
-            noButton
-        );
+        const pressedButton = await vscode.window.showWarningMessage(confirmMessage, { modal: true }, yesButton, noButton);
         return pressedButton === yesButton;
     }
 }

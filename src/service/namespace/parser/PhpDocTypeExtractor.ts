@@ -8,15 +8,7 @@ import { ReservedKeywords } from "../../php/reserved/ReservedKeywords";
  */
 export class PhpDocTypeExtractor {
     private static readonly docBlockRegExp = /\/\*\*[\s\S]*?\*\//gu;
-    private static readonly simpleTypeTags = new Set([
-        "@param",
-        "@return",
-        "@var",
-        "@throws",
-        "@property",
-        "@property-read",
-        "@property-write",
-    ]);
+    private static readonly simpleTypeTags = new Set(["@param", "@return", "@var", "@throws", "@property", "@property-read", "@property-write"]);
     private static readonly identifierRegExp = /^[\p{L}_\x80-\xff][\p{L}\p{N}_\x80-\xff]*$/u;
 
     constructor(private readonly phpCode: string) {}
@@ -129,11 +121,7 @@ export class PhpDocTypeExtractor {
 
         for (let index = 0; index < text.length; index++) {
             const character = text[index];
-            const isTopLevel =
-                angleDepth === 0 &&
-                braceDepth === 0 &&
-                bracketDepth === 0 &&
-                parenDepth === 0;
+            const isTopLevel = angleDepth === 0 && braceDepth === 0 && bracketDepth === 0 && parenDepth === 0;
 
             if (isTopLevel && /\s/u.test(character)) {
                 const nextSegment = text.slice(index).trimStart();
@@ -231,7 +219,10 @@ export class PhpDocTypeExtractor {
             return "";
         }
 
-        return typeParts.join(" ").replace(/^[&.]+/u, "").replace(/^\.{3}/u, "");
+        return typeParts
+            .join(" ")
+            .replace(/^[&.]+/u, "")
+            .replace(/^\.{3}/u, "");
     }
 
     private extractIdentifiersFromTypeExpression(typeExpression: string): string[] {
@@ -266,9 +257,7 @@ export class PhpDocTypeExtractor {
 
             return [
                 ...this.extractIdentifiersFromTypeExpression(baseType),
-                ...this.splitTopLevel(genericContent, ",").flatMap((segment) =>
-                    this.extractIdentifiersFromTypeExpression(segment)
-                ),
+                ...this.splitTopLevel(genericContent, ",").flatMap((segment) => this.extractIdentifiersFromTypeExpression(segment)),
             ];
         }
 
@@ -285,10 +274,7 @@ export class PhpDocTypeExtractor {
                 return this.extractIdentifiersFromTypeExpression(segment.slice(colonIndex + 1));
             });
 
-            return [
-                ...this.extractIdentifiersFromTypeExpression(baseType),
-                ...valueTypes,
-            ];
+            return [...this.extractIdentifiersFromTypeExpression(baseType), ...valueTypes];
         }
 
         if (normalized.startsWith("\\")) {
@@ -348,8 +334,7 @@ export class PhpDocTypeExtractor {
         let expression = typeExpression.trim();
         while (
             expression.length >= 2 &&
-            ((expression.startsWith("(") && expression.endsWith(")")) ||
-                (expression.startsWith("[") && expression.endsWith("]")))
+            ((expression.startsWith("(") && expression.endsWith(")")) || (expression.startsWith("[") && expression.endsWith("]")))
         ) {
             expression = expression.slice(1, -1).trim();
         }
@@ -362,10 +347,7 @@ export class PhpDocTypeExtractor {
             expression = expression.slice(0, -1).trim();
         }
 
-        if (
-            (expression.startsWith("'") && expression.endsWith("'")) ||
-            (expression.startsWith("\"") && expression.endsWith("\""))
-        ) {
+        if ((expression.startsWith("'") && expression.endsWith("'")) || (expression.startsWith('"') && expression.endsWith('"'))) {
             return "";
         }
 
@@ -410,11 +392,7 @@ export class PhpDocTypeExtractor {
                     break;
             }
 
-            const isTopLevel =
-                angleDepth === 0 &&
-                braceDepth === 0 &&
-                bracketDepth === 0 &&
-                parenDepth === 0;
+            const isTopLevel = angleDepth === 0 && braceDepth === 0 && bracketDepth === 0 && parenDepth === 0;
 
             if (isTopLevel && operators.includes(character)) {
                 if (current.trim() !== "") {
@@ -472,11 +450,7 @@ export class PhpDocTypeExtractor {
                     break;
             }
 
-            const isTopLevel =
-                angleDepth === 0 &&
-                braceDepth === 0 &&
-                bracketDepth === 0 &&
-                parenDepth === 0;
+            const isTopLevel = angleDepth === 0 && braceDepth === 0 && bracketDepth === 0 && parenDepth === 0;
 
             if (isTopLevel && character === delimiter) {
                 segments.push(current.trim());
@@ -502,11 +476,7 @@ export class PhpDocTypeExtractor {
 
         for (let index = 0; index < expression.length; index++) {
             const character = expression[index];
-            const isTopLevel =
-                angleDepth === 0 &&
-                braceDepth === 0 &&
-                bracketDepth === 0 &&
-                parenDepth === 0;
+            const isTopLevel = angleDepth === 0 && braceDepth === 0 && bracketDepth === 0 && parenDepth === 0;
 
             if (isTopLevel && character === target) {
                 return index;
@@ -554,11 +524,7 @@ export class PhpDocTypeExtractor {
 
         for (let index = 0; index < expression.length; index++) {
             const character = expression[index];
-            const isTopLevel =
-                angleDepth === 0 &&
-                braceDepth === 0 &&
-                bracketDepth === 0 &&
-                parenDepth === 0;
+            const isTopLevel = angleDepth === 0 && braceDepth === 0 && bracketDepth === 0 && parenDepth === 0;
 
             if (isTopLevel && character === target) {
                 foundIndex = index;
@@ -597,12 +563,7 @@ export class PhpDocTypeExtractor {
         return foundIndex;
     }
 
-    private findMatchingBracket(
-        expression: string,
-        openIndex: number,
-        openBracket: string,
-        closeBracket: string
-    ): number {
+    private findMatchingBracket(expression: string, openIndex: number, openBracket: string, closeBracket: string): number {
         let depth = 0;
 
         for (let index = openIndex; index < expression.length; index++) {

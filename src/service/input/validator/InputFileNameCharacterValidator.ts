@@ -49,9 +49,7 @@ export class InputFileNameCharacterValidator implements InputValidatorInterface 
         const validNameRegex = /^[\p{L}_][\p{L}\p{N}_]*$/u;
         if (!validNameRegex.test(input)) {
             return {
-                message: vscode.l10n.t(
-                    "Filename can only contain letters, numbers, and underscores, to be autoload compatible"
-                ),
+                message: vscode.l10n.t("Filename can only contain letters, numbers, and underscores, to be autoload compatible"),
                 severity: vscode.InputBoxValidationSeverity.Error,
             };
         }

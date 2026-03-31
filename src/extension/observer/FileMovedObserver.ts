@@ -37,10 +37,7 @@ export class FileMovedObserver extends ObserverAbstract {
      * @returns True if the event is a file move operation, false otherwise.
      */
     protected async isValidEvent(event: FilesystemObserverEvent): Promise<boolean> {
-        return (
-            event.resource === FilesystemObserverResourceEnum.File &&
-            event.operation === FilesystemObserverOperationEnum.Moved
-        );
+        return event.resource === FilesystemObserverResourceEnum.File && event.operation === FilesystemObserverOperationEnum.Moved;
     }
 
     /**

@@ -16,7 +16,7 @@ export class ComposerJsonService {
      */
     constructor(
         private readonly composerJsonFinder: ComposerJsonFinder,
-        private readonly composerJsonParser: ComposerJsonParser
+        private readonly composerJsonParser: ComposerJsonParser,
     ) {}
 
     /**

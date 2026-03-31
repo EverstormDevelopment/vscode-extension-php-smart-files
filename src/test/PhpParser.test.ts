@@ -121,12 +121,10 @@ class Demo
                         resolution: NameResolutionEnum.Uqn,
                         snippet: "ParameterAttribute",
                     },
-                ]
+                ],
             );
 
-            assert.ok(
-                attributeReferences.every((reference) => reference.kind === IdentifierKindEnum.Oop)
-            );
+            assert.ok(attributeReferences.every((reference) => reference.kind === IdentifierKindEnum.Oop));
         });
     });
 });

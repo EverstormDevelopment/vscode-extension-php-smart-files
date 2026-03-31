@@ -20,7 +20,7 @@ export class InputBox implements InputBoxInterface {
      */
     constructor(
         protected readonly options: InputBoxOptionsType = {},
-        private readonly inputBox = vscode.window.createInputBox()
+        private readonly inputBox = vscode.window.createInputBox(),
     ) {
         this.configureUI();
         this.configureBehaviour();

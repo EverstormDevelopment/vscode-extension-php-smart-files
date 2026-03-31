@@ -152,9 +152,7 @@ export class SnippetSymfonyCommandFactory extends SnippetFactoryAbstract {
         this.snippet.appendPlaceholder("// TODO: Implement command logic", this.tabstop++);
         this.snippet.appendText("\n\n");
         this.addIndentation(2);
-        this.snippet.appendText(
-            "$io->success('You have a new command! Now make it your own! Pass --help to see your options.');\n\n"
-        );
+        this.snippet.appendText("$io->success('You have a new command! Now make it your own! Pass --help to see your options.');\n\n");
         this.addIndentation(2);
         this.snippet.appendText("return Command::SUCCESS;\n");
         this.addIndentation();

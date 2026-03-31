@@ -7,11 +7,7 @@ import * as vscode from "vscode";
  * @param limit Optional maximum number of results
  * @return Promise that resolves to an array of file URIs
  */
-export async function getFilesInUriDirectory(
-    directoryUri: vscode.Uri,
-    pattern: string = "**/*",
-    limit?: number
-): Promise<vscode.Uri[]> {
+export async function getFilesInUriDirectory(directoryUri: vscode.Uri, pattern: string = "**/*", limit?: number): Promise<vscode.Uri[]> {
     const globPattern = new vscode.RelativePattern(directoryUri.fsPath, pattern);
     const files = await vscode.workspace.findFiles(globPattern, null, limit);
 

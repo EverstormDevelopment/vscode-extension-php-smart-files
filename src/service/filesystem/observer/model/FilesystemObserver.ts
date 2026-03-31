@@ -99,9 +99,7 @@ export class FilesystemObserver implements FilesystemObserverInterface {
         const oldDirname = path.dirname(oldUri.fsPath);
         const newDirname = path.dirname(newUri.fsPath);
 
-        return oldDirname === newDirname
-            ? FilesystemObserverOperationEnum.Renamed
-            : FilesystemObserverOperationEnum.Moved;
+        return oldDirname === newDirname ? FilesystemObserverOperationEnum.Renamed : FilesystemObserverOperationEnum.Moved;
     }
 
     /**

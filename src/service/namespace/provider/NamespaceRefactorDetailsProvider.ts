@@ -37,7 +37,7 @@ export class NamespaceRefactorDetailsProvider {
     constructor(
         protected readonly namespaceResolver: NamespaceResolver,
         protected readonly namespacePathValidator: NamespacePathValidator,
-        protected readonly namespaceIdentifierValidator: NamespaceIdentifierValidator
+        protected readonly namespaceIdentifierValidator: NamespaceIdentifierValidator,
     ) {}
 
     /**
@@ -104,10 +104,7 @@ export class NamespaceRefactorDetailsProvider {
      * @param contentDetails Previously extracted information from the file content (namespace, identifiers, isFile)
      * @returns Object with namespace, identifier, and validation information for the file
      */
-    private async getUriDetails(
-        uri: vscode.Uri,
-        contentDetails: ContentDetailsType
-    ): Promise<NamespaceRefactorUriDetailsType> {
+    private async getUriDetails(uri: vscode.Uri, contentDetails: ContentDetailsType): Promise<NamespaceRefactorUriDetailsType> {
         const namespaceUnsafe = await this.namespaceResolver.resolveUnsafe(uri);
         const isNamespaceValid = await this.namespacePathValidator.validate(namespaceUnsafe);
         const namespaceInvalid = isNamespaceValid ? undefined : namespaceUnsafe;

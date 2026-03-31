@@ -32,16 +32,12 @@ export class SnippetFunctionFactory extends SnippetFactoryAbstract {
     protected addFunctionIdentifier(identifier: string, usePlaceholder?: boolean): this {
         const hasStartingLetter = identifier.match(/^[\p{L}]/u);
         if (!hasStartingLetter) {
-            usePlaceholder
-                ? this.snippet.appendPlaceholder(identifier, this.tabstop++)
-                : this.snippet.appendText(identifier);
+            usePlaceholder ? this.snippet.appendPlaceholder(identifier, this.tabstop++) : this.snippet.appendText(identifier);
             return this;
         }
 
         const hasUppercaseLetter = identifier.match(/^[\p{Lu}]/u);
-        const switchedCaseLetter = hasUppercaseLetter
-            ? identifier.charAt(0).toLowerCase()
-            : identifier.charAt(0).toUpperCase();
+        const switchedCaseLetter = hasUppercaseLetter ? identifier.charAt(0).toLowerCase() : identifier.charAt(0).toUpperCase();
 
         const identifierAlternative = switchedCaseLetter + identifier.slice(1);
         this.snippet.appendChoice([identifier, identifierAlternative], this.tabstop++);

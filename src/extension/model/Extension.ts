@@ -78,18 +78,13 @@ export class Extension implements ExtensionInterface {
             return;
         }
 
-        const message = vscode.l10n.t(
-            "PHP Smart Files {0} is ready! See what’s new and customize it in your settings.",
-            this.version
-        );
+        const message = vscode.l10n.t("PHP Smart Files {0} is ready! See what’s new and customize it in your settings.", this.version);
         const changelogButton = vscode.l10n.t("Changelog");
         const settingsButton = vscode.l10n.t("Settings");
 
         vscode.window.showInformationMessage(`🎉 ` + message, changelogButton, settingsButton).then((selection) => {
             if (selection === changelogButton) {
-                const uri = vscode.Uri.parse(
-                    "https://github.com/EverstormDevelopment/vscode-extension-php-smart-files/blob/main/CHANGELOG.md"
-                );
+                const uri = vscode.Uri.parse("https://github.com/EverstormDevelopment/vscode-extension-php-smart-files/blob/main/CHANGELOG.md");
                 vscode.env.openExternal(uri);
             }
             if (selection === settingsButton) {
@@ -117,11 +112,7 @@ export class Extension implements ExtensionInterface {
      * @param commandName The command name suffix
      * @param fileType The PHP file type to create when the command is executed
      */
-    private addFileCreationCommand(
-        context: vscode.ExtensionContext,
-        commandName: string,
-        fileType: FileTypeEnum
-    ): void {
+    private addFileCreationCommand(context: vscode.ExtensionContext, commandName: string, fileType: FileTypeEnum): void {
         const commandId = `${this.name}.${commandName}`;
         const vscodeCommand = vscode.commands.registerCommand(commandId, async (uri?: vscode.Uri) => {
             const fileGenerationCommand = this.container.get(FileGenerationCommand);
@@ -174,11 +165,7 @@ export class Extension implements ExtensionInterface {
      * @param name The name of the observer
      * @param observer The constructor type of the observer to register
      */
-    private addObserver(
-        context: vscode.ExtensionContext,
-        name: string,
-        observer: ConstructorType<FilesystemObserverInterface>
-    ): void {
+    private addObserver(context: vscode.ExtensionContext, name: string, observer: ConstructorType<FilesystemObserverInterface>): void {
         const observerInstance = this.container.get(observer);
         if (!observerInstance) {
             console.error(`Observer \`${name}\` not found`);

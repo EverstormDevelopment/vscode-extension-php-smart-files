@@ -83,9 +83,7 @@ export function php(strings: TemplateStringsArray, ...values: string[]): string 
     const raw = String.raw({ raw: strings.raw }, ...values);
     const trimmed = raw.replace(/^\n/u, "").replace(/\n\s*$/u, "\n");
     const lines = trimmed.split("\n");
-    const indents = lines
-        .filter((line) => line.trim().length > 0)
-        .map((line) => line.match(/^ */u)?.[0].length ?? 0);
+    const indents = lines.filter((line) => line.trim().length > 0).map((line) => line.match(/^ */u)?.[0].length ?? 0);
     const minIndent = indents.length > 0 ? Math.min(...indents) : 0;
 
     return lines.map((line) => line.slice(minIndent)).join("\n");

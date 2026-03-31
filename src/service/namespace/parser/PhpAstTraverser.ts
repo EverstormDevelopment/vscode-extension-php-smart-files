@@ -18,14 +18,32 @@ export class PhpAstTraverser {
      * PHP built-in type names that must not be emitted as OOP references.
      */
     private static readonly builtInTypes = new Set([
-        "int", "integer", "float", "double", "string", "bool", "boolean",
-        "array", "object", "callable", "iterable", "void", "null", "true",
-        "false", "never", "mixed", "self", "static", "parent", "resource",
+        "int",
+        "integer",
+        "float",
+        "double",
+        "string",
+        "bool",
+        "boolean",
+        "array",
+        "object",
+        "callable",
+        "iterable",
+        "void",
+        "null",
+        "true",
+        "false",
+        "never",
+        "mixed",
+        "self",
+        "static",
+        "parent",
+        "resource",
     ]);
 
     constructor(
         private readonly ast: AST,
-        private readonly sourceCode: string = ""
+        private readonly sourceCode: string = "",
     ) {}
 
     /**
@@ -292,12 +310,7 @@ export class PhpAstTraverser {
             return;
         }
 
-        const kind =
-            context === "function"
-                ? IdentifierKindEnum.Function
-                : context === "oop"
-                  ? IdentifierKindEnum.Oop
-                  : IdentifierKindEnum.Constant;
+        const kind = context === "function" ? IdentifierKindEnum.Function : context === "oop" ? IdentifierKindEnum.Oop : IdentifierKindEnum.Constant;
 
         refs.push({
             name,

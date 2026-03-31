@@ -1,9 +1,5 @@
 import * as vscode from "vscode";
-import {
-    assertNormalizedFileEquals,
-    NamespaceTestWorkspace,
-    php,
-} from "./NamespaceTestWorkspace";
+import { assertNormalizedFileEquals, NamespaceTestWorkspace, php } from "./NamespaceTestWorkspace";
 
 suite("Namespace Refactor Integration", () => {
     let testWorkspace: NamespaceTestWorkspace;
@@ -33,7 +29,7 @@ suite("Namespace Refactor Integration", () => {
                     },
                 },
                 null,
-                4
+                4,
             ),
             "src/Domain/User.php": php`
                 <?php
@@ -120,7 +116,7 @@ suite("Namespace Refactor Integration", () => {
                         return new \App\Service\Sub\LegacyHelper();
                     }
                 }
-            `
+            `,
         );
 
         assertNormalizedFileEquals(
@@ -139,7 +135,7 @@ suite("Namespace Refactor Integration", () => {
                         return new ServiceAlias();
                     }
                 }
-            `
+            `,
         );
 
         assertNormalizedFileEquals(
@@ -156,7 +152,7 @@ suite("Namespace Refactor Integration", () => {
                         return new UserService();
                     }
                 }
-            `
+            `,
         );
     });
 
@@ -172,7 +168,7 @@ suite("Namespace Refactor Integration", () => {
                     },
                 },
                 null,
-                4
+                4,
             ),
             "src/Domain/LegacyService.php": php`
                 <?php
@@ -219,7 +215,7 @@ suite("Namespace Refactor Integration", () => {
                 class BetterService
                 {
                 }
-            `
+            `,
         );
 
         assertNormalizedFileEquals(
@@ -240,7 +236,7 @@ suite("Namespace Refactor Integration", () => {
                         return new BetterService();
                     }
                 }
-            `
+            `,
         );
     });
 
@@ -256,7 +252,7 @@ suite("Namespace Refactor Integration", () => {
                     },
                 },
                 null,
-                4
+                4,
             ),
             "src/Support/ExternalHelpers.php": php`
                 <?php
@@ -330,7 +326,7 @@ suite("Namespace Refactor Integration", () => {
                         return EXTERNAL_FLAG ? 1 : (LOCAL_FLAG ? 2 : 3);
                     }
                 }
-            `
+            `,
         );
     });
 
@@ -345,7 +341,7 @@ suite("Namespace Refactor Integration", () => {
                     },
                 },
                 null,
-                4
+                4,
             ),
             "src/Old/Foo.php": php`
                 <?php
@@ -407,7 +403,7 @@ suite("Namespace Refactor Integration", () => {
                         return $foo;
                     }
                 }
-            `
+            `,
         );
     });
 
@@ -423,7 +419,7 @@ suite("Namespace Refactor Integration", () => {
                     },
                 },
                 null,
-                4
+                4,
             ),
             "src/Domain/ValidName.php": php`
                 <?php
@@ -468,7 +464,7 @@ suite("Namespace Refactor Integration", () => {
                 class ValidName
                 {
                 }
-            `
+            `,
         );
 
         assertNormalizedFileEquals(
@@ -487,7 +483,7 @@ suite("Namespace Refactor Integration", () => {
                         return new ValidName();
                     }
                 }
-            `
+            `,
         );
     });
 
@@ -502,7 +498,7 @@ suite("Namespace Refactor Integration", () => {
                     },
                 },
                 null,
-                4
+                4,
             ),
             "src/Support/LegacyNote.php": php`
                 <?php
@@ -556,7 +552,7 @@ suite("Namespace Refactor Integration", () => {
                         return $label;
                     }
                 }
-            `
+            `,
         );
     });
 
@@ -571,7 +567,7 @@ suite("Namespace Refactor Integration", () => {
                     },
                 },
                 null,
-                4
+                4,
             ),
             "src/Support/Attributes/AsTaggedItem.php": php`
                 <?php
@@ -628,7 +624,7 @@ suite("Namespace Refactor Integration", () => {
                 class Task
                 {
                 }
-            `
+            `,
         );
     });
 
@@ -643,7 +639,7 @@ suite("Namespace Refactor Integration", () => {
                     },
                 },
                 null,
-                4
+                4,
             ),
             "src/Support/Result.php": php`
                 <?php
@@ -738,7 +734,7 @@ suite("Namespace Refactor Integration", () => {
                         return 'ready';
                     }
                 }
-            `
+            `,
         );
     });
 
@@ -753,7 +749,7 @@ suite("Namespace Refactor Integration", () => {
                     },
                 },
                 null,
-                4
+                4,
             ),
             "src/Support/Result.php": php`
                 <?php
@@ -783,9 +779,11 @@ suite("Namespace Refactor Integration", () => {
         });
 
         const originalGetConfiguration = vscode.workspace.getConfiguration.bind(vscode.workspace);
-        (vscode.workspace as typeof vscode.workspace & {
-            getConfiguration: typeof vscode.workspace.getConfiguration;
-        }).getConfiguration = ((section?: string, scope?: vscode.ConfigurationScope) => {
+        (
+            vscode.workspace as typeof vscode.workspace & {
+                getConfiguration: typeof vscode.workspace.getConfiguration;
+            }
+        ).getConfiguration = ((section?: string, scope?: vscode.ConfigurationScope) => {
             const configuration = originalGetConfiguration(section, scope);
             if (section !== "phpSmartFiles") {
                 return configuration;
@@ -812,9 +810,11 @@ suite("Namespace Refactor Integration", () => {
             await vscode.workspace.fs.rename(oldUri, newUri, { overwrite: true });
             await namespaceRefactorService.refactorFile(oldUri, newUri);
         } finally {
-            (vscode.workspace as typeof vscode.workspace & {
-                getConfiguration: typeof vscode.workspace.getConfiguration;
-            }).getConfiguration = originalGetConfiguration;
+            (
+                vscode.workspace as typeof vscode.workspace & {
+                    getConfiguration: typeof vscode.workspace.getConfiguration;
+                }
+            ).getConfiguration = originalGetConfiguration;
         }
 
         assertNormalizedFileEquals(
@@ -834,7 +834,7 @@ suite("Namespace Refactor Integration", () => {
                         return 'ready';
                     }
                 }
-            `
+            `,
         );
     });
 
@@ -849,7 +849,7 @@ suite("Namespace Refactor Integration", () => {
                     },
                 },
                 null,
-                4
+                4,
             ),
             "src/Remote/Button/SubClassStatic.php": php`
                 <?php
@@ -907,7 +907,7 @@ suite("Namespace Refactor Integration", () => {
                         dump('DiagnosticsButton::someMethod() called');
                     }
                 }
-            `
+            `,
         );
     });
 
@@ -922,7 +922,7 @@ suite("Namespace Refactor Integration", () => {
                     },
                 },
                 null,
-                4
+                4,
             ),
             "src/Attributes/Handles.php": php`
                 <?php
@@ -990,7 +990,7 @@ suite("Namespace Refactor Integration", () => {
                     ): void {
                     }
                 }
-            `
+            `,
         );
     });
 });

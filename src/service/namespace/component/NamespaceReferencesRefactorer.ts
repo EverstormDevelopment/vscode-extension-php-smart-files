@@ -39,11 +39,7 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
         const options: vscode.ProgressOptions = {
             cancellable: false,
             location: vscode.ProgressLocation.Notification,
-            title: vscode.l10n.t(
-                'Updating references from "{0}" to "{1}"',
-                refactorDetails.old.namespace,
-                refactorDetails.new.namespace
-            ),
+            title: vscode.l10n.t('Updating references from "{0}" to "{1}"', refactorDetails.old.namespace, refactorDetails.new.namespace),
         };
 
         await vscode.window.withProgress(options, async (progress) => {
@@ -61,7 +57,7 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
             message?: string;
             increment?: number;
         }>,
-        refactorDetails: NamespaceRefactorDetailsType
+        refactorDetails: NamespaceRefactorDetailsType,
     ): Promise<void> {
         const files = await this.findFilesToRefactor(refactorDetails.new.uri);
         const progressIncrement = 100 / files.length;
@@ -124,11 +120,7 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
      * @param refactorDetails Contains information about the old and new namespace/identifier values
      * @returns Updated file content
      */
-    private refactorReferences(
-        content: string,
-        fileNamespace: string,
-        refactorDetails: NamespaceRefactorDetailsType
-    ): string {
+    private refactorReferences(content: string, fileNamespace: string, refactorDetails: NamespaceRefactorDetailsType): string {
         const oldNamespace = refactorDetails.old.namespace;
         const newNamespace = refactorDetails.new.namespace;
         const identifiers = refactorDetails.identifiers;
@@ -155,14 +147,7 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
 
         // Step 3: Use statement changes — sequential, each call re-parses the updated content
         for (const identifier of identifiers) {
-            content = this.refactorUseStatement(
-                content,
-                fileNamespace,
-                oldNamespace,
-                newNamespace,
-                identifier,
-                refactorDetails
-            );
+            content = this.refactorUseStatement(content, fileNamespace, oldNamespace, newNamespace, identifier, refactorDetails);
         }
 
         return content;
@@ -175,11 +160,7 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
      * @param refactorDetails Contains information about the old and new namespace/identifier values
      * @returns Updated file content with refactored identifiers
      */
-    private refactorFileIdentifier(
-        content: string,
-        fileNamespace: string,
-        refactorDetails: NamespaceRefactorDetailsType
-    ): string {
+    private refactorFileIdentifier(content: string, fileNamespace: string, refactorDetails: NamespaceRefactorDetailsType): string {
         if (!refactorDetails.hasFileIdentifierChanged) {
             return content;
         }
@@ -202,7 +183,7 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
         oldNamespace: string,
         newNamespace: string,
         identifier: IdentifierType,
-        replacements: Array<{ loc: OffsetLocType; newText: string }>
+        replacements: Array<{ loc: OffsetLocType; newText: string }>,
     ): void {
         const oldFQNName = `\\${oldNamespace}\\${identifier.name}`;
         const isSameNamespace = fileNamespace === newNamespace;
@@ -233,7 +214,7 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
         oldNamespace: string,
         newNamespace: string,
         identifier: IdentifierType,
-        replacements: Array<{ loc: OffsetLocType; newText: string }>
+        replacements: Array<{ loc: OffsetLocType; newText: string }>,
     ): void {
         const oldFQNFull = `\\${oldNamespace}\\${identifier.name}`;
         const newFQNFull = `\\${newNamespace}\\${identifier.name}`;
@@ -280,7 +261,7 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
         oldNamespace: string,
         newNamespace: string,
         identifier: IdentifierType,
-        refactorDetails: NamespaceRefactorDetailsType
+        refactorDetails: NamespaceRefactorDetailsType,
     ): string {
         const hasNamespaceChange = oldNamespace !== newNamespace;
         if (fileNamespace === oldNamespace && hasNamespaceChange) {
@@ -289,13 +270,7 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
             content = this.removeReferenceUseStatement(content, oldNamespace, identifier);
         }
 
-        return this.replaceReferenceUseStatement(
-            content,
-            oldNamespace,
-            newNamespace,
-            identifier,
-            refactorDetails
-        );
+        return this.replaceReferenceUseStatement(content, oldNamespace, newNamespace, identifier, refactorDetails);
     }
 
     /**
@@ -325,28 +300,23 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
         const hasCodeReference = references.some(
             (reference) =>
                 reference.name === identifier.name &&
-                (
-                    (identifier.kind === IdentifierKindEnum.Function &&
-                        reference.kind === IdentifierKindEnum.Function &&
-                        reference.resolution === NameResolutionEnum.Uqn) ||
+                ((identifier.kind === IdentifierKindEnum.Function &&
+                    reference.kind === IdentifierKindEnum.Function &&
+                    reference.resolution === NameResolutionEnum.Uqn) ||
                     (identifier.kind === IdentifierKindEnum.Constant &&
                         reference.kind === IdentifierKindEnum.Constant &&
                         reference.resolution === NameResolutionEnum.Uqn) ||
                     (identifier.kind !== IdentifierKindEnum.Function &&
                         identifier.kind !== IdentifierKindEnum.Constant &&
                         reference.kind === IdentifierKindEnum.Oop &&
-                        reference.resolution === NameResolutionEnum.Uqn)
-                )
+                        reference.resolution === NameResolutionEnum.Uqn)),
         );
 
         if (hasCodeReference) {
             return true;
         }
 
-        if (
-            identifier.kind === IdentifierKindEnum.Function ||
-            identifier.kind === IdentifierKindEnum.Constant
-        ) {
+        if (identifier.kind === IdentifierKindEnum.Function || identifier.kind === IdentifierKindEnum.Constant) {
             return false;
         }
 
@@ -355,9 +325,7 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
             return false;
         }
 
-        return new PhpDocTypeExtractor(content)
-            .getUnqualifiedOopReferences()
-            .some((reference) => reference.name === identifier.name);
+        return new PhpDocTypeExtractor(content).getUnqualifiedOopReferences().some((reference) => reference.name === identifier.name);
     }
 
     /**
@@ -385,12 +353,11 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
         oldNamespace: string,
         newNamespace: string,
         identifier: IdentifierType,
-        refactorDetails: NamespaceRefactorDetailsType
+        refactorDetails: NamespaceRefactorDetailsType,
     ): string {
         const oldFQN = `${oldNamespace}\\${identifier.name}`;
         const nextIdentifierName =
-            refactorDetails.hasFileIdentifierChanged &&
-            identifier.name === refactorDetails.old.fileIdentifier.name
+            refactorDetails.hasFileIdentifierChanged && identifier.name === refactorDetails.old.fileIdentifier.name
                 ? refactorDetails.new.fileIdentifier.name
                 : identifier.name;
         const newFQN = `${newNamespace}\\${nextIdentifierName}`;
@@ -402,19 +369,12 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
         }
 
         if (!stmt.grouped) {
-            return (
-                content.slice(0, stmt.groupLoc.start) +
-                this.renderSingleUseStatement(newFQN, stmt.kind, stmt.alias) +
-                content.slice(stmt.groupLoc.end)
-            );
+            return content.slice(0, stmt.groupLoc.start) + this.renderSingleUseStatement(newFQN, stmt.kind, stmt.alias) + content.slice(stmt.groupLoc.end);
         }
 
         const linebreakType = getLinebreakType(content);
         const expandedStatements = this.getGroupedUseStatements(useStatements, stmt).map((groupStatement) => {
-            if (
-                groupStatement.name === oldFQN &&
-                this.useStatementKindMatches(groupStatement.kind, identifier.kind)
-            ) {
+            if (groupStatement.name === oldFQN && this.useStatementKindMatches(groupStatement.kind, identifier.kind)) {
                 return {
                     ...groupStatement,
                     name: newFQN,
@@ -430,9 +390,7 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
             };
         });
 
-        const expandedBlock = expandedStatements
-            .map((groupStatement) => this.renderUseStatement(groupStatement))
-            .join(linebreakType);
+        const expandedBlock = expandedStatements.map((groupStatement) => this.renderUseStatement(groupStatement)).join(linebreakType);
 
         return content.slice(0, stmt.groupLoc.start) + expandedBlock + content.slice(stmt.groupLoc.end);
     }

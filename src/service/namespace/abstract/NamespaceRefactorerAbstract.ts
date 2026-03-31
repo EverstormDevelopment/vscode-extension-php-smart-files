@@ -35,17 +35,12 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
      * @param refactorDetails Details about the namespace and identifier changes.
      * @returns Updated content with refactored identifiers.
      */
-    protected refactorIdentifier(
-        content: string,
-        fileNamespace: string,
-        refactorDetails: NamespaceRefactorDetailsType
-    ): string {
+    protected refactorIdentifier(content: string, fileNamespace: string, refactorDetails: NamespaceRefactorDetailsType): string {
         const oldIdentifier = refactorDetails.old.fileIdentifier;
         const oldFQN = `\\${refactorDetails.old.namespace}\\${oldIdentifier.name}`;
         const newFQN = `\\${refactorDetails.new.namespace}\\${refactorDetails.new.fileIdentifier.name}`;
         const hasUseStatement =
-            this.hasUseStatementForIdentifier(content, oldIdentifier) ||
-            this.hasUseStatementForIdentifier(content, refactorDetails.new.fileIdentifier);
+            this.hasUseStatementForIdentifier(content, oldIdentifier) || this.hasUseStatementForIdentifier(content, refactorDetails.new.fileIdentifier);
         const parser = new PhpParser(content);
         const references = new PhpAstTraverser(parser.getAST(), content)
             .getNameReferences(false)
@@ -59,10 +54,7 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
                 newText = newFQN;
             }
 
-            if (
-                reference.resolution === NameResolutionEnum.Qn &&
-                `\\${fileNamespace}\\${reference.name}` === oldFQN
-            ) {
+            if (reference.resolution === NameResolutionEnum.Qn && `\\${fileNamespace}\\${reference.name}` === oldFQN) {
                 const segments = reference.name.split("\\");
                 segments[segments.length - 1] = refactorDetails.new.fileIdentifier.name;
                 newText = segments.join("\\");
@@ -110,10 +102,7 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
         const newUseStatement = `${linebreakType}use ${useType}${namespace}\\${identifier.name};`;
 
         const useStatements = parser.getUseStatements();
-        const insertAfterOffset =
-            useStatements.length > 0
-                ? useStatements[useStatements.length - 1].loc.end
-                : namespaceLoc.end;
+        const insertAfterOffset = useStatements.length > 0 ? useStatements[useStatements.length - 1].loc.end : namespaceLoc.end;
 
         return content.slice(0, insertAfterOffset) + newUseStatement + content.slice(insertAfterOffset);
     }
@@ -158,11 +147,7 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
         }
 
         const remainingStatements = this.getGroupedUseStatements(useStatements, stmt).filter(
-            (groupedStatement) =>
-                !(
-                    groupedStatement.name === fullName &&
-                    this.useStatementKindMatches(groupedStatement.kind, identifier.kind)
-                )
+            (groupedStatement) => !(groupedStatement.name === fullName && this.useStatementKindMatches(groupedStatement.kind, identifier.kind)),
         );
 
         return this.replaceUseStatementGroup(content, stmt, remainingStatements);
@@ -178,9 +163,7 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
      */
     protected removeOwnNamespaceUseStatements(content: string, namespace: string): string {
         const useStatements = new PhpParser(content).getUseStatements();
-        const groups = this.getUniqueUseStatementGroups(useStatements).sort(
-            (a, b) => b.groupLoc.start - a.groupLoc.start
-        );
+        const groups = this.getUniqueUseStatementGroups(useStatements).sort((a, b) => b.groupLoc.start - a.groupLoc.start);
 
         for (const group of groups) {
             const remainingStatements = group.statements.filter((statement) => {
@@ -277,18 +260,12 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
      * @param identifier The identifier providing the kind to match.
      * @returns The matching UseStatementType, or undefined if not found.
      */
-    protected findUseStatement(
-        useStatements: UseStatementType[],
-        fullName: string,
-        identifier: IdentifierType
-    ): UseStatementType | undefined {
-        return useStatements.find(
-            (s) => s.name === fullName && this.useStatementKindMatches(s.kind, identifier.kind)
-        );
+    protected findUseStatement(useStatements: UseStatementType[], fullName: string, identifier: IdentifierType): UseStatementType | undefined {
+        return useStatements.find((s) => s.name === fullName && this.useStatementKindMatches(s.kind, identifier.kind));
     }
 
     private getUniqueUseStatementGroups(
-        useStatements: UseStatementType[]
+        useStatements: UseStatementType[],
     ): Array<{ groupKey: string; groupLoc: UseStatementType["groupLoc"]; kind: IdentifierKindEnum; statements: UseStatementType[] }> {
         const groups = new Map<
             string,
@@ -320,12 +297,7 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
     }
 
     protected getUseStatementGroupKey(statement: UseStatementType): string {
-        return [
-            statement.groupLoc.start,
-            statement.groupLoc.end,
-            statement.kind,
-            statement.groupPrefix ?? "",
-        ].join(":");
+        return [statement.groupLoc.start, statement.groupLoc.end, statement.kind, statement.groupPrefix ?? ""].join(":");
     }
 
     protected renderUseStatement(statement: UseStatementType): string {
@@ -355,9 +327,7 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
         const useType = getUseTypeByKind(firstStatement.kind);
         const items = statements
             .map((statement) => {
-                const relativeName = statement.name.startsWith(`${groupPrefix}\\`)
-                    ? statement.name.slice(groupPrefix.length + 1)
-                    : statement.name;
+                const relativeName = statement.name.startsWith(`${groupPrefix}\\`) ? statement.name.slice(groupPrefix.length + 1) : statement.name;
                 const aliasText = statement.alias ? ` as ${statement.alias}` : "";
                 return `${relativeName}${aliasText}`;
             })
@@ -366,21 +336,13 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
         return `use ${useType}${groupPrefix}\\{${items}};`;
     }
 
-    protected replaceUseStatementGroup(
-        content: string,
-        statement: UseStatementType,
-        replacementStatements: UseStatementType[]
-    ): string {
+    protected replaceUseStatementGroup(content: string, statement: UseStatementType, replacementStatements: UseStatementType[]): string {
         const replacement = this.renderUseStatementGroup(replacementStatements);
         if (replacement === "") {
             return this.removeUseStatementBlock(content, statement.groupLoc);
         }
 
-        return (
-            content.slice(0, statement.groupLoc.start) +
-            replacement +
-            content.slice(statement.groupLoc.end)
-        );
+        return content.slice(0, statement.groupLoc.start) + replacement + content.slice(statement.groupLoc.end);
     }
 
     private removeUseStatementBlock(content: string, loc: UseStatementType["groupLoc"]): string {
@@ -409,7 +371,7 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
             statements: UseStatementType[];
         }>,
         content: string,
-        lineBreak: string
+        lineBreak: string,
     ): string[] {
         const orderedGroups = [...useStatementGroups].sort((a, b) => {
             const kindOrder = this.getUseStatementSortOrder(a.kind) - this.getUseStatementSortOrder(b.kind);

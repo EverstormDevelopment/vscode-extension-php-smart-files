@@ -19,7 +19,7 @@ export class NamespaceResolver {
      */
     constructor(
         private readonly composerJsonService: ComposerJsonService,
-        private readonly namespacePathValidator: NamespacePathValidator
+        private readonly namespacePathValidator: NamespacePathValidator,
     ) {}
 
     /**
@@ -142,11 +142,7 @@ export class NamespaceResolver {
      * @param isPsr0 Whether to use PSR-0 or PSR-4 autoloading rules
      * @returns The resolved namespace or undefined if not found
      */
-    private findNamespaceForPath(
-        relativePath: string,
-        namespaceMap: Record<string, string[]>,
-        isPsr0: boolean
-    ): string | undefined {
+    private findNamespaceForPath(relativePath: string, namespaceMap: Record<string, string[]>, isPsr0: boolean): string | undefined {
         relativePath = getPathNormalized(relativePath);
         const namespaceMatch = this.findBestMatch(relativePath, namespaceMap);
         if (!namespaceMatch) {
@@ -162,10 +158,7 @@ export class NamespaceResolver {
      * @param namespaceMap The mapping of namespace prefixes to directories
      * @returns The best matching namespace information or undefined if not found
      */
-    private findBestMatch(
-        relativePath: string,
-        namespaceMap: Record<string, string[]>
-    ): NamespaceMatchType | undefined {
+    private findBestMatch(relativePath: string, namespaceMap: Record<string, string[]>): NamespaceMatchType | undefined {
         let namespaceMatch: NamespaceMatchType | undefined;
 
         for (const [namespacePrefix, directories] of Object.entries(namespaceMap)) {
@@ -185,11 +178,7 @@ export class NamespaceResolver {
      * @param namespace The namespace associated with the directories
      * @returns The best matching directory information or undefined if not found
      */
-    private findDirectoriesBestMatch(
-        path: string,
-        directories: string[],
-        namespace: string
-    ): NamespaceMatchType | undefined {
+    private findDirectoriesBestMatch(path: string, directories: string[], namespace: string): NamespaceMatchType | undefined {
         let directoryBestMatch: NamespaceMatchType | undefined;
 
         for (const directory of directories) {
@@ -226,10 +215,7 @@ export class NamespaceResolver {
      * @param newMatch A new potential match to compare against
      * @returns The better match of the two or undefined if both are undefined
      */
-    private getBestMatch(
-        currentMatch: NamespaceMatchType | undefined,
-        newMatch: NamespaceMatchType | undefined
-    ): NamespaceMatchType | undefined {
+    private getBestMatch(currentMatch: NamespaceMatchType | undefined, newMatch: NamespaceMatchType | undefined): NamespaceMatchType | undefined {
         if (!currentMatch && !newMatch) {
             return undefined;
         }
@@ -257,11 +243,7 @@ export class NamespaceResolver {
             return this.getNamespaceNormalized(namespaceMatch.namespace);
         }
 
-        const namespaceSegments = this.getNamespaceSegmentsFromPath(
-            parsedFilePath.dir,
-            namespaceMatch.namespace,
-            isPsr0
-        );
+        const namespaceSegments = this.getNamespaceSegmentsFromPath(parsedFilePath.dir, namespaceMatch.namespace, isPsr0);
         return this.buildNamespaceWithSegments(namespaceMatch.namespace, namespaceSegments);
     }
 

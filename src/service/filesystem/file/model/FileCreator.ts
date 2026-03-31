@@ -49,12 +49,7 @@ export class FileCreator {
         const overwriteMessage = vscode.l10n.t("The file '{0}' already exists. Overwrite?", fileName);
         const overwriteButton = vscode.l10n.t("Overwrite");
         const cancelButton = vscode.l10n.t("Cancel");
-        const overwriteReturn = await vscode.window.showWarningMessage(
-            overwriteMessage,
-            { modal: true },
-            overwriteButton,
-            cancelButton
-        );
+        const overwriteReturn = await vscode.window.showWarningMessage(overwriteMessage, { modal: true }, overwriteButton, cancelButton);
         return overwriteReturn === overwriteButton;
     }
 
@@ -72,8 +67,6 @@ export class FileCreator {
      * @param error The error to display
      */
     private showErrorMessage(error: unknown): void {
-        vscode.window.showErrorMessage(
-            vscode.l10n.t("Error creating file: {0}", error instanceof Error ? error.message : String(error))
-        );
+        vscode.window.showErrorMessage(vscode.l10n.t("Error creating file: {0}", error instanceof Error ? error.message : String(error)));
     }
 }

@@ -5,6 +5,7 @@ import { NamespaceRefactorerAbstract } from "../abstract/NamespaceRefactorerAbst
 import { IdentifierKindEnum } from "../enum/IdentifierKindEnum";
 import { NameResolutionEnum } from "../enum/NameResolutionEnum";
 import { PhpAstTraverser } from "../parser/PhpAstTraverser";
+import { PhpDocTypeExtractor } from "../parser/PhpDocTypeExtractor";
 import { PhpParser } from "../parser/PhpParser";
 import { IdentifierType } from "../type/IdentifierType";
 import { NameReferenceType } from "../type/NameReferenceType";
@@ -321,7 +322,7 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
     private hasAstReferenceForIdentifier(content: string, identifier: IdentifierType): boolean {
         const references = new PhpAstTraverser(new PhpParser(content).getAST(), content).getNameReferences(false);
 
-        return references.some(
+        const hasCodeReference = references.some(
             (reference) =>
                 reference.name === identifier.name &&
                 (
@@ -337,6 +338,26 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
                         reference.resolution === NameResolutionEnum.Uqn)
                 )
         );
+
+        if (hasCodeReference) {
+            return true;
+        }
+
+        if (
+            identifier.kind === IdentifierKindEnum.Function ||
+            identifier.kind === IdentifierKindEnum.Constant
+        ) {
+            return false;
+        }
+
+        const config = vscode.workspace.getConfiguration("phpSmartFiles");
+        if (!config.get<boolean>("refactorNamespacesIncludeDocblockTypes", true)) {
+            return false;
+        }
+
+        return new PhpDocTypeExtractor(content)
+            .getUnqualifiedOopReferences()
+            .some((reference) => reference.name === identifier.name);
     }
 
     /**

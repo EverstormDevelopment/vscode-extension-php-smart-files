@@ -50,7 +50,7 @@ export class PhpDocTypeExtractor {
         const lines = docBlock
             .split(/\r?\n/gu)
             .map((line) => line.replace(/^\s*\/?\*+\s?/u, "").trim())
-            .filter((line) => line.length > 0);
+            .filter((line) => line.length > 0 && line !== "/");
         const tags = this.getTagEntries(lines);
 
         const typeExpressions: string[] = [];

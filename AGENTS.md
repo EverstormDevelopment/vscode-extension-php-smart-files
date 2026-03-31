@@ -45,7 +45,7 @@ Notes:
 - Read `src/container/registry/ContainerRegistry.ts` before adding new DI-managed services.
 - Preserve localization. New user-facing strings should use `vscode.l10n.t()`.
 - Keep edits aligned with strict TypeScript and the repository's JSDoc style.
-- Do not reintroduce removed concepts such as `GlobalReservedService`; the current codebase uses static reserved keyword/function/constant lists under `src/service/php/reserved/`.
+- Do not reintroduce removed concepts such as `GlobalReservedService`; reserved-name handling is currently centered around the static keyword list under `src/service/php/reserved/ReservedKeywords.ts`.
 
 ## Architecture
 
@@ -184,14 +184,12 @@ Important:
 
 There is no current `GlobalReservedService`.
 
-Reserved-name handling is currently split across static data files:
-- `src/service/php/reserved/keywords/ReservedKeywords.ts`
-- `src/service/php/reserved/functions/*`
-- `src/service/php/reserved/constants/*`
+Reserved-name handling is currently centered around:
+- `src/service/php/reserved/ReservedKeywords.ts`
 
 Current behavior:
 - File rename validation checks `ReservedKeywords` to warn when the new filename maps to a reserved PHP keyword.
-- Reserved functions and constants are represented as static lists in the repository.
+- Input validation and PHPDoc type parsing also use `ReservedKeywords` to avoid invalid PHP identifiers and built-in pseudo-types.
 
 ## Conventions
 

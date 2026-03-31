@@ -168,6 +168,13 @@
           "markdownDescription": "%php-smart-files.config.refactorNamespacesIncludeConstants.description%",
           "order": 9
         },
+        "phpSmartFiles.refactorNamespacesIncludeDocblockTypes": {
+          "type": "boolean",
+          "default": true,
+          "description": "%php-smart-files.config.refactorNamespacesIncludeDocblockTypes.description%",
+          "markdownDescription": "%php-smart-files.config.refactorNamespacesIncludeDocblockTypes.description%",
+          "order": 10
+        },
         "phpSmartFiles.refactorNamespacesExcludeDirectories": {
           "type": "array",
           "default": [
@@ -194,7 +201,7 @@
           "items": {
             "type": "string"
           },
-          "order": 10
+          "order": 11
         }
       }
     },

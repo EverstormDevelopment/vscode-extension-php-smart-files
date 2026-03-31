@@ -4,7 +4,7 @@ import { FilesystemObserverResourceEnum } from "../../service/filesystem/observe
 import { FilesystemObserverEvent } from "../../service/filesystem/observer/event/FilesystemObserverEvent";
 import { FilesystemObserver } from "../../service/filesystem/observer/model/FilesystemObserver";
 import { NamespaceRefactorService } from "../../service/namespace/service/NamespaceRefactorService";
-import { ReservedKeywords } from "../../service/php/reserved/keywords/ReservedKeywords";
+import { ReservedKeywords } from "../../service/php/reserved/ReservedKeywords";
 import { getUriFileName } from "../../utils/filesystem/getUriFileName";
 import { ObserverAbstract } from "./ObserverAbstract";
 

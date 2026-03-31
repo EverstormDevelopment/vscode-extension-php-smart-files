@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { ReservedKeywords } from "../../php/reserved/keywords/ReservedKeywords";
+import { ReservedKeywords } from "../../php/reserved/ReservedKeywords";
 import { InputValidatorInterface } from "../interface/InputValidatorInterface";
 
 /**

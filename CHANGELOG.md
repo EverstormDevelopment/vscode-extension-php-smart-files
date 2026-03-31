@@ -31,6 +31,9 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
   - Improved location handling for fully qualified names and grouped `use` statements to avoid incorrect replacements
   - Fixed redundant `use` statements not being removed when references stay within the same namespace
   - Improved import lookup and identifier context handling for more accurate reference updates
+- Fixed support for PHP attributes during namespace refactoring:  
+  - Attribute class references are now recognized and updated when related files are moved or renamed
+  - This includes imported, partially qualified, and fully qualified attribute references
 
 
 ## [1.1.0] - 2025-07-10

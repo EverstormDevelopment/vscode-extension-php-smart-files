@@ -22,6 +22,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 - Expanded automated test coverage for namespace refactoring:
   - Added dedicated parser, refactoring, and integration tests for the new AST-based behavior
   - This improves reliability when handling complex namespace and import update scenarios
+- Updated project dependencies to newer versions for improved compatibility and maintenance
 
 ### Fixed
 

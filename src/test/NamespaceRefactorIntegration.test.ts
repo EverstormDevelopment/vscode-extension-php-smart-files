@@ -632,6 +632,212 @@ suite("Namespace Refactor Integration", () => {
         );
     });
 
+    test("adds imports for types referenced only inside PHPDoc blocks", async () => {
+        await testWorkspace.writeWorkspaceFiles({
+            "composer.json": JSON.stringify(
+                {
+                    autoload: {
+                        "psr-4": {
+                            "App\\": "src/",
+                        },
+                    },
+                },
+                null,
+                4
+            ),
+            "src/Support/Result.php": php`
+                <?php
+
+                namespace App\Support;
+
+                class Result
+                {
+                }
+            `,
+            "src/Support/Input.php": php`
+                <?php
+
+                namespace App\Support;
+
+                class Input
+                {
+                }
+            `,
+            "src/Support/Filter.php": php`
+                <?php
+
+                namespace App\Support;
+
+                class Filter
+                {
+                }
+            `,
+            "src/Support/Metadata.php": php`
+                <?php
+
+                namespace App\Support;
+
+                class Metadata
+                {
+                }
+            `,
+            "src/Support/DocblockAwareService.php": php`
+                <?php
+
+                namespace App\Support;
+
+                /**
+                 * @property-read Metadata $metadata
+                 */
+                class DocblockAwareService
+                {
+                    /**
+                     * @param Input $input
+                     * @return Result
+                     * @method Result run(Input $input, list<Filter> $filters)
+                     */
+                    public function describe(): string
+                    {
+                        return 'ready';
+                    }
+                }
+            `,
+        });
+
+        const namespaceRefactorService = testWorkspace.getService();
+        const oldUri = testWorkspace.uri("src/Support/DocblockAwareService.php");
+        const newUri = testWorkspace.uri("src/Application/DocblockAwareService.php");
+
+        await vscode.workspace.fs.createDirectory(testWorkspace.uri("src/Application"));
+        await vscode.workspace.fs.rename(oldUri, newUri, { overwrite: true });
+        await namespaceRefactorService.refactorFile(oldUri, newUri);
+
+        assertNormalizedFileEquals(
+            await testWorkspace.readFile(newUri),
+            php`
+                <?php
+
+                namespace App\Application;
+                use App\Support\Filter;
+                use App\Support\Input;
+                use App\Support\Metadata;
+                use App\Support\Result;
+
+                /**
+                 * @property-read Metadata $metadata
+                 */
+                class DocblockAwareService
+                {
+                    /**
+                     * @param Input $input
+                     * @return Result
+                     * @method Result run(Input $input, list<Filter> $filters)
+                     */
+                    public function describe(): string
+                    {
+                        return 'ready';
+                    }
+                }
+            `
+        );
+    });
+
+    test("skips PHPDoc-based imports when the option is disabled", async () => {
+        await testWorkspace.writeWorkspaceFiles({
+            "composer.json": JSON.stringify(
+                {
+                    autoload: {
+                        "psr-4": {
+                            "App\\": "src/",
+                        },
+                    },
+                },
+                null,
+                4
+            ),
+            "src/Support/Result.php": php`
+                <?php
+
+                namespace App\Support;
+
+                class Result
+                {
+                }
+            `,
+            "src/Support/DocblockOnlyService.php": php`
+                <?php
+
+                namespace App\Support;
+
+                class DocblockOnlyService
+                {
+                    /**
+                     * @return Result
+                     */
+                    public function describe(): string
+                    {
+                        return 'ready';
+                    }
+                }
+            `,
+        });
+
+        const originalGetConfiguration = vscode.workspace.getConfiguration.bind(vscode.workspace);
+        (vscode.workspace as typeof vscode.workspace & {
+            getConfiguration: typeof vscode.workspace.getConfiguration;
+        }).getConfiguration = ((section?: string, scope?: vscode.ConfigurationScope) => {
+            const configuration = originalGetConfiguration(section, scope);
+            if (section !== "phpSmartFiles") {
+                return configuration;
+            }
+
+            return {
+                ...configuration,
+                get<T>(key: string, defaultValue?: T): T {
+                    if (key === "refactorNamespacesIncludeDocblockTypes") {
+                        return false as T;
+                    }
+
+                    return configuration.get<T>(key, defaultValue as T);
+                },
+            };
+        }) as typeof vscode.workspace.getConfiguration;
+
+        try {
+            const namespaceRefactorService = testWorkspace.getService();
+            const oldUri = testWorkspace.uri("src/Support/DocblockOnlyService.php");
+            const newUri = testWorkspace.uri("src/Application/DocblockOnlyService.php");
+
+            await vscode.workspace.fs.createDirectory(testWorkspace.uri("src/Application"));
+            await vscode.workspace.fs.rename(oldUri, newUri, { overwrite: true });
+            await namespaceRefactorService.refactorFile(oldUri, newUri);
+        } finally {
+            (vscode.workspace as typeof vscode.workspace & {
+                getConfiguration: typeof vscode.workspace.getConfiguration;
+            }).getConfiguration = originalGetConfiguration;
+        }
+
+        assertNormalizedFileEquals(
+            await testWorkspace.readFile(testWorkspace.uri("src/Application/DocblockOnlyService.php")),
+            php`
+                <?php
+
+                namespace App\Application;
+
+                class DocblockOnlyService
+                {
+                    /**
+                     * @return Result
+                     */
+                    public function describe(): string
+                    {
+                        return 'ready';
+                    }
+                }
+            `
+        );
+    });
+
     test("renames classes referenced inside attributes in dependent files", async () => {
         await testWorkspace.writeWorkspaceFiles({
             "composer.json": JSON.stringify(

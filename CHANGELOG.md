@@ -13,6 +13,9 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 - Added support for PHPDoc type references during namespace refactoring:
   - Types found in tags like `@param`, `@return`, `@var`, and `@method` are now considered when updating related `use` statements
   - This behavior is enabled by default and can be disabled via the `phpSmartFiles.refactorNamespacesIncludeDocblockTypes` setting
+- Added manifest activation tests to guard the extension activation setup:
+  - Verifies that PHP-specific activation events remain configured in the extension manifest
+  - Ensures command and Explorer submenu contributions stay available for command-based activation scenarios
 
 ### Changed
 
@@ -37,6 +40,9 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 - Fixed support for PHP attributes during namespace refactoring:  
   - Attribute class references are now recognized and updated when related files are moved or renamed
   - This includes imported, partially qualified, and fully qualified attribute references
+- Fixed extension activation so it no longer starts globally after VS Code startup:
+  - Replaced `onStartupFinished` with `workspaceContains:**/*.php` while keeping `onLanguage:php`
+  - This limits activation to relevant PHP workspaces and still allows command-based activation when needed
 
 
 ## [1.1.0] - 2025-07-10

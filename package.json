@@ -67,7 +67,7 @@
   },
   "activationEvents": [
     "onLanguage:php",
-    "onStartupFinished"
+    "workspaceContains:**/*.php"
   ],
   "contributes": {
     "configuration": {

@@ -3,6 +3,7 @@ import { defineConfig } from "@vscode/test-cli";
 
 export default defineConfig({
     files: [
+        "out/test/ManifestActivation.test.js",
         "out/test/PhpParser.test.js",
         "out/test/PhpDocTypeExtractor.test.js",
         "out/test/NamespaceRefactorerAbstract.test.js",

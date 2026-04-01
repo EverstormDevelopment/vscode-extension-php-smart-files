@@ -54,6 +54,29 @@ class Demo {}
             assert.strictEqual(constantStatements[0].kind, IdentifierKindEnum.Constant);
             assert.strictEqual(constantStatements[0].groupPrefix, "App\\Support");
         });
+
+        test("returns grouped imports with aliases and nested namespace items", () => {
+            const code = `<?php
+
+namespace App\\Test;
+
+use MyNamespace\\{ClassA, ClassB as B, SubNamespace\\ClassC};
+
+class Demo {}
+`;
+
+            const statements = new PhpParser(code).getUseStatements();
+
+            assert.strictEqual(statements.length, 3);
+            assert.strictEqual(statements[0].name, "MyNamespace\\ClassA");
+            assert.strictEqual(statements[0].alias, null);
+            assert.strictEqual(statements[1].name, "MyNamespace\\ClassB");
+            assert.strictEqual(statements[1].alias, "B");
+            assert.strictEqual(statements[2].name, "MyNamespace\\SubNamespace\\ClassC");
+            assert.strictEqual(statements[2].alias, null);
+            assert.ok(statements.every((statement) => statement.grouped));
+            assert.ok(statements.every((statement) => statement.groupPrefix === "MyNamespace"));
+        });
     });
 
     suite("PhpAstTraverser attributes", () => {

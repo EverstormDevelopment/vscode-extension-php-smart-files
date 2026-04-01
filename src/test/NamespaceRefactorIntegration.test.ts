@@ -407,6 +407,160 @@ suite("Namespace Refactor Integration", () => {
         );
     });
 
+    test("updates grouped imports with aliases and nested namespace items in referencing files", async () => {
+        await testWorkspace.writeWorkspaceFiles({
+            "composer.json": JSON.stringify(
+                {
+                    autoload: {
+                        "psr-4": {
+                            "App\\": "src/",
+                        },
+                    },
+                },
+                null,
+                4,
+            ),
+            "src/Old/ClassB.php": php`
+                <?php
+
+                namespace App\Old;
+
+                class ClassB
+                {
+                }
+            `,
+            "src/Old/ClassA.php": php`
+                <?php
+
+                namespace App\Old;
+
+                class ClassA
+                {
+                }
+            `,
+            "src/Old/SubNamespace/ClassC.php": php`
+                <?php
+
+                namespace App\Old\SubNamespace;
+
+                class ClassC
+                {
+                }
+            `,
+            "src/Consumer/UsesGroupedAliasImports.php": php`
+                <?php
+
+                namespace App\Consumer;
+
+                use App\Old\{ClassA, ClassB as B, SubNamespace\ClassC};
+
+                class UsesGroupedAliasImports
+                {
+                    public function build(B $service, ClassA $classA, ClassC $classC): B
+                    {
+                        return new B();
+                    }
+                }
+            `,
+        });
+
+        const namespaceRefactorService = testWorkspace.getService();
+        const oldUri = testWorkspace.uri("src/Old/ClassB.php");
+        const newUri = testWorkspace.uri("src/New/ClassB.php");
+
+        await vscode.workspace.fs.createDirectory(testWorkspace.uri("src/New"));
+        await vscode.workspace.fs.rename(oldUri, newUri, { overwrite: true });
+        await namespaceRefactorService.refactorFile(oldUri, newUri);
+
+        assertNormalizedFileEquals(
+            await testWorkspace.readFile(testWorkspace.uri("src/Consumer/UsesGroupedAliasImports.php")),
+            php`
+                <?php
+
+                namespace App\Consumer;
+
+                use App\New\ClassB as B;
+                use App\Old\ClassA;
+                use App\Old\SubNamespace\ClassC;
+
+                class UsesGroupedAliasImports
+                {
+                    public function build(B $service, ClassA $classA, ClassC $classC): B
+                    {
+                        return new B();
+                    }
+                }
+            `,
+        );
+    });
+
+    test("updates aliased imports in referencing files when a class moves", async () => {
+        await testWorkspace.writeWorkspaceFiles({
+            "composer.json": JSON.stringify(
+                {
+                    autoload: {
+                        "psr-4": {
+                            "App\\": "src/",
+                        },
+                    },
+                },
+                null,
+                4,
+            ),
+            "src/Legacy/ReportBuilder.php": php`
+                <?php
+
+                namespace App\Legacy;
+
+                class ReportBuilder
+                {
+                }
+            `,
+            "src/Consumer/UsesAliasedImport.php": php`
+                <?php
+
+                namespace App\Consumer;
+
+                use App\Legacy\ReportBuilder as BuilderAlias;
+
+                class UsesAliasedImport
+                {
+                    public function make(): \App\Legacy\ReportBuilder
+                    {
+                        return new BuilderAlias();
+                    }
+                }
+            `,
+        });
+
+        const namespaceRefactorService = testWorkspace.getService();
+        const oldUri = testWorkspace.uri("src/Legacy/ReportBuilder.php");
+        const newUri = testWorkspace.uri("src/Application/ReportBuilder.php");
+
+        await vscode.workspace.fs.createDirectory(testWorkspace.uri("src/Application"));
+        await vscode.workspace.fs.rename(oldUri, newUri, { overwrite: true });
+        await namespaceRefactorService.refactorFile(oldUri, newUri);
+
+        assertNormalizedFileEquals(
+            await testWorkspace.readFile(testWorkspace.uri("src/Consumer/UsesAliasedImport.php")),
+            php`
+                <?php
+
+                namespace App\Consumer;
+
+                use App\Application\ReportBuilder as BuilderAlias;
+
+                class UsesAliasedImport
+                {
+                    public function make(): \App\Application\ReportBuilder
+                    {
+                        return new BuilderAlias();
+                    }
+                }
+            `,
+        );
+    });
+
     test("cancels refactoring when the new file name is not a valid PHP identifier", async () => {
         // Safety first: a bad target name must not trigger cascading reference damage.
         await testWorkspace.writeWorkspaceFiles({

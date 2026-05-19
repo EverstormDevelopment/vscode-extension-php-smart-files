@@ -50,7 +50,7 @@ final class FeatureFlags
             assert.ok(references.some((reference) => reference.name === "Example"));
         });
 
-        test("returns a controlled parse error for unsupported clone-with syntax", () => {
+        test("supports PHP 8.5 clone with property overrides", () => {
             const code = `<?php
 
 namespace App\\Test;
@@ -65,9 +65,12 @@ final class CloneExample
 `;
 
             const parser = new PhpParser(code);
+            const ast = parser.getAST();
 
-            assert.strictEqual(parser.isParseable(), false);
-            assert.ok(parser.getParseError());
+            assert.strictEqual(parser.isParseable(), true);
+            assert.strictEqual(parser.getParseError(), undefined);
+            assert.ok(ast.errors);
+            assert.strictEqual(ast.errors.length, 0);
         });
     });
 

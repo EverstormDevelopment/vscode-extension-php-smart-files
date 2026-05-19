@@ -1239,7 +1239,7 @@ suite("Namespace Refactor Integration", () => {
         );
     });
 
-    test("skips single-file refactoring safely when the moved file uses unsupported clone-with syntax", async () => {
+    test("renames classes in files that use PHP 8.5 clone with property overrides", async () => {
         await testWorkspace.writeWorkspaceFiles({
             "composer.json": JSON.stringify(
                 {
@@ -1261,7 +1261,7 @@ suite("Namespace Refactor Integration", () => {
                 {
                     public function duplicate(object $service): object
                     {
-                        return clone($service, ['name' => 'x']);
+                        return clone($service, ['name' => self::class]);
                     }
                 }
             `,
@@ -1296,11 +1296,11 @@ suite("Namespace Refactor Integration", () => {
 
                 namespace App\Domain;
 
-                final class LegacyCloneService
+                final class ModernCloneService
                 {
                     public function duplicate(object $service): object
                     {
-                        return clone($service, ['name' => 'x']);
+                        return clone($service, ['name' => self::class]);
                     }
                 }
             `,
@@ -1313,20 +1313,20 @@ suite("Namespace Refactor Integration", () => {
 
                 namespace App\Controller;
 
-                use App\Domain\LegacyCloneService;
+                use App\Domain\ModernCloneService;
 
                 final class UsesCloneService
                 {
-                    public function make(): LegacyCloneService
+                    public function make(): ModernCloneService
                     {
-                        return new LegacyCloneService();
+                        return new ModernCloneService();
                     }
                 }
             `,
         );
     });
 
-    test("continues directory refactoring when one file uses unsupported clone-with syntax", async () => {
+    test("refactors directory contents when a file uses PHP 8.5 clone with property overrides", async () => {
         await testWorkspace.writeWorkspaceFiles({
             "composer.json": JSON.stringify(
                 {
@@ -1363,7 +1363,7 @@ suite("Namespace Refactor Integration", () => {
                 {
                     public function duplicate(object $service): object
                     {
-                        return clone($service, ['name' => 'x']);
+                        return clone($service, ['name' => self::class]);
                     }
                 }
             `,
@@ -1379,6 +1379,21 @@ suite("Namespace Refactor Integration", () => {
                     public function make(): PipeService
                     {
                         return new PipeService();
+                    }
+                }
+            `,
+            "src/Controller/UsesCloneService.php": php`
+                <?php
+
+                namespace App\Controller;
+
+                use App\Domain\CloneService;
+
+                final class UsesCloneService
+                {
+                    public function make(): CloneService
+                    {
+                        return new CloneService();
                     }
                 }
             `,
@@ -1415,13 +1430,13 @@ suite("Namespace Refactor Integration", () => {
             php`
                 <?php
 
-                namespace App\Domain;
+                namespace App\Application;
 
                 final class CloneService
                 {
                     public function duplicate(object $service): object
                     {
-                        return clone($service, ['name' => 'x']);
+                        return clone($service, ['name' => self::class]);
                     }
                 }
             `,
@@ -1441,6 +1456,25 @@ suite("Namespace Refactor Integration", () => {
                     public function make(): PipeService
                     {
                         return new PipeService();
+                    }
+                }
+            `,
+        );
+
+        assertNormalizedFileEquals(
+            await testWorkspace.readFile(testWorkspace.uri("src/Controller/UsesCloneService.php")),
+            php`
+                <?php
+
+                namespace App\Controller;
+
+                use App\Application\CloneService;
+
+                final class UsesCloneService
+                {
+                    public function make(): CloneService
+                    {
+                        return new CloneService();
                     }
                 }
             `,

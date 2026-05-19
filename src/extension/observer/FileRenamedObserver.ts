@@ -41,7 +41,7 @@ export class FileRenamedObserver extends ObserverAbstract {
      */
     protected async getConfirmationMessage(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<string> {
         const name = getUriFileName(newUri);
-        return vscode.l10n.t('Would you like to update the declaration identifer to "{0}" and update its references?', name);
+        return vscode.l10n.t('Would you like to update the declaration identifier to "{0}" and update its references?', name);
     }
 
     /**

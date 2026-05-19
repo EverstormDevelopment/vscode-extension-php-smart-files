@@ -72,7 +72,7 @@
   "Error updating references in file {0}: {1}": "Error updating references in file {0}: {1}",
   "Updating directory from \"{0}\" to \"{1}\"": "Updating directory from \"{0}\" to \"{1}\"",
 
-  "Would you like to update the declaration identifer to \"{0}\" and update its references?": "Would you like to update the declaration identifer to \"{0}\" and update its references?",
+  "Would you like to update the declaration identifier to \"{0}\" and update its references?": "Would you like to update the declaration identifier to \"{0}\" and update its references?",
   "The detected namespace '{0}' is not a valid PHP namespace. The refactoring process has been canceled.": "The detected namespace '{0}' is not a valid PHP namespace. The refactoring process has been canceled.",
   "The provided name '{0}' is not a valid PHP identifier. The refactoring process has been canceled.": "The provided name '{0}' is not a valid PHP identifier. The refactoring process has been canceled.",
   "Unable to locate a valid definition. The refactoring process has been canceled.": "Unable to locate a valid definition. The refactoring process has been canceled.",

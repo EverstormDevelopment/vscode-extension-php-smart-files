@@ -9,6 +9,7 @@
 
   "Create PHP Function": "Create PHP Function",
   "Enter function filename (without .php)": "Enter function filename (without .php)",
+  "Enter a name for the new PHP function": "Enter a name for the new PHP function",
   "Enter a name for the new PHP function file": "Enter a name for the new PHP function file",
 
   "Create PHP Class": "Create PHP Class",
@@ -63,12 +64,14 @@
   "Cannot use PHP global constant name as definition name": "Cannot use PHP global constant name as definition name",
   
   "Would you like to update the namespace for \"{0}\" and all its references?": "Would you like to update the namespace for \"{0}\" and all its references?",
+  "Warning: The new file name \"{0}\" is a PHP reserved keyword. This may cause errors or unpredictable behavior in your project. Do you want to proceed and update the declaration identifier and all its references?": "Warning: The new file name \"{0}\" is a PHP reserved keyword. This may cause errors or unpredictable behavior in your project. Do you want to proceed and update the declaration identifier and all its references?",
   "Warning: The new file name \"{0}\" is globally reserved or a PHP keyword. This may cause errors or unpredictable behavior in your project. Do you want to proceed and update the declaration identifier and all its references?": "Warning: The new file name \"{0}\" is globally reserved or a PHP keyword. This may cause errors or unpredictable behavior in your project. Do you want to proceed and update the declaration identifier and all its references?",
   "Yes": "Yes",
   "No": "No",
   "Error during namespace refactoring: {0}": "Error during namespace refactoring: {0}",
   "Updating references from \"{0}\" to \"{1}\"": "Updating references from \"{0}\" to \"{1}\"",
   "Processing file {0} of {1}": "Processing file {0} of {1}",
+  "Skipped namespace refactoring in {0} file(s) because they use PHP syntax that is not fully supported yet.": "Skipped namespace refactoring in {0} file(s) because they use PHP syntax that is not fully supported yet.",
   "Error updating references in file {0}: {1}": "Error updating references in file {0}: {1}",
   "Updating directory from \"{0}\" to \"{1}\"": "Updating directory from \"{0}\" to \"{1}\"",
 

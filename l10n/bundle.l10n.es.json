@@ -9,6 +9,7 @@
 
   "Create PHP Function": "Crear función PHP",
   "Enter function filename (without .php)": "Ingrese nombre de la función (sin .php)",
+  "Enter a name for the new PHP function": "Ingrese un nombre para la nueva función PHP",
   "Enter a name for the new PHP function file": "Ingrese un nombre para el nuevo archivo de función PHP",
   
   "Create PHP Class": "Crear clase PHP",
@@ -63,12 +64,14 @@
   "Cannot use PHP global constant name as definition name": "No se puede usar el nombre de una constante global de PHP como nombre de definición.",
   
   "Would you like to update the namespace for \"{0}\" and all its references?": "¿Le gustaría actualizar el espacio de nombres para \"{0}\" y todas sus referencias?",
+  "Warning: The new file name \"{0}\" is a PHP reserved keyword. This may cause errors or unpredictable behavior in your project. Do you want to proceed and update the declaration identifier and all its references?": "Advertencia: El nuevo nombre de archivo \"{0}\" es una palabra reservada de PHP. Esto puede causar errores o un comportamiento impredecible en tu proyecto. ¿Quieres continuar y actualizar el identificador de declaración y todas sus referencias?",
   "Warning: The new file name \"{0}\" is globally reserved or a PHP keyword. This may cause errors or unpredictable behavior in your project. Do you want to proceed and update the declaration identifier and all its references?": "Advertencia: El nuevo nombre de archivo \"{0}\" está reservado globalmente o es una palabra clave de PHP. Esto puede causar errores o un comportamiento impredecible en tu proyecto. ¿Quieres continuar y actualizar el identificador de declaración y todas sus referencias?",
   "Yes": "Sí",
   "No": "No",
   "Error during namespace refactoring: {0}": "Error durante la refactorización del espacio de nombres: {0}",
   "Updating references from \"{0}\" to \"{1}\"": "Actualizando referencias de \"{0}\" a \"{1}\"",
   "Processing file {0} of {1}": "Procesando archivo {0} de {1}",
+  "Skipped namespace refactoring in {0} file(s) because they use PHP syntax that is not fully supported yet.": "Se omitió la refactorización del espacio de nombres en {0} archivo(s) porque usan sintaxis PHP que aún no es totalmente compatible.",
   "Error updating references in file {0}: {1}": "Error al actualizar referencias en el archivo {0}: {1}",
   "Updating directory from \"{0}\" to \"{1}\"": "Actualizando directorio de \"{0}\" a \"{1}\"",
   

@@ -9,6 +9,7 @@
 
   "Create PHP Function": "Создать PHP функцию",
   "Enter function filename (without .php)": "Введите имя файла функции (без .php)",
+  "Enter a name for the new PHP function": "Введите имя для новой PHP функции",
   "Enter a name for the new PHP function file": "Введите имя для нового файла PHP функции",
 
   "Create PHP Class": "Создать PHP класс",
@@ -17,7 +18,7 @@
   
   "Create PHP Interface": "Создать PHP интерфейс",
   "Enter interface name": "Введите имя интерфейса",
-  "Enter a name for the new PHP интерфейс": "Введите имя для нового PHP интерфейса",
+  "Enter a name for the new PHP interface": "Введите имя для нового PHP интерфейса",
   
   "Create PHP Enum": "Создать PHP перечисление",
   "Enter enum name": "Введите имя перечисления",
@@ -63,12 +64,14 @@
   "Cannot use PHP global constant name as definition name": "Нельзя использовать имя глобальной константы PHP в качестве имени определения.",
   
   "Would you like to update the namespace for \"{0}\" and all its references?": "Хотите обновить пространство имен для \"{0}\" и всех его ссылок?",
+  "Warning: The new file name \"{0}\" is a PHP reserved keyword. This may cause errors or unpredictable behavior in your project. Do you want to proceed and update the declaration identifier and all its references?": "Внимание: новое имя файла \"{0}\" является зарезервированным ключевым словом PHP. Это может привести к ошибкам или непредсказуемому поведению в вашем проекте. Хотите продолжить и обновить идентификатор объявления и все его ссылки?",
   "Warning: The new file name \"{0}\" is globally reserved or a PHP keyword. This may cause errors or unpredictable behavior in your project. Do you want to proceed and update the declaration identifier and all its references?": "Внимание: новое имя файла \"{0}\" является глобально зарезервированным или ключевым словом PHP. Это может привести к ошибкам или непредсказуемому поведению в вашем проекте. Хотите продолжить и обновить идентификатор объявления и все его ссылки?",
   "Yes": "Да",
   "No": "Нет",
   "Error during namespace refactoring: {0}": "Ошибка при рефакторинге пространства имен: {0}",
   "Updating references from \"{0}\" to \"{1}\"": "Обновление ссылок с \"{0}\" на \"{1}\"",
   "Processing file {0} of {1}": "Обработка файла {0} из {1}",
+  "Skipped namespace refactoring in {0} file(s) because they use PHP syntax that is not fully supported yet.": "Рефакторинг пространства имен пропущен в {0} файл(ах), потому что они используют синтаксис PHP, который пока поддерживается не полностью.",
   "Error updating references in file {0}: {1}": "Ошибка обновления ссылок в файле {0}: {1}",
   "Updating directory from \"{0}\" to \"{1}\"": "Обновление каталога с \"{0}\" на \"{1}\"",
   

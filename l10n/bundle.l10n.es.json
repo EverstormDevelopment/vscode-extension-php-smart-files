@@ -1,4 +1,4 @@
-{
+﻿{
   "PHP Smart Files {0} is ready! See what’s new and customize it in your settings.": "¡PHP Smart Files {0} está listo! Descubre las novedades y personalízalo en la configuración.",
   "Changelog": "Changelog",
   "Settings": "Configuración",
@@ -77,5 +77,6 @@
   "The provided name '{0}' is not a valid PHP identifier. The refactoring process has been canceled.": "El nombre proporcionado '{0}' no es un identificador PHP válido. El proceso de refactorización ha sido cancelado.",
   "Unable to locate a valid definition. The refactoring process has been canceled.": "No se puede localizar una definición válida. El proceso de refactorización ha sido cancelado.",
 
+  "This file uses PHP syntax that could not be parsed safely by the refactoring engine. Refactoring was skipped for safety. {0}": "Este archivo usa sintaxis de PHP que el motor de refactorización no pudo analizar de forma segura. La refactorización se omitió por seguridad. {0}",
   "Would you like to update all files and their references for directory \"{0}\"? This operation may take some time depending on the directory content and project size.": "¿Le gustaría actualizar todos los archivos y sus referencias para el directorio \"{0}\"? Esta operación puede tomar algún tiempo dependiendo del contenido del directorio y el tamaño del proyecto."
 }

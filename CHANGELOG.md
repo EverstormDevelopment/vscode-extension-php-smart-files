@@ -46,6 +46,8 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 - Fixed extension activation so it no longer starts globally after VS Code startup:
   - Replaced `onStartupFinished` with `workspaceContains:**/*.php` while keeping `onLanguage:php`
   - This limits activation to relevant PHP workspaces and still allows command-based activation when needed
+- Fixed missing runtime translations and corrected an invalid localization key.
+- Fixed minor post-refactor cleanup issues, including a rename prompt typo, observer listener disposal, and empty refactor file-list handling.  
 
 
 ## [1.1.0] - 2025-07-10

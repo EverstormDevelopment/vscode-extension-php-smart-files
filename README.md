@@ -169,7 +169,11 @@ I'll do my best to keep this extension reliable and useful while balancing its s
 
 ## Release Notes
 
-### Current Version: 1.2.0
+### Current Version: 1.2.1
+
+- Fixed broken README badges.
+
+### Version 1.2.0
 
 - Reworked namespace refactoring around AST-based analysis for more accurate namespace, import, and reference updates.
 - Added grouped `use` statement support and preservation where possible during refactoring.

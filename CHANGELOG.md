@@ -16,6 +16,9 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 - Added manifest activation tests to guard the extension activation setup:
   - Verifies that PHP-specific activation events remain configured in the extension manifest
   - Ensures command and Explorer submenu contributions stay available for command-based activation scenarios
+- Added PHP 8.5 syntax compatibility for namespace refactoring:
+  - Parser support now covers PHP 8.5 syntax such as the pipe operator and clone with property overrides
+  - Namespace refactoring remains compatible with modern PHP files using these newer language constructs
 
 ### Changed
 

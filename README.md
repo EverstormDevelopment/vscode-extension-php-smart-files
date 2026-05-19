@@ -63,7 +63,12 @@ Save time and prevent bugs with comprehensive namespace management:
   - Removes redundant use statements when files share namespace
   - Updates fully qualified and partially qualified namespace references
   - Supports use statements with aliases
+  - Supports grouped `use` statements and preserves them where possible
   - Automatically sorts use statements (normal `use`, `use function`, `use const`) alphabetically — optional and configurable in the settings.
+- **Comprehensive Reference Detection**:
+  - Updates class-like references in PHPDoc tags such as `@param`, `@return`, `@var`, and `@method`
+  - Recognizes PHP attribute references, including imported, partially qualified, and fully qualified attributes
+  - Handles modern PHP syntax, including PHP 8.5 constructs, through AST-based analysis
 - **Efficient Processing**: Handles reference updates in parallel for better performance
 - **Flexible Configuration**: Control refactoring behavior for each operation type
 - **Format Integrity**: Preserves your preferred line break style (CR, LF, CRLF) during all file operations
@@ -112,7 +117,7 @@ The extension automatically refactors namespaces and references during standard 
 
 - Simply **move files** between directories or **rename files** in your editor or file explorer
 - When prompted, confirm the refactoring operation (if using default settings)
-- That's it! The extension handles all namespace updates, class renames, and reference adjustments
+- That's it! The extension handles namespace updates, class renames, imports, PHPDoc types, attributes, and related reference adjustments
 
 > 💡 **Tip:** Use the extension settings to control whether confirmations are shown or to disable specific refactoring features
 
@@ -163,13 +168,14 @@ I'll do my best to keep this extension reliable and useful while balancing its s
 
 ## Release Notes
 
-### Current Version: 1.1.0
+### Current Version: 1.2.0
 
-- Improved support for `use function` and `use const` statements during namespace refactoring.  
-- Automatic grouping and alphabetical sorting of `use` statements by type.  
-- New ability to create PHP function files directly from the file creation dialog.  
-- Added a global reserved service to prevent naming conflicts with PHP built-in functions, constants, and keywords.  
-- Visual updates including a refreshed logo and Marketplace banner.
+- Reworked namespace refactoring around AST-based analysis for more accurate namespace, import, and reference updates.
+- Added grouped `use` statement support and preservation where possible during refactoring.
+- Added PHPDoc type reference handling for tags like `@param`, `@return`, `@var`, and `@method`, configurable through `phpSmartFiles.refactorNamespacesIncludeDocblockTypes`.
+- Improved PHP attribute and fully qualified name handling during namespace refactoring.
+- Added PHP 8.5 syntax compatibility and removed the need for a configured PHP executable for namespace refactoring.
+- Refined activation behavior so the extension starts only for relevant PHP workspaces or command-based usage.
 
 For the full list of changes and detailed release notes, please see the [CHANGELOG](CHANGELOG.md).
 

@@ -1,8 +1,9 @@
 # PHP Smart Files
 
 <p align="center">
-  <a href="https://marketplace.visualstudio.com/items?itemName=everstorm.php-smart-files"><img src="https://img.shields.io/visual-studio-marketplace/v/everstorm.php-smart-files" alt="Version" /></a>
-  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT" /></a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=everstorm.php-smart-files"><img src="https://vsmarketplacebadges.dev/version/everstorm.php-smart-files.png" alt="Version" /></a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=everstorm.php-smart-files"><img src="https://vsmarketplacebadges.dev/installs/everstorm.php-smart-files.png" alt="Installs" /></a>
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-yellow?style=flat" alt="License: MIT" /></a>
 </p>
 
 <h3 align="center">Smart PHP File Creation & Intelligent Namespace Management</h3>

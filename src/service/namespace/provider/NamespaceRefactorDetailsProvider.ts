@@ -21,6 +21,8 @@ type ContentDetailsType = {
     namespace: string | undefined;
     identifiers: IdentifierType[];
     isFile: boolean;
+    isParseable: boolean;
+    parseError?: string;
 };
 
 /**
@@ -60,6 +62,8 @@ export class NamespaceRefactorDetailsProvider {
             old: oldUriDetails,
             new: newUriDetails,
             identifiers: contentDetails.identifiers,
+            isParseable: contentDetails.isParseable,
+            parseError: contentDetails.parseError,
             hasNamespaces: hasNamespaces,
             hasNamespaceChanged: hasNamespaceChanged,
             hasFileIdentifierChanged: hasIdentifierChanged,
@@ -75,11 +79,21 @@ export class NamespaceRefactorDetailsProvider {
     private async getContentDetails(uri: vscode.Uri): Promise<ContentDetailsType> {
         const isContentFile = await isUriFile(uri);
         if (!isContentFile) {
-            return { namespace: undefined, identifiers: [], isFile: false };
+            return { namespace: undefined, identifiers: [], isFile: false, isParseable: true };
         }
 
         const content = await getFileContentByUri(uri);
         const parser = new PhpParser(content, getUriFileName(uri, true));
+        if (!parser.isParseable()) {
+            return {
+                namespace: undefined,
+                identifiers: [],
+                isFile: true,
+                isParseable: false,
+                parseError: parser.getParseError(),
+            };
+        }
+
         const namespace = parser.getNamespace();
         let identifiers = parser.getTopLevelIdentifiers();
 
@@ -95,6 +109,7 @@ export class NamespaceRefactorDetailsProvider {
             namespace: namespace,
             identifiers: identifiers,
             isFile: true,
+            isParseable: true,
         };
     }
 

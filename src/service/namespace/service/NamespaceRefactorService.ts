@@ -58,6 +58,15 @@ export class NamespaceRefactorService {
      * @returns true if refactoring can proceed, false otherwise
      */
     private isRefactorable(refactorDetails: NamespaceRefactorDetailsType): boolean {
+        if (!refactorDetails.isParseable) {
+            const message = vscode.l10n.t(
+                "This file currently uses PHP 8.5 syntax that is not fully supported by the refactoring engine yet. Refactoring was skipped for safety. {0}",
+                refactorDetails.parseError ?? "",
+            ).trim();
+            vscode.window.showWarningMessage(message);
+            return false;
+        }
+
         if (!refactorDetails.new.isNamespaceValid) {
             const message = vscode.l10n.t(
                 "The detected namespace '{0}' is not a valid PHP namespace. The refactoring process has been canceled.",

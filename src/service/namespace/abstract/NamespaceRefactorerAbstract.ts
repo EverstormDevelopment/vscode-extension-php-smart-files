@@ -38,7 +38,7 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
         const newFQN = `\\${refactorDetails.new.namespace}\\${refactorDetails.new.fileIdentifier.name}`;
         const hasUseStatement =
             this.hasUseStatementForIdentifier(content, oldIdentifier) || this.hasUseStatementForIdentifier(content, refactorDetails.new.fileIdentifier);
-        const parser = new PhpParser(content);
+        const parser = this.getCheckedParser(content);
         const references = new PhpAstTraverser(parser.getAST(), content)
             .getNameReferences(false)
             .filter((reference) => reference.kind === IdentifierKindEnum.Oop)
@@ -88,7 +88,7 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
             return content;
         }
 
-        const parser = new PhpParser(content);
+        const parser = this.getCheckedParser(content);
         const namespaceLoc = parser.getNamespaceLoc();
         if (!namespaceLoc) {
             return content;
@@ -112,7 +112,7 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
      * @returns True if a matching use statement exists, otherwise false.
      */
     protected hasUseStatementForIdentifier(content: string, identifier: IdentifierType): boolean {
-        const useStatements = new PhpParser(content).getUseStatements();
+        const useStatements = this.getCheckedParser(content).getUseStatements();
         return useStatements.some((stmt) => {
             if (!this.useStatementKindMatches(stmt.kind, identifier.kind)) {
                 return false;
@@ -132,7 +132,7 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
      */
     protected removeUseStatement(content: string, namespace: string, identifier: IdentifierType): string {
         const fullName = `${namespace}\\${identifier.name}`;
-        const useStatements = new PhpParser(content).getUseStatements();
+        const useStatements = this.getCheckedParser(content).getUseStatements();
         const stmt = this.findUseStatement(useStatements, fullName, identifier);
 
         if (!stmt) {
@@ -159,7 +159,7 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
      * @returns The updated file content without redundant same-namespace imports.
      */
     protected removeOwnNamespaceUseStatements(content: string, namespace: string): string {
-        const useStatements = new PhpParser(content).getUseStatements();
+        const useStatements = this.getCheckedParser(content).getUseStatements();
         const groups = this.getUniqueUseStatementGroups(useStatements).sort((a, b) => b.groupLoc.start - a.groupLoc.start);
 
         for (const group of groups) {
@@ -195,7 +195,7 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
             return content;
         }
 
-        const useStatementGroups = this.getUniqueUseStatementGroups(new PhpParser(content).getUseStatements());
+        const useStatementGroups = this.getUniqueUseStatementGroups(this.getCheckedParser(content).getUseStatements());
         if (useStatementGroups.length === 0) {
             return content;
         }
@@ -478,5 +478,20 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
             default:
                 return 0;
         }
+    }
+
+    /**
+     * Creates a parser instance and ensures that the PHP source can be analysed safely.
+     * @param content The PHP source code to parse
+     * @returns A parseable PhpParser instance
+     * @throws Error when the content cannot be parsed safely
+     */
+    protected getCheckedParser(content: string): PhpParser {
+        const parser = new PhpParser(content);
+        if (!parser.isParseable()) {
+            throw new Error(parser.getParseError() ?? "Unable to parse the PHP file.");
+        }
+
+        return parser;
     }
 }

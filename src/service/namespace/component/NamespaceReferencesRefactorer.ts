@@ -61,22 +61,30 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
     ): Promise<void> {
         const files = await this.findFilesToRefactor(refactorDetails.new.uri);
         const progressIncrement = 100 / files.length;
-        const processPromises: Promise<void>[] = [];
+        const processPromises: Promise<string | null>[] = [];
 
         let completed = 0;
         for (let fileIndex = 0; fileIndex < files.length; fileIndex++) {
             const fileUri = files[fileIndex];
-            const promise = this.updateReference(fileUri, refactorDetails).then(() => {
+            const promise = this.updateReference(fileUri, refactorDetails).then((result) => {
                 completed++;
                 progress.report({
                     increment: progressIncrement,
                     message: vscode.l10n.t("Processing file {0} of {1}", completed, files.length),
                 });
+                return result;
             });
             processPromises.push(promise);
         }
 
-        await Promise.all(processPromises);
+        const failedFiles = (await Promise.all(processPromises)).filter((entry): entry is string => entry !== null);
+        if (failedFiles.length > 0) {
+            const message = vscode.l10n.t(
+                "Skipped namespace refactoring in {0} file(s) because they use PHP syntax that is not fully supported yet.",
+                failedFiles.length,
+            );
+            vscode.window.showWarningMessage(message);
+        }
     }
 
     /**
@@ -86,27 +94,31 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
      * @param uri The URI of the file to update
      * @param refactorDetails Contains information about the old and new namespace/identifier values
      */
-    private async updateReference(uri: vscode.Uri, refactorDetails: NamespaceRefactorDetailsType): Promise<void> {
+    private async updateReference(uri: vscode.Uri, refactorDetails: NamespaceRefactorDetailsType): Promise<string | null> {
         try {
             const fileContent = await this.getFileContent(uri);
-            const fileNamespace = new PhpParser(fileContent).getNamespace();
+            const parser = new PhpParser(fileContent, uri.fsPath);
+            if (!parser.isParseable()) {
+                return uri.fsPath;
+            }
+
+            const fileNamespace = parser.getNamespace();
             if (!fileNamespace) {
-                return;
+                return null;
             }
 
             let fileContentUpdated = fileContent;
-            fileContentUpdated = this.refactorReferences(fileContentUpdated, fileNamespace, refactorDetails);
+            fileContentUpdated = this.refactorReferences(fileContentUpdated, parser, fileNamespace, refactorDetails);
             fileContentUpdated = this.refactorFileIdentifier(fileContentUpdated, fileNamespace, refactorDetails);
             if (fileContentUpdated === fileContent) {
-                return;
+                return null;
             }
 
             fileContentUpdated = this.orderUseStatements(fileContentUpdated);
             await this.setFileContent(uri, fileContentUpdated);
+            return null;
         } catch (error) {
-            const errorDetails = error instanceof Error ? error.message : String(error);
-            const errorMessage = vscode.l10n.t("Error updating references in file {0}: {1}", uri.fsPath, errorDetails);
-            vscode.window.showErrorMessage(errorMessage);
+            return uri.fsPath;
         }
     }
 
@@ -120,13 +132,13 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
      * @param refactorDetails Contains information about the old and new namespace/identifier values
      * @returns Updated file content
      */
-    private refactorReferences(content: string, fileNamespace: string, refactorDetails: NamespaceRefactorDetailsType): string {
+    private refactorReferences(content: string, parser: PhpParser, fileNamespace: string, refactorDetails: NamespaceRefactorDetailsType): string {
         const oldNamespace = refactorDetails.old.namespace;
         const newNamespace = refactorDetails.new.namespace;
         const identifiers = refactorDetails.identifiers;
 
         // Step 1: Parse once and collect all body replacements for all identifiers
-        const allRefs = new PhpAstTraverser(new PhpParser(content).getAST(), content).getNameReferences(false);
+        const allRefs = new PhpAstTraverser(parser.getAST(), content).getNameReferences(false);
         const replacements: Array<{ loc: OffsetLocType; newText: string }> = [];
 
         for (const identifier of identifiers) {
@@ -295,7 +307,7 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
      * @returns True when a matching name reference exists in code, otherwise false
      */
     private hasAstReferenceForIdentifier(content: string, identifier: IdentifierType): boolean {
-        const references = new PhpAstTraverser(new PhpParser(content).getAST(), content).getNameReferences(false);
+        const references = new PhpAstTraverser(this.getCheckedParser(content).getAST(), content).getNameReferences(false);
 
         // Map identifier kind to the expected reference kind (functions and constants keep theirs, everything else is OOP)
         const expectedReferenceKind = identifier.kind === IdentifierKindEnum.Function || identifier.kind === IdentifierKindEnum.Constant
@@ -361,7 +373,7 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
                 : identifier.name;
         const newFQN = `${newNamespace}\\${nextIdentifierName}`;
 
-        const useStatements = new PhpParser(content).getUseStatements();
+        const useStatements = this.getCheckedParser(content).getUseStatements();
         const stmt = this.findUseStatement(useStatements, oldFQN, identifier);
         if (!stmt) {
             return content;

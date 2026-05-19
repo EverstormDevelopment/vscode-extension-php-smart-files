@@ -5,6 +5,72 @@ import { PhpAstTraverser } from "../service/namespace/parser/PhpAstTraverser";
 import { PhpParser } from "../service/namespace/parser/PhpParser";
 
 suite("PhpParser", () => {
+    suite("parse status", () => {
+        test("supports PHP 8.5 pipe operator syntax", () => {
+            const code = `<?php
+
+namespace App\\Test;
+
+final class PipeExample
+{
+    public function transform(string $value): string
+    {
+        return $value
+            |> trim(...)
+            |> strtoupper(...);
+    }
+}
+`;
+
+            const parser = new PhpParser(code);
+
+            assert.strictEqual(parser.isParseable(), true);
+            assert.strictEqual(parser.getParseError(), undefined);
+            assert.strictEqual(parser.getNamespace(), "App\\Test");
+        });
+
+        test("supports PHP 8.5 attributes and constant expressions", () => {
+            const code = `<?php
+
+namespace App\\Test;
+
+#[\\NoDiscard]
+final class FeatureFlags
+{
+    #[Example]
+    public const CALLBACK = strlen(...);
+}
+`;
+
+            const parser = new PhpParser(code);
+            const references = new PhpAstTraverser(parser.getAST(), code).getNameReferences(false);
+
+            assert.strictEqual(parser.isParseable(), true);
+            assert.ok(references.some((reference) => reference.name === "\\NoDiscard"));
+            assert.ok(references.some((reference) => reference.name === "Example"));
+        });
+
+        test("returns a controlled parse error for unsupported clone-with syntax", () => {
+            const code = `<?php
+
+namespace App\\Test;
+
+final class CloneExample
+{
+    public function duplicate(object $service): object
+    {
+        return clone($service, ["name" => "x"]);
+    }
+}
+`;
+
+            const parser = new PhpParser(code);
+
+            assert.strictEqual(parser.isParseable(), false);
+            assert.ok(parser.getParseError());
+        });
+    });
+
     suite("getUseStatements()", () => {
         test("returns grouped imports with prefix and shared group location", () => {
             const code = `<?php

@@ -23,7 +23,7 @@ export abstract class ObserverAbstract implements FilesystemObserverInterface {
      */
     public watch(context: vscode.ExtensionContext): void {
         this.filesystemObserver.watch(context);
-        
+
         const disposable = this.filesystemObserver.onDidChange(async (event: FilesystemObserverEvent) => {
             await this.handleChangeEvent(event);
         });

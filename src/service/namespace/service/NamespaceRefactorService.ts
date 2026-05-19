@@ -59,10 +59,12 @@ export class NamespaceRefactorService {
      */
     private isRefactorable(refactorDetails: NamespaceRefactorDetailsType): boolean {
         if (!refactorDetails.isParseable) {
-            const message = vscode.l10n.t(
-                "This file uses PHP syntax that could not be parsed safely by the refactoring engine. Refactoring was skipped for safety. {0}",
-                refactorDetails.parseError ?? "",
-            ).trim();
+            const message = vscode.l10n
+                .t(
+                    "This file uses PHP syntax that could not be parsed safely by the refactoring engine. Refactoring was skipped for safety. {0}",
+                    refactorDetails.parseError ?? "",
+                )
+                .trim();
             vscode.window.showWarningMessage(message);
             return false;
         }

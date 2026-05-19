@@ -3,6 +3,13 @@
 All notable changes to the "PHP Smart Files" extension will be documented in this file.
 <!-- Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file. -->
 
+## [1.2.1] - 2026-05-19
+
+### Fixed
+
+- Fixed broken badges in the README.
+
+
 ## [1.2.0] - 2026-05-19
 
 ### Added

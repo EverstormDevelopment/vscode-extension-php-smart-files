@@ -60,6 +60,10 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
         refactorDetails: NamespaceRefactorDetailsType,
     ): Promise<void> {
         const files = await this.findFilesToRefactor(refactorDetails.new.uri);
+        if (files.length === 0) {
+            return;
+        }
+
         const progressIncrement = 100 / files.length;
         const processPromises: Promise<string | null>[] = [];
 

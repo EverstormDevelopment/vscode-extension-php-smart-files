@@ -77,6 +77,10 @@ export class NamespaceDirectoryRefactorer {
         }>,
     ): Promise<void> {
         const files = await getFilesInUriDirectory(refactorDetails.new.uri, "**/*.php");
+        if (files.length === 0) {
+            return;
+        }
+
         const progressIncrement = 99.9 / files.length;
         let skippedFiles = 0;
 

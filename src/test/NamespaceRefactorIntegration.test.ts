@@ -993,4 +993,303 @@ suite("Namespace Refactor Integration", () => {
             `,
         );
     });
+
+    test("renames classes in files that use the PHP 8.5 pipe operator", async () => {
+        await testWorkspace.writeWorkspaceFiles({
+            "composer.json": JSON.stringify(
+                {
+                    autoload: {
+                        "psr-4": {
+                            "App\\": "src/",
+                        },
+                    },
+                },
+                null,
+                4,
+            ),
+            "src/Domain/LegacyPipeService.php": php`
+                <?php
+
+                namespace App\Domain;
+
+                final class LegacyPipeService
+                {
+                    public function transform(string $value): string
+                    {
+                        return $value
+                            |> trim(...)
+                            |> strtoupper(...);
+                    }
+                }
+            `,
+            "src/Controller/UsesPipeService.php": php`
+                <?php
+
+                namespace App\Controller;
+
+                use App\Domain\LegacyPipeService;
+
+                final class UsesPipeService
+                {
+                    public function make(): LegacyPipeService
+                    {
+                        return new LegacyPipeService();
+                    }
+                }
+            `,
+        });
+
+        const namespaceRefactorService = testWorkspace.getService();
+        const oldUri = testWorkspace.uri("src/Domain/LegacyPipeService.php");
+        const newUri = testWorkspace.uri("src/Domain/ModernPipeService.php");
+
+        await vscode.workspace.fs.rename(oldUri, newUri, { overwrite: true });
+        await namespaceRefactorService.refactorFile(oldUri, newUri);
+
+        assertNormalizedFileEquals(
+            await testWorkspace.readFile(newUri),
+            php`
+                <?php
+
+                namespace App\Domain;
+
+                final class ModernPipeService
+                {
+                    public function transform(string $value): string
+                    {
+                        return $value
+                            |> trim(...)
+                            |> strtoupper(...);
+                    }
+                }
+            `,
+        );
+
+        assertNormalizedFileEquals(
+            await testWorkspace.readFile(testWorkspace.uri("src/Controller/UsesPipeService.php")),
+            php`
+                <?php
+
+                namespace App\Controller;
+
+                use App\Domain\ModernPipeService;
+
+                final class UsesPipeService
+                {
+                    public function make(): ModernPipeService
+                    {
+                        return new ModernPipeService();
+                    }
+                }
+            `,
+        );
+    });
+
+    test("skips single-file refactoring safely when the moved file uses unsupported clone-with syntax", async () => {
+        await testWorkspace.writeWorkspaceFiles({
+            "composer.json": JSON.stringify(
+                {
+                    autoload: {
+                        "psr-4": {
+                            "App\\": "src/",
+                        },
+                    },
+                },
+                null,
+                4,
+            ),
+            "src/Domain/LegacyCloneService.php": php`
+                <?php
+
+                namespace App\Domain;
+
+                final class LegacyCloneService
+                {
+                    public function duplicate(object $service): object
+                    {
+                        return clone($service, ['name' => 'x']);
+                    }
+                }
+            `,
+            "src/Controller/UsesCloneService.php": php`
+                <?php
+
+                namespace App\Controller;
+
+                use App\Domain\LegacyCloneService;
+
+                final class UsesCloneService
+                {
+                    public function make(): LegacyCloneService
+                    {
+                        return new LegacyCloneService();
+                    }
+                }
+            `,
+        });
+
+        const namespaceRefactorService = testWorkspace.getService();
+        const oldUri = testWorkspace.uri("src/Domain/LegacyCloneService.php");
+        const newUri = testWorkspace.uri("src/Domain/ModernCloneService.php");
+
+        await vscode.workspace.fs.rename(oldUri, newUri, { overwrite: true });
+        await namespaceRefactorService.refactorFile(oldUri, newUri);
+
+        assertNormalizedFileEquals(
+            await testWorkspace.readFile(newUri),
+            php`
+                <?php
+
+                namespace App\Domain;
+
+                final class LegacyCloneService
+                {
+                    public function duplicate(object $service): object
+                    {
+                        return clone($service, ['name' => 'x']);
+                    }
+                }
+            `,
+        );
+
+        assertNormalizedFileEquals(
+            await testWorkspace.readFile(testWorkspace.uri("src/Controller/UsesCloneService.php")),
+            php`
+                <?php
+
+                namespace App\Controller;
+
+                use App\Domain\LegacyCloneService;
+
+                final class UsesCloneService
+                {
+                    public function make(): LegacyCloneService
+                    {
+                        return new LegacyCloneService();
+                    }
+                }
+            `,
+        );
+    });
+
+    test("continues directory refactoring when one file uses unsupported clone-with syntax", async () => {
+        await testWorkspace.writeWorkspaceFiles({
+            "composer.json": JSON.stringify(
+                {
+                    autoload: {
+                        "psr-4": {
+                            "App\\": "src/",
+                        },
+                    },
+                },
+                null,
+                4,
+            ),
+            "src/Domain/PipeService.php": php`
+                <?php
+
+                namespace App\Domain;
+
+                final class PipeService
+                {
+                    public function transform(string $value): string
+                    {
+                        return $value
+                            |> trim(...)
+                            |> strtoupper(...);
+                    }
+                }
+            `,
+            "src/Domain/CloneService.php": php`
+                <?php
+
+                namespace App\Domain;
+
+                final class CloneService
+                {
+                    public function duplicate(object $service): object
+                    {
+                        return clone($service, ['name' => 'x']);
+                    }
+                }
+            `,
+            "src/Controller/UsesPipeService.php": php`
+                <?php
+
+                namespace App\Controller;
+
+                use App\Domain\PipeService;
+
+                final class UsesPipeService
+                {
+                    public function make(): PipeService
+                    {
+                        return new PipeService();
+                    }
+                }
+            `,
+        });
+
+        const namespaceRefactorService = testWorkspace.getService();
+        const oldUri = testWorkspace.uri("src/Domain");
+        const newUri = testWorkspace.uri("src/Application");
+
+        await vscode.workspace.fs.rename(oldUri, newUri, { overwrite: true });
+        await namespaceRefactorService.refactorDirectory(oldUri, newUri);
+
+        assertNormalizedFileEquals(
+            await testWorkspace.readFile(testWorkspace.uri("src/Application/PipeService.php")),
+            php`
+                <?php
+
+                namespace App\Application;
+
+                final class PipeService
+                {
+                    public function transform(string $value): string
+                    {
+                        return $value
+                            |> trim(...)
+                            |> strtoupper(...);
+                    }
+                }
+            `,
+        );
+
+        assertNormalizedFileEquals(
+            await testWorkspace.readFile(testWorkspace.uri("src/Application/CloneService.php")),
+            php`
+                <?php
+
+                namespace App\Domain;
+
+                final class CloneService
+                {
+                    public function duplicate(object $service): object
+                    {
+                        return clone($service, ['name' => 'x']);
+                    }
+                }
+            `,
+        );
+
+        assertNormalizedFileEquals(
+            await testWorkspace.readFile(testWorkspace.uri("src/Controller/UsesPipeService.php")),
+            php`
+                <?php
+
+                namespace App\Controller;
+
+                use App\Application\PipeService;
+
+                final class UsesPipeService
+                {
+                    public function make(): PipeService
+                    {
+                        return new PipeService();
+                    }
+                }
+            `,
+        );
+    });
 });

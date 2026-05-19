@@ -78,6 +78,7 @@ export class NamespaceDirectoryRefactorer {
     ): Promise<void> {
         const files = await getFilesInUriDirectory(refactorDetails.new.uri, "**/*.php");
         const progressIncrement = 99.9 / files.length;
+        let skippedFiles = 0;
 
         for (let fileIndex = 0; fileIndex < files.length; fileIndex++) {
             progress.report({
@@ -86,7 +87,15 @@ export class NamespaceDirectoryRefactorer {
             });
 
             const fileUri = files[fileIndex];
-            await this.refactorFile(fileUri, refactorDetails);
+            skippedFiles += await this.refactorFile(fileUri, refactorDetails);
+        }
+
+        if (skippedFiles > 0) {
+            const message = vscode.l10n.t(
+                "Skipped namespace refactoring in {0} file(s) because they use PHP syntax that is not fully supported yet.",
+                skippedFiles,
+            );
+            vscode.window.showWarningMessage(message);
         }
     }
 
@@ -96,14 +105,19 @@ export class NamespaceDirectoryRefactorer {
      * @param refactorDetails Overall namespace refactoring details
      * @returns Promise that resolves when the file is refactored
      */
-    private async refactorFile(fileUri: vscode.Uri, refactorDetails: NamespaceRefactorDetailsType): Promise<void> {
+    private async refactorFile(fileUri: vscode.Uri, refactorDetails: NamespaceRefactorDetailsType): Promise<number> {
         const oldUri = refactorDetails.old.uri;
         const newUri = refactorDetails.new.uri;
 
-        const oldPath = fileUri.path.replace(newUri.path, oldUri.path);
-        const oldFileUri = fileUri.with({ path: oldPath });
+        const oldFilePath = fileUri.fsPath.replace(newUri.fsPath, oldUri.fsPath);
+        const oldFileUri = vscode.Uri.file(oldFilePath);
 
         const fileRefactorDetails = await this.namespaceRefactorDetailsProvider.get(oldFileUri, fileUri);
+        if (!fileRefactorDetails.isParseable) {
+            return 1;
+        }
+
         await this.namespaceFileRefactorer.refactor(fileRefactorDetails);
+        return 0;
     }
 }

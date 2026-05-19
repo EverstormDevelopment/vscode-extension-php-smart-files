@@ -24,6 +24,16 @@ export type NamespaceRefactorDetailsType = {
     identifiers: IdentifierType[];
 
     /**
+     * Indicates whether the moved file could be parsed safely.
+     */
+    isParseable: boolean;
+
+    /**
+     * The parser error message when the moved file could not be parsed safely.
+     */
+    parseError?: string;
+
+    /**
      * Indicates whether both old and new locations have namespaces
      */
     hasNamespaces: boolean;

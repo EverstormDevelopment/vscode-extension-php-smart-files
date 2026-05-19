@@ -57,12 +57,12 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
      */
     private async refactorContent(content: string, refactorDetails: NamespaceRefactorDetailsType): Promise<string> {
         if (refactorDetails.hasNamespaceChanged) {
-            content = this.refactorNamespace(content, refactorDetails);
-            content = await this.refactorUseStatements(content, refactorDetails);
-            content = this.refactorPartialQualified(content, refactorDetails);
+            content = this.refactorNamespace(content, this.getCheckedParser(content), refactorDetails);
+            content = await this.refactorUseStatements(content, this.getCheckedParser(content), refactorDetails);
+            content = this.refactorPartialQualified(content, this.getCheckedParser(content), refactorDetails);
         }
         if (refactorDetails.hasFileIdentifierChanged) {
-            content = this.refactorDefinition(content, refactorDetails);
+            content = this.refactorDefinition(content, this.getCheckedParser(content), refactorDetails);
             content = this.refactorIdentifier(content, refactorDetails.new.namespace, refactorDetails);
         }
         return content;
@@ -74,8 +74,8 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
      * @param refactorDetails Details about what needs to be refactored.
      * @returns The content with the updated namespace declaration.
      */
-    private refactorNamespace(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
-        const namespaceLoc = new PhpParser(content).getNamespaceLoc();
+    private refactorNamespace(content: string, parser: PhpParser, refactorDetails: NamespaceRefactorDetailsType): string {
+        const namespaceLoc = parser.getNamespaceLoc();
         if (!namespaceLoc) {
             return content;
         }
@@ -90,8 +90,8 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
      * @returns The content with the updated definition name.
      * @throws Error if no matching top-level definition is found.
      */
-    private refactorDefinition(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
-        const identifierLocs = new PhpParser(content).getTopLevelIdentifierLocs();
+    private refactorDefinition(content: string, parser: PhpParser, refactorDetails: NamespaceRefactorDetailsType): string {
+        const identifierLocs = parser.getTopLevelIdentifierLocs();
         const identifierLoc = identifierLocs.find((id) => id.name === refactorDetails.old.fileIdentifier.name);
 
         if (!identifierLoc) {
@@ -108,8 +108,8 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
      * @param refactorDetails Details about what needs to be refactored.
      * @returns The content with updated use statements.
      */
-    private async refactorUseStatements(content: string, refactorDetails: NamespaceRefactorDetailsType): Promise<string> {
-        const references = await this.getNonQualifiedReferences(content, refactorDetails);
+    private async refactorUseStatements(content: string, parser: PhpParser, refactorDetails: NamespaceRefactorDetailsType): Promise<string> {
+        const references = await this.getNonQualifiedReferences(content, parser, refactorDetails);
         const nonQualifiedReferences = references.filter((reference) => reference.name !== refactorDetails.old.fileIdentifier.name);
 
         for (const identifier of nonQualifiedReferences) {
@@ -133,8 +133,7 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
      * @param refactorDetails Details about what needs to be refactored.
      * @returns The content with updated partially qualified references.
      */
-    private refactorPartialQualified(content: string, refactorDetails: NamespaceRefactorDetailsType): string {
-        const parser = new PhpParser(content);
+    private refactorPartialQualified(content: string, parser: PhpParser, refactorDetails: NamespaceRefactorDetailsType): string {
         const qnRefs = new PhpAstTraverser(parser.getAST(), content)
             .getNameReferences(false)
             .filter((ref) => ref.resolution === NameResolutionEnum.Qn)
@@ -168,8 +167,7 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
      * @param content The file content to analyse.
      * @returns Deduplicated list of unqualified references.
      */
-    private async getNonQualifiedReferences(content: string, refactorDetails: NamespaceRefactorDetailsType): Promise<IdentifierType[]> {
-        const parser = new PhpParser(content);
+    private async getNonQualifiedReferences(content: string, parser: PhpParser, refactorDetails: NamespaceRefactorDetailsType): Promise<IdentifierType[]> {
         const allRefs = new PhpAstTraverser(parser.getAST(), content).getNameReferences(true);
 
         const config = vscode.workspace.getConfiguration("phpSmartFiles");
@@ -217,6 +215,10 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
         for (const file of phpFiles) {
             const fileContent = await this.getFileContent(file);
             const parser = new PhpParser(fileContent);
+            if (!parser.isParseable()) {
+                continue;
+            }
+
             if (parser.getNamespace() !== refactorDetails.old.namespace) {
                 continue;
             }

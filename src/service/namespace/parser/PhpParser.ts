@@ -19,12 +19,22 @@ export class PhpParser {
     /**
      * The AST (Abstract Syntax Tree) of the parsed PHP code.
      */
-    private ast: AST;
+    private ast: AST | null = null;
 
     /**
      * The original PHP source code, stored for offset-based loc computation.
      */
     private phpCode: string;
+
+    /**
+     * Indicates whether the PHP source code was parsed successfully without syntax errors.
+     */
+    private readonly parseable: boolean;
+
+    /**
+     * The parse error message when parsing failed.
+     */
+    private readonly parseError?: string;
 
     /**
      * Creates a new instance of PhpParser and parses the given PHP code.
@@ -33,17 +43,32 @@ export class PhpParser {
      */
     constructor(phpCode: string, fileName: string = "") {
         this.phpCode = phpCode;
-        const parser = new Engine({
-            parser: {
-                php7: true,
-                suppressErrors: true,
-            },
-            ast: {
-                withPositions: true,
-            },
-        });
+        try {
+            const parser = new Engine({
+                parser: {
+                    version: "8.5",
+                    suppressErrors: true,
+                },
+                ast: {
+                    withPositions: true,
+                },
+            });
 
-        this.ast = parser.parseCode(phpCode, fileName);
+            const parsedAst = parser.parseCode(phpCode, fileName);
+            if ((parsedAst.errors?.length ?? 0) > 0) {
+                this.parseable = false;
+                this.parseError = parsedAst.errors
+                    .map((error: { message?: string }) => error.message ?? "Unknown PHP parse error")
+                    .join("\n");
+                return;
+            }
+
+            this.ast = parsedAst;
+            this.parseable = true;
+        } catch (error) {
+            this.parseable = false;
+            this.parseError = error instanceof Error ? error.message : String(error);
+        }
     }
 
     /**
@@ -51,7 +76,24 @@ export class PhpParser {
      * @returns The AST object
      */
     public getAST(): AST {
-        return this.ast;
+        this.ensureParseable();
+        return this.ast as AST;
+    }
+
+    /**
+     * Returns whether the PHP source code was parsed successfully.
+     * @returns True when the AST is valid and can be used safely
+     */
+    public isParseable(): boolean {
+        return this.parseable;
+    }
+
+    /**
+     * Returns the parse error message when parsing failed.
+     * @returns The parse error message, or undefined when parsing succeeded
+     */
+    public getParseError(): string | undefined {
+        return this.parseError;
     }
 
     /**
@@ -59,9 +101,7 @@ export class PhpParser {
      * @returns The namespace name as a string or undefined if none exists
      */
     public getNamespace(): string | undefined {
-        if (!this.ast || !this.ast.children) {
-            return undefined;
-        }
+        this.ensureParseable();
 
         const namespaceNode = this.getNamespaceNode();
         if (!namespaceNode) {
@@ -76,6 +116,8 @@ export class PhpParser {
      * @returns The offset range or null if no namespace declaration is found
      */
     public getNamespaceLoc(): OffsetLocType | null {
+        this.ensureParseable();
+
         const namespaceNode = this.getNamespaceNode();
         if (!namespaceNode?.loc) {
             return null;
@@ -96,6 +138,8 @@ export class PhpParser {
      * @returns Array of IdentifierType for all found identifiers
      */
     public getTopLevelIdentifiers(): IdentifierType[] {
+        this.ensureParseable();
+
         const namespaceNode = this.getNamespaceNode();
         if (!namespaceNode) {
             return [];
@@ -129,6 +173,8 @@ export class PhpParser {
      * @returns Array of IdentifierLocType for all found identifiers
      */
     public getTopLevelIdentifierLocs(): IdentifierLocType[] {
+        this.ensureParseable();
+
         const namespaceNode = this.getNamespaceNode();
         if (!namespaceNode) {
             return [];
@@ -162,6 +208,8 @@ export class PhpParser {
      * @returns Array of UseStatementType for all found use statements
      */
     public getUseStatements(): UseStatementType[] {
+        this.ensureParseable();
+
         const namespaceNode = this.getNamespaceNode();
         if (!namespaceNode) {
             return [];
@@ -289,5 +337,15 @@ export class PhpParser {
             name: identifier,
             kind: node.kind as IdentifierKindEnum,
         };
+    }
+
+    /**
+     * Ensures that the PHP source code was parsed successfully before exposing AST-derived data.
+     * @throws Error when parsing failed or the AST is unavailable
+     */
+    private ensureParseable(): void {
+        if (!this.parseable || !this.ast) {
+            throw new Error(this.parseError ?? "Unable to parse the PHP file.");
+        }
     }
 }

@@ -1480,4 +1480,84 @@ suite("Namespace Refactor Integration", () => {
             `,
         );
     });
+
+    test("refactors directory contents with repeated directory names", async () => {
+        await testWorkspace.writeWorkspaceFiles({
+            "composer.json": JSON.stringify(
+                {
+                    autoload: {
+                        "psr-4": {
+                            "App\\": "src/",
+                        },
+                    },
+                },
+                null,
+                4,
+            ),
+            "src/Domain/Domain/NestedService.php": php`
+                <?php
+
+                namespace App\Domain\Domain;
+
+                final class NestedService
+                {
+                }
+            `,
+            "src/Controller/UsesNestedService.php": php`
+                <?php
+
+                namespace App\Controller;
+
+                use App\Domain\Domain\NestedService;
+
+                final class UsesNestedService
+                {
+                    public function make(): NestedService
+                    {
+                        return new NestedService();
+                    }
+                }
+            `,
+        });
+
+        const namespaceRefactorService = testWorkspace.getService();
+        const oldUri = testWorkspace.uri("src/Domain");
+        const newUri = testWorkspace.uri("src/Application/Domain");
+
+        await vscode.workspace.fs.createDirectory(testWorkspace.uri("src/Application"));
+        await vscode.workspace.fs.rename(oldUri, newUri, { overwrite: true });
+        await namespaceRefactorService.refactorDirectory(oldUri, newUri);
+
+        assertNormalizedFileEquals(
+            await testWorkspace.readFile(testWorkspace.uri("src/Application/Domain/Domain/NestedService.php")),
+            php`
+                <?php
+
+                namespace App\Application\Domain\Domain;
+
+                final class NestedService
+                {
+                }
+            `,
+        );
+
+        assertNormalizedFileEquals(
+            await testWorkspace.readFile(testWorkspace.uri("src/Controller/UsesNestedService.php")),
+            php`
+                <?php
+
+                namespace App\Controller;
+
+                use App\Application\Domain\Domain\NestedService;
+
+                final class UsesNestedService
+                {
+                    public function make(): NestedService
+                    {
+                        return new NestedService();
+                    }
+                }
+            `,
+        );
+    });
 });

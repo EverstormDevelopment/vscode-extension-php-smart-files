@@ -28,6 +28,7 @@
 - [About This Project](#about-this-project)
 - [Release Notes](#release-notes)
 - [Feedback and Contributions](#feedback-and-contributions)
+- [Support the Project](#support-the-project)
 - [License](#license)
 
 ## Features
@@ -193,6 +194,14 @@ Your feedback, ideas, and contributions are truly appreciated! If you've found a
 - [Contribute on GitHub](https://github.com/EverstormDevelopment/vscode-extension-php-smart-files)
 
 Thanks for helping make PHP Smart Files better!
+
+## Support the Project
+
+If PHP Smart Files improves your workflow, you can support ongoing development here:
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/X6H22089VY)
+
+Or [sponsor the project on on GitHub](https://github.com/sponsors/EverstormDevelopment).
 
 ## License
 

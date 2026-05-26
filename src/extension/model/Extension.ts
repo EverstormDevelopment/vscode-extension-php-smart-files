@@ -31,7 +31,12 @@ export class Extension implements ExtensionInterface {
     /**
      * Tracks if observers have been registered
      */
-    private hasObserversRegistered: boolean | undefined;
+    private hasObserversRegistered: boolean;
+
+    /**
+     * Tracks an active observer registration process
+     */
+    private observersRegistrationPromise: Promise<boolean> | undefined;
 
     /**
      * Creates a new Extension instance with default container
@@ -40,6 +45,7 @@ export class Extension implements ExtensionInterface {
         this.name = "php-smart-files";
         this.version = "0.0.0";
         this.container = ContainerFactory.createDefaultContainer();
+        this.hasObserversRegistered = false;
     }
 
     /**
@@ -147,32 +153,47 @@ export class Extension implements ExtensionInterface {
      * @param context The VS Code extension context
      */
     private async addObservers(context: vscode.ExtensionContext): Promise<boolean> {
-        if (this.hasObserversRegistered || !(await this.hasPhpFilesInWorkspace())) {
+        if (this.hasObserversRegistered) {
+            return true;
+        }
+
+        if (this.observersRegistrationPromise) {
+            return this.observersRegistrationPromise;
+        }
+
+        this.observersRegistrationPromise = this.registerObservers(context);
+        try {
+            return await this.observersRegistrationPromise;
+        } finally {
+            this.observersRegistrationPromise = undefined;
+        }
+    }
+
+    /**
+     * Registers all observers when PHP files are available in the workspace
+     * @param context The VS Code extension context
+     */
+    private async registerObservers(context: vscode.ExtensionContext): Promise<boolean> {
+        if (!(await this.hasPhpFilesInWorkspace())) {
             return false;
         }
-        this.hasObserversRegistered = true;
 
-        const observerRegisty = ObserverRegistry;
-        for (const [observerName, observer] of Object.entries(observerRegisty)) {
-            this.addObserver(context, observerName, observer);
+        for (const observer of Object.values(ObserverRegistry)) {
+            this.addObserver(context, observer);
         }
+
+        this.hasObserversRegistered = true;
         return true;
     }
 
     /**
      * Registers a single observer with VS Code
      * @param context The VS Code extension context
-     * @param name The name of the observer
      * @param observer The constructor type of the observer to register
      */
-    private addObserver(context: vscode.ExtensionContext, name: string, observer: ConstructorType<FilesystemObserverInterface>): void {
+    private addObserver(context: vscode.ExtensionContext, observer: ConstructorType<FilesystemObserverInterface>): void {
         const observerInstance = this.container.get(observer);
-        if (!observerInstance) {
-            console.error(`Observer \`${name}\` not found`);
-            return;
-        }
         if (typeof observerInstance.watch !== "function") {
-            console.error(`Observer \`${name}\` does not implement \`watch\``);
             return;
         }
         observerInstance.watch(context);
@@ -190,8 +211,7 @@ export class Extension implements ExtensionInterface {
         try {
             const phpFiles = await vscode.workspace.findFiles("**/*.php", "**/vendor/**", 1);
             return phpFiles.length > 0;
-        } catch (error) {
-            console.error("Error checking for PHP files:", error);
+        } catch {
             return false;
         }
     }

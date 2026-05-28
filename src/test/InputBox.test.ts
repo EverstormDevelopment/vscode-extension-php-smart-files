@@ -1,6 +1,16 @@
 import * as assert from "assert";
 import * as vscode from "vscode";
+import { InputValidatorInterface } from "../service/input/interface/InputValidatorInterface";
 import { InputBox } from "../service/input/model/InputBox";
+
+class WarningValidatorTestDouble implements InputValidatorInterface {
+    public async validate(): Promise<vscode.InputBoxValidationMessage> {
+        return {
+            message: "Filename contains characters that may cause issues",
+            severity: vscode.InputBoxValidationSeverity.Warning,
+        };
+    }
+}
 
 class InputBoxTestDouble implements vscode.InputBox {
     public title = "";
@@ -58,6 +68,22 @@ class InputBoxTestDouble implements vscode.InputBox {
 }
 
 suite("InputBox", () => {
+    test("preserves warning validation severity from validator", async () => {
+        const vscodeInputBox = new InputBoxTestDouble();
+        const inputBox = new InputBox({ inputValidator: new WarningValidatorTestDouble() }, vscodeInputBox);
+        const input = inputBox.prompt();
+
+        vscodeInputBox.fireChangeValue("foo bar.php");
+        await new Promise((resolve) => setTimeout(resolve, 0));
+        vscodeInputBox.hide();
+
+        assert.deepStrictEqual(vscodeInputBox.validationMessage, {
+            message: "Filename contains characters that may cause issues",
+            severity: vscode.InputBoxValidationSeverity.Warning,
+        });
+        assert.strictEqual(await input, undefined);
+    });
+
     test("resolves undefined when hidden with warning validation message", async () => {
         const vscodeInputBox = new InputBoxTestDouble();
         vscodeInputBox.validationMessage = {

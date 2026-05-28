@@ -24,6 +24,8 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 ### Changed
 
 - Simplified dependency validation in the service container.
+- Removed unreachable input resolver error checks.
+
 
 
 ## [1.2.1] - 2026-05-19
@@ -31,6 +33,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 ### Fixed
 
 - Fixed broken badges in the README.
+
 
 
 ## [1.2.0] - 2026-05-19
@@ -78,6 +81,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
   - This limits activation to relevant PHP workspaces and still allows command-based activation when needed
 - Fixed missing runtime translations and corrected an invalid localization key.
 - Fixed minor post-refactor cleanup issues, including a rename prompt typo, observer listener disposal, and empty refactor file-list handling.  
+
 
 
 ## [1.1.0] - 2025-07-10

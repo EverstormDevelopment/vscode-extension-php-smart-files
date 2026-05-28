@@ -81,7 +81,9 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
             return content;
         }
 
-        return content.slice(0, namespaceLoc.start) + `namespace ${refactorDetails.new.namespace};` + content.slice(namespaceLoc.end);
+        const terminator = content[namespaceLoc.end - 1];
+        const declaration = terminator === "{" ? `namespace ${refactorDetails.new.namespace} {` : `namespace ${refactorDetails.new.namespace};`;
+        return content.slice(0, namespaceLoc.start) + declaration + content.slice(namespaceLoc.end);
     }
 
     /**

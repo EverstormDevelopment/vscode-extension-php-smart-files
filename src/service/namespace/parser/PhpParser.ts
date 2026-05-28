@@ -112,7 +112,8 @@ export class PhpParser {
     }
 
     /**
-     * Returns the character offset range of the namespace declaration line (e.g. `namespace App\Foo;`).
+     * Returns the character offset range of the namespace declaration header
+     * (e.g. `namespace App\Foo;` or `namespace App\Foo {`).
      * @returns The offset range or null if no namespace declaration is found
      */
     public getNamespaceLoc(): OffsetLocType | null {
@@ -124,12 +125,12 @@ export class PhpParser {
         }
 
         const start = namespaceNode.loc.start.offset;
-        const semicolonIndex = this.phpCode.indexOf(";", start);
-        if (semicolonIndex === -1) {
+        const terminatorIndex = this.getNamespaceDeclarationTerminatorIndex(start);
+        if (terminatorIndex === -1) {
             return null;
         }
 
-        return { start, end: semicolonIndex + 1 };
+        return { start, end: terminatorIndex + 1 };
     }
 
     /**
@@ -271,6 +272,22 @@ export class PhpParser {
         }
 
         return undefined;
+    }
+
+    /**
+     * Finds the first namespace declaration terminator after the namespace keyword.
+     * @param start The namespace node start offset
+     * @returns The terminator offset, or -1 when no terminator exists
+     */
+    private getNamespaceDeclarationTerminatorIndex(start: number): number {
+        const semicolonIndex = this.phpCode.indexOf(";", start);
+        const openingBraceIndex = this.phpCode.indexOf("{", start);
+
+        if (openingBraceIndex !== -1 && (semicolonIndex === -1 || openingBraceIndex < semicolonIndex)) {
+            return openingBraceIndex;
+        }
+
+        return semicolonIndex;
     }
 
     /**

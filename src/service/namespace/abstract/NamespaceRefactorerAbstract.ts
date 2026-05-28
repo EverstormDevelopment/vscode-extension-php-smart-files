@@ -205,7 +205,7 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
         const lastGroup = useStatementGroups[useStatementGroups.length - 1];
 
         let blockEnd = lastGroup.groupLoc.end;
-        while (blockEnd < content.length && /\s/.test(content[blockEnd])) {
+        while (blockEnd < content.length && (content[blockEnd] === "\r" || content[blockEnd] === "\n")) {
             blockEnd++;
         }
 

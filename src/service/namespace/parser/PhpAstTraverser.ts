@@ -251,7 +251,11 @@ export class PhpAstTraverser {
             return;
         }
 
-        const groupStart = typeof node.loc?.start?.offset === "number" ? node.loc.start.offset : 0;
+        if (typeof node.loc?.start?.offset !== "number") {
+            return;
+        }
+
+        const groupStart = node.loc.start.offset;
         let searchOffset = groupStart;
 
         for (const attr of node.attrs) {

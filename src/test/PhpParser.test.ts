@@ -218,5 +218,22 @@ class Demo
 
             assert.ok(attributeReferences.every((reference) => reference.kind === IdentifierKindEnum.Oop));
         });
+
+        test("skips attribute references when source offsets cannot be reconstructed", () => {
+            const code = `<?php
+
+namespace App\\Test;
+
+#[MissingLocAttribute]
+class Demo
+{
+}
+`;
+
+            const references = new PhpAstTraverser(new PhpParser(code).getAST()).getNameReferences(false);
+
+            assert.ok(!references.some((reference) => reference.name === "MissingLocAttribute"));
+            assert.ok(!references.some((reference) => reference.loc.start === 0 && reference.loc.end === 0));
+        });
     });
 });

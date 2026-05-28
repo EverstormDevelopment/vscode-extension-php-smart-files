@@ -1,4 +1,3 @@
-import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
 
@@ -12,7 +11,7 @@ export class UriFolderResolver {
      * @returns The target folder URI or undefined if not determinable
      */
     public async getTargetFolder(uri?: vscode.Uri): Promise<vscode.Uri | undefined> {
-        return this.resolveFromUri(uri) || this.resolveFromActiveEditor() || (await this.resolveFromWorkspace());
+        return (await this.resolveFromUri(uri)) || this.resolveFromActiveEditor() || (await this.resolveFromWorkspace());
     }
 
     /**
@@ -20,18 +19,18 @@ export class UriFolderResolver {
      * @param uri The URI to resolve from
      * @returns The resolved folder or undefined if not resolvable
      */
-    private resolveFromUri(uri?: vscode.Uri): vscode.Uri | undefined {
+    private async resolveFromUri(uri?: vscode.Uri): Promise<vscode.Uri | undefined> {
         if (!uri || uri.scheme !== "file") {
             return undefined;
         }
 
         try {
-            const stat = fs.statSync(uri.fsPath);
-            if (stat.isDirectory()) {
+            const stat = await vscode.workspace.fs.stat(uri);
+            if ((stat.type & vscode.FileType.Directory) === vscode.FileType.Directory) {
                 return uri;
             }
             return vscode.Uri.file(path.dirname(uri.fsPath));
-        } catch (error) {
+        } catch {
             return undefined;
         }
     }

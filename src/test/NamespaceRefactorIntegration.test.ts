@@ -196,6 +196,88 @@ suite("Namespace Refactor Integration", () => {
         );
     });
 
+    test("moves a block-style namespace class across namespaces and keeps references consistent", async () => {
+        await testWorkspace.writeWorkspaceFiles({
+            "composer.json": JSON.stringify(
+                {
+                    autoload: {
+                        "psr-4": {
+                            "App\\": "src/",
+                        },
+                    },
+                },
+                null,
+                4,
+            ),
+            "src/Service/BlockService.php": php`
+                <?php
+
+                namespace App\Service {
+                    use App\Shared\Dependency;
+
+                    class BlockService
+                    {
+                        private Dependency $dependency;
+                    }
+                }
+            `,
+            "src/Controller/UsesBlockService.php": php`
+                <?php
+
+                namespace App\Controller;
+
+                class UsesBlockService
+                {
+                    public function make(): \App\Service\BlockService
+                    {
+                        return new \App\Service\BlockService();
+                    }
+                }
+            `,
+        });
+
+        const namespaceRefactorService = testWorkspace.getService();
+        const oldUri = testWorkspace.uri("src/Service/BlockService.php");
+        const newUri = testWorkspace.uri("src/Domain/BlockService.php");
+
+        await vscode.workspace.fs.createDirectory(testWorkspace.uri("src/Domain"));
+        await vscode.workspace.fs.rename(oldUri, newUri, { overwrite: true });
+        await namespaceRefactorService.refactorFile(oldUri, newUri);
+
+        assertNormalizedFileEquals(
+            await testWorkspace.readFile(newUri),
+            php`
+                <?php
+
+                namespace App\Domain {
+                    use App\Shared\Dependency;
+
+                    class BlockService
+                    {
+                        private Dependency $dependency;
+                    }
+                }
+            `,
+        );
+
+        assertNormalizedFileEquals(
+            await testWorkspace.readFile(testWorkspace.uri("src/Controller/UsesBlockService.php")),
+            php`
+                <?php
+
+                namespace App\Controller;
+
+                class UsesBlockService
+                {
+                    public function make(): \App\Domain\BlockService
+                    {
+                        return new \App\Domain\BlockService();
+                    }
+                }
+            `,
+        );
+    });
+
     test("renames a class without corrupting strings or comments in dependent files", async () => {
         // A blind refactor must not silently rewrite runtime strings or human comments.
         await testWorkspace.writeWorkspaceFiles({

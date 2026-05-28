@@ -148,6 +148,58 @@ class Demo {}
         });
     });
 
+    suite("getNamespaceLoc()", () => {
+        test("returns the declaration range for semicolon-style namespaces", () => {
+            const code = `<?php
+
+namespace App\\Test;
+
+class Demo {}
+`;
+
+            const namespaceLoc = new PhpParser(code).getNamespaceLoc();
+
+            assert.ok(namespaceLoc);
+            assert.strictEqual(code.slice(namespaceLoc.start, namespaceLoc.end), "namespace App\\Test;");
+        });
+
+        test("returns the declaration range for block-style namespaces", () => {
+            const code = `<?php
+
+namespace App\\Test {
+    use App\\Shared\\Foo;
+
+    class Demo
+    {
+        private Foo $foo;
+    }
+}
+`;
+
+            const namespaceLoc = new PhpParser(code).getNamespaceLoc();
+
+            assert.ok(namespaceLoc);
+            assert.strictEqual(code.slice(namespaceLoc.start, namespaceLoc.end), "namespace App\\Test {");
+        });
+
+        test("returns the declaration range for block-style namespaces with the brace on the next line", () => {
+            const code = `<?php
+
+namespace App\\Test
+{
+    class Demo
+    {
+    }
+}
+`;
+
+            const namespaceLoc = new PhpParser(code).getNamespaceLoc();
+
+            assert.ok(namespaceLoc);
+            assert.strictEqual(code.slice(namespaceLoc.start, namespaceLoc.end), "namespace App\\Test\n{");
+        });
+    });
+
     suite("PhpAstTraverser attributes", () => {
         test("collects attribute references with the correct resolution and source offsets", () => {
             const code = `<?php

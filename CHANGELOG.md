@@ -14,6 +14,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 - Fixed PHP attribute references without source offsets being collected with invalid zero-length locations.
 - Fixed target folder resolution to use VS Code's async workspace filesystem API instead of blocking filesystem calls.
 - Fixed namespace refactoring exclude pattern generation for empty and single-entry exclude lists.
+- Fixed directory namespace refactoring to respect configured exclude directories with workspace-relative matching.
 
 
 ## [1.2.1] - 2026-05-19

@@ -100,7 +100,7 @@ export class InputBox implements InputBoxInterface {
             return true;
         }
 
-        this.inputBox.validationMessage = validationResult.message;
+        this.inputBox.validationMessage = validationResult;
         return validationResult.severity !== vscode.InputBoxValidationSeverity.Error;
     }
 

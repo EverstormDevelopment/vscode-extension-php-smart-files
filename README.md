@@ -28,7 +28,7 @@
 - [About This Project](#about-this-project)
 - [Release Notes](#release-notes)
 - [Feedback and Contributions](#feedback-and-contributions)
-- [Support the Project](#support-the-project)
+- [Enjoying PHP Smart Files?](#enjoying-php-smart-files)
 - [License](#license)
 
 ## Features
@@ -195,19 +195,15 @@ Your feedback, ideas, and contributions are truly appreciated! If you've found a
 
 Thanks for helping make PHP Smart Files better!
 
-## Support the Project
 
-If PHP Smart Files improves your workflow, you can support ongoing development here:
+## Enjoying PHP Smart Files?
 
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/X6H22089VY)
+If you're enjoying PHP Smart Files, you can:
+- ⭐ [Rate the extension on the VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=everstorm.php-smart-files)
+- ❤️ [Sponsor the project on GitHub](https://github.com/sponsors/EverstormDevelopment)
+- ☕ [Leave a tip on Ko-fi](https://ko-fi.com/everstorm)
 
-Or [sponsor the project on on GitHub](https://github.com/sponsors/EverstormDevelopment).
 
 ## License
 
 This extension is licensed under the [MIT License](LICENSE).
-
-
----
-
-**Enjoying PHP Smart Files?** Consider [rating it](https://marketplace.visualstudio.com/items?itemName=everstorm.php-smart-files) in the VS Code Marketplace!

@@ -10,7 +10,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 - Fixed lazy observer registration so the temporary PHP file watcher is disposed once observers are already active.
 - Fixed a race condition where multiple simultaneous PHP file creation events could register namespace refactor observers more than once.
 - Fixed directory namespace refactoring path mapping by deriving old file paths from relative paths instead of string replacement.
-- Fixed input prompts staying unresolved when dismissed while a warning validation message is shown.
+- Fixed input prompts preserving warning validation severity so dismissing a warning prompt no longer leaves the command unresolved.
 - Fixed PHP attribute references without source offsets being collected with invalid zero-length locations.
 - Fixed target folder resolution to use VS Code's async workspace filesystem API instead of blocking filesystem calls.
 - Fixed namespace refactoring exclude pattern generation for empty and single-entry exclude lists.

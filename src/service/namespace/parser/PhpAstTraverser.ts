@@ -262,12 +262,14 @@ export class PhpAstTraverser {
             const loc = this.getAttributeNameLoc(attr.name, searchOffset);
             searchOffset = loc?.end ?? searchOffset;
 
-            refs.push({
-                name: attr.name,
-                kind: IdentifierKindEnum.Oop,
-                resolution: this.resolveAttributeNameResolution(attr.name),
-                loc: loc ?? { start: 0, end: 0 },
-            });
+            if (loc) {
+                refs.push({
+                    name: attr.name,
+                    kind: IdentifierKindEnum.Oop,
+                    resolution: this.resolveAttributeNameResolution(attr.name),
+                    loc,
+                });
+            }
 
             this.collect(attr.args, "generic", refs);
         }

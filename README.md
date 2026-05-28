@@ -64,7 +64,8 @@ Save time and prevent bugs with comprehensive namespace management:
   - Adds missing use statements when needed
   - Removes redundant use statements when files share namespace
   - Updates fully qualified and partially qualified namespace references
-  - Supports use statements with aliases
+  - Supports use statements with aliases and preserves alias usage during class renames
+  - Avoids rewriting unrelated same-name imports when a different class is renamed
   - Supports grouped `use` statements and preserves them where possible
   - Automatically sorts use statements (normal `use`, `use function`, `use const`) alphabetically — optional and configurable in the settings.
 - **Comprehensive Reference Detection**:
@@ -170,7 +171,14 @@ I'll do my best to keep this extension reliable and useful while balancing its s
 
 ## Release Notes
 
-### Current Version: 1.2.1
+### Current Version: 1.2.2
+
+- Fixed class rename handling so unrelated same-name imports and explicit aliases are not rewritten accidentally.
+- Improved namespace refactoring stability across observer registration, directory moves, block-style namespaces, attributes, exclude patterns, grouped imports, and file content handling.
+- Tightened file creation, overwrite cancellation, snippet insertion cleanup, input validation, and filesystem handling for more reliable day-to-day workflows.
+- Includes many additional fixes and internal cleanups. See the [CHANGELOG](CHANGELOG.md) for the full 1.2.2 release notes.
+
+### Version 1.2.1
 
 - Fixed broken README badges.
 

@@ -9,6 +9,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 
 - Fixed lazy observer registration so the temporary PHP file watcher is disposed once observers are already active.
 - Fixed a race condition where multiple simultaneous PHP file creation events could register namespace refactor observers more than once.
+- Fixed directory namespace refactoring path mapping by deriving old file paths from relative paths instead of string replacement.
 
 
 ## [1.2.1] - 2026-05-19

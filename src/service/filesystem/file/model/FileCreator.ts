@@ -9,16 +9,17 @@ export class FileCreator {
     /**
      * Creates a new file at the specified URI location
      * @param uri The URI where the file should be created
-     * @returns Promise that resolves when the file is created or rejects if creation fails
+     * @returns Promise resolving to true if the file was created, false if creation was cancelled
      * @throws Error if file creation fails
      */
-    public async create(uri: vscode.Uri): Promise<void> {
+    public async create(uri: vscode.Uri): Promise<boolean> {
         if (!(await this.canCreateFile(uri))) {
-            return;
+            return false;
         }
 
         try {
             await this.createFile(uri);
+            return true;
         } catch (error: unknown) {
             this.showErrorMessage(error);
             throw error;

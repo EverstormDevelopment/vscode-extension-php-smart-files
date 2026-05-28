@@ -93,8 +93,7 @@ export class FileGenerationCommand {
      */
     private async createFile(uri: vscode.Uri): Promise<boolean> {
         try {
-            await this.fileCreator.create(uri);
-            return true;
+            return await this.fileCreator.create(uri);
         } catch (error) {
             return false;
         }

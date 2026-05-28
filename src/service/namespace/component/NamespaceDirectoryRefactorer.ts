@@ -1,6 +1,7 @@
 import path from "path";
 import * as vscode from "vscode";
-import { getFilesInUriDirectory } from "../../../utils/filesystem/getFilesInUriDirectory";
+import { getExcludePattern } from "../../../utils/filesystem/getExcludePattern";
+import { getPathNormalized } from "../../../utils/filesystem/getPathNormalized";
 import { NamespaceRefactorDetailsProvider } from "../provider/NamespaceRefactorDetailsProvider";
 import { NamespaceRefactorDetailsType } from "../type/NamespaceRefactorDetailsType";
 import { NamespaceFileRefactorer } from "./NamespaceFileRefactorer";
@@ -77,7 +78,7 @@ export class NamespaceDirectoryRefactorer {
             increment?: number;
         }>,
     ): Promise<void> {
-        const files = await getFilesInUriDirectory(refactorDetails.new.uri, "**/*.php");
+        const files = await this.findFilesToRefactor(refactorDetails.new.uri);
         if (files.length === 0) {
             return;
         }
@@ -102,6 +103,27 @@ export class NamespaceDirectoryRefactorer {
             );
             vscode.window.showWarningMessage(message);
         }
+    }
+
+    /**
+     * Finds PHP files in the target directory and applies the namespace refactor exclude settings.
+     * @param directoryUri Directory to search in
+     * @returns Promise that resolves to all PHP file URIs that should be refactored
+     */
+    private async findFilesToRefactor(directoryUri: vscode.Uri): Promise<vscode.Uri[]> {
+        const config = vscode.workspace.getConfiguration("phpSmartFiles");
+        const excludedFolders = config.get<string[]>("refactorNamespacesExcludeDirectories", []);
+        const excludePattern = getExcludePattern(excludedFolders);
+
+        const workspaceFolder = vscode.workspace.getWorkspaceFolder(directoryUri);
+        if (!workspaceFolder) {
+            return [];
+        }
+
+        const relativeDirectoryPath = getPathNormalized(path.relative(workspaceFolder.uri.fsPath, directoryUri.fsPath));
+        const includePattern = relativeDirectoryPath ? `${relativeDirectoryPath}/**/*.php` : "**/*.php";
+
+        return vscode.workspace.findFiles(new vscode.RelativePattern(workspaceFolder, includePattern), excludePattern);
     }
 
     /**

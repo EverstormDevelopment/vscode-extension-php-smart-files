@@ -69,13 +69,14 @@ export class Container implements ContainerInterface {
      * @throws Error if a dependency is not registered
      */
     private createInstance<T>(constructor: ConstructorType<T>, registration: RegistrationType<T>): T {
-        registration.dependencies?.map((depConstructor) => {
+        const resolvedDependencies = registration.dependencies?.map((depConstructor) => {
             if (!this.has(depConstructor)) {
                 throw new Error(`Dependency ${depConstructor.name} not registered for service ${constructor.name}`);
             }
-        });
 
-        const resolvedDependencies = registration.dependencies?.map((depConstructor) => this.get(depConstructor)) ?? [];
+            return this.get(depConstructor);
+        }) ?? [];
+
         registration.instance = new registration.constructor(...resolvedDependencies);
         return registration.instance as T;
     }

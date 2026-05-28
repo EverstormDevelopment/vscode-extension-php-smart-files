@@ -362,6 +362,148 @@ suite("Namespace Refactor Integration", () => {
         );
     });
 
+    test("does not rename unqualified references that resolve to an unrelated same-name import", async () => {
+        await testWorkspace.writeWorkspaceFiles({
+            "composer.json": JSON.stringify(
+                {
+                    autoload: {
+                        "psr-4": {
+                            "App\\": "src/",
+                            "Vendor\\": "vendor/",
+                        },
+                    },
+                },
+                null,
+                4,
+            ),
+            "src/Domain/User.php": php`
+                <?php
+
+                namespace App\Domain;
+
+                class User
+                {
+                }
+            `,
+            "vendor/Auth/User.php": php`
+                <?php
+
+                namespace Vendor\Auth;
+
+                class User
+                {
+                }
+            `,
+            "src/Controller/UsesVendorUser.php": php`
+                <?php
+
+                namespace App\Controller;
+
+                use Vendor\Auth\User;
+
+                class UsesVendorUser
+                {
+                    public function build(User $user): User
+                    {
+                        return new User();
+                    }
+                }
+            `,
+        });
+
+        const namespaceRefactorService = testWorkspace.getService();
+        const oldUri = testWorkspace.uri("src/Domain/User.php");
+        const newUri = testWorkspace.uri("src/Domain/Customer.php");
+
+        await vscode.workspace.fs.rename(oldUri, newUri, { overwrite: true });
+        await namespaceRefactorService.refactorFile(oldUri, newUri);
+
+        assertNormalizedFileEquals(
+            await testWorkspace.readFile(testWorkspace.uri("src/Controller/UsesVendorUser.php")),
+            php`
+                <?php
+
+                namespace App\Controller;
+
+                use Vendor\Auth\User;
+
+                class UsesVendorUser
+                {
+                    public function build(User $user): User
+                    {
+                        return new User();
+                    }
+                }
+            `,
+        );
+    });
+
+    test("keeps unqualified references stable when the renamed class is imported with an explicit same-name alias", async () => {
+        await testWorkspace.writeWorkspaceFiles({
+            "composer.json": JSON.stringify(
+                {
+                    autoload: {
+                        "psr-4": {
+                            "App\\": "src/",
+                        },
+                    },
+                },
+                null,
+                4,
+            ),
+            "src/Domain/User.php": php`
+                <?php
+
+                namespace App\Domain;
+
+                class User
+                {
+                }
+            `,
+            "src/Controller/UsesAliasedUser.php": php`
+                <?php
+
+                namespace App\Controller;
+
+                use App\Domain\User as User;
+
+                class UsesAliasedUser
+                {
+                    public function build(User $user): User
+                    {
+                        return new User();
+                    }
+                }
+            `,
+        });
+
+        const namespaceRefactorService = testWorkspace.getService();
+        const oldUri = testWorkspace.uri("src/Domain/User.php");
+        const newUri = testWorkspace.uri("src/Domain/Customer.php");
+
+        await vscode.workspace.fs.rename(oldUri, newUri, { overwrite: true });
+        await namespaceRefactorService.refactorFile(oldUri, newUri);
+
+        assertNormalizedFileEquals(
+            await testWorkspace.readFile(testWorkspace.uri("src/Controller/UsesAliasedUser.php")),
+            php`
+                <?php
+
+                namespace App\Controller;
+
+                use App\Domain\Customer as User;
+
+                class UsesAliasedUser
+                {
+                    public function build(User $user): User
+                    {
+                        return new User();
+                    }
+                }
+            `,
+        );
+    });
+
     test("adds imports for external functions and constants but not for ones defined in the moved file", async () => {
         // Namespace moves are especially risky when helper functions/constants would otherwise switch meaning.
         await testWorkspace.writeWorkspaceFiles({

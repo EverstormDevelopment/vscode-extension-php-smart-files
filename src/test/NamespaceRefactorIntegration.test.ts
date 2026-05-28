@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { getPathNormalized } from "../utils/filesystem/getPathNormalized";
 import { assertNormalizedFileEquals, NamespaceTestWorkspace, php } from "./NamespaceTestWorkspace";
 
 suite("Namespace Refactor Integration", () => {
@@ -16,6 +17,45 @@ suite("Namespace Refactor Integration", () => {
     setup(async () => {
         await testWorkspace.reset();
     });
+
+    async function withExcludedFolders(excludedFolders: string[], callback: () => Promise<void>): Promise<void> {
+        const originalGetConfiguration = vscode.workspace.getConfiguration.bind(vscode.workspace);
+        (
+            vscode.workspace as typeof vscode.workspace & {
+                getConfiguration: typeof vscode.workspace.getConfiguration;
+            }
+        ).getConfiguration = ((section?: string, scope?: vscode.ConfigurationScope) => {
+            const configuration = originalGetConfiguration(section, scope);
+            if (section !== "phpSmartFiles") {
+                return configuration;
+            }
+
+            return {
+                ...configuration,
+                get<T>(key: string, defaultValue?: T): T {
+                    if (key === "refactorNamespacesExcludeDirectories") {
+                        return excludedFolders as T;
+                    }
+
+                    return configuration.get<T>(key, defaultValue as T);
+                },
+            };
+        }) as typeof vscode.workspace.getConfiguration;
+
+        try {
+            await callback();
+        } finally {
+            (
+                vscode.workspace as typeof vscode.workspace & {
+                    getConfiguration: typeof vscode.workspace.getConfiguration;
+                }
+            ).getConfiguration = originalGetConfiguration;
+        }
+    }
+
+    function getWorkspaceExcludePattern(relativeDirectoryPath: string): string {
+        return `${getPathNormalized(vscode.workspace.asRelativePath(testWorkspace.uri(relativeDirectoryPath).fsPath))}/**`;
+    }
 
     test("moves a class across namespaces and keeps external references consistent", async () => {
         // This guards the core trust promise: after a move, callers must still resolve the same class.
@@ -1556,6 +1596,329 @@ suite("Namespace Refactor Integration", () => {
                     {
                         return new NestedService();
                     }
+                }
+            `,
+        );
+    });
+
+    test("does not skip nested directories for root-relative namespace refactor exclude settings", async () => {
+        await testWorkspace.writeWorkspaceFiles({
+            "composer.json": JSON.stringify(
+                {
+                    autoload: {
+                        "psr-4": {
+                            "App\\": "src/",
+                        },
+                    },
+                },
+                null,
+                4,
+            ),
+            "src/Domain/ApplicationService.php": php`
+                <?php
+
+                namespace App\Domain;
+
+                final class ApplicationService
+                {
+                }
+            `,
+            "src/Domain/vendor/ThirdPartyService.php": php`
+                <?php
+
+                namespace App\Domain\vendor;
+
+                final class ThirdPartyService
+                {
+                }
+            `,
+        });
+
+        await withExcludedFolders(["vendor/**"], async () => {
+            const namespaceRefactorService = testWorkspace.getService();
+            const oldUri = testWorkspace.uri("src/Domain");
+            const newUri = testWorkspace.uri("src/Application");
+
+            await vscode.workspace.fs.rename(oldUri, newUri, { overwrite: true });
+            await namespaceRefactorService.refactorDirectory(oldUri, newUri);
+        });
+
+        assertNormalizedFileEquals(
+            await testWorkspace.readFile(testWorkspace.uri("src/Application/ApplicationService.php")),
+            php`
+                <?php
+
+                namespace App\Application;
+
+                final class ApplicationService
+                {
+                }
+            `,
+        );
+
+        assertNormalizedFileEquals(
+            await testWorkspace.readFile(testWorkspace.uri("src/Application/vendor/ThirdPartyService.php")),
+            php`
+                <?php
+
+                namespace App\Application\vendor;
+
+                final class ThirdPartyService
+                {
+                }
+            `,
+        );
+    });
+
+    test("skips directory contents that match namespace refactor exclude settings", async () => {
+        await testWorkspace.writeWorkspaceFiles({
+            "composer.json": JSON.stringify(
+                {
+                    autoload: {
+                        "psr-4": {
+                            "App\\": "src/",
+                        },
+                    },
+                },
+                null,
+                4,
+            ),
+            "src/Domain/ApplicationService.php": php`
+                <?php
+
+                namespace App\Domain;
+
+                final class ApplicationService
+                {
+                }
+            `,
+            "src/Domain/vendor/ThirdPartyService.php": php`
+                <?php
+
+                namespace App\Domain\vendor;
+
+                final class ThirdPartyService
+                {
+                }
+            `,
+        });
+
+        await withExcludedFolders(["**/vendor/**"], async () => {
+            const namespaceRefactorService = testWorkspace.getService();
+            const oldUri = testWorkspace.uri("src/Domain");
+            const newUri = testWorkspace.uri("src/Application");
+
+            await vscode.workspace.fs.rename(oldUri, newUri, { overwrite: true });
+            await namespaceRefactorService.refactorDirectory(oldUri, newUri);
+        });
+
+        assertNormalizedFileEquals(
+            await testWorkspace.readFile(testWorkspace.uri("src/Application/ApplicationService.php")),
+            php`
+                <?php
+
+                namespace App\Application;
+
+                final class ApplicationService
+                {
+                }
+            `,
+        );
+
+        assertNormalizedFileEquals(
+            await testWorkspace.readFile(testWorkspace.uri("src/Application/vendor/ThirdPartyService.php")),
+            php`
+                <?php
+
+                namespace App\Domain\vendor;
+
+                final class ThirdPartyService
+                {
+                }
+            `,
+        );
+    });
+
+    test("skips only the exact workspace-relative excluded directory", async () => {
+        await testWorkspace.writeWorkspaceFiles({
+            "composer.json": JSON.stringify(
+                {
+                    autoload: {
+                        "psr-4": {
+                            "App\\": "src/",
+                        },
+                    },
+                },
+                null,
+                4,
+            ),
+            "src/Domain/ApplicationService.php": php`
+                <?php
+
+                namespace App\Domain;
+
+                final class ApplicationService
+                {
+                }
+            `,
+            "src/Domain/vendor/ThirdPartyService.php": php`
+                <?php
+
+                namespace App\Domain\vendor;
+
+                final class ThirdPartyService
+                {
+                }
+            `,
+            "src/Domain/vendor_extra/LocalVendorService.php": php`
+                <?php
+
+                namespace App\Domain\vendor_extra;
+
+                final class LocalVendorService
+                {
+                }
+            `,
+        });
+
+        await withExcludedFolders([getWorkspaceExcludePattern("src/Application/vendor")], async () => {
+            const namespaceRefactorService = testWorkspace.getService();
+            const oldUri = testWorkspace.uri("src/Domain");
+            const newUri = testWorkspace.uri("src/Application");
+
+            await vscode.workspace.fs.rename(oldUri, newUri, { overwrite: true });
+            await namespaceRefactorService.refactorDirectory(oldUri, newUri);
+        });
+
+        assertNormalizedFileEquals(
+            await testWorkspace.readFile(testWorkspace.uri("src/Application/ApplicationService.php")),
+            php`
+                <?php
+
+                namespace App\Application;
+
+                final class ApplicationService
+                {
+                }
+            `,
+        );
+
+        assertNormalizedFileEquals(
+            await testWorkspace.readFile(testWorkspace.uri("src/Application/vendor/ThirdPartyService.php")),
+            php`
+                <?php
+
+                namespace App\Domain\vendor;
+
+                final class ThirdPartyService
+                {
+                }
+            `,
+        );
+
+        assertNormalizedFileEquals(
+            await testWorkspace.readFile(testWorkspace.uri("src/Application/vendor_extra/LocalVendorService.php")),
+            php`
+                <?php
+
+                namespace App\Application\vendor_extra;
+
+                final class LocalVendorService
+                {
+                }
+            `,
+        );
+    });
+
+    test("skips multiple configured excluded directories during directory refactoring", async () => {
+        await testWorkspace.writeWorkspaceFiles({
+            "composer.json": JSON.stringify(
+                {
+                    autoload: {
+                        "psr-4": {
+                            "App\\": "src/",
+                        },
+                    },
+                },
+                null,
+                4,
+            ),
+            "src/Domain/ApplicationService.php": php`
+                <?php
+
+                namespace App\Domain;
+
+                final class ApplicationService
+                {
+                }
+            `,
+            "src/Domain/Generated/GeneratedService.php": php`
+                <?php
+
+                namespace App\Domain\Generated;
+
+                final class GeneratedService
+                {
+                }
+            `,
+            "src/Domain/Private/InternalService.php": php`
+                <?php
+
+                namespace App\Domain\Private;
+
+                final class InternalService
+                {
+                }
+            `,
+        });
+
+        await withExcludedFolders(
+            [getWorkspaceExcludePattern("src/Application/Generated"), getWorkspaceExcludePattern("src/Application/Private")],
+            async () => {
+                const namespaceRefactorService = testWorkspace.getService();
+                const oldUri = testWorkspace.uri("src/Domain");
+                const newUri = testWorkspace.uri("src/Application");
+
+                await vscode.workspace.fs.rename(oldUri, newUri, { overwrite: true });
+                await namespaceRefactorService.refactorDirectory(oldUri, newUri);
+            },
+        );
+
+        assertNormalizedFileEquals(
+            await testWorkspace.readFile(testWorkspace.uri("src/Application/ApplicationService.php")),
+            php`
+                <?php
+
+                namespace App\Application;
+
+                final class ApplicationService
+                {
+                }
+            `,
+        );
+
+        assertNormalizedFileEquals(
+            await testWorkspace.readFile(testWorkspace.uri("src/Application/Generated/GeneratedService.php")),
+            php`
+                <?php
+
+                namespace App\Domain\Generated;
+
+                final class GeneratedService
+                {
+                }
+            `,
+        );
+
+        assertNormalizedFileEquals(
+            await testWorkspace.readFile(testWorkspace.uri("src/Application/Private/InternalService.php")),
+            php`
+                <?php
+
+                namespace App\Domain\Private;
+
+                final class InternalService
+                {
                 }
             `,
         );

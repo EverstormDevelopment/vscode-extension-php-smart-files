@@ -12,6 +12,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 - Fixed directory namespace refactoring path mapping by deriving old file paths from relative paths instead of string replacement.
 - Fixed input prompts staying unresolved when dismissed while a warning validation message is shown.
 - Fixed PHP attribute references without source offsets being collected with invalid zero-length locations.
+- Fixed target folder resolution to use VS Code's async workspace filesystem API instead of blocking filesystem calls.
 
 
 ## [1.2.1] - 2026-05-19

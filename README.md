@@ -176,11 +176,7 @@ I'll do my best to keep this extension reliable and useful while balancing its s
 - Fixed class rename handling so unrelated same-name imports and explicit aliases are not rewritten accidentally.
 - Improved namespace refactoring stability across observer registration, directory moves, block-style namespaces, attributes, exclude patterns, grouped imports, and file content handling.
 - Tightened file creation, overwrite cancellation, snippet insertion cleanup, input validation, and filesystem handling for more reliable day-to-day workflows.
-- Includes many additional fixes and internal cleanups. See the [CHANGELOG](CHANGELOG.md) for the full 1.2.2 release notes.
-
-### Version 1.2.1
-
-- Fixed broken README badges.
+- Includes many additional fixes and internal cleanups.
 
 ### Version 1.2.0
 
@@ -191,7 +187,7 @@ I'll do my best to keep this extension reliable and useful while balancing its s
 - Added PHP 8.5 syntax compatibility and removed the need for a configured PHP executable for namespace refactoring.
 - Refined activation behavior so the extension starts only for relevant PHP workspaces or command-based usage.
 
-For the full list of changes and detailed release notes, please see the [CHANGELOG](CHANGELOG.md).
+For older maintenance releases and the full history, please see the [CHANGELOG](CHANGELOG.md).
 
 
 ## Feedback and Contributions

@@ -1,3 +1,4 @@
+import path from "path";
 import * as vscode from "vscode";
 import { getFilesInUriDirectory } from "../../../utils/filesystem/getFilesInUriDirectory";
 import { NamespaceRefactorDetailsProvider } from "../provider/NamespaceRefactorDetailsProvider";
@@ -113,7 +114,8 @@ export class NamespaceDirectoryRefactorer {
         const oldUri = refactorDetails.old.uri;
         const newUri = refactorDetails.new.uri;
 
-        const oldFilePath = fileUri.fsPath.replace(newUri.fsPath, oldUri.fsPath);
+        const relativeFilePath = path.relative(newUri.fsPath, fileUri.fsPath);
+        const oldFilePath = path.join(oldUri.fsPath, relativeFilePath);
         const oldFileUri = vscode.Uri.file(oldFilePath);
 
         const fileRefactorDetails = await this.namespaceRefactorDetailsProvider.get(oldFileUri, fileUri);

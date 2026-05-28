@@ -36,9 +36,8 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
         const oldIdentifier = refactorDetails.old.fileIdentifier;
         const oldFQN = `\\${refactorDetails.old.namespace}\\${oldIdentifier.name}`;
         const newFQN = `\\${refactorDetails.new.namespace}\\${refactorDetails.new.fileIdentifier.name}`;
-        const hasUseStatement =
-            this.hasUseStatementForIdentifier(content, oldIdentifier) || this.hasUseStatementForIdentifier(content, refactorDetails.new.fileIdentifier);
         const parser = this.getCheckedParser(content);
+        const useStatements = parser.getUseStatements();
         const references = new PhpAstTraverser(parser.getAST(), content)
             .getNameReferences(false)
             .filter((reference) => reference.kind === IdentifierKindEnum.Oop)
@@ -60,7 +59,7 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
             if (
                 reference.resolution === NameResolutionEnum.Uqn &&
                 reference.name === oldIdentifier.name &&
-                (fileNamespace === refactorDetails.new.namespace || hasUseStatement)
+                this.canRenameUnqualifiedIdentifier(fileNamespace, useStatements, refactorDetails)
             ) {
                 newText = refactorDetails.new.fileIdentifier.name;
             }
@@ -73,6 +72,31 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
         }
 
         return content;
+    }
+
+    /**
+     * Checks whether an unqualified reference with the old identifier name resolves to
+     * the symbol currently being renamed.
+     * @param fileNamespace The namespace of the file being processed.
+     * @param useStatements Parsed use statements from the file.
+     * @param refactorDetails Details about the namespace and identifier changes.
+     * @returns True when the unqualified reference should be renamed.
+     */
+    private canRenameUnqualifiedIdentifier(fileNamespace: string, useStatements: UseStatementType[], refactorDetails: NamespaceRefactorDetailsType): boolean {
+        const oldIdentifier = refactorDetails.old.fileIdentifier;
+        const newIdentifier = refactorDetails.new.fileIdentifier;
+        const oldFullName = `${refactorDetails.old.namespace}\\${oldIdentifier.name}`;
+        const newFullName = `${refactorDetails.new.namespace}\\${newIdentifier.name}`;
+
+        if (this.hasVisibleUseStatement(useStatements, oldFullName, oldIdentifier.name, oldIdentifier)) {
+            return true;
+        }
+
+        if (this.hasVisibleUseStatement(useStatements, newFullName, newIdentifier.name, newIdentifier)) {
+            return true;
+        }
+
+        return fileNamespace === refactorDetails.new.namespace && !this.hasVisibleUseStatementForIdentifier(useStatements, oldIdentifier);
     }
 
     /**
@@ -113,13 +137,45 @@ export abstract class NamespaceRefactorerAbstract implements NamespaceRefactorer
      */
     protected hasUseStatementForIdentifier(content: string, identifier: IdentifierType): boolean {
         const useStatements = this.getCheckedParser(content).getUseStatements();
+        return this.hasVisibleUseStatementForIdentifier(useStatements, identifier);
+    }
+
+    /**
+     * Checks whether a visible import name matches the given identifier.
+     * @param useStatements Parsed use statements from the file.
+     * @param identifier The identifier to look for.
+     * @returns True if a matching visible import exists.
+     */
+    private hasVisibleUseStatementForIdentifier(useStatements: UseStatementType[], identifier: IdentifierType): boolean {
         return useStatements.some((stmt) => {
             if (!this.useStatementKindMatches(stmt.kind, identifier.kind)) {
                 return false;
             }
-            const lastSegment = stmt.name.split("\\").pop() ?? "";
-            return lastSegment === identifier.name || stmt.alias === identifier.name;
+            return this.getUseStatementVisibleName(stmt) === identifier.name;
         });
+    }
+
+    /**
+     * Checks whether a use statement imports a specific FQN under the expected visible name.
+     * @param useStatements Parsed use statements from the file.
+     * @param fullName The fully qualified name without leading backslash.
+     * @param visibleName The unqualified name visible in source code.
+     * @param identifier The identifier kind to match.
+     * @returns True when a matching import exists.
+     */
+    private hasVisibleUseStatement(useStatements: UseStatementType[], fullName: string, visibleName: string, identifier: IdentifierType): boolean {
+        return useStatements.some((stmt) => {
+            return stmt.name === fullName && this.useStatementKindMatches(stmt.kind, identifier.kind) && this.getUseStatementVisibleName(stmt) === visibleName;
+        });
+    }
+
+    /**
+     * Returns the unqualified source name introduced by a use statement.
+     * @param useStatement The use statement to inspect.
+     * @returns The alias or final imported namespace segment.
+     */
+    private getUseStatementVisibleName(useStatement: UseStatementType): string {
+        return useStatement.alias ?? useStatement.name.split("\\").pop() ?? "";
     }
 
     /**

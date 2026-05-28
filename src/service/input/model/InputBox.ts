@@ -61,10 +61,6 @@ export class InputBox implements InputBoxInterface {
      */
     private configureOnAccept(): void {
         this.inputBox.onDidAccept(async () => {
-            if (!this.resolveInput) {
-                throw new Error("No input resolver function provided.");
-            }
-
             const value = this.inputBox.value;
             const isValueValid = await this.validate(value);
             if (!isValueValid) {
@@ -82,10 +78,6 @@ export class InputBox implements InputBoxInterface {
      */
     private configureOnHide(): void {
         this.inputBox.onDidHide(() => {
-            if (!this.resolveInput) {
-                throw new Error("No input resolver function provided.");
-            }
-
             if (this.hasValidationError()) {
                 return;
             }

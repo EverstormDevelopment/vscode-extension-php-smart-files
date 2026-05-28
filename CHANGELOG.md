@@ -18,6 +18,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 - Fixed cancelled file overwrite prompts continuing with snippet generation.
 - Fixed file content decoding to avoid relying on VS Code returning Node.js Buffer instances.
 - Fixed namespace refactoring for block-style namespace declarations by preserving their `{` terminator.
+- Fixed failed snippet insertion leaving newly created empty files behind.
 
 ### Changed
 

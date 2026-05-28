@@ -15,6 +15,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 - Fixed target folder resolution to use VS Code's async workspace filesystem API instead of blocking filesystem calls.
 - Fixed namespace refactoring exclude pattern generation for empty and single-entry exclude lists.
 - Fixed directory namespace refactoring to respect configured exclude directories with workspace-relative matching.
+- Fixed cancelled file overwrite prompts continuing with snippet generation.
 
 ### Changed
 

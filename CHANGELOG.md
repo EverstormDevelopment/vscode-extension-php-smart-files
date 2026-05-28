@@ -2,7 +2,7 @@
 
 All notable changes to the "PHP Smart Files" extension will be documented in this file.
 
-## [1.2.2] - 2026-05-26
+## [1.2.2] - 2026-05-28
 
 ### Fixed
 

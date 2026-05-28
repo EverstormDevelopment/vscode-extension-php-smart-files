@@ -20,6 +20,7 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 - Fixed namespace refactoring for block-style namespace declarations by preserving their `{` terminator.
 - Fixed failed snippet insertion leaving newly created empty files behind.
 - Fixed attribute reference collection to skip attribute groups without reliable source offsets.
+- Fixed a typo in the filesystem observer resource detection method name.
 
 ### Changed
 

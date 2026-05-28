@@ -86,7 +86,7 @@ export class InputBox implements InputBoxInterface {
                 throw new Error("No input resolver function provided.");
             }
 
-            if (this.inputBox.validationMessage) {
+            if (this.hasValidationError()) {
                 return;
             }
 
@@ -110,6 +110,23 @@ export class InputBox implements InputBoxInterface {
 
         this.inputBox.validationMessage = validationResult.message;
         return validationResult.severity !== vscode.InputBoxValidationSeverity.Error;
+    }
+
+    /**
+     * Checks if the current validation message blocks closing the input
+     * @returns True if an error validation message is set
+     */
+    private hasValidationError(): boolean {
+        const validationMessage = this.inputBox.validationMessage;
+        if (!validationMessage) {
+            return false;
+        }
+
+        if (typeof validationMessage === "string") {
+            return true;
+        }
+
+        return validationMessage.severity === vscode.InputBoxValidationSeverity.Error;
     }
 
     /**

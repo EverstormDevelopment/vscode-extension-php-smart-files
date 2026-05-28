@@ -5,6 +5,7 @@ export default defineConfig({
     version: "1.99.0",
     files: [
         "out/test/ManifestActivation.test.js",
+        "out/test/FileCreator.test.js",
         "out/test/InputBox.test.js",
         "out/test/getExcludePattern.test.js",
         "out/test/PhpParser.test.js",

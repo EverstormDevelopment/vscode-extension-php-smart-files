@@ -61,7 +61,7 @@ export class FilesystemObserver implements FilesystemObserverInterface {
      */
     private async handleFileRenamed(oldUri: vscode.Uri, newUri: vscode.Uri): Promise<void> {
         const operation = this.determineOperation(oldUri, newUri);
-        const resource = await this.determineRecource(newUri);
+        const resource = await this.determineResource(newUri);
         if (!resource) {
             return;
         }
@@ -77,7 +77,7 @@ export class FilesystemObserver implements FilesystemObserverInterface {
      * @param uri The URI to check.
      * @returns The resource enum or undefined if not a file or directory.
      */
-    private async determineRecource(uri: vscode.Uri): Promise<FilesystemObserverResourceEnum | undefined> {
+    private async determineResource(uri: vscode.Uri): Promise<FilesystemObserverResourceEnum | undefined> {
         if (await isUriFile(uri)) {
             return FilesystemObserverResourceEnum.File;
         }

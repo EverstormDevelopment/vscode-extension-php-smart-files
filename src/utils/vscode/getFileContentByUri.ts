@@ -15,5 +15,5 @@ export async function getFileContentByUri(uri: vscode.Uri): Promise<string> {
     }
 
     const fileContent = await vscode.workspace.fs.readFile(uri);
-    return fileContent.toString();
+    return Buffer.from(fileContent).toString("utf8");
 }

@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { getExcludePattern } from "../../../utils/filesystem/getExcludePattern";
 import { getPathNormalized } from "../../../utils/filesystem/getPathNormalized";
 import { getLinebreakType } from "../../../utils/string/getLinebreakType";
 import { NamespaceRefactorerAbstract } from "../abstract/NamespaceRefactorerAbstract";
@@ -314,16 +315,12 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
         const references = new PhpAstTraverser(this.getCheckedParser(content).getAST(), content).getNameReferences(false);
 
         // Map identifier kind to the expected reference kind (functions and constants keep theirs, everything else is OOP)
-        const expectedReferenceKind = identifier.kind === IdentifierKindEnum.Function || identifier.kind === IdentifierKindEnum.Constant
-            ? identifier.kind
-            : IdentifierKindEnum.Oop;
+        const expectedReferenceKind =
+            identifier.kind === IdentifierKindEnum.Function || identifier.kind === IdentifierKindEnum.Constant ? identifier.kind : IdentifierKindEnum.Oop;
 
         // Check for an unqualified name reference matching both name and kind
         const hasCodeReference = references.some(
-            (reference) =>
-                reference.name === identifier.name &&
-                reference.resolution === NameResolutionEnum.Uqn &&
-                reference.kind === expectedReferenceKind,
+            (reference) => reference.name === identifier.name && reference.resolution === NameResolutionEnum.Uqn && reference.kind === expectedReferenceKind,
         );
 
         if (hasCodeReference) {
@@ -423,7 +420,7 @@ export class NamespaceReferencesRefactorer extends NamespaceRefactorerAbstract {
         const relativeFilePath = vscode.workspace.asRelativePath(fileUri.fsPath);
         const excludedFile = getPathNormalized(relativeFilePath);
 
-        const excludePattern = `{${[...excludedFolders, excludedFile].join(",")}}`;
+        const excludePattern = getExcludePattern([...excludedFolders, excludedFile]);
         return vscode.workspace.findFiles("**/*.php", excludePattern);
     }
 }

@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { getExcludePattern } from "../../../utils/filesystem/getExcludePattern";
 import { NamespaceRefactorerAbstract } from "../abstract/NamespaceRefactorerAbstract";
 import { IdentifierKindEnum } from "../enum/IdentifierKindEnum";
 import { NameResolutionEnum } from "../enum/NameResolutionEnum";
@@ -285,7 +286,7 @@ export class NamespaceSourceRefactorer extends NamespaceRefactorerAbstract {
         const excludedFolders = config.get<string[]>("refactorNamespacesExcludeDirectories", []);
 
         const relativeFilePath = vscode.workspace.asRelativePath(currentFileUri.fsPath);
-        const excludePattern = `{${[...excludedFolders, relativeFilePath].join(",")}}`;
+        const excludePattern = getExcludePattern([...excludedFolders, relativeFilePath]);
 
         return vscode.workspace.findFiles("**/*.php", excludePattern);
     }

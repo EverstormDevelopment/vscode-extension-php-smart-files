@@ -6,6 +6,7 @@ import { NamespaceResolver } from "../../service/namespace/resolver/NamespaceRes
 import { FileTypeEnum } from "../../service/php/enum/FileTypeEnum";
 import { SnippetFactoryInterface } from "../../service/snippet/interface/SnippetFactoryInterface";
 import { getUriFileName } from "../../utils/filesystem/getUriFileName";
+import { isUriFile } from "../../utils/filesystem/isUriFile";
 import { findDocumentByUri } from "../../utils/vscode/findDocumentByUri";
 
 /**
@@ -36,7 +37,7 @@ export class FileGenerationCommand {
      * @param uri Optional URI indicating where to create the file
      * @returns Promise that resolves when the process completes
      */
-    async execute(fileType: FileTypeEnum, uri?: vscode.Uri): Promise<void> {
+    public async execute(fileType: FileTypeEnum, uri?: vscode.Uri): Promise<void> {
         const targetFolder = await this.getTargetFolder(uri);
         if (!targetFolder) {
             vscode.window.showWarningMessage(vscode.l10n.t("No target folder selected or no workspace opened."));
@@ -49,12 +50,29 @@ export class FileGenerationCommand {
         }
 
         const fileUri = this.getFileUri(targetFolder, fileName);
+        const didExistBefore = await isUriFile(fileUri);
         const isFileCreated = await this.createFile(fileUri);
         if (!isFileCreated) {
             return;
         }
 
-        await this.applySnippet(fileUri, fileType);
+        try {
+            await this.applySnippet(fileUri, fileType);
+        } catch (error) {
+            await this.revokeFileCreation(fileUri, didExistBefore);
+            throw error;
+        }
+    }
+
+    /**
+     * Revokes the file creation by deleting the file if it was newly created
+     * @param uri The URI of the file to revoke
+     * @param didExistBefore Indicates if the file existed before the operation
+     */
+    private async revokeFileCreation(uri: vscode.Uri, didExistBefore: boolean): Promise<void> {
+        if (!didExistBefore) {
+            await this.removeFile(uri);
+        }
     }
 
     /**
@@ -96,6 +114,18 @@ export class FileGenerationCommand {
             return await this.fileCreator.create(uri);
         } catch (error) {
             return false;
+        }
+    }
+
+    /**
+     * Deletes the file at the specified URI
+     * @param uri The URI of the file to delete
+     */
+    private async removeFile(uri: vscode.Uri): Promise<void> {
+        try {
+            await vscode.workspace.fs.delete(uri, { useTrash: false });
+        } catch (error) {
+            // Cleanup best effort only.
         }
     }
 

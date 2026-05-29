@@ -2,7 +2,23 @@
 
 All notable changes to the "PHP Smart Files" extension will be documented in this file.
 
+
+## [1.2.3] - 2026-XX-XX
+
+### Added
+
+### Changed
+
+### Fixed
+
+
+
 ## [1.2.2] - 2026-05-28
+
+### Changed
+
+- Simplified dependency validation in the service container.
+- Removed unreachable input resolver error checks.
 
 ### Fixed
 
@@ -21,11 +37,6 @@ All notable changes to the "PHP Smart Files" extension will be documented in thi
 - Fixed failed snippet insertion leaving newly created empty files behind.
 - Fixed attribute reference collection to skip attribute groups without reliable source offsets.
 - Fixed a typo in the filesystem observer resource detection method name.
-
-### Changed
-
-- Simplified dependency validation in the service container.
-- Removed unreachable input resolver error checks.
 
 
 

@@ -28,7 +28,7 @@
 - [About This Project](#about-this-project)
 - [Release Notes](#release-notes)
 - [Feedback and Contributions](#feedback-and-contributions)
-- [Enjoying PHP Smart Files?](#enjoying-php-smart-files)
+- [Support PHP Smart Files](#support-php-smart-files)
 - [License](#license)
 
 ## Features
@@ -192,17 +192,15 @@ For older maintenance releases and the full history, please see the [CHANGELOG](
 
 ## Feedback and Contributions
 
-Your feedback, ideas, and contributions are truly appreciated! If you've found a bug, have a suggestion, or want to contribute:
+Your feedback, ideas, and contributions are truly appreciated!
 
 - [Submit an issue](https://github.com/EverstormDevelopment/vscode-extension-php-smart-files/issues)
 - [Contribute on GitHub](https://github.com/EverstormDevelopment/vscode-extension-php-smart-files)
 
-Thanks for helping make PHP Smart Files better!
 
+## Support PHP Smart Files
 
-## Enjoying PHP Smart Files?
-
-If you're enjoying PHP Smart Files, you can:
+If PHP Smart Files has helped make your PHP workflow a little easier, you can support the project by:
 - ⭐ [Rate the extension on the VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=everstorm.php-smart-files)
 - ❤️ [Sponsor the project on GitHub](https://github.com/sponsors/EverstormDevelopment)
 - ☕ [Leave a tip on Ko-fi](https://ko-fi.com/everstorm)

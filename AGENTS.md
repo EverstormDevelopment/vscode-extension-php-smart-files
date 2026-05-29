@@ -74,7 +74,7 @@ Important areas:
 - `src/extension.ts` is the VS Code entry point.
 - `src/extension/model/Extension.ts` handles activation.
 - File creation commands are registered immediately.
-- Refactor observers are registered lazily once the workspace contains a PHP file.
+- Refactor observers are registered lazily the first time a `**/*.php` file watcher fires, indicating at least one PHP file exists in the workspace.
 - Lazy bootstrapping uses a file watcher for `**/*.php`, but actual move and rename processing is driven by `vscode.workspace.onDidRenameFiles`.
 
 ### Dependency Injection
@@ -155,7 +155,7 @@ Related settings:
 Namespace refactoring is AST-based. That implementation detail is still relevant when editing parser or refactor code, but the migration history is not.
 
 Keep these practical gotchas in mind:
-- The parser is instantiated with `php7: true` and `withPositions: true`.
+- The parser is instantiated with `parser.version: "8.5"`, `parser.suppressErrors: true`, and `ast.withPositions: true`.
 - `usegroup.items` exists at runtime even if typings suggest a different property.
 - For grouped imports, item names must be combined with the group prefix.
 - FQN name nodes include the leading backslash in both `name` and `loc.start.offset`.
